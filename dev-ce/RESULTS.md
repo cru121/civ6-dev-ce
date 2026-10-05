@@ -130,3 +130,7 @@ Log kept: data/devbridge_hang_sightrange.log. The remaining level-3 functions af
 * test 1 (handler adds 1): handled=true value=42; test 2 (handler returns nothing): handled=true value=999; test 3 (no handler): handled=false value=7; all as expected, on both turns.
 * The 11 congress target choosers hooked natively (AI.cpp) were called by the game (World Congress resolution in this save, several players, OutcomeType 1 and 2); the test handlers only log and do not set map.Handled, so the game's own chooser decided and the turn ended normally. GameProcessor.log: every call on one thread with the GameCore lock held (lock=1), sent=4, handled=1.
 * Not tested: a handler that actually claims a decision (map.Handled = 1), multiplayer, save/load with handlers registered.
+
+### 2026-10-05 save/load and menu round trip: PASS
+New game -> save (RT1) -> quit to main menu -> load RT1 -> end turn -> new game from the menu (same game process, DLL never unloaded by hand). DevBridge.log shows one registration pass per game load (4 loads in the log, the first from the previous process): each identical: PE check OK, 251/251 functions ready, 26 interfaces / 240 methods added (no double hooking, nothing missing), UI cache states re-registered each time. After every load the Lua self-test ran again with the same result (226 present, 23/23 oracle matches, processor tests 42 / 999 / unhandled). No FAULT, no hang, game responsive.
+Not tested: a save made AFTER calling a mutator (persistence of changed state), loading such a save in plain CE/vanilla.
