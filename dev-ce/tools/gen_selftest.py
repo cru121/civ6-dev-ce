@@ -428,7 +428,7 @@ open(os.path.join(MOD, 'DevCE_Test.modinfo'), 'w', encoding='utf-8').write('''<?
 <Mod id="%s" version="1">
     <Properties>
         <Name>Dev CE test build</Name>
-        <Description>EXPERIMENTAL. Dev CE with its automatic self-tests: a fork of the Community Extension GameCore that adds %d engine functions to existing Lua objects, plus scripts that test them at the start of your first turns (results in Lua.log lines containing "DevCE" and in DevBridge.log next to the DLL). SINGLE PLAYER ONLY, may desync multiplayer. Works only with Steam build 15038592 (disables itself otherwise). Incompatible with every other GameCore mod, including the Community Extension. Known unsafe: Unit.ChangeSightRange (hung the game once), PlayerTrade.Change*TradeDisabledCount (routes are not restored). Report problems with DevBridge.log.</Description>
+        <Description>EXPERIMENTAL. Dev CE with its automatic self-tests: a fork of the Community Extension GameCore that adds %d engine functions to existing Lua objects, plus scripts that test them at the start of your first turns (results in Lua.log lines containing "DevCE" and in DevBridge.log next to the DLL). SINGLE PLAYER ONLY, may desync multiplayer. Works only with Steam build 15038592 (disables itself otherwise). Incompatible with every other GameCore mod, including the Community Extension. Potentially unsafe: Unit.ChangeSightRange (hung the game once on a late-game save), PlayerTrade.Change*TradeDisabledCount (routes are not restored). Report problems with DevBridge.log.</Description>
         <Teaser>Dev CE native bridge with self-tests (experimental)</Teaser>
         <Authors>cru121, based on the Community Extension by Wild-W</Authors>
         <CompatibleVersions>1.2,2.0</CompatibleVersions>
@@ -473,7 +473,7 @@ open(os.path.join(PLAYER, 'DevCE.modinfo'), 'w', encoding='utf-8').write('''<?xm
 <Mod id="%s" version="1">
     <Properties>
         <Name>Dev CE (experimental)</Name>
-        <Description>EXPERIMENTAL. A fork of the Community Extension GameCore that adds %d engine functions to existing Lua objects (City, Unit, Player, Game, Map, ...). Nothing runs by itself; call the new methods from your own scripts. SINGLE PLAYER ONLY, may desync multiplayer; ids and indices you pass are not range-checked. Works only with Steam build 15038592 (disables itself otherwise). Incompatible with every other GameCore mod, including the Community Extension. Known unsafe: Unit.ChangeSightRange, PlayerTrade.Change*TradeDisabledCount. DevBridge.log next to the DLL describes what loaded; attach it to bug reports.</Description>
+        <Description>EXPERIMENTAL. A fork of the Community Extension GameCore that adds %d engine functions to existing Lua objects (City, Unit, Player, Game, Map, ...). Nothing runs by itself; call the new methods from your own scripts. SINGLE PLAYER ONLY, may desync multiplayer; ids and indices you pass are not range-checked. Works only with Steam build 15038592 (disables itself otherwise). Incompatible with every other GameCore mod, including the Community Extension. Potentially unsafe: Unit.ChangeSightRange (hung the game once on a late-game save), PlayerTrade.Change*TradeDisabledCount (routes are not restored). DevBridge.log next to the DLL describes what loaded; attach it to bug reports.</Description>
         <Teaser>Engine functions for Lua modders (experimental)</Teaser>
         <Authors>cru121, based on the Community Extension by Wild-W</Authors>
         <CompatibleVersions>1.2,2.0</CompatibleVersions>
