@@ -1,0 +1,1034 @@
+[
+ {
+  "lua": "Unit.ChangeBuildCharges",
+  "plus": true,
+  "minus": true,
+  "changed": 1,
+  "restored": "yes",
+  "diff": [
+   "24.GetBuildCharges:0->1"
+  ],
+  "stuck": ""
+ },
+ {
+  "lua": "PlayerTrade.ChangeOutgoingRouteCapacity",
+  "plus": true,
+  "minus": true,
+  "changed": 1,
+  "restored": "yes",
+  "diff": [
+   "13.GetOutgoingRouteCapacity:0->1"
+  ],
+  "stuck": ""
+ },
+ {
+  "lua": "City.ChangeYieldChange",
+  "plus": true,
+  "minus": true,
+  "changed": 2,
+  "restored": "yes",
+  "diff": [
+   "21.GetFoodSurplus:2->3",
+   "21.GetTurnsUntilGrowth:4->3"
+  ],
+  "stuck": ""
+ },
+ {
+  "lua": "UnitGreatPerson.ChangeActionCharges",
+  "plus": true,
+  "minus": true,
+  "changed": 1,
+  "restored": "yes",
+  "diff": [
+   "27.GetActionCharges:0->1"
+  ],
+  "stuck": ""
+ },
+ {
+  "lua": "Unit.ChangeDisasterCharges",
+  "plus": true,
+  "minus": true,
+  "changed": 1,
+  "restored": "yes",
+  "diff": [
+   "24.GetDisasterCharges:0->1"
+  ],
+  "stuck": ""
+ },
+ {
+  "lua": "City.ChangeFollowerYieldModifier",
+  "plus": true,
+  "minus": true,
+  "changed": 1,
+  "restored": "yes",
+  "diff": [
+   "21.GetFoodSurplus:2->2.0390625"
+  ],
+  "stuck": ""
+ },
+ {
+  "lua": "City.ChangeYieldModifier",
+  "plus": true,
+  "minus": true,
+  "changed": 1,
+  "restored": "yes",
+  "diff": [
+   "21.GetFoodSurplus:2->2.0390625"
+  ],
+  "stuck": ""
+ },
+ {
+  "lua": "City.ChangeYieldModifierPerGovernorTitle",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerAerodromeBuildingConstructed",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerArmyKilled",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerArtifactExtracted",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerCityReligionConversion",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerCivicBoost",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerContinentDiscovered",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerCorpsKilled",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerCultureBuildingConstructed",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerCurrentCivic",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerCurrentTech",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerDistrictConstructed",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerGreatPersonEarned",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerIndustrialBuildingConstructed",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerNaturalWonderDiscovered",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerNonBarbarianUnitKilledByGDR",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerNonBarbarianUnitSeaKilled",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerScienceBuildingConstructed",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerSpySuccessfulMission",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerTechBoost",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerTradeRouteCompleted",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerUnitPromotionEarned",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "PlayerGreatPeoplePoints.ChangeFreeGreatPersonPoints",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "PlayerResources.ChangeReservedResourceAmount",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "CityBuildings.ChangeYieldModifier",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "PlayerResources.ChangeFreeResourcesExtracted",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "UnitExperience.ChangeGeneralExperienceModifier",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "PlayerUnits.ChangeExtraBuildCharges",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "CityBuildQueue.ChangeProductionModifier",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "CityBuildings.ChangeWonderYieldChange",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "CityBuildings.ChangeYieldChange",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "CityBuildings.ChangeYieldChangeCityStates",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "City.ChangeCountAlwaysLoyalFlags",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "City.ChangeExtraIdentityPerTurnPerCitizen",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "City.ChangeIdentityPressureFromAges",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "City.ChangeIdentityPressureFromModifiers",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "CityGrowth.ChangeFeatureAppealModifier",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "City.ChangeAllowIncomingRegionalStackingCount",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "City.ChangeFlatYieldBonusForInternational",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "City.ChangeYieldFromForeignRoutesPassingThrough",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "City.ChangeYieldPerDestinationLuxuryResourceForInternational",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "City.ChangeYieldPerDestinationStrategicResourceForDomestic",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "City.ChangeYieldPerDestinationStrategicResourceForInternational",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "City.ChangeYieldPerLocalBonusResourceForDomestic",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "City.ChangeYieldPerLocalBonusResourceForInternational",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "City.ChangeYieldPerLocalLuxuryResourceForInternational",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "City.ChangeYieldPerLocalStrategicResourceForInternational",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "City.ChangeYieldPerMajorTradePartner",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "GameEras.ChangeExtraScorePerPrideMoment",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "GameEras.ChangePlayerAlwaysAllowedCommemorationQuestCount",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "Map.ChangeNaturalWonderCount",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "Player.ChangeFlatBonus",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "Player.ChangeResolutionEffectRefundPercent",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "Player.ChangeIdentityPerTurnForTradeRouteOrigin",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "PlayerCulture.ChangeGreatWorkObjectTourismModifier",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "TeamDiplomacy.ChangeYieldPerDelegation",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "TeamDiplomacy.ChangeYieldPerEmbassy",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "Player.ChangeSpyCapacity",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "PlayerGreatPeoplePoints.ChangeBonusPointsPerTurn",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "PlayerGreatPeoplePoints.ChangeBonusPointsPerTurnPercent",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "PlayerGreatPeoplePoints.ChangePatronageDiscountPercent",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "PlayerGreatPeoplePoints.ChangePointsRefundPercent",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "Player.ChangeRandomEventModifiedDamageOpposingPlayer",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "Player.ChangeRandomEventNoUnitDamage",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "Player.ChangeYieldRate",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "PlayerResources.ChangeBannedResource",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "PlayerResources.ChangeExtraAccumulationModifier",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "PlayerResources.ChangeExtraAmenitiesPerOwnedBonusResource",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "PlayerResources.ChangeExtraAmenitiesPerOwnedLuxuryResource",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "PlayerResources.ChangeNoCapResource",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "PlayerResources.ChangeResourceStockpileCapModifier",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "PlayerStats.ChangeScienceVictoryPointsPerTurn",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "PlayerTrade.ChangeCityStateDistrictTradeRouteBonus",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "PlayerTrade.ChangeDestinationYieldForAllyRoute",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "PlayerTrade.ChangeDestinationYieldForSuzerainRoute",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "PlayerTrade.ChangeDestinationYieldModifier",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "PlayerTrade.ChangeDestinationYieldPerImprovementAtDestination",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "PlayerTrade.ChangeDestinationYieldPerTerrainForDomestic",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "PlayerTrade.ChangeDestinationYieldPerTerrainForInternational",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "PlayerTrade.ChangeDomesticTradeDisabledCount",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "PlayerTrade.ChangeFlatYieldBonus",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "PlayerTrade.ChangeFlatYieldBonusForCityState",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "PlayerTrade.ChangeImprovedRouteLevel",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "PlayerTrade.ChangeInternationalMajorsTradeDisabledCount",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "PlayerTrade.ChangeInternationalMinorsTradeDisabledCount",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "PlayerTrade.ChangeInternationalYieldModifier",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "PlayerTrade.ChangeInternationalYieldPerImprovementAtOrigin",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "PlayerTrade.ChangeOriginYieldForAllyRoute",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "PlayerTrade.ChangeOriginYieldForSuzerainRoute",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "PlayerTrade.ChangeOriginYieldModifier",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "PlayerTrade.ChangeOriginYieldPerImprovementAtDestination",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "PlayerTrade.ChangeOriginYieldPerTerrainForDomestic",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "PlayerTrade.ChangeOriginYieldPerTerrainForInternational",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "PlayerTrade.ChangePerSpecialtyDistrictYieldBonusForDomestic",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "PlayerTrade.ChangePerSpecialtyDistrictYieldBonusForInternational",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "PlayerTrade.ChangeYieldPerFollower",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "PlayerTrade.ChangeYieldPerPathTile",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "PlayerTrade.ChangeYieldPerTradingPostInForeignCity",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "PlayerTrade.ChangeYieldPerTradingPostInOwnCity",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "PlayerUnits.ChangeProductionModifier",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "Unit.ChangeBonusPointsPerKill",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "Unit.ChangeBonusPointsPerKillStrength",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "Unit.ChangeSightRange",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "Unit.ChangeTerritoryHealing",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "Unit.ChangeTerritoryHealingReligion",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ },
+ {
+  "lua": "UnitReligion.ChangeInitiationYieldPopulation",
+  "plus": true,
+  "minus": true,
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
+ }
+]

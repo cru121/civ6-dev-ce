@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Mod id="8ef12d22-29f1-48e3-a6d7-6dbb00d8be25"
+     version="1">
+    <Properties>
+        <Name>CE Proc Test: processors through the game dispatcher</Name>
+        <Description>Prototype for Community Extension issue #5. A custom GameCore routes RegisterProcessor / native processor calls through the game's own Lua dispatcher. Single-player testing only. Incompatible with other GameCore mods (including the Community Extension). Output goes to Lua.log (search for "CE_Proc").</Description>
+        <Teaser>Prototype for CE issue #5</Teaser>
+        <Authors>local test</Authors>
+        <CompatibleVersions>1.2,2.0</CompatibleVersions>
+        <AffectsSavedGames>0</AffectsSavedGames>
+    </Properties>
+    <Dependencies>
+        <Mod id="4873eb62-8ccc-4574-b784-dda455e74e68" title="Expansion: Gathering Storm" />
+    </Dependencies>
+    <FrontEndActions>
+        <UpdateDatabase id="CE_Proc_Config">
+            <Properties>
+                <LoadOrder>10</LoadOrder>
+            </Properties>
+            <File>Data/Config.sql</File>
+        </UpdateDatabase>
+    </FrontEndActions>
+    <InGameActions>
+        <AddGameplayScripts id="CE_Proc_Script">
+            <Properties>
+                <LoadOrder>10</LoadOrder>
+            </Properties>
+            <File>Scripts/CE_Proc.lua</File>
+        </AddGameplayScripts>
+    </InGameActions>
+    <Files>
+        <File>Binaries/Win64/GameCore_XP2_CE_FinalRelease.dll</File>
+        <File>Data/Config.sql</File>
+        <File>Scripts/CE_Proc.lua</File>
+    </Files>
+</Mod>

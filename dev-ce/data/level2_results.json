@@ -1,0 +1,4568 @@
+[
+ {
+  "lua": "TeamDiplomacy.SetCanEnforceBorders",
+  "rva": "0x2af9f0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   1
+  ],
+  "native_saw": [
+   "6692813984",
+   "1",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "TeamDiplomacy.SetHasOpenBordersFrom",
+  "rva": "0x2b0360",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   1
+  ],
+  "native_saw": [
+   "6692813984",
+   "11",
+   "1",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "City.RecalculatePower",
+  "rva": "0x147e80",
+  "status": "PASS",
+  "detail": "",
+  "sent": [],
+  "native_saw": [
+   "6781164120",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "Player.SetAlive",
+  "rva": "0x2fa9a0",
+  "status": "EXCLUDED",
+  "detail": "not stub-tested: may be called by the engine from several threads",
+  "sent": [
+   1
+  ],
+  "native_saw": []
+ },
+ {
+  "lua": "CityBuildings.RemoveAllBuildings",
+  "rva": "0x10cf80",
+  "status": "PASS",
+  "detail": "",
+  "sent": [],
+  "native_saw": [
+   "6781161152",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "GameEras.SetCurrentEra",
+  "rva": "0x1e7eb0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11
+  ],
+  "native_saw": [
+   "5689195040",
+   "11",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "Player.AddAgenda",
+  "rva": "0x2f7400",
+  "status": "EXCLUDED",
+  "detail": "not stub-tested: may be called by the engine from several threads",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": []
+ },
+ {
+  "lua": "Unit.SetProcessedTurn",
+  "rva": "0x3a5ee0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   1
+  ],
+  "native_saw": [
+   "7183199784",
+   "1",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "Unit.ChangeBuildCharges",
+  "rva": "0x3a2980",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11
+  ],
+  "native_saw": [
+   "7183199784",
+   "11",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "City.SetOccupied",
+  "rva": "0x135a30",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   1
+  ],
+  "native_saw": [
+   "6781157904",
+   "1",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerTrade.ChangeOutgoingRouteCapacity",
+  "rva": "0x33cc20",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11
+  ],
+  "native_saw": [
+   "5691158352",
+   "11",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "UnitExperience.SetLevel",
+  "rva": "0x3974a0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11
+  ],
+  "native_saw": [
+   "7183202200",
+   "11",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "City.ChangeYieldChange",
+  "rva": "0x131c60",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "6781157904",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerResources.RevealResourceOnVisibleTiles",
+  "rva": "0x322f00",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11
+  ],
+  "native_saw": [
+   "4623507632",
+   "11",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "UnitGreatPerson.ChangeActionCharges",
+  "rva": "0x398f70",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11
+  ],
+  "native_saw": [
+   "7183202296",
+   "11",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "Unit.ChangeDisasterCharges",
+  "rva": "0x3a2a40",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11
+  ],
+  "native_saw": [
+   "7183199784",
+   "11",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "City.ChangeFollowerYieldModifier",
+  "rva": "0x131af0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "6781157904",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "City.ChangeYieldModifier",
+  "rva": "0x131cf0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "6781157904",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "City.ChangeYieldModifierPerGovernorTitle",
+  "rva": "0x131d80",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   896
+  ],
+  "native_saw": [
+   "6781157904",
+   "11",
+   "896",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "District.SetSiegeStatus",
+  "rva": "0x1930e0",
+  "status": "NOT_RUN",
+  "detail": "no L2 line for this method",
+  "sent": [
+   1
+  ],
+  "native_saw": []
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerAerodromeBuildingConstructed",
+  "rva": "0x1e2300",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "5689195040",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerArmyKilled",
+  "rva": "0x1e2380",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "5689195040",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerArtifactExtracted",
+  "rva": "0x1e2400",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "5689195040",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerCityReligionConversion",
+  "rva": "0x1e2480",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "5689195040",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerCivicBoost",
+  "rva": "0x1e2500",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "5689195040",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerContinentDiscovered",
+  "rva": "0x1e2580",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "5689195040",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerCorpsKilled",
+  "rva": "0x1e2600",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "5689195040",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerCultureBuildingConstructed",
+  "rva": "0x1e2680",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "5689195040",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerCurrentCivic",
+  "rva": "0x1e2700",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "5689195040",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerCurrentTech",
+  "rva": "0x1e2780",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "5689195040",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerDistrictConstructed",
+  "rva": "0x1e2800",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "5689195040",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerGreatPersonEarned",
+  "rva": "0x1e2880",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "5689195040",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerIndustrialBuildingConstructed",
+  "rva": "0x1e2900",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "5689195040",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerNaturalWonderDiscovered",
+  "rva": "0x1e2980",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "5689195040",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerNonBarbarianUnitKilledByGDR",
+  "rva": "0x1e2a00",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "5689195040",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerNonBarbarianUnitSeaKilled",
+  "rva": "0x1e2a80",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "5689195040",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerScienceBuildingConstructed",
+  "rva": "0x1e2b00",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "5689195040",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerSpySuccessfulMission",
+  "rva": "0x1e2b80",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "5689195040",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerTechBoost",
+  "rva": "0x1e2c00",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "5689195040",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerTradeRouteCompleted",
+  "rva": "0x1e2c80",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "5689195040",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerUnitPromotionEarned",
+  "rva": "0x1e2d00",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "5689195040",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "GameEras.RecalculateThresholdShifts",
+  "rva": "0x1e6e00",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "5689195040",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerGreatPeoplePoints.ChangeFreeGreatPersonPoints",
+  "rva": "0x2e30b0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11
+  ],
+  "native_saw": [
+   "5744802064",
+   "11",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "Game.SetLocalPlayerTo",
+  "rva": "0x308ca0",
+  "status": "EXCLUDED",
+  "detail": "not stub-tested: may be called by the engine from several threads",
+  "sent": [
+   11
+  ],
+  "native_saw": []
+ },
+ {
+  "lua": "TeamDiplomacy.SetBlockedEntry",
+  "rva": "0x2af7e0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   1
+  ],
+  "native_saw": [
+   "6692813984",
+   "11",
+   "1",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "CityBuildings.AddGreatWork",
+  "rva": "0x109290",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11
+  ],
+  "native_saw": [
+   "6781161152",
+   "11",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "Map.AddPlotYield",
+  "rva": "0x720ee0",
+  "status": "EXCLUDED",
+  "detail": "not stub-tested: may be called by the engine from several threads",
+  "sent": [
+   11,
+   12,
+   13
+  ],
+  "native_saw": []
+ },
+ {
+  "lua": "Unit.SetLevied",
+  "rva": "0x3a5c50",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   1
+  ],
+  "native_saw": [
+   "7183199784",
+   "1",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "Game.DecrementGameStateLock",
+  "rva": "0x63cee0",
+  "status": "EXCLUDED",
+  "detail": "not stub-tested: may be called by the engine from several threads",
+  "sent": [],
+  "native_saw": []
+ },
+ {
+  "lua": "GameDiplomacy.SetIsInDefensivePact",
+  "rva": "0x1d3c30",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12,
+   1
+  ],
+  "native_saw": [
+   "616845488",
+   "11",
+   "12",
+   "1",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "GameEras.SetDarkAge",
+  "rva": "0x1e7fa0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   1
+  ],
+  "native_saw": [
+   "5689195040",
+   "11",
+   "1",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "GameEras.SetGoldenAge",
+  "rva": "0x1e8040",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   1
+  ],
+  "native_saw": [
+   "5689195040",
+   "11",
+   "1",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerCulture.SetAllCivicsByPreviousEra",
+  "rva": "0x284060",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11
+  ],
+  "native_saw": [
+   "5759758864",
+   "11",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "TeamDiplomacy.AddEspionageIncursion",
+  "rva": "0x29e220",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11
+  ],
+  "native_saw": [
+   "6692813984",
+   "11",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerTechs.SetAllTechsByPreviousEra",
+  "rva": "0x335a30",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11
+  ],
+  "native_saw": [
+   "6819060416",
+   "11",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "TeamDiplomacy.AddIncursionData",
+  "rva": "0x29e2a0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12,
+   13
+  ],
+  "native_saw": [
+   "6692813984",
+   "11",
+   "12",
+   "13",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerResources.ChangeReservedResourceAmount",
+  "rva": "0x31e960",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "4623507632",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "CityBuildings.AddGreatWorkToSlot",
+  "rva": "0x1099b0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12,
+   13
+  ],
+  "native_saw": [
+   "6781161152",
+   "11",
+   "12",
+   "13",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerCulture.AddTourismAtPlot",
+  "rva": "0x279f60",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "5759758864",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "TeamDiplomacy.SetLastTurnOfferedDeal",
+  "rva": "0x2b04b0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "6692813984",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "City.RemoveDynamicAdjacencyBonus",
+  "rva": "0x134d90",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12,
+   13,
+   1,
+   15,
+   1,
+   17
+  ],
+  "native_saw": [
+   "6781157904",
+   "11",
+   "12",
+   "13",
+   "1",
+   "15",
+   "1",
+   "17"
+  ]
+ },
+ {
+  "lua": "PlayerTechs.GrantRandomBoostsByEra",
+  "rva": "0x3346d0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12,
+   13
+  ],
+  "native_saw": [
+   "6819060416",
+   "11",
+   "12",
+   "13",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "CityBuildings.ChangeYieldModifier",
+  "rva": "0x10a1d0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12,
+   13
+  ],
+  "native_saw": [
+   "6781161152",
+   "11",
+   "12",
+   "13",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "GameDiplomacy.SetAtWar",
+  "rva": "0x1d31b0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12,
+   13
+  ],
+  "native_saw": [
+   "616845488",
+   "11",
+   "12",
+   "13",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerCulture.GrantRandomBoostsByEra",
+  "rva": "0x280c80",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12,
+   13
+  ],
+  "native_saw": [
+   "5759758864",
+   "11",
+   "12",
+   "13",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerCulture.RecomputeTourismOn",
+  "rva": "0x282cb0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11
+  ],
+  "native_saw": [
+   "5759758864",
+   "11",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerResources.ChangeFreeResourcesExtracted",
+  "rva": "0x31e810",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "4623507632",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerUnits.SetCanEverTrain",
+  "rva": "0x350dc0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [],
+  "native_saw": [
+   "5699566624",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "UnitExperience.ChangeGeneralExperienceModifier",
+  "rva": "0x396d70",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11
+  ],
+  "native_saw": [
+   "7183202200",
+   "11",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "UnitExperience.GrantPromotion",
+  "rva": "0x3970f0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   1
+  ],
+  "native_saw": [
+   "7183202200",
+   "11",
+   "1",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "CityGrowth.AddGrowth",
+  "rva": "0x123160",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   640
+  ],
+  "native_saw": [
+   "6781160320",
+   "640",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "District.ChangeRemainingAttackCount",
+  "rva": "0x190520",
+  "status": "NOT_RUN",
+  "detail": "no L2 line for this method",
+  "sent": [
+   11
+  ],
+  "native_saw": []
+ },
+ {
+  "lua": "GameGreatPeople.AwardFreePersonByClass",
+  "rva": "0x208fd0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "6586098960",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "Game.IncrementGameStateLock",
+  "rva": "0x63d1a0",
+  "status": "EXCLUDED",
+  "detail": "not stub-tested: may be called by the engine from several threads",
+  "sent": [],
+  "native_saw": []
+ },
+ {
+  "lua": "MapAreaPortal.AttachAreas",
+  "rva": "0x634d0",
+  "status": "NOT_RUN",
+  "detail": "no L2 line for this method",
+  "sent": [],
+  "native_saw": []
+ },
+ {
+  "lua": "Territory.SetIsSea",
+  "rva": "0x2ce60",
+  "status": "NOT_RUN",
+  "detail": "no L2 line for this method",
+  "sent": [
+   1
+  ],
+  "native_saw": []
+ },
+ {
+  "lua": "PlayerCulture.ChangeTourismOn",
+  "rva": "0x27c140",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   896
+  ],
+  "native_saw": [
+   "5759758864",
+   "11",
+   "896",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerCulture.GrantRandomBoostGoodyHut",
+  "rva": "0x280860",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "5759758864",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "TeamDiplomacy.SetOccupyingOriginalCity",
+  "rva": "0x2b04e0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   1
+  ],
+  "native_saw": [
+   "6692813984",
+   "11",
+   "1",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "Player.RecomputeCost",
+  "rva": "0x2c4f10",
+  "status": "EXCLUDED",
+  "detail": "not stub-tested: may be called by the engine from several threads",
+  "sent": [
+   11
+  ],
+  "native_saw": []
+ },
+ {
+  "lua": "Game.ClearLists",
+  "rva": "0x3065e0",
+  "status": "EXCLUDED",
+  "detail": "not stub-tested: may be called by the engine from several threads",
+  "sent": [],
+  "native_saw": []
+ },
+ {
+  "lua": "PlayerTechs.GrantRandomBoostGoodyHut",
+  "rva": "0x3342e0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "6819060416",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerUnits.ChangeExtraBuildCharges",
+  "rva": "0x34cd90",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "5699566624",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "CityBuildQueue.ChangeProductionModifier",
+  "rva": "0x949730",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "6781162208",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "CityBuildQueue.SetDistrictPercentComplete",
+  "rva": "0x1046f0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "6781162208",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "CityBuildings.ChangeWonderYieldChange",
+  "rva": "0x109d30",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "6781161152",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "CityBuildings.ChangeYieldChange",
+  "rva": "0x109dc0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12,
+   13
+  ],
+  "native_saw": [
+   "6781161152",
+   "11",
+   "12",
+   "13",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "CityBuildings.ChangeYieldChangeCityStates",
+  "rva": "0x109f10",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12,
+   13
+  ],
+  "native_saw": [
+   "6781161152",
+   "11",
+   "12",
+   "13",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "CityBuildings.ChangeYieldChangeFromFeature",
+  "rva": "0x10a060",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12,
+   13
+  ],
+  "native_saw": [
+   "6781161152",
+   "11",
+   "12",
+   "13",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "CityBuildings.SetEraCreatedToGameEra",
+  "rva": "0x10e880",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11
+  ],
+  "native_saw": [
+   "6781161152",
+   "11",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "City.SetSiegeProtection",
+  "rva": "0x111b10",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   1
+  ],
+  "native_saw": [
+   "6781160496",
+   "1",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "City.ChangeAccumulatedIdentity",
+  "rva": "0x114fa0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   896
+  ],
+  "native_saw": [
+   "6781163584",
+   "11",
+   "896",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "City.ChangeCountAlwaysLoyalFlags",
+  "rva": "0x1150c0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11
+  ],
+  "native_saw": [
+   "6781163584",
+   "11",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "City.ChangeExtraIdentityPerTurnPerCitizen",
+  "rva": "0x115100",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   640
+  ],
+  "native_saw": [
+   "6781163584",
+   "640",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "City.ChangeIdentityPressureFromAges",
+  "rva": "0x1151b0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   640
+  ],
+  "native_saw": [
+   "6781163584",
+   "640",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "City.ChangeIdentityPressureFromModifiers",
+  "rva": "0x1151e0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   640
+  ],
+  "native_saw": [
+   "6781163584",
+   "640",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "City.ChangeGreatWorkYieldModifier",
+  "rva": "0x11b800",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12,
+   13,
+   14
+  ],
+  "native_saw": [
+   "6781160864",
+   "11",
+   "12",
+   "13",
+   "14",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "City.ChangeTourism",
+  "rva": "0x11b960",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12,
+   1,
+   1,
+   15,
+   16
+  ],
+  "native_saw": [
+   "6781160864",
+   "11",
+   "12",
+   "1",
+   "1",
+   "15",
+   "16",
+   "0"
+  ]
+ },
+ {
+  "lua": "CityDistricts.DestroyAll",
+  "rva": "0x11e3f0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [],
+  "native_saw": [
+   "6781160808",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "City.SetBuildingFaithPurchaseByDistrict",
+  "rva": "0x121c20",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   1
+  ],
+  "native_saw": [
+   "6781160136",
+   "11",
+   "1",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "CityGrowth.ChangeFeatureAppealModifier",
+  "rva": "0x123370",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "6781160320",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "City.AddCityHappinessModifier",
+  "rva": "0x12f320",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12,
+   13,
+   14,
+   15
+  ],
+  "native_saw": [
+   "6781157904",
+   "11",
+   "12",
+   "13",
+   "14",
+   "15",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "City.ChangeAllowIncomingRegionalStackingCount",
+  "rva": "0x131a90",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "6781157904",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "City.RemoveCityHappinessModifier",
+  "rva": "0x1349b0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12,
+   13,
+   14,
+   15
+  ],
+  "native_saw": [
+   "6781157904",
+   "11",
+   "12",
+   "13",
+   "14",
+   "15",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "City.ResetCache",
+  "rva": "0x135370",
+  "status": "PASS",
+  "detail": "",
+  "sent": [],
+  "native_saw": [
+   "6781157904",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "City.ChangeFlatYieldBonusForInternational",
+  "rva": "0x14da50",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   896
+  ],
+  "native_saw": [
+   "6781161624",
+   "11",
+   "896",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "City.ChangeYieldFromForeignRoutesPassingThrough",
+  "rva": "0x14db00",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   896
+  ],
+  "native_saw": [
+   "6781161624",
+   "11",
+   "896",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "City.ChangeYieldPerDestinationLuxuryResourceForInternational",
+  "rva": "0x14db30",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   896
+  ],
+  "native_saw": [
+   "6781161624",
+   "11",
+   "896",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "City.ChangeYieldPerDestinationStrategicResourceForDomestic",
+  "rva": "0x14db60",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   896
+  ],
+  "native_saw": [
+   "6781161624",
+   "11",
+   "896",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "City.ChangeYieldPerDestinationStrategicResourceForInternational",
+  "rva": "0x14db90",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   896
+  ],
+  "native_saw": [
+   "6781161624",
+   "11",
+   "896",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "City.ChangeYieldPerLocalBonusResourceForDomestic",
+  "rva": "0x14dbc0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   896
+  ],
+  "native_saw": [
+   "6781161624",
+   "11",
+   "896",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "City.ChangeYieldPerLocalBonusResourceForInternational",
+  "rva": "0x14dbf0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   896
+  ],
+  "native_saw": [
+   "6781161624",
+   "11",
+   "896",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "City.ChangeYieldPerLocalLuxuryResourceForInternational",
+  "rva": "0x14dc20",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   896
+  ],
+  "native_saw": [
+   "6781161624",
+   "11",
+   "896",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "City.ChangeYieldPerLocalStrategicResourceForInternational",
+  "rva": "0x14dc50",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   896
+  ],
+  "native_saw": [
+   "6781161624",
+   "11",
+   "896",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "City.ChangeYieldPerMajorTradePartner",
+  "rva": "0x14dc80",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   896
+  ],
+  "native_saw": [
+   "6781161624",
+   "11",
+   "896",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "Deal.RemoveExpiredItems",
+  "rva": "0x57f3f0",
+  "status": "NOT_RUN",
+  "detail": "no L2 line for this method",
+  "sent": [],
+  "native_saw": []
+ },
+ {
+  "lua": "District.ChangeExtraRegionalYield",
+  "rva": "0x190470",
+  "status": "NOT_RUN",
+  "detail": "no L2 line for this method",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": []
+ },
+ {
+  "lua": "District.ChangeGreatPersonPointChange",
+  "rva": "0x1904d0",
+  "status": "NOT_RUN",
+  "detail": "no L2 line for this method",
+  "sent": [
+   11,
+   896
+  ],
+  "native_saw": []
+ },
+ {
+  "lua": "District.ChangeTourismAdjacencyYieldModifier",
+  "rva": "0x190590",
+  "status": "NOT_RUN",
+  "detail": "no L2 line for this method",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": []
+ },
+ {
+  "lua": "District.SetComplete",
+  "rva": "0x192c20",
+  "status": "NOT_RUN",
+  "detail": "no L2 line for this method",
+  "sent": [
+   1,
+   1
+  ],
+  "native_saw": []
+ },
+ {
+  "lua": "GameDiplomacy.SetJointWarTarget",
+  "rva": "0x1d3db0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12,
+   13
+  ],
+  "native_saw": [
+   "616845488",
+   "11",
+   "12",
+   "13",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "GameDiplomacy.SetSharesSuzerain",
+  "rva": "0x1d41d0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12,
+   1
+  ],
+  "native_saw": [
+   "616845488",
+   "11",
+   "12",
+   "1",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "GameEras.ChangeExtraScorePerPrideMoment",
+  "rva": "0x1e2260",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "5689195040",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "GameEras.ChangePlayerAlwaysAllowedCommemorationQuestCount",
+  "rva": "0x1e22b0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "5689195040",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "GameEras.SetMinScoreForExtraEraScore",
+  "rva": "0x1e80e0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "5689195040",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "Map.SetVolcanoActive",
+  "rva": "0x7271e0",
+  "status": "EXCLUDED",
+  "detail": "not stub-tested: may be called by the engine from several threads",
+  "sent": [
+   1
+  ],
+  "native_saw": []
+ },
+ {
+  "lua": "Map.SetVolcanoInactive",
+  "rva": "0x727540",
+  "status": "EXCLUDED",
+  "detail": "not stub-tested: may be called by the engine from several threads",
+  "sent": [
+   1
+  ],
+  "native_saw": []
+ },
+ {
+  "lua": "Map.ChangeNaturalWonderCount",
+  "rva": "0x52000",
+  "status": "EXCLUDED",
+  "detail": "not stub-tested: may be called by the engine from several threads",
+  "sent": [
+   11
+  ],
+  "native_saw": []
+ },
+ {
+  "lua": "Map.SetRevealedImprovementType",
+  "rva": "0x35de10",
+  "status": "EXCLUDED",
+  "detail": "not stub-tested: may be called by the engine from several threads",
+  "sent": [
+   11,
+   12,
+   13
+  ],
+  "native_saw": []
+ },
+ {
+  "lua": "Map.SetRevealedResourceType",
+  "rva": "0x35deb0",
+  "status": "EXCLUDED",
+  "detail": "not stub-tested: may be called by the engine from several threads",
+  "sent": [
+   11,
+   12,
+   13
+  ],
+  "native_saw": []
+ },
+ {
+  "lua": "Map.SetRevealedRouteType",
+  "rva": "0x35df50",
+  "status": "EXCLUDED",
+  "detail": "not stub-tested: may be called by the engine from several threads",
+  "sent": [
+   11,
+   12,
+   13
+  ],
+  "native_saw": []
+ },
+ {
+  "lua": "Player.ChangeFlatBonus",
+  "rva": "0x261010",
+  "status": "EXCLUDED",
+  "detail": "not stub-tested: may be called by the engine from several threads",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": []
+ },
+ {
+  "lua": "Player.ChangeResolutionEffectRefundPercent",
+  "rva": "0x26c4e0",
+  "status": "EXCLUDED",
+  "detail": "not stub-tested: may be called by the engine from several threads",
+  "sent": [
+   11,
+   12,
+   13
+  ],
+  "native_saw": []
+ },
+ {
+  "lua": "Player.ChangeIdentityPerTurnForTradeRouteOrigin",
+  "rva": "0x26ef90",
+  "status": "EXCLUDED",
+  "detail": "not stub-tested: may be called by the engine from several threads",
+  "sent": [
+   640
+  ],
+  "native_saw": []
+ },
+ {
+  "lua": "PlayerCulture.ChangeGreatWorkObjectTourismModifier",
+  "rva": "0x27c0b0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "5759758864",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerCulture.SetFavorPerTurnFromBuilding",
+  "rva": "0x284ca0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "5759758864",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerCulture.SetFavorPerTurnFromPolicy",
+  "rva": "0x284d60",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "5759758864",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerCulture.SetGreatWorkObjectNoTourism",
+  "rva": "0x285030",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   1
+  ],
+  "native_saw": [
+   "5759758864",
+   "11",
+   "1",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerCulture.SetNumFreeCivicBoostOnNewEra",
+  "rva": "0x285190",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   1
+  ],
+  "native_saw": [
+   "5759758864",
+   "11",
+   "1",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerCulture.SetPolicyBanned",
+  "rva": "0x285230",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   1
+  ],
+  "native_saw": [
+   "5759758864",
+   "11",
+   "1",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "TeamDiplomacy.ChangeYieldPerDelegation",
+  "rva": "0x2a1060",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "6692813984",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "TeamDiplomacy.ChangeYieldPerEmbassy",
+  "rva": "0x2a10e0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "6692813984",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "TeamDiplomacy.SetFightingJointWar",
+  "rva": "0x2afc50",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "6692813984",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "TeamDiplomacy.SetHasDefensivePact",
+  "rva": "0x2aff30",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   1
+  ],
+  "native_saw": [
+   "6692813984",
+   "11",
+   "1",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "TeamDiplomacy.SetResearchAgreementTech",
+  "rva": "0x2b0560",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "6692813984",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "Player.ChangeSpyCapacity",
+  "rva": "0x2cf7a0",
+  "status": "EXCLUDED",
+  "detail": "not stub-tested: may be called by the engine from several threads",
+  "sent": [
+   11
+  ],
+  "native_saw": []
+ },
+ {
+  "lua": "Player.ChangeTargetCitySpyYieldPercent",
+  "rva": "0x2cf800",
+  "status": "EXCLUDED",
+  "detail": "not stub-tested: may be called by the engine from several threads",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": []
+ },
+ {
+  "lua": "PlayerGreatPeoplePoints.ChangeBonusPointsPerTurn",
+  "rva": "0x2e2e20",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   896
+  ],
+  "native_saw": [
+   "5744802064",
+   "11",
+   "896",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerGreatPeoplePoints.ChangeBonusPointsPerTurnPercent",
+  "rva": "0x2e2e90",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "5744802064",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerGreatPeoplePoints.ChangePatronageDiscountPercent",
+  "rva": "0x2e3110",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "5744802064",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerGreatPeoplePoints.ChangePointsRefundPercent",
+  "rva": "0x2e31c0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11
+  ],
+  "native_saw": [
+   "5744802064",
+   "11",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerGreatPeoplePoints.SetGreatPersonClassNoPoints",
+  "rva": "0x2e4550",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   1
+  ],
+  "native_saw": [
+   "5744802064",
+   "11",
+   "1",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerGreatPeoplePoints.SetNoPatronageWith",
+  "rva": "0x2e4640",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   1
+  ],
+  "native_saw": [
+   "5744802064",
+   "11",
+   "1",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerGreatPeoplePoints.SetYieldModifierPerEarnedGreatPerson",
+  "rva": "0x2e47b0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   896
+  ],
+  "native_saw": [
+   "5744802064",
+   "11",
+   "896",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "Player.AddChopFeatureBehavior",
+  "rva": "0x2f7570",
+  "status": "EXCLUDED",
+  "detail": "not stub-tested: may be called by the engine from several threads",
+  "sent": [
+   11,
+   1,
+   13,
+   14
+  ],
+  "native_saw": []
+ },
+ {
+  "lua": "Player.ChangeCO2GenerationReduction",
+  "rva": "0x2f7720",
+  "status": "EXCLUDED",
+  "detail": "not stub-tested: may be called by the engine from several threads",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": []
+ },
+ {
+  "lua": "Player.ChangeRandomEventModifiedDamageOpposingPlayer",
+  "rva": "0x2f7760",
+  "status": "EXCLUDED",
+  "detail": "not stub-tested: may be called by the engine from several threads",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": []
+ },
+ {
+  "lua": "Player.ChangeRandomEventNoUnitDamage",
+  "rva": "0x2f77b0",
+  "status": "EXCLUDED",
+  "detail": "not stub-tested: may be called by the engine from several threads",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": []
+ },
+ {
+  "lua": "Player.ChangeYieldRate",
+  "rva": "0x2f7800",
+  "status": "EXCLUDED",
+  "detail": "not stub-tested: may be called by the engine from several threads",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": []
+ },
+ {
+  "lua": "Player.RemoveChopFeatureBehavior",
+  "rva": "0x2fa1e0",
+  "status": "EXCLUDED",
+  "detail": "not stub-tested: may be called by the engine from several threads",
+  "sent": [
+   11,
+   1,
+   13
+  ],
+  "native_saw": []
+ },
+ {
+  "lua": "PlayerReligion.SetSpreadModifier",
+  "rva": "0x3162b0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12,
+   13
+  ],
+  "native_saw": [
+   "6356478736",
+   "11",
+   "12",
+   "13",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerResources.ChangeBannedResource",
+  "rva": "0x31e700",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "4623507632",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerResources.ChangeExtraAccumulationModifier",
+  "rva": "0x31e740",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "4623507632",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerResources.ChangeExtraAmenitiesPerOwnedBonusResource",
+  "rva": "0x31e780",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11
+  ],
+  "native_saw": [
+   "4623507632",
+   "11",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerResources.ChangeExtraAmenitiesPerOwnedLuxuryResource",
+  "rva": "0x31e7c0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11
+  ],
+  "native_saw": [
+   "4623507632",
+   "11",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerResources.ChangeImportResourceExtracted",
+  "rva": "0x31e870",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "4623507632",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerResources.ChangeNoCapResource",
+  "rva": "0x31e8d0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "4623507632",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerResources.ChangeResourceStockpileCapModifier",
+  "rva": "0x31eb10",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "4623507632",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerStats.ChangeScienceVictoryPointsPerTurn",
+  "rva": "0x32aeb0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   640
+  ],
+  "native_saw": [
+   "5949933248",
+   "640",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerTechs.SetNumFreeTechBoostOnNewEra",
+  "rva": "0x335b80",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   1
+  ],
+  "native_saw": [
+   "6819060416",
+   "11",
+   "1",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerTrade.ChangeCityStateDistrictTradeRouteBonus",
+  "rva": "0x33c180",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   896
+  ],
+  "native_saw": [
+   "5691158352",
+   "11",
+   "896",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerTrade.ChangeDestinationYieldForAllyRoute",
+  "rva": "0x33c1e0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   896
+  ],
+  "native_saw": [
+   "5691158352",
+   "11",
+   "896",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerTrade.ChangeDestinationYieldForSuzerainRoute",
+  "rva": "0x33c240",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   896
+  ],
+  "native_saw": [
+   "5691158352",
+   "11",
+   "896",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerTrade.ChangeDestinationYieldModifier",
+  "rva": "0x33c2a0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   896
+  ],
+  "native_saw": [
+   "5691158352",
+   "11",
+   "896",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerTrade.ChangeDestinationYieldPerImprovementAtDestination",
+  "rva": "0x33c300",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12,
+   1152
+  ],
+  "native_saw": [
+   "5691158352",
+   "11",
+   "12",
+   "1152",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerTrade.ChangeDestinationYieldPerTerrainForDomestic",
+  "rva": "0x33c390",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12,
+   1152
+  ],
+  "native_saw": [
+   "5691158352",
+   "11",
+   "12",
+   "1152",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerTrade.ChangeDestinationYieldPerTerrainForInternational",
+  "rva": "0x33c420",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12,
+   1152
+  ],
+  "native_saw": [
+   "5691158352",
+   "11",
+   "12",
+   "1152",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerTrade.ChangeDomesticTradeDisabledCount",
+  "rva": "0x33c4b0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11
+  ],
+  "native_saw": [
+   "5691158352",
+   "11",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerTrade.ChangeFlatYieldBonus",
+  "rva": "0x33c570",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   896
+  ],
+  "native_saw": [
+   "5691158352",
+   "11",
+   "896",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerTrade.ChangeFlatYieldBonusForCityState",
+  "rva": "0x33c5d0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   896
+  ],
+  "native_saw": [
+   "5691158352",
+   "11",
+   "896",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerTrade.ChangeFlatYieldBonusForDomestic",
+  "rva": "0x33c630",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   1,
+   1152
+  ],
+  "native_saw": [
+   "5691158352",
+   "11",
+   "1",
+   "1152",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerTrade.ChangeFlatYieldBonusForInternational",
+  "rva": "0x33c6c0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   1,
+   1152
+  ],
+  "native_saw": [
+   "5691158352",
+   "11",
+   "1",
+   "1152",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerTrade.ChangeImprovedRouteLevel",
+  "rva": "0x33c750",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11
+  ],
+  "native_saw": [
+   "5691158352",
+   "11",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerTrade.ChangeInternationalMajorsTradeDisabledCount",
+  "rva": "0x33c780",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11
+  ],
+  "native_saw": [
+   "5691158352",
+   "11",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerTrade.ChangeInternationalMinorsTradeDisabledCount",
+  "rva": "0x33c7f0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11
+  ],
+  "native_saw": [
+   "5691158352",
+   "11",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerTrade.ChangeInternationalYieldModifier",
+  "rva": "0x33c860",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   896
+  ],
+  "native_saw": [
+   "5691158352",
+   "11",
+   "896",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerTrade.ChangeInternationalYieldPerImprovementAtOrigin",
+  "rva": "0x33c8c0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12,
+   1152
+  ],
+  "native_saw": [
+   "5691158352",
+   "11",
+   "12",
+   "1152",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerTrade.ChangeOriginYieldForAllyRoute",
+  "rva": "0x33c950",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   896
+  ],
+  "native_saw": [
+   "5691158352",
+   "11",
+   "896",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerTrade.ChangeOriginYieldForSuzerainRoute",
+  "rva": "0x33c9b0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   896
+  ],
+  "native_saw": [
+   "5691158352",
+   "11",
+   "896",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerTrade.ChangeOriginYieldModifier",
+  "rva": "0x33ca10",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   896
+  ],
+  "native_saw": [
+   "5691158352",
+   "11",
+   "896",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerTrade.ChangeOriginYieldPerImprovementAtDestination",
+  "rva": "0x33ca70",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12,
+   1152
+  ],
+  "native_saw": [
+   "5691158352",
+   "11",
+   "12",
+   "1152",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerTrade.ChangeOriginYieldPerTerrainForDomestic",
+  "rva": "0x33cb00",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12,
+   1152
+  ],
+  "native_saw": [
+   "5691158352",
+   "11",
+   "12",
+   "1152",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerTrade.ChangeOriginYieldPerTerrainForInternational",
+  "rva": "0x33cb90",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12,
+   1152
+  ],
+  "native_saw": [
+   "5691158352",
+   "11",
+   "12",
+   "1152",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerTrade.ChangePerSpecialtyDistrictYieldBonusForDomestic",
+  "rva": "0x33cc80",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   896
+  ],
+  "native_saw": [
+   "5691158352",
+   "11",
+   "896",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerTrade.ChangePerSpecialtyDistrictYieldBonusForInternational",
+  "rva": "0x33cce0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   896
+  ],
+  "native_saw": [
+   "5691158352",
+   "11",
+   "896",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerTrade.ChangeYieldPerFollower",
+  "rva": "0x33cd70",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   896
+  ],
+  "native_saw": [
+   "5691158352",
+   "11",
+   "896",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerTrade.ChangeYieldPerPathTile",
+  "rva": "0x33cdc0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   896
+  ],
+  "native_saw": [
+   "5691158352",
+   "11",
+   "896",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerTrade.ChangeYieldPerTradingPostInForeignCity",
+  "rva": "0x33ce10",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   896
+  ],
+  "native_saw": [
+   "5691158352",
+   "11",
+   "896",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerTrade.ChangeYieldPerTradingPostInOwnCity",
+  "rva": "0x33ce60",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   896
+  ],
+  "native_saw": [
+   "5691158352",
+   "11",
+   "896",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerTreasury.ChangeGoldDiplomaticDeal",
+  "rva": "0x343360",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   21,
+   22,
+   1
+  ],
+  "native_saw": [
+   "610588800",
+   "21",
+   "22",
+   "1",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerTreasury.ChangeGoldInterestPercent",
+  "rva": "0x3434b0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   640
+  ],
+  "native_saw": [
+   "610588800",
+   "640",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerUnits.ChangeAddOnDistrictFounding",
+  "rva": "0x34cb20",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   21,
+   22,
+   13
+  ],
+  "native_saw": [
+   "5699566624",
+   "21",
+   "22",
+   "13",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerUnits.ChangeProductionModifier",
+  "rva": "0x9497a0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "5699566624",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerUnits.SetBannedProductionYield",
+  "rva": "0x350cf0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11
+  ],
+  "native_saw": [
+   "5699566624",
+   "11",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerUnits.SetModifiedArmyCorpsStrength",
+  "rva": "0x3512d0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   1,
+   1,
+   13
+  ],
+  "native_saw": [
+   "5699566624",
+   "1",
+   "1",
+   "13",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerUnits.SetPromotionSelected",
+  "rva": "0x351330",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12,
+   1
+  ],
+  "native_saw": [
+   "5699566624",
+   "11",
+   "12",
+   "1",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "Unit.SetHomeCityCallback",
+  "rva": "0x394fe0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [],
+  "native_saw": [
+   "7183201984",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "Unit.AddEspionageTimeReduction",
+  "rva": "0x395d70",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "7183202048",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "Unit.RemoveEspionageTimeReduction",
+  "rva": "0x396210",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "7183202048",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "Unit.AddBypassWallsPromotionClass",
+  "rva": "0x3a1f30",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11
+  ],
+  "native_saw": [
+   "7183199784",
+   "11",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "Unit.AddEnableWallAttackPromotionClass",
+  "rva": "0x3a2060",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11
+  ],
+  "native_saw": [
+   "7183199784",
+   "11",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "Unit.ChangeBonusPointsPerKill",
+  "rva": "0x3a2900",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "7183199784",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "Unit.ChangeBonusPointsPerKillStrength",
+  "rva": "0x3a2940",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "7183199784",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "Unit.ChangeSightRange",
+  "rva": "0x3a2ca0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11
+  ],
+  "native_saw": [
+   "7183199784",
+   "11",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "Unit.ChangeTerritoryHealing",
+  "rva": "0x3a2d30",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "7183199784",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "Unit.ChangeTerritoryHealingReligion",
+  "rva": "0x3a2db0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "7183199784",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "Unit.RemoveInvalidTerrain",
+  "rva": "0x3a4cc0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11
+  ],
+  "native_saw": [
+   "7183199784",
+   "11",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "Unit.SetCanMoveAfterAttacking",
+  "rva": "0x3a58d0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11
+  ],
+  "native_saw": [
+   "7183199784",
+   "11",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "Unit.SetCanSeeThroughFeatures",
+  "rva": "0x3a5940",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   1
+  ],
+  "native_saw": [
+   "7183199784",
+   "1",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "Unit.SetCanSeeThroughTerrain",
+  "rva": "0x3a59d0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   1
+  ],
+  "native_saw": [
+   "7183199784",
+   "1",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "Unit.SetOperationDisabled",
+  "rva": "0x3a5e50",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   1
+  ],
+  "native_saw": [
+   "7183199784",
+   "11",
+   "1",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "Unit.SetSeeHiddenType",
+  "rva": "0x3a5f60",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11
+  ],
+  "native_saw": [
+   "7183199784",
+   "11",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "UnitReligion.ChangeInitiationYieldPopulation",
+  "rva": "0x3b2890",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "7183202336",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "Game.BuildCivics",
+  "rva": "0x1c71c0",
+  "status": "EXCLUDED",
+  "detail": "not stub-tested: may be called by the engine from several threads",
+  "sent": [],
+  "native_saw": []
+ },
+ {
+  "lua": "Game.BuildTechs",
+  "rva": "0x2502e0",
+  "status": "EXCLUDED",
+  "detail": "not stub-tested: may be called by the engine from several threads",
+  "sent": [],
+  "native_saw": []
+ },
+ {
+  "lua": "TeamDiplomacy.DevOracle_IsAtWarWithHumans",
+  "rva": "0x2a8810",
+  "status": "PASS",
+  "detail": "",
+  "sent": [],
+  "native_saw": [
+   "6692813984",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "TeamDiplomacy.DevOracle_GetMetTurn",
+  "rva": "0x2a6030",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11
+  ],
+  "native_saw": [
+   "6692813984",
+   "11",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "CityBuildings.DevOracle_GetBuildingLocation",
+  "rva": "0x10abf0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11
+  ],
+  "native_saw": [
+   "6781161152",
+   "11",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "CityBuildings.DevOracle_GetBuildingMaintenance",
+  "rva": "0x10ac10",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11
+  ],
+  "native_saw": [
+   "6781161152",
+   "11",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "Unit.DevOracle_GetAntiAirCombat",
+  "rva": "0x3a3340",
+  "status": "PASS",
+  "detail": "",
+  "sent": [],
+  "native_saw": [
+   "7183199784",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "Unit.DevOracle_GetBombardCombat",
+  "rva": "0x3a3480",
+  "status": "PASS",
+  "detail": "",
+  "sent": [],
+  "native_saw": [
+   "7183199784",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "UnitExperience.DevOracle_GetExperienceForNextLevel",
+  "rva": "0x396f20",
+  "status": "PASS",
+  "detail": "",
+  "sent": [],
+  "native_saw": [
+   "7183202200",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "UnitExperience.DevOracle_HasPromotion",
+  "rva": "0x397170",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11
+  ],
+  "native_saw": [
+   "7183202200",
+   "11",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "District.DevOracle_GetOwner",
+  "rva": "0x191b50",
+  "status": "NOT_RUN",
+  "detail": "no L2 line for this method",
+  "sent": [],
+  "native_saw": []
+ },
+ {
+  "lua": "District.DevOracle_IsPillaged",
+  "rva": "0x192910",
+  "status": "NOT_RUN",
+  "detail": "no L2 line for this method",
+  "sent": [],
+  "native_saw": []
+ },
+ {
+  "lua": "PlayerCulture.DevOracle_GetCultureYield",
+  "rva": "0x27e190",
+  "status": "PASS",
+  "detail": "",
+  "sent": [],
+  "native_saw": [
+   "5759758864",
+   "9602322872",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerCulture.DevOracle_GetNumPolicySlots",
+  "rva": "0x27e570",
+  "status": "PASS",
+  "detail": "",
+  "sent": [],
+  "native_saw": [
+   "5759758864",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerTechs.DevOracle_GetResearchingTech",
+  "rva": "0x333ef0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [],
+  "native_saw": [
+   "6819060416",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerTechs.DevOracle_GetScienceYield",
+  "rva": "0x333f10",
+  "status": "PASS",
+  "detail": "",
+  "sent": [],
+  "native_saw": [
+   "6819060416",
+   "9602322872",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "CityGrowth.DevOracle_GetAmenities",
+  "rva": "0x123860",
+  "status": "PASS",
+  "detail": "",
+  "sent": [],
+  "native_saw": [
+   "6781160320",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "CityGrowth.DevOracle_GetAmenitiesFromEntertainment",
+  "rva": "0x1239a0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [],
+  "native_saw": [
+   "6781160320",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "GameGreatPeople.DevOracle_IsClassAvailable",
+  "rva": "0x20d320",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11
+  ],
+  "native_saw": [
+   "6586098960",
+   "11",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "GameGreatPeople.DevOracle_CanRecruitPerson",
+  "rva": "0x209af0",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11,
+   12
+  ],
+  "native_saw": [
+   "6586098960",
+   "11",
+   "12",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "CityDistricts.DevOracle_GetPrereqDistrictPlotID",
+  "rva": "0x11ed40",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11
+  ],
+  "native_saw": [
+   "6781160808",
+   "11",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "Deal.DevOracle_HasUnacceptableItems",
+  "rva": "0x57f0b0",
+  "status": "NOT_RUN",
+  "detail": "no L2 line for this method",
+  "sent": [],
+  "native_saw": []
+ },
+ {
+  "lua": "PlayerReligion.DevOracle_GetFaithYield",
+  "rva": "0x315210",
+  "status": "PASS",
+  "detail": "",
+  "sent": [],
+  "native_saw": [
+   "6356478736",
+   "9602322872",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerReligion.DevOracle_GetPantheon",
+  "rva": "0x315440",
+  "status": "PASS",
+  "detail": "",
+  "sent": [],
+  "native_saw": [
+   "6356478736",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerStats.DevOracle_GetNumBeliefsInReligion",
+  "rva": "0x32bd10",
+  "status": "PASS",
+  "detail": "",
+  "sent": [],
+  "native_saw": [
+   "5949933248",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerStats.DevOracle_GetNumMyCitiesFollowingSpecificReligion",
+  "rva": "0x32cf50",
+  "status": "PASS",
+  "detail": "",
+  "sent": [
+   11
+  ],
+  "native_saw": [
+   "5949933248",
+   "11",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerTreasury.DevOracle_GetBuildingMaintenance",
+  "rva": "0x343910",
+  "status": "PASS",
+  "detail": "",
+  "sent": [],
+  "native_saw": [
+   "610588800",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ },
+ {
+  "lua": "PlayerTreasury.DevOracle_GetDistrictMaintenance",
+  "rva": "0x343960",
+  "status": "PASS",
+  "detail": "",
+  "sent": [],
+  "native_saw": [
+   "610588800",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0",
+   "0"
+  ]
+ }
+]

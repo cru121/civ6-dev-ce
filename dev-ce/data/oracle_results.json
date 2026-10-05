@@ -1,0 +1,78 @@
+{
+ "IPlayerDiplomacy": {
+  "result": "match",
+  "getters": [
+   "IsAtWarWithHumans",
+   "GetMetTurn"
+  ]
+ },
+ "ICityBuildings": {
+  "result": "match",
+  "getters": [
+   "GetBuildingLocation",
+   "GetBuildingMaintenance"
+  ]
+ },
+ "IUnit": {
+  "result": "match",
+  "getters": [
+   "GetAntiAirCombat",
+   "GetBombardCombat"
+  ]
+ },
+ "IUnitExperience": {
+  "result": "match",
+  "getters": [
+   "GetExperienceForNextLevel",
+   "HasPromotion"
+  ]
+ },
+ "IPlayerCulture": {
+  "result": "match",
+  "getters": [
+   "GetNumPolicySlots",
+   "GetProgressingCivic"
+  ]
+ },
+ "IPlayerTechs": {
+  "result": "match",
+  "getters": [
+   "GetResearchingTech",
+   "CanResearch"
+  ]
+ },
+ "IGameGreatPeople": {
+  "result": "match",
+  "getters": [
+   "IsClassAvailable",
+   "CanRecruitPerson"
+  ]
+ },
+ "ICityDistricts": {
+  "result": "match",
+  "getters": [
+   "GetPrereqDistrictPlotID"
+  ]
+ },
+ "ICityGrowth": {
+  "result": "match",
+  "getters": [
+   "GetAmenities",
+   "GetAmenitiesFromEntertainment"
+  ]
+ },
+ "IPlayerReligion": {
+  "result": "match",
+  "getters": [
+   "GetPantheon",
+   "GetReligionInMajorityOfCities"
+  ]
+ },
+ "IPlayerTreasury": {
+  "result": "match",
+  "getters": [
+   "GetBuildingMaintenance",
+   "GetDistrictMaintenance"
+  ]
+ }
+}

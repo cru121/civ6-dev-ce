@@ -1,0 +1,6086 @@
+[
+ {
+  "lua": "TeamDiplomacy.SetCanEnforceBorders",
+  "iface": "IPlayerDiplomacy",
+  "cpp": "GameCore::Player::Diplomacy::SetCanEnforceBorders",
+  "rva": "0x2af9f0",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Diplomacy* this, bool bNewValue)",
+  "args": [
+   {
+    "name": "bNewValue",
+    "type": "bool",
+    "kind": "BOOL"
+   }
+  ],
+  "returns": "VOID",
+  "index": 0,
+  "nav": null
+ },
+ {
+  "lua": "TeamDiplomacy.SetHasOpenBordersFrom",
+  "iface": "IPlayerDiplomacy",
+  "cpp": "GameCore::Player::Diplomacy::SetHasOpenBordersFrom",
+  "rva": "0x2b0360",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Diplomacy* this, PlayerTypes ePlayer, bool bNewValue)",
+  "args": [
+   {
+    "name": "ePlayer",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "bNewValue",
+    "type": "bool",
+    "kind": "BOOL"
+   }
+  ],
+  "returns": "VOID",
+  "index": 1,
+  "nav": null
+ },
+ {
+  "lua": "City.RecalculatePower",
+  "iface": "ICity",
+  "cpp": "GameCore::City::Power::RecalculatePower",
+  "rva": "0x147e80",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(City::Power* this)",
+  "args": [],
+  "returns": "VOID",
+  "index": 2,
+  "nav": {
+   "owner": "City::Instance",
+   "offset": "0x1838",
+   "mode": "FAutoVariable"
+  }
+ },
+ {
+  "lua": "Player.SetAlive",
+  "iface": "IPlayer",
+  "cpp": "GameCore::Player::Instance::SetAlive",
+  "rva": "0x2fa9a0",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Instance* this, bool bIsAlive)",
+  "args": [
+   {
+    "name": "bIsAlive",
+    "type": "bool",
+    "kind": "BOOL"
+   }
+  ],
+  "returns": "VOID",
+  "index": 3,
+  "nav": {
+   "owner": "Lua::PlayerReference",
+   "offset": "0x0",
+   "mode": "itself"
+  }
+ },
+ {
+  "lua": "CityBuildings.RemoveAllBuildings",
+  "iface": "ICityBuildings",
+  "cpp": "GameCore::City::Buildings::RemoveAllBuildings",
+  "rva": "0x10cf80",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(City::Buildings* this)",
+  "args": [],
+  "returns": "VOID",
+  "index": 4,
+  "nav": null
+ },
+ {
+  "lua": "GameEras.SetCurrentEra",
+  "iface": "IGameEras",
+  "cpp": "GameCore::Game::Eras::SetCurrentEra",
+  "rva": "0x1e7eb0",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Game::Eras* this, EraTypes eEra)",
+  "args": [
+   {
+    "name": "eEra",
+    "type": "EraTypes",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 5,
+  "nav": null
+ },
+ {
+  "lua": "Player.AddAgenda",
+  "iface": "IPlayer",
+  "cpp": "GameCore::Player::Instance::AddAgenda",
+  "rva": "0x2f7400",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "bool(Player::Instance* this, AgendaTypes agenda, DiplomaticVisibilityTypes visibility)",
+  "args": [
+   {
+    "name": "agenda",
+    "type": "AgendaTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "visibility",
+    "type": "DiplomaticVisibilityTypes",
+    "kind": "INT"
+   }
+  ],
+  "returns": "BOOL",
+  "index": 6,
+  "nav": {
+   "owner": "Lua::PlayerReference",
+   "offset": "0x0",
+   "mode": "itself"
+  }
+ },
+ {
+  "lua": "Unit.SetProcessedTurn",
+  "iface": "IUnit",
+  "cpp": "GameCore::Unit::Instance::SetProcessedTurn",
+  "rva": "0x3a5ee0",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Unit::Instance* this, bool bNewValue)",
+  "args": [
+   {
+    "name": "bNewValue",
+    "type": "bool",
+    "kind": "BOOL"
+   }
+  ],
+  "returns": "VOID",
+  "index": 7,
+  "nav": null
+ },
+ {
+  "lua": "Unit.ChangeBuildCharges",
+  "iface": "IUnit",
+  "cpp": "GameCore::Unit::Instance::ChangeBuildCharges",
+  "rva": "0x3a2980",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Unit::Instance* this, int iChange)",
+  "args": [
+   {
+    "name": "iChange",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 8,
+  "nav": null
+ },
+ {
+  "lua": "City.SetOccupied",
+  "iface": "ICity",
+  "cpp": "GameCore::City::Instance::SetOccupied",
+  "rva": "0x135a30",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(City::Instance* this, bool bNewValue)",
+  "args": [
+   {
+    "name": "bNewValue",
+    "type": "bool",
+    "kind": "BOOL"
+   }
+  ],
+  "returns": "VOID",
+  "index": 9,
+  "nav": null
+ },
+ {
+  "lua": "PlayerTrade.ChangeOutgoingRouteCapacity",
+  "iface": "IPlayerTrade",
+  "cpp": "GameCore::Player::Trade::ChangeOutgoingRouteCapacity",
+  "rva": "0x33cc20",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Trade* this, int iChange)",
+  "args": [
+   {
+    "name": "iChange",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 10,
+  "nav": null
+ },
+ {
+  "lua": "UnitExperience.SetLevel",
+  "iface": "IUnitExperience",
+  "cpp": "GameCore::Unit::Experience::SetLevel",
+  "rva": "0x3974a0",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Unit::Experience* this, int iLevel)",
+  "args": [
+   {
+    "name": "iLevel",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 11,
+  "nav": null
+ },
+ {
+  "lua": "City.ChangeYieldChange",
+  "iface": "ICity",
+  "cpp": "GameCore::City::Instance::ChangeYieldChange",
+  "rva": "0x131c60",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(City::Instance* this, YieldTypes eYield, int iDelta)",
+  "args": [
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iDelta",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 12,
+  "nav": null
+ },
+ {
+  "lua": "PlayerResources.RevealResourceOnVisibleTiles",
+  "iface": "IPlayerResources",
+  "cpp": "GameCore::Player::Resources::RevealResourceOnVisibleTiles",
+  "rva": "0x322f00",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Resources* this, ResourceTypes resource)",
+  "args": [
+   {
+    "name": "resource",
+    "type": "ResourceTypes",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 13,
+  "nav": null
+ },
+ {
+  "lua": "UnitGreatPerson.ChangeActionCharges",
+  "iface": "IUnitGreatPerson",
+  "cpp": "GameCore::Unit::GreatPerson::ChangeActionCharges",
+  "rva": "0x398f70",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Unit::GreatPerson* this, int iChange)",
+  "args": [
+   {
+    "name": "iChange",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 14,
+  "nav": null
+ },
+ {
+  "lua": "Unit.ChangeDisasterCharges",
+  "iface": "IUnit",
+  "cpp": "GameCore::Unit::Instance::ChangeDisasterCharges",
+  "rva": "0x3a2a40",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Unit::Instance* this, int iChange)",
+  "args": [
+   {
+    "name": "iChange",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 15,
+  "nav": null
+ },
+ {
+  "lua": "City.ChangeFollowerYieldModifier",
+  "iface": "ICity",
+  "cpp": "GameCore::City::Instance::ChangeFollowerYieldModifier",
+  "rva": "0x131af0",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(City::Instance* this, YieldTypes eYield, int iDelta)",
+  "args": [
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iDelta",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 16,
+  "nav": null
+ },
+ {
+  "lua": "City.ChangeYieldModifier",
+  "iface": "ICity",
+  "cpp": "GameCore::City::Instance::ChangeYieldModifier",
+  "rva": "0x131cf0",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(City::Instance* this, YieldTypes eYield, int iDelta)",
+  "args": [
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iDelta",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 17,
+  "nav": null
+ },
+ {
+  "lua": "City.ChangeYieldModifierPerGovernorTitle",
+  "iface": "ICity",
+  "cpp": "GameCore::City::Instance::ChangeYieldModifierPerGovernorTitle",
+  "rva": "0x131d80",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(City::Instance* this, YieldTypes eYield, FixedPoint xDelta)",
+  "args": [
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "xDelta",
+    "type": "FixedPoint",
+    "kind": "FIXED"
+   }
+  ],
+  "returns": "VOID",
+  "index": 18,
+  "nav": null
+ },
+ {
+  "lua": "District.SetSiegeStatus",
+  "iface": "IDistrict",
+  "cpp": "GameCore::District::Instance::SetSiegeStatus",
+  "rva": "0x1930e0",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(District::Instance* this, bool bIsUnderSiege)",
+  "args": [
+   {
+    "name": "bIsUnderSiege",
+    "type": "bool",
+    "kind": "BOOL"
+   }
+  ],
+  "returns": "VOID",
+  "index": 19,
+  "nav": null
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerAerodromeBuildingConstructed",
+  "iface": "IGameEras",
+  "cpp": "GameCore::Game::Eras::ChangePlayerEraScorePerAerodromeBuildingConstructed",
+  "rva": "0x1e2300",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Game::Eras* this, PlayerTypes ePlayer, int iAmount)",
+  "args": [
+   {
+    "name": "ePlayer",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iAmount",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 20,
+  "nav": null
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerArmyKilled",
+  "iface": "IGameEras",
+  "cpp": "GameCore::Game::Eras::ChangePlayerEraScorePerArmyKilled",
+  "rva": "0x1e2380",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Game::Eras* this, PlayerTypes ePlayer, int iAmount)",
+  "args": [
+   {
+    "name": "ePlayer",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iAmount",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 21,
+  "nav": null
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerArtifactExtracted",
+  "iface": "IGameEras",
+  "cpp": "GameCore::Game::Eras::ChangePlayerEraScorePerArtifactExtracted",
+  "rva": "0x1e2400",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Game::Eras* this, PlayerTypes ePlayer, int iAmount)",
+  "args": [
+   {
+    "name": "ePlayer",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iAmount",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 22,
+  "nav": null
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerCityReligionConversion",
+  "iface": "IGameEras",
+  "cpp": "GameCore::Game::Eras::ChangePlayerEraScorePerCityReligionConversion",
+  "rva": "0x1e2480",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Game::Eras* this, PlayerTypes ePlayer, int iAmount)",
+  "args": [
+   {
+    "name": "ePlayer",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iAmount",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 23,
+  "nav": null
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerCivicBoost",
+  "iface": "IGameEras",
+  "cpp": "GameCore::Game::Eras::ChangePlayerEraScorePerCivicBoost",
+  "rva": "0x1e2500",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Game::Eras* this, PlayerTypes ePlayer, int iAmount)",
+  "args": [
+   {
+    "name": "ePlayer",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iAmount",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 24,
+  "nav": null
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerContinentDiscovered",
+  "iface": "IGameEras",
+  "cpp": "GameCore::Game::Eras::ChangePlayerEraScorePerContinentDiscovered",
+  "rva": "0x1e2580",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Game::Eras* this, PlayerTypes ePlayer, int iAmount)",
+  "args": [
+   {
+    "name": "ePlayer",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iAmount",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 25,
+  "nav": null
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerCorpsKilled",
+  "iface": "IGameEras",
+  "cpp": "GameCore::Game::Eras::ChangePlayerEraScorePerCorpsKilled",
+  "rva": "0x1e2600",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Game::Eras* this, PlayerTypes ePlayer, int iAmount)",
+  "args": [
+   {
+    "name": "ePlayer",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iAmount",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 26,
+  "nav": null
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerCultureBuildingConstructed",
+  "iface": "IGameEras",
+  "cpp": "GameCore::Game::Eras::ChangePlayerEraScorePerCultureBuildingConstructed",
+  "rva": "0x1e2680",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Game::Eras* this, PlayerTypes ePlayer, int iAmount)",
+  "args": [
+   {
+    "name": "ePlayer",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iAmount",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 27,
+  "nav": null
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerCurrentCivic",
+  "iface": "IGameEras",
+  "cpp": "GameCore::Game::Eras::ChangePlayerEraScorePerCurrentCivic",
+  "rva": "0x1e2700",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Game::Eras* this, PlayerTypes ePlayer, int iAmount)",
+  "args": [
+   {
+    "name": "ePlayer",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iAmount",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 28,
+  "nav": null
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerCurrentTech",
+  "iface": "IGameEras",
+  "cpp": "GameCore::Game::Eras::ChangePlayerEraScorePerCurrentTech",
+  "rva": "0x1e2780",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Game::Eras* this, PlayerTypes ePlayer, int iAmount)",
+  "args": [
+   {
+    "name": "ePlayer",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iAmount",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 29,
+  "nav": null
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerDistrictConstructed",
+  "iface": "IGameEras",
+  "cpp": "GameCore::Game::Eras::ChangePlayerEraScorePerDistrictConstructed",
+  "rva": "0x1e2800",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Game::Eras* this, PlayerTypes ePlayer, int iAmount)",
+  "args": [
+   {
+    "name": "ePlayer",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iAmount",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 30,
+  "nav": null
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerGreatPersonEarned",
+  "iface": "IGameEras",
+  "cpp": "GameCore::Game::Eras::ChangePlayerEraScorePerGreatPersonEarned",
+  "rva": "0x1e2880",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Game::Eras* this, PlayerTypes ePlayer, int iAmount)",
+  "args": [
+   {
+    "name": "ePlayer",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iAmount",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 31,
+  "nav": null
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerIndustrialBuildingConstructed",
+  "iface": "IGameEras",
+  "cpp": "GameCore::Game::Eras::ChangePlayerEraScorePerIndustrialBuildingConstructed",
+  "rva": "0x1e2900",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Game::Eras* this, PlayerTypes ePlayer, int iAmount)",
+  "args": [
+   {
+    "name": "ePlayer",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iAmount",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 32,
+  "nav": null
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerNaturalWonderDiscovered",
+  "iface": "IGameEras",
+  "cpp": "GameCore::Game::Eras::ChangePlayerEraScorePerNaturalWonderDiscovered",
+  "rva": "0x1e2980",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Game::Eras* this, PlayerTypes ePlayer, int iAmount)",
+  "args": [
+   {
+    "name": "ePlayer",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iAmount",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 33,
+  "nav": null
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerNonBarbarianUnitKilledByGDR",
+  "iface": "IGameEras",
+  "cpp": "GameCore::Game::Eras::ChangePlayerEraScorePerNonBarbarianUnitKilledByGDR",
+  "rva": "0x1e2a00",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Game::Eras* this, PlayerTypes ePlayer, int iAmount)",
+  "args": [
+   {
+    "name": "ePlayer",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iAmount",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 34,
+  "nav": null
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerNonBarbarianUnitSeaKilled",
+  "iface": "IGameEras",
+  "cpp": "GameCore::Game::Eras::ChangePlayerEraScorePerNonBarbarianUnitSeaKilled",
+  "rva": "0x1e2a80",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Game::Eras* this, PlayerTypes ePlayer, int iAmount)",
+  "args": [
+   {
+    "name": "ePlayer",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iAmount",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 35,
+  "nav": null
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerScienceBuildingConstructed",
+  "iface": "IGameEras",
+  "cpp": "GameCore::Game::Eras::ChangePlayerEraScorePerScienceBuildingConstructed",
+  "rva": "0x1e2b00",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Game::Eras* this, PlayerTypes ePlayer, int iAmount)",
+  "args": [
+   {
+    "name": "ePlayer",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iAmount",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 36,
+  "nav": null
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerSpySuccessfulMission",
+  "iface": "IGameEras",
+  "cpp": "GameCore::Game::Eras::ChangePlayerEraScorePerSpySuccessfulMission",
+  "rva": "0x1e2b80",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Game::Eras* this, PlayerTypes ePlayer, int iAmount)",
+  "args": [
+   {
+    "name": "ePlayer",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iAmount",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 37,
+  "nav": null
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerTechBoost",
+  "iface": "IGameEras",
+  "cpp": "GameCore::Game::Eras::ChangePlayerEraScorePerTechBoost",
+  "rva": "0x1e2c00",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Game::Eras* this, PlayerTypes ePlayer, int iAmount)",
+  "args": [
+   {
+    "name": "ePlayer",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iAmount",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 38,
+  "nav": null
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerTradeRouteCompleted",
+  "iface": "IGameEras",
+  "cpp": "GameCore::Game::Eras::ChangePlayerEraScorePerTradeRouteCompleted",
+  "rva": "0x1e2c80",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Game::Eras* this, PlayerTypes ePlayer, int iAmount)",
+  "args": [
+   {
+    "name": "ePlayer",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iAmount",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 39,
+  "nav": null
+ },
+ {
+  "lua": "GameEras.ChangePlayerEraScorePerUnitPromotionEarned",
+  "iface": "IGameEras",
+  "cpp": "GameCore::Game::Eras::ChangePlayerEraScorePerUnitPromotionEarned",
+  "rva": "0x1e2d00",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Game::Eras* this, PlayerTypes ePlayer, int iAmount)",
+  "args": [
+   {
+    "name": "ePlayer",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iAmount",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 40,
+  "nav": null
+ },
+ {
+  "lua": "GameEras.RecalculateThresholdShifts",
+  "iface": "IGameEras",
+  "cpp": "GameCore::Game::Eras::RecalculateThresholdShifts",
+  "rva": "0x1e6e00",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Game::Eras* this, PlayerTypes ePlayer, EraTypes eCurrentEra)",
+  "args": [
+   {
+    "name": "ePlayer",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "eCurrentEra",
+    "type": "EraTypes",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 41,
+  "nav": null
+ },
+ {
+  "lua": "PlayerGreatPeoplePoints.ChangeFreeGreatPersonPoints",
+  "iface": "IPlayerGreatPeoplePoints",
+  "cpp": "GameCore::Player::GreatPeoplePoints::ChangeFreeGreatPersonPoints",
+  "rva": "0x2e30b0",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::GreatPeoplePoints* this, int iChange)",
+  "args": [
+   {
+    "name": "iChange",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 42,
+  "nav": null
+ },
+ {
+  "lua": "Game.SetLocalPlayerTo",
+  "iface": "IGame",
+  "cpp": "GameCore::Player::Manager::SetLocalPlayerTo",
+  "rva": "0x308ca0",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "bool(Player::Manager* this, PlayerTypes ePlayer)",
+  "args": [
+   {
+    "name": "ePlayer",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   }
+  ],
+  "returns": "BOOL",
+  "index": 43,
+  "nav": {
+   "owner": "Game",
+   "offset": "0x306b80",
+   "mode": "static Game/Map accessor"
+  }
+ },
+ {
+  "lua": "TeamDiplomacy.SetBlockedEntry",
+  "iface": "IPlayerDiplomacy",
+  "cpp": "GameCore::Player::Diplomacy::SetBlockedEntry",
+  "rva": "0x2af7e0",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Diplomacy* this, UnitTypes eUnit, bool bNewValue)",
+  "args": [
+   {
+    "name": "eUnit",
+    "type": "UnitTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "bNewValue",
+    "type": "bool",
+    "kind": "BOOL"
+   }
+  ],
+  "returns": "VOID",
+  "index": 44,
+  "nav": null
+ },
+ {
+  "lua": "CityBuildings.AddGreatWork",
+  "iface": "ICityBuildings",
+  "cpp": "GameCore::City::Buildings::AddGreatWork",
+  "rva": "0x109290",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(City::Buildings* this, GreatWorkListIndex iIndex)",
+  "args": [
+   {
+    "name": "iIndex",
+    "type": "GreatWorkListIndex",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 45,
+  "nav": null
+ },
+ {
+  "lua": "Map.AddPlotYield",
+  "iface": "IMap",
+  "cpp": "GameCore::Map::Feature::Manager::AddPlotYield",
+  "rva": "0x720ee0",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Map::Feature::Manager* this, int iPlotIndex, YieldTypes eYield, int iAmount)",
+  "args": [
+   {
+    "name": "iPlotIndex",
+    "type": "int",
+    "kind": "INT"
+   },
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iAmount",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 46,
+  "nav": {
+   "owner": "Game",
+   "offset": "0x7236b0",
+   "mode": "static Game/Map accessor"
+  }
+ },
+ {
+  "lua": "Unit.SetLevied",
+  "iface": "IUnit",
+  "cpp": "GameCore::Unit::Instance::SetLevied",
+  "rva": "0x3a5c50",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Unit::Instance* this, bool bLevied)",
+  "args": [
+   {
+    "name": "bLevied",
+    "type": "bool",
+    "kind": "BOOL"
+   }
+  ],
+  "returns": "VOID",
+  "index": 47,
+  "nav": null
+ },
+ {
+  "lua": "Game.DecrementGameStateLock",
+  "iface": "IGame",
+  "cpp": "GameCore::Game::Instance::DecrementGameStateLock",
+  "rva": "0x63cee0",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "uint(Game::Instance* this)",
+  "args": [],
+  "returns": "UINT",
+  "index": 48,
+  "nav": {
+   "owner": "Game",
+   "offset": "0x951550",
+   "mode": "static Game/Map accessor"
+  }
+ },
+ {
+  "lua": "GameDiplomacy.SetIsInDefensivePact",
+  "iface": "IGameDiplomacy",
+  "cpp": "GameCore::Game::DiplomaticRelations::SetIsInDefensivePact",
+  "rva": "0x1d3c30",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Game::DiplomaticRelations* this, PlayerTypes a, PlayerTypes b, bool pact)",
+  "args": [
+   {
+    "name": "a",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "b",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "pact",
+    "type": "bool",
+    "kind": "BOOL"
+   }
+  ],
+  "returns": "VOID",
+  "index": 49,
+  "nav": null
+ },
+ {
+  "lua": "GameEras.SetDarkAge",
+  "iface": "IGameEras",
+  "cpp": "GameCore::Game::Eras::SetDarkAge",
+  "rva": "0x1e7fa0",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Game::Eras* this, PlayerTypes ePlayer, bool bIsDarkAge)",
+  "args": [
+   {
+    "name": "ePlayer",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "bIsDarkAge",
+    "type": "bool",
+    "kind": "BOOL"
+   }
+  ],
+  "returns": "VOID",
+  "index": 50,
+  "nav": null
+ },
+ {
+  "lua": "GameEras.SetGoldenAge",
+  "iface": "IGameEras",
+  "cpp": "GameCore::Game::Eras::SetGoldenAge",
+  "rva": "0x1e8040",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Game::Eras* this, PlayerTypes ePlayer, bool bIsGoldenAge)",
+  "args": [
+   {
+    "name": "ePlayer",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "bIsGoldenAge",
+    "type": "bool",
+    "kind": "BOOL"
+   }
+  ],
+  "returns": "VOID",
+  "index": 51,
+  "nav": null
+ },
+ {
+  "lua": "PlayerCulture.SetAllCivicsByPreviousEra",
+  "iface": "IPlayerCulture",
+  "cpp": "GameCore::Player::Culture::SetAllCivicsByPreviousEra",
+  "rva": "0x284060",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Culture* this, EraTypes eEraType)",
+  "args": [
+   {
+    "name": "eEraType",
+    "type": "EraTypes",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 52,
+  "nav": null
+ },
+ {
+  "lua": "TeamDiplomacy.AddEspionageIncursion",
+  "iface": "IPlayerDiplomacy",
+  "cpp": "GameCore::Player::Diplomacy::AddEspionageIncursion",
+  "rva": "0x29e220",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Diplomacy* this, PlayerTypes eOtherPlayer)",
+  "args": [
+   {
+    "name": "eOtherPlayer",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 53,
+  "nav": null
+ },
+ {
+  "lua": "PlayerTechs.SetAllTechsByPreviousEra",
+  "iface": "IPlayerTechs",
+  "cpp": "GameCore::Player::Techs::SetAllTechsByPreviousEra",
+  "rva": "0x335a30",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Techs* this, EraTypes eEraType)",
+  "args": [
+   {
+    "name": "eEraType",
+    "type": "EraTypes",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 54,
+  "nav": null
+ },
+ {
+  "lua": "TeamDiplomacy.AddIncursionData",
+  "iface": "IPlayerDiplomacy",
+  "cpp": "GameCore::Player::Diplomacy::AddIncursionData",
+  "rva": "0x29e2a0",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Diplomacy* this, PlayerTypes eOtherPlayer, PromiseTypes ePromiseType, int iTurnMade)",
+  "args": [
+   {
+    "name": "eOtherPlayer",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "ePromiseType",
+    "type": "PromiseTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iTurnMade",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 55,
+  "nav": null
+ },
+ {
+  "lua": "PlayerResources.ChangeReservedResourceAmount",
+  "iface": "IPlayerResources",
+  "cpp": "GameCore::Player::Resources::ChangeReservedResourceAmount",
+  "rva": "0x31e960",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Resources* this, ResourceTypes eResource, int iDelta)",
+  "args": [
+   {
+    "name": "eResource",
+    "type": "ResourceTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iDelta",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 56,
+  "nav": null
+ },
+ {
+  "lua": "CityBuildings.AddGreatWorkToSlot",
+  "iface": "ICityBuildings",
+  "cpp": "GameCore::City::Buildings::AddGreatWorkToSlot",
+  "rva": "0x1099b0",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(City::Buildings* this, GreatWorkListIndex iIndex, BuildingTypes eBuilding, int iSlot)",
+  "args": [
+   {
+    "name": "iIndex",
+    "type": "GreatWorkListIndex",
+    "kind": "INT"
+   },
+   {
+    "name": "eBuilding",
+    "type": "BuildingTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iSlot",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 57,
+  "nav": null
+ },
+ {
+  "lua": "PlayerCulture.AddTourismAtPlot",
+  "iface": "IPlayerCulture",
+  "cpp": "GameCore::Player::Culture::AddTourismAtPlot",
+  "rva": "0x279f60",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Culture* this, int iPlotIndex, int iTourism)",
+  "args": [
+   {
+    "name": "iPlotIndex",
+    "type": "int",
+    "kind": "INT"
+   },
+   {
+    "name": "iTourism",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 58,
+  "nav": null
+ },
+ {
+  "lua": "TeamDiplomacy.SetLastTurnOfferedDeal",
+  "iface": "IPlayerDiplomacy",
+  "cpp": "GameCore::Player::Diplomacy::SetLastTurnOfferedDeal",
+  "rva": "0x2b04b0",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Diplomacy* this, PlayerTypes ePlayer, int iTurn)",
+  "args": [
+   {
+    "name": "ePlayer",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iTurn",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 59,
+  "nav": null
+ },
+ {
+  "lua": "City.RemoveDynamicAdjacencyBonus",
+  "iface": "ICity",
+  "cpp": "GameCore::City::Instance::RemoveDynamicAdjacencyBonus",
+  "rva": "0x134d90",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(City::Instance* this, DistrictTypes eDistrict, TerrainTypes eTerrain, FeatureTypes eFeature, bool bIsRiver, int iAppeal, bool bAdjacentDistrict, YieldTypes eYield)",
+  "args": [
+   {
+    "name": "eDistrict",
+    "type": "DistrictTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "eTerrain",
+    "type": "TerrainTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "eFeature",
+    "type": "FeatureTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "bIsRiver",
+    "type": "bool",
+    "kind": "BOOL"
+   },
+   {
+    "name": "iAppeal",
+    "type": "int",
+    "kind": "INT"
+   },
+   {
+    "name": "bAdjacentDistrict",
+    "type": "bool",
+    "kind": "BOOL"
+   },
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 60,
+  "nav": null
+ },
+ {
+  "lua": "PlayerTechs.GrantRandomBoostsByEra",
+  "iface": "IPlayerTechs",
+  "cpp": "GameCore::Player::Techs::GrantRandomBoostsByEra",
+  "rva": "0x3346d0",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Techs* this, int iNumFreeBoosts, EraTypes eStartEra, EraTypes eEndEra)",
+  "args": [
+   {
+    "name": "iNumFreeBoosts",
+    "type": "int",
+    "kind": "INT"
+   },
+   {
+    "name": "eStartEra",
+    "type": "EraTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "eEndEra",
+    "type": "EraTypes",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 61,
+  "nav": null
+ },
+ {
+  "lua": "CityBuildings.ChangeYieldModifier",
+  "iface": "ICityBuildings",
+  "cpp": "GameCore::City::Buildings::ChangeYieldModifier",
+  "rva": "0x10a1d0",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(City::Buildings* this, BuildingTypes eBuilding, YieldTypes eYield, int iChange)",
+  "args": [
+   {
+    "name": "eBuilding",
+    "type": "BuildingTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iChange",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 62,
+  "nav": null
+ },
+ {
+  "lua": "GameDiplomacy.SetAtWar",
+  "iface": "IGameDiplomacy",
+  "cpp": "GameCore::Game::DiplomaticRelations::SetAtWar",
+  "rva": "0x1d31b0",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Game::DiplomaticRelations* this, PlayerTypes a, PlayerTypes b, WarTypes war)",
+  "args": [
+   {
+    "name": "a",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "b",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "war",
+    "type": "WarTypes",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 63,
+  "nav": null
+ },
+ {
+  "lua": "PlayerCulture.GrantRandomBoostsByEra",
+  "iface": "IPlayerCulture",
+  "cpp": "GameCore::Player::Culture::GrantRandomBoostsByEra",
+  "rva": "0x280c80",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Culture* this, int iNumFreeBoosts, EraTypes eStartEra, EraTypes eEndEra)",
+  "args": [
+   {
+    "name": "iNumFreeBoosts",
+    "type": "int",
+    "kind": "INT"
+   },
+   {
+    "name": "eStartEra",
+    "type": "EraTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "eEndEra",
+    "type": "EraTypes",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 64,
+  "nav": null
+ },
+ {
+  "lua": "PlayerCulture.RecomputeTourismOn",
+  "iface": "IPlayerCulture",
+  "cpp": "GameCore::Player::Culture::RecomputeTourismOn",
+  "rva": "0x282cb0",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Culture* this, PlayerTypes ePlayer)",
+  "args": [
+   {
+    "name": "ePlayer",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 65,
+  "nav": null
+ },
+ {
+  "lua": "PlayerResources.ChangeFreeResourcesExtracted",
+  "iface": "IPlayerResources",
+  "cpp": "GameCore::Player::Resources::ChangeFreeResourcesExtracted",
+  "rva": "0x31e810",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Resources* this, ResourceTypes resource, int amount)",
+  "args": [
+   {
+    "name": "resource",
+    "type": "ResourceTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "amount",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 66,
+  "nav": null
+ },
+ {
+  "lua": "PlayerUnits.SetCanEverTrain",
+  "iface": "IPlayerUnits",
+  "cpp": "GameCore::Player::Units::SetCanEverTrain",
+  "rva": "0x350dc0",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Units* this)",
+  "args": [],
+  "returns": "VOID",
+  "index": 67,
+  "nav": null
+ },
+ {
+  "lua": "UnitExperience.ChangeGeneralExperienceModifier",
+  "iface": "IUnitExperience",
+  "cpp": "GameCore::Unit::Experience::ChangeGeneralExperienceModifier",
+  "rva": "0x396d70",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Unit::Experience* this, int iDelta)",
+  "args": [
+   {
+    "name": "iDelta",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 68,
+  "nav": null
+ },
+ {
+  "lua": "UnitExperience.GrantPromotion",
+  "iface": "IUnitExperience",
+  "cpp": "GameCore::Unit::Experience::GrantPromotion",
+  "rva": "0x3970f0",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Unit::Experience* this, UnitPromotionTypes ePromotion, bool bIgnoreRandomPromotionCheck)",
+  "args": [
+   {
+    "name": "ePromotion",
+    "type": "UnitPromotionTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "bIgnoreRandomPromotionCheck",
+    "type": "bool",
+    "kind": "BOOL"
+   }
+  ],
+  "returns": "VOID",
+  "index": 69,
+  "nav": null
+ },
+ {
+  "lua": "CityGrowth.AddGrowth",
+  "iface": "ICityGrowth",
+  "cpp": "GameCore::City::Growth::AddGrowth",
+  "rva": "0x123160",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(City::Growth* this, FixedPoint xGrowth)",
+  "args": [
+   {
+    "name": "xGrowth",
+    "type": "FixedPoint",
+    "kind": "FIXED"
+   }
+  ],
+  "returns": "VOID",
+  "index": 70,
+  "nav": null
+ },
+ {
+  "lua": "District.ChangeRemainingAttackCount",
+  "iface": "IDistrict",
+  "cpp": "GameCore::District::Instance::ChangeRemainingAttackCount",
+  "rva": "0x190520",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(District::Instance* this, int iDelta)",
+  "args": [
+   {
+    "name": "iDelta",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 71,
+  "nav": null
+ },
+ {
+  "lua": "GameGreatPeople.AwardFreePersonByClass",
+  "iface": "IGameGreatPeople",
+  "cpp": "GameCore::Game::GreatPeople::AwardFreePersonByClass",
+  "rva": "0x208fd0",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "bool(Game::GreatPeople* this, PlayerTypes ePlayer, GreatPersonClassTypes eClass)",
+  "args": [
+   {
+    "name": "ePlayer",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "eClass",
+    "type": "GreatPersonClassTypes",
+    "kind": "INT"
+   }
+  ],
+  "returns": "BOOL",
+  "index": 72,
+  "nav": null
+ },
+ {
+  "lua": "Game.IncrementGameStateLock",
+  "iface": "IGame",
+  "cpp": "GameCore::Game::Instance::IncrementGameStateLock",
+  "rva": "0x63d1a0",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "uint(Game::Instance* this)",
+  "args": [],
+  "returns": "UINT",
+  "index": 73,
+  "nav": {
+   "owner": "Game",
+   "offset": "0x951550",
+   "mode": "static Game/Map accessor"
+  }
+ },
+ {
+  "lua": "MapAreaPortal.AttachAreas",
+  "iface": "IMapAreaPortal",
+  "cpp": "GameCore::Map::Route::Portal::AreaInstance::AttachAreas",
+  "rva": "0x634d0",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Map::Route::Portal::AreaInstance* this)",
+  "args": [],
+  "returns": "VOID",
+  "index": 74,
+  "nav": null
+ },
+ {
+  "lua": "Territory.SetIsSea",
+  "iface": "IMapTerritory",
+  "cpp": "GameCore::Map::Territory::Instance::SetIsSea",
+  "rva": "0x2ce60",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Map::Territory::Instance* this, bool bIsSea)",
+  "args": [
+   {
+    "name": "bIsSea",
+    "type": "bool",
+    "kind": "BOOL"
+   }
+  ],
+  "returns": "VOID",
+  "index": 75,
+  "nav": null
+ },
+ {
+  "lua": "PlayerCulture.ChangeTourismOn",
+  "iface": "IPlayerCulture",
+  "cpp": "GameCore::Player::Culture::ChangeTourismOn",
+  "rva": "0x27c140",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Culture* this, PlayerTypes ePlayer, FixedPoint xValue)",
+  "args": [
+   {
+    "name": "ePlayer",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "xValue",
+    "type": "FixedPoint",
+    "kind": "FIXED"
+   }
+  ],
+  "returns": "VOID",
+  "index": 76,
+  "nav": null
+ },
+ {
+  "lua": "PlayerCulture.GrantRandomBoostGoodyHut",
+  "iface": "IPlayerCulture",
+  "cpp": "GameCore::Player::Culture::GrantRandomBoostGoodyHut",
+  "rva": "0x280860",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Culture* this, int iNumFreeBoosts, BoostSource eSource)",
+  "args": [
+   {
+    "name": "iNumFreeBoosts",
+    "type": "int",
+    "kind": "INT"
+   },
+   {
+    "name": "eSource",
+    "type": "BoostSource",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 77,
+  "nav": null
+ },
+ {
+  "lua": "TeamDiplomacy.SetOccupyingOriginalCity",
+  "iface": "IPlayerDiplomacy",
+  "cpp": "GameCore::Player::Diplomacy::SetOccupyingOriginalCity",
+  "rva": "0x2b04e0",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Diplomacy* this, PlayerTypes ePlayer, bool bNewValue)",
+  "args": [
+   {
+    "name": "ePlayer",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "bNewValue",
+    "type": "bool",
+    "kind": "BOOL"
+   }
+  ],
+  "returns": "VOID",
+  "index": 78,
+  "nav": null
+ },
+ {
+  "lua": "Player.RecomputeCost",
+  "iface": "IPlayer",
+  "cpp": "GameCore::Player::Districts::RecomputeCost",
+  "rva": "0x2c4f10",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "int(Player::Districts* this, DistrictTypes eDistrict)",
+  "args": [
+   {
+    "name": "eDistrict",
+    "type": "DistrictTypes",
+    "kind": "INT"
+   }
+  ],
+  "returns": "INT",
+  "index": 79,
+  "nav": {
+   "owner": "Lua::PlayerReference",
+   "offset": "0x6e8",
+   "mode": "pointer"
+  }
+ },
+ {
+  "lua": "Game.ClearLists",
+  "iface": "IGame",
+  "cpp": "GameCore::Player::Manager::ClearLists",
+  "rva": "0x3065e0",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Manager* this)",
+  "args": [],
+  "returns": "VOID",
+  "index": 80,
+  "nav": {
+   "owner": "Game",
+   "offset": "0x306b80",
+   "mode": "static Game/Map accessor"
+  }
+ },
+ {
+  "lua": "PlayerTechs.GrantRandomBoostGoodyHut",
+  "iface": "IPlayerTechs",
+  "cpp": "GameCore::Player::Techs::GrantRandomBoostGoodyHut",
+  "rva": "0x3342e0",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Techs* this, int iNumFreeBoosts, BoostSource eSource)",
+  "args": [
+   {
+    "name": "iNumFreeBoosts",
+    "type": "int",
+    "kind": "INT"
+   },
+   {
+    "name": "eSource",
+    "type": "BoostSource",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 81,
+  "nav": null
+ },
+ {
+  "lua": "PlayerUnits.ChangeExtraBuildCharges",
+  "iface": "IPlayerUnits",
+  "cpp": "GameCore::Player::Units::ChangeExtraBuildCharges",
+  "rva": "0x34cd90",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Units* this, UnitTypes eUnit, int iChange)",
+  "args": [
+   {
+    "name": "eUnit",
+    "type": "UnitTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iChange",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 82,
+  "nav": null
+ },
+ {
+  "lua": "CityBuildQueue.ChangeProductionModifier",
+  "iface": "ICityBuildQueue",
+  "cpp": "GameCore::City::BuildQueue::ChangeProductionModifier",
+  "rva": "0x949730",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(City::BuildQueue* this, BuildingTypes eBuilding, int iDelta)",
+  "args": [
+   {
+    "name": "eBuilding",
+    "type": "BuildingTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iDelta",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 83,
+  "nav": null
+ },
+ {
+  "lua": "CityBuildQueue.SetDistrictPercentComplete",
+  "iface": "ICityBuildQueue",
+  "cpp": "GameCore::City::BuildQueue::SetDistrictPercentComplete",
+  "rva": "0x1046f0",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(City::BuildQueue* this, DistrictTypes eDistrict, int iPercent)",
+  "args": [
+   {
+    "name": "eDistrict",
+    "type": "DistrictTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iPercent",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 84,
+  "nav": null
+ },
+ {
+  "lua": "CityBuildings.ChangeWonderYieldChange",
+  "iface": "ICityBuildings",
+  "cpp": "GameCore::City::Buildings::ChangeWonderYieldChange",
+  "rva": "0x109d30",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(City::Buildings* this, YieldTypes eYield, int iChange)",
+  "args": [
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iChange",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 85,
+  "nav": null
+ },
+ {
+  "lua": "CityBuildings.ChangeYieldChange",
+  "iface": "ICityBuildings",
+  "cpp": "GameCore::City::Buildings::ChangeYieldChange",
+  "rva": "0x109dc0",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(City::Buildings* this, BuildingTypes eBuilding, YieldTypes eYield, int iChange)",
+  "args": [
+   {
+    "name": "eBuilding",
+    "type": "BuildingTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iChange",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 86,
+  "nav": null
+ },
+ {
+  "lua": "CityBuildings.ChangeYieldChangeCityStates",
+  "iface": "ICityBuildings",
+  "cpp": "GameCore::City::Buildings::ChangeYieldChangeCityStates",
+  "rva": "0x109f10",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(City::Buildings* this, BuildingTypes eBuilding, YieldTypes eYield, int iChange)",
+  "args": [
+   {
+    "name": "eBuilding",
+    "type": "BuildingTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iChange",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 87,
+  "nav": null
+ },
+ {
+  "lua": "CityBuildings.ChangeYieldChangeFromFeature",
+  "iface": "ICityBuildings",
+  "cpp": "GameCore::City::Buildings::ChangeYieldChangeFromFeature",
+  "rva": "0x10a060",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(City::Buildings* this, FeatureTypes eFeature, YieldTypes eYield, int iChange)",
+  "args": [
+   {
+    "name": "eFeature",
+    "type": "FeatureTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iChange",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 88,
+  "nav": null
+ },
+ {
+  "lua": "CityBuildings.SetEraCreatedToGameEra",
+  "iface": "ICityBuildings",
+  "cpp": "GameCore::City::Buildings::SetEraCreatedToGameEra",
+  "rva": "0x10e880",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(City::Buildings* this, BuildingTypes eBuilding)",
+  "args": [
+   {
+    "name": "eBuilding",
+    "type": "BuildingTypes",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 89,
+  "nav": null
+ },
+ {
+  "lua": "City.SetSiegeProtection",
+  "iface": "ICity",
+  "cpp": "GameCore::City::Combat::SetSiegeProtection",
+  "rva": "0x111b10",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(City::Combat* this, bool bProtected)",
+  "args": [
+   {
+    "name": "bProtected",
+    "type": "bool",
+    "kind": "BOOL"
+   }
+  ],
+  "returns": "VOID",
+  "index": 90,
+  "nav": {
+   "owner": "City::Instance",
+   "offset": "0xa10",
+   "mode": "FAutoVariable"
+  }
+ },
+ {
+  "lua": "City.ChangeAccumulatedIdentity",
+  "iface": "ICity",
+  "cpp": "GameCore::City::CulturalIdentity::ChangeAccumulatedIdentity",
+  "rva": "0x114fa0",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(City::CulturalIdentity* this, PlayerTypes ePlayer, FixedPoint xIdentityChange)",
+  "args": [
+   {
+    "name": "ePlayer",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "xIdentityChange",
+    "type": "FixedPoint",
+    "kind": "FIXED"
+   }
+  ],
+  "returns": "VOID",
+  "index": 91,
+  "nav": {
+   "owner": "City::Instance",
+   "offset": "0x1630",
+   "mode": "embedded"
+  }
+ },
+ {
+  "lua": "City.ChangeCountAlwaysLoyalFlags",
+  "iface": "ICity",
+  "cpp": "GameCore::City::CulturalIdentity::ChangeCountAlwaysLoyalFlags",
+  "rva": "0x1150c0",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(City::CulturalIdentity* this, int iDelta)",
+  "args": [
+   {
+    "name": "iDelta",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 92,
+  "nav": {
+   "owner": "City::Instance",
+   "offset": "0x1630",
+   "mode": "embedded"
+  }
+ },
+ {
+  "lua": "City.ChangeExtraIdentityPerTurnPerCitizen",
+  "iface": "ICity",
+  "cpp": "GameCore::City::CulturalIdentity::ChangeExtraIdentityPerTurnPerCitizen",
+  "rva": "0x115100",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(City::CulturalIdentity* this, FixedPoint xDelta)",
+  "args": [
+   {
+    "name": "xDelta",
+    "type": "FixedPoint",
+    "kind": "FIXED"
+   }
+  ],
+  "returns": "VOID",
+  "index": 93,
+  "nav": {
+   "owner": "City::Instance",
+   "offset": "0x1630",
+   "mode": "embedded"
+  }
+ },
+ {
+  "lua": "City.ChangeIdentityPressureFromAges",
+  "iface": "ICity",
+  "cpp": "GameCore::City::CulturalIdentity::ChangeIdentityPressureFromAges",
+  "rva": "0x1151b0",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(City::CulturalIdentity* this, FixedPoint xChange)",
+  "args": [
+   {
+    "name": "xChange",
+    "type": "FixedPoint",
+    "kind": "FIXED"
+   }
+  ],
+  "returns": "VOID",
+  "index": 94,
+  "nav": {
+   "owner": "City::Instance",
+   "offset": "0x1630",
+   "mode": "embedded"
+  }
+ },
+ {
+  "lua": "City.ChangeIdentityPressureFromModifiers",
+  "iface": "ICity",
+  "cpp": "GameCore::City::CulturalIdentity::ChangeIdentityPressureFromModifiers",
+  "rva": "0x1151e0",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(City::CulturalIdentity* this, FixedPoint xChange)",
+  "args": [
+   {
+    "name": "xChange",
+    "type": "FixedPoint",
+    "kind": "FIXED"
+   }
+  ],
+  "returns": "VOID",
+  "index": 95,
+  "nav": {
+   "owner": "City::Instance",
+   "offset": "0x1630",
+   "mode": "embedded"
+  }
+ },
+ {
+  "lua": "City.ChangeGreatWorkYieldModifier",
+  "iface": "ICity",
+  "cpp": "GameCore::City::Culture::ChangeGreatWorkYieldModifier",
+  "rva": "0x11b800",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(City::Culture* this, GreatWorkObjectTypes eObjectType, YieldTypes eYield, int iYieldChange, int iScalingFactor)",
+  "args": [
+   {
+    "name": "eObjectType",
+    "type": "GreatWorkObjectTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iYieldChange",
+    "type": "int",
+    "kind": "INT"
+   },
+   {
+    "name": "iScalingFactor",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 96,
+  "nav": {
+   "owner": "City::Instance",
+   "offset": "0xb80",
+   "mode": "FAutoVariable"
+  }
+ },
+ {
+  "lua": "City.ChangeTourism",
+  "iface": "ICity",
+  "cpp": "GameCore::City::Culture::ChangeTourism",
+  "rva": "0x11b960",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(City::Culture* this, ImprovementTypes eImprovement, GreatWorkObjectTypes eObjectType, bool bAffectsWonders, bool bAffectsReligiousTourism, int iScalingFactor, int iModifierID)",
+  "args": [
+   {
+    "name": "eImprovement",
+    "type": "ImprovementTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "eObjectType",
+    "type": "GreatWorkObjectTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "bAffectsWonders",
+    "type": "bool",
+    "kind": "BOOL"
+   },
+   {
+    "name": "bAffectsReligiousTourism",
+    "type": "bool",
+    "kind": "BOOL"
+   },
+   {
+    "name": "iScalingFactor",
+    "type": "int",
+    "kind": "INT"
+   },
+   {
+    "name": "iModifierID",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 97,
+  "nav": {
+   "owner": "City::Instance",
+   "offset": "0xb80",
+   "mode": "FAutoVariable"
+  }
+ },
+ {
+  "lua": "CityDistricts.DestroyAll",
+  "iface": "ICityDistricts",
+  "cpp": "GameCore::City::Districts::DestroyAll",
+  "rva": "0x11e3f0",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(City::Districts* this)",
+  "args": [],
+  "returns": "VOID",
+  "index": 98,
+  "nav": null
+ },
+ {
+  "lua": "City.SetBuildingFaithPurchaseByDistrict",
+  "iface": "ICity",
+  "cpp": "GameCore::City::Gold::SetBuildingFaithPurchaseByDistrict",
+  "rva": "0x121c20",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(City::Gold* this, DistrictTypes eDistrict, bool bNewValue)",
+  "args": [
+   {
+    "name": "eDistrict",
+    "type": "DistrictTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "bNewValue",
+    "type": "bool",
+    "kind": "BOOL"
+   }
+  ],
+  "returns": "VOID",
+  "index": 99,
+  "nav": {
+   "owner": "City::Instance",
+   "offset": "0x8a8",
+   "mode": "FAutoVariable"
+  }
+ },
+ {
+  "lua": "CityGrowth.ChangeFeatureAppealModifier",
+  "iface": "ICityGrowth",
+  "cpp": "GameCore::City::Growth::ChangeFeatureAppealModifier",
+  "rva": "0x123370",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(City::Growth* this, FeatureTypes eFeature, int iChange)",
+  "args": [
+   {
+    "name": "eFeature",
+    "type": "FeatureTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iChange",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 100,
+  "nav": null
+ },
+ {
+  "lua": "City.AddCityHappinessModifier",
+  "iface": "ICity",
+  "cpp": "GameCore::City::Instance::AddCityHappinessModifier",
+  "rva": "0x12f320",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(City::Instance* this, HappinessTypes eHappiness, YieldTypes eYield, GreatPersonClassTypes eGreatPersonClass, int iYieldChange, int iGreatPersonChange)",
+  "args": [
+   {
+    "name": "eHappiness",
+    "type": "HappinessTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "eGreatPersonClass",
+    "type": "GreatPersonClassTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iYieldChange",
+    "type": "int",
+    "kind": "INT"
+   },
+   {
+    "name": "iGreatPersonChange",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 101,
+  "nav": null
+ },
+ {
+  "lua": "City.ChangeAllowIncomingRegionalStackingCount",
+  "iface": "ICity",
+  "cpp": "GameCore::City::Instance::ChangeAllowIncomingRegionalStackingCount",
+  "rva": "0x131a90",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(City::Instance* this, YieldTypes eYield, int iDelta)",
+  "args": [
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iDelta",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 102,
+  "nav": null
+ },
+ {
+  "lua": "City.RemoveCityHappinessModifier",
+  "iface": "ICity",
+  "cpp": "GameCore::City::Instance::RemoveCityHappinessModifier",
+  "rva": "0x1349b0",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(City::Instance* this, HappinessTypes eHappiness, YieldTypes eYield, GreatPersonClassTypes eGreatPersonClass, int iYieldChange, int iGreatPersonChange)",
+  "args": [
+   {
+    "name": "eHappiness",
+    "type": "HappinessTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "eGreatPersonClass",
+    "type": "GreatPersonClassTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iYieldChange",
+    "type": "int",
+    "kind": "INT"
+   },
+   {
+    "name": "iGreatPersonChange",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 103,
+  "nav": null
+ },
+ {
+  "lua": "City.ResetCache",
+  "iface": "ICity",
+  "cpp": "GameCore::City::Instance::ResetCache",
+  "rva": "0x135370",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(City::Instance* this)",
+  "args": [],
+  "returns": "VOID",
+  "index": 104,
+  "nav": null
+ },
+ {
+  "lua": "City.ChangeFlatYieldBonusForInternational",
+  "iface": "ICity",
+  "cpp": "GameCore::City::Trade::ChangeFlatYieldBonusForInternational",
+  "rva": "0x14da50",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(City::Trade* this, YieldTypes eYield, FixedPoint xDelta)",
+  "args": [
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "xDelta",
+    "type": "FixedPoint",
+    "kind": "FIXED"
+   }
+  ],
+  "returns": "VOID",
+  "index": 105,
+  "nav": {
+   "owner": "City::Instance",
+   "offset": "0xe78",
+   "mode": "FAutoVariable"
+  }
+ },
+ {
+  "lua": "City.ChangeYieldFromForeignRoutesPassingThrough",
+  "iface": "ICity",
+  "cpp": "GameCore::City::Trade::ChangeYieldFromForeignRoutesPassingThrough",
+  "rva": "0x14db00",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(City::Trade* this, YieldTypes eYield, FixedPoint xDelta)",
+  "args": [
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "xDelta",
+    "type": "FixedPoint",
+    "kind": "FIXED"
+   }
+  ],
+  "returns": "VOID",
+  "index": 106,
+  "nav": {
+   "owner": "City::Instance",
+   "offset": "0xe78",
+   "mode": "FAutoVariable"
+  }
+ },
+ {
+  "lua": "City.ChangeYieldPerDestinationLuxuryResourceForInternational",
+  "iface": "ICity",
+  "cpp": "GameCore::City::Trade::ChangeYieldPerDestinationLuxuryResourceForInternational",
+  "rva": "0x14db30",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(City::Trade* this, YieldTypes eYield, FixedPoint xDelta)",
+  "args": [
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "xDelta",
+    "type": "FixedPoint",
+    "kind": "FIXED"
+   }
+  ],
+  "returns": "VOID",
+  "index": 107,
+  "nav": {
+   "owner": "City::Instance",
+   "offset": "0xe78",
+   "mode": "FAutoVariable"
+  }
+ },
+ {
+  "lua": "City.ChangeYieldPerDestinationStrategicResourceForDomestic",
+  "iface": "ICity",
+  "cpp": "GameCore::City::Trade::ChangeYieldPerDestinationStrategicResourceForDomestic",
+  "rva": "0x14db60",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(City::Trade* this, YieldTypes eYield, FixedPoint xDelta)",
+  "args": [
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "xDelta",
+    "type": "FixedPoint",
+    "kind": "FIXED"
+   }
+  ],
+  "returns": "VOID",
+  "index": 108,
+  "nav": {
+   "owner": "City::Instance",
+   "offset": "0xe78",
+   "mode": "FAutoVariable"
+  }
+ },
+ {
+  "lua": "City.ChangeYieldPerDestinationStrategicResourceForInternational",
+  "iface": "ICity",
+  "cpp": "GameCore::City::Trade::ChangeYieldPerDestinationStrategicResourceForInternational",
+  "rva": "0x14db90",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(City::Trade* this, YieldTypes eYield, FixedPoint xDelta)",
+  "args": [
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "xDelta",
+    "type": "FixedPoint",
+    "kind": "FIXED"
+   }
+  ],
+  "returns": "VOID",
+  "index": 109,
+  "nav": {
+   "owner": "City::Instance",
+   "offset": "0xe78",
+   "mode": "FAutoVariable"
+  }
+ },
+ {
+  "lua": "City.ChangeYieldPerLocalBonusResourceForDomestic",
+  "iface": "ICity",
+  "cpp": "GameCore::City::Trade::ChangeYieldPerLocalBonusResourceForDomestic",
+  "rva": "0x14dbc0",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(City::Trade* this, YieldTypes eYield, FixedPoint xDelta)",
+  "args": [
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "xDelta",
+    "type": "FixedPoint",
+    "kind": "FIXED"
+   }
+  ],
+  "returns": "VOID",
+  "index": 110,
+  "nav": {
+   "owner": "City::Instance",
+   "offset": "0xe78",
+   "mode": "FAutoVariable"
+  }
+ },
+ {
+  "lua": "City.ChangeYieldPerLocalBonusResourceForInternational",
+  "iface": "ICity",
+  "cpp": "GameCore::City::Trade::ChangeYieldPerLocalBonusResourceForInternational",
+  "rva": "0x14dbf0",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(City::Trade* this, YieldTypes eYield, FixedPoint xDelta)",
+  "args": [
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "xDelta",
+    "type": "FixedPoint",
+    "kind": "FIXED"
+   }
+  ],
+  "returns": "VOID",
+  "index": 111,
+  "nav": {
+   "owner": "City::Instance",
+   "offset": "0xe78",
+   "mode": "FAutoVariable"
+  }
+ },
+ {
+  "lua": "City.ChangeYieldPerLocalLuxuryResourceForInternational",
+  "iface": "ICity",
+  "cpp": "GameCore::City::Trade::ChangeYieldPerLocalLuxuryResourceForInternational",
+  "rva": "0x14dc20",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(City::Trade* this, YieldTypes eYield, FixedPoint xDelta)",
+  "args": [
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "xDelta",
+    "type": "FixedPoint",
+    "kind": "FIXED"
+   }
+  ],
+  "returns": "VOID",
+  "index": 112,
+  "nav": {
+   "owner": "City::Instance",
+   "offset": "0xe78",
+   "mode": "FAutoVariable"
+  }
+ },
+ {
+  "lua": "City.ChangeYieldPerLocalStrategicResourceForInternational",
+  "iface": "ICity",
+  "cpp": "GameCore::City::Trade::ChangeYieldPerLocalStrategicResourceForInternational",
+  "rva": "0x14dc50",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(City::Trade* this, YieldTypes eYield, FixedPoint xDelta)",
+  "args": [
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "xDelta",
+    "type": "FixedPoint",
+    "kind": "FIXED"
+   }
+  ],
+  "returns": "VOID",
+  "index": 113,
+  "nav": {
+   "owner": "City::Instance",
+   "offset": "0xe78",
+   "mode": "FAutoVariable"
+  }
+ },
+ {
+  "lua": "City.ChangeYieldPerMajorTradePartner",
+  "iface": "ICity",
+  "cpp": "GameCore::City::Trade::ChangeYieldPerMajorTradePartner",
+  "rva": "0x14dc80",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(City::Trade* this, YieldTypes eYield, FixedPoint xDelta)",
+  "args": [
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "xDelta",
+    "type": "FixedPoint",
+    "kind": "FIXED"
+   }
+  ],
+  "returns": "VOID",
+  "index": 114,
+  "nav": {
+   "owner": "City::Instance",
+   "offset": "0xe78",
+   "mode": "FAutoVariable"
+  }
+ },
+ {
+  "lua": "Deal.RemoveExpiredItems",
+  "iface": "IDeal",
+  "cpp": "GameCore::Diplomacy::Deal::Instance::RemoveExpiredItems",
+  "rva": "0x57f3f0",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Diplomacy::Deal::Instance* this)",
+  "args": [],
+  "returns": "VOID",
+  "index": 115,
+  "nav": null
+ },
+ {
+  "lua": "District.ChangeExtraRegionalYield",
+  "iface": "IDistrict",
+  "cpp": "GameCore::District::Instance::ChangeExtraRegionalYield",
+  "rva": "0x190470",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(District::Instance* this, YieldTypes eYield, int iDelta)",
+  "args": [
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iDelta",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 116,
+  "nav": null
+ },
+ {
+  "lua": "District.ChangeGreatPersonPointChange",
+  "iface": "IDistrict",
+  "cpp": "GameCore::District::Instance::ChangeGreatPersonPointChange",
+  "rva": "0x1904d0",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(District::Instance* this, GreatPersonClassTypes eClass, FixedPoint xChange)",
+  "args": [
+   {
+    "name": "eClass",
+    "type": "GreatPersonClassTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "xChange",
+    "type": "FixedPoint",
+    "kind": "FIXED"
+   }
+  ],
+  "returns": "VOID",
+  "index": 117,
+  "nav": null
+ },
+ {
+  "lua": "District.ChangeTourismAdjacencyYieldModifier",
+  "iface": "IDistrict",
+  "cpp": "GameCore::District::Instance::ChangeTourismAdjacencyYieldModifier",
+  "rva": "0x190590",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(District::Instance* this, YieldTypes eYield, int iDelta)",
+  "args": [
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iDelta",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 118,
+  "nav": null
+ },
+ {
+  "lua": "District.SetComplete",
+  "iface": "IDistrict",
+  "cpp": "GameCore::District::Instance::SetComplete",
+  "rva": "0x192c20",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(District::Instance* this, bool bState, bool bOriginalCompletion)",
+  "args": [
+   {
+    "name": "bState",
+    "type": "bool",
+    "kind": "BOOL"
+   },
+   {
+    "name": "bOriginalCompletion",
+    "type": "bool",
+    "kind": "BOOL"
+   }
+  ],
+  "returns": "VOID",
+  "index": 119,
+  "nav": null
+ },
+ {
+  "lua": "GameDiplomacy.SetJointWarTarget",
+  "iface": "IGameDiplomacy",
+  "cpp": "GameCore::Game::DiplomaticRelations::SetJointWarTarget",
+  "rva": "0x1d3db0",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Game::DiplomaticRelations* this, PlayerTypes initiator, PlayerTypes partner, PlayerTypes target)",
+  "args": [
+   {
+    "name": "initiator",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "partner",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "target",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 120,
+  "nav": null
+ },
+ {
+  "lua": "GameDiplomacy.SetSharesSuzerain",
+  "iface": "IGameDiplomacy",
+  "cpp": "GameCore::Game::DiplomaticRelations::SetSharesSuzerain",
+  "rva": "0x1d41d0",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Game::DiplomaticRelations* this, PlayerTypes a, PlayerTypes b, bool c)",
+  "args": [
+   {
+    "name": "a",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "b",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "c",
+    "type": "bool",
+    "kind": "BOOL"
+   }
+  ],
+  "returns": "VOID",
+  "index": 121,
+  "nav": null
+ },
+ {
+  "lua": "GameEras.ChangeExtraScorePerPrideMoment",
+  "iface": "IGameEras",
+  "cpp": "GameCore::Game::Eras::ChangeExtraScorePerPrideMoment",
+  "rva": "0x1e2260",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Game::Eras* this, PlayerTypes ePlayer, int iDelta)",
+  "args": [
+   {
+    "name": "ePlayer",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iDelta",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 122,
+  "nav": null
+ },
+ {
+  "lua": "GameEras.ChangePlayerAlwaysAllowedCommemorationQuestCount",
+  "iface": "IGameEras",
+  "cpp": "GameCore::Game::Eras::ChangePlayerAlwaysAllowedCommemorationQuestCount",
+  "rva": "0x1e22b0",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Game::Eras* this, PlayerTypes ePlayer, int iAmount)",
+  "args": [
+   {
+    "name": "ePlayer",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iAmount",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 123,
+  "nav": null
+ },
+ {
+  "lua": "GameEras.SetMinScoreForExtraEraScore",
+  "iface": "IGameEras",
+  "cpp": "GameCore::Game::Eras::SetMinScoreForExtraEraScore",
+  "rva": "0x1e80e0",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Game::Eras* this, PlayerTypes ePlayer, int iNewValue)",
+  "args": [
+   {
+    "name": "ePlayer",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iNewValue",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 124,
+  "nav": null
+ },
+ {
+  "lua": "Map.SetVolcanoActive",
+  "iface": "IMap",
+  "cpp": "GameCore::Map::Feature::Manager::SetVolcanoActive",
+  "rva": "0x7271e0",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Map::Feature::Manager* this, bool bMustBeNamed)",
+  "args": [
+   {
+    "name": "bMustBeNamed",
+    "type": "bool",
+    "kind": "BOOL"
+   }
+  ],
+  "returns": "VOID",
+  "index": 125,
+  "nav": {
+   "owner": "Game",
+   "offset": "0x7236b0",
+   "mode": "static Game/Map accessor"
+  }
+ },
+ {
+  "lua": "Map.SetVolcanoInactive",
+  "iface": "IMap",
+  "cpp": "GameCore::Map::Feature::Manager::SetVolcanoInactive",
+  "rva": "0x727540",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Map::Feature::Manager* this, bool bMustBeNamed)",
+  "args": [
+   {
+    "name": "bMustBeNamed",
+    "type": "bool",
+    "kind": "BOOL"
+   }
+  ],
+  "returns": "VOID",
+  "index": 126,
+  "nav": {
+   "owner": "Game",
+   "offset": "0x7236b0",
+   "mode": "static Game/Map accessor"
+  }
+ },
+ {
+  "lua": "Map.ChangeNaturalWonderCount",
+  "iface": "IMap",
+  "cpp": "GameCore::Map::Instance::ChangeNaturalWonderCount",
+  "rva": "0x52000",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Map::Instance* this, int iChange)",
+  "args": [
+   {
+    "name": "iChange",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 127,
+  "nav": {
+   "owner": "Game",
+   "offset": "0x526c0",
+   "mode": "static Game/Map accessor"
+  }
+ },
+ {
+  "lua": "Map.SetRevealedImprovementType",
+  "iface": "IMap",
+  "cpp": "GameCore::Map::Player::Visibility::Manager::SetRevealedImprovementType",
+  "rva": "0x35de10",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "bool(Map::Player::Visibility::Manager* this, PlayerTypes ePlayer, int iPlotIndex, ImprovementTypes eNewValue)",
+  "args": [
+   {
+    "name": "ePlayer",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iPlotIndex",
+    "type": "int",
+    "kind": "INT"
+   },
+   {
+    "name": "eNewValue",
+    "type": "ImprovementTypes",
+    "kind": "INT"
+   }
+  ],
+  "returns": "BOOL",
+  "index": 128,
+  "nav": {
+   "owner": "Game",
+   "offset": "0x44d70",
+   "mode": "static Game/Map accessor"
+  }
+ },
+ {
+  "lua": "Map.SetRevealedResourceType",
+  "iface": "IMap",
+  "cpp": "GameCore::Map::Player::Visibility::Manager::SetRevealedResourceType",
+  "rva": "0x35deb0",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "bool(Map::Player::Visibility::Manager* this, PlayerTypes ePlayer, int iPlotIndex, ResourceTypes eNewValue)",
+  "args": [
+   {
+    "name": "ePlayer",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iPlotIndex",
+    "type": "int",
+    "kind": "INT"
+   },
+   {
+    "name": "eNewValue",
+    "type": "ResourceTypes",
+    "kind": "INT"
+   }
+  ],
+  "returns": "BOOL",
+  "index": 129,
+  "nav": {
+   "owner": "Game",
+   "offset": "0x44d70",
+   "mode": "static Game/Map accessor"
+  }
+ },
+ {
+  "lua": "Map.SetRevealedRouteType",
+  "iface": "IMap",
+  "cpp": "GameCore::Map::Player::Visibility::Manager::SetRevealedRouteType",
+  "rva": "0x35df50",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "bool(Map::Player::Visibility::Manager* this, PlayerTypes ePlayer, int iPlotIndex, RouteTypes eNewType)",
+  "args": [
+   {
+    "name": "ePlayer",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iPlotIndex",
+    "type": "int",
+    "kind": "INT"
+   },
+   {
+    "name": "eNewType",
+    "type": "RouteTypes",
+    "kind": "INT"
+   }
+  ],
+  "returns": "BOOL",
+  "index": 130,
+  "nav": {
+   "owner": "Game",
+   "offset": "0x44d70",
+   "mode": "static Game/Map accessor"
+  }
+ },
+ {
+  "lua": "Player.ChangeFlatBonus",
+  "iface": "IPlayer",
+  "cpp": "GameCore::Player::Bonuses::ChangeFlatBonus",
+  "rva": "0x261010",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Bonuses* this, GovernmentBonusTypes eBonus, int iDelta)",
+  "args": [
+   {
+    "name": "eBonus",
+    "type": "GovernmentBonusTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iDelta",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 131,
+  "nav": {
+   "owner": "Lua::PlayerReference",
+   "offset": "0x2610c0",
+   "mode": "static Get(player)"
+  }
+ },
+ {
+  "lua": "Player.ChangeResolutionEffectRefundPercent",
+  "iface": "IPlayer",
+  "cpp": "GameCore::Player::Congress::ChangeResolutionEffectRefundPercent",
+  "rva": "0x26c4e0",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Congress* this, ResolutionTypes eResolution, int iWhichEffect, int iChange)",
+  "args": [
+   {
+    "name": "eResolution",
+    "type": "ResolutionTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iWhichEffect",
+    "type": "int",
+    "kind": "INT"
+   },
+   {
+    "name": "iChange",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 132,
+  "nav": {
+   "owner": "Lua::PlayerReference",
+   "offset": "0x26c770",
+   "mode": "static Get(player)"
+  }
+ },
+ {
+  "lua": "Player.ChangeIdentityPerTurnForTradeRouteOrigin",
+  "iface": "IPlayer",
+  "cpp": "GameCore::Player::CulturalIdentity::ChangeIdentityPerTurnForTradeRouteOrigin",
+  "rva": "0x26ef90",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::CulturalIdentity* this, FixedPoint xChange)",
+  "args": [
+   {
+    "name": "xChange",
+    "type": "FixedPoint",
+    "kind": "FIXED"
+   }
+  ],
+  "returns": "VOID",
+  "index": 133,
+  "nav": {
+   "owner": "Lua::PlayerReference",
+   "offset": "0x770",
+   "mode": "pointer"
+  }
+ },
+ {
+  "lua": "PlayerCulture.ChangeGreatWorkObjectTourismModifier",
+  "iface": "IPlayerCulture",
+  "cpp": "GameCore::Player::Culture::ChangeGreatWorkObjectTourismModifier",
+  "rva": "0x27c0b0",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Culture* this, GreatWorkObjectTypes eGreatWorkObjectType, int iModDelta)",
+  "args": [
+   {
+    "name": "eGreatWorkObjectType",
+    "type": "GreatWorkObjectTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iModDelta",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 134,
+  "nav": null
+ },
+ {
+  "lua": "PlayerCulture.SetFavorPerTurnFromBuilding",
+  "iface": "IPlayerCulture",
+  "cpp": "GameCore::Player::Culture::SetFavorPerTurnFromBuilding",
+  "rva": "0x284ca0",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Culture* this, BuildingTypes eBuilding, int iFavor)",
+  "args": [
+   {
+    "name": "eBuilding",
+    "type": "BuildingTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iFavor",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 135,
+  "nav": null
+ },
+ {
+  "lua": "PlayerCulture.SetFavorPerTurnFromPolicy",
+  "iface": "IPlayerCulture",
+  "cpp": "GameCore::Player::Culture::SetFavorPerTurnFromPolicy",
+  "rva": "0x284d60",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Culture* this, PolicyTypes ePolicy, int iFavor)",
+  "args": [
+   {
+    "name": "ePolicy",
+    "type": "PolicyTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iFavor",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 136,
+  "nav": null
+ },
+ {
+  "lua": "PlayerCulture.SetGreatWorkObjectNoTourism",
+  "iface": "IPlayerCulture",
+  "cpp": "GameCore::Player::Culture::SetGreatWorkObjectNoTourism",
+  "rva": "0x285030",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Culture* this, GreatWorkObjectTypes eGreatWorkObjectType, bool bNoTourism)",
+  "args": [
+   {
+    "name": "eGreatWorkObjectType",
+    "type": "GreatWorkObjectTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "bNoTourism",
+    "type": "bool",
+    "kind": "BOOL"
+   }
+  ],
+  "returns": "VOID",
+  "index": 137,
+  "nav": null
+ },
+ {
+  "lua": "PlayerCulture.SetNumFreeCivicBoostOnNewEra",
+  "iface": "IPlayerCulture",
+  "cpp": "GameCore::Player::Culture::SetNumFreeCivicBoostOnNewEra",
+  "rva": "0x285190",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Culture* this, int numBoosts, bool applyImmediately)",
+  "args": [
+   {
+    "name": "numBoosts",
+    "type": "int",
+    "kind": "INT"
+   },
+   {
+    "name": "applyImmediately",
+    "type": "bool",
+    "kind": "BOOL"
+   }
+  ],
+  "returns": "VOID",
+  "index": 138,
+  "nav": null
+ },
+ {
+  "lua": "PlayerCulture.SetPolicyBanned",
+  "iface": "IPlayerCulture",
+  "cpp": "GameCore::Player::Culture::SetPolicyBanned",
+  "rva": "0x285230",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Culture* this, PolicyTypes ePolicy, bool bBanned)",
+  "args": [
+   {
+    "name": "ePolicy",
+    "type": "PolicyTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "bBanned",
+    "type": "bool",
+    "kind": "BOOL"
+   }
+  ],
+  "returns": "VOID",
+  "index": 139,
+  "nav": null
+ },
+ {
+  "lua": "TeamDiplomacy.ChangeYieldPerDelegation",
+  "iface": "IPlayerDiplomacy",
+  "cpp": "GameCore::Player::Diplomacy::ChangeYieldPerDelegation",
+  "rva": "0x2a1060",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Diplomacy* this, int iAmount, YieldTypes eYield)",
+  "args": [
+   {
+    "name": "iAmount",
+    "type": "int",
+    "kind": "INT"
+   },
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 140,
+  "nav": null
+ },
+ {
+  "lua": "TeamDiplomacy.ChangeYieldPerEmbassy",
+  "iface": "IPlayerDiplomacy",
+  "cpp": "GameCore::Player::Diplomacy::ChangeYieldPerEmbassy",
+  "rva": "0x2a10e0",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Diplomacy* this, int iAmount, YieldTypes eYield)",
+  "args": [
+   {
+    "name": "iAmount",
+    "type": "int",
+    "kind": "INT"
+   },
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 141,
+  "nav": null
+ },
+ {
+  "lua": "TeamDiplomacy.SetFightingJointWar",
+  "iface": "IPlayerDiplomacy",
+  "cpp": "GameCore::Player::Diplomacy::SetFightingJointWar",
+  "rva": "0x2afc50",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Diplomacy* this, PlayerTypes target, PlayerTypes partner)",
+  "args": [
+   {
+    "name": "target",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "partner",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 142,
+  "nav": null
+ },
+ {
+  "lua": "TeamDiplomacy.SetHasDefensivePact",
+  "iface": "IPlayerDiplomacy",
+  "cpp": "GameCore::Player::Diplomacy::SetHasDefensivePact",
+  "rva": "0x2aff30",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Diplomacy* this, PlayerTypes ePlayer, bool bNewValue)",
+  "args": [
+   {
+    "name": "ePlayer",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "bNewValue",
+    "type": "bool",
+    "kind": "BOOL"
+   }
+  ],
+  "returns": "VOID",
+  "index": 143,
+  "nav": null
+ },
+ {
+  "lua": "TeamDiplomacy.SetResearchAgreementTech",
+  "iface": "IPlayerDiplomacy",
+  "cpp": "GameCore::Player::Diplomacy::SetResearchAgreementTech",
+  "rva": "0x2b0560",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Diplomacy* this, PlayerTypes ePlayer, TechTypes eTech)",
+  "args": [
+   {
+    "name": "ePlayer",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "eTech",
+    "type": "TechTypes",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 144,
+  "nav": null
+ },
+ {
+  "lua": "Player.ChangeSpyCapacity",
+  "iface": "IPlayer",
+  "cpp": "GameCore::Player::Espionage::ChangeSpyCapacity",
+  "rva": "0x2cf7a0",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Espionage* this, int iDelta)",
+  "args": [
+   {
+    "name": "iDelta",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 145,
+  "nav": {
+   "owner": "Lua::PlayerReference",
+   "offset": "0x6f8",
+   "mode": "pointer"
+  }
+ },
+ {
+  "lua": "Player.ChangeTargetCitySpyYieldPercent",
+  "iface": "IPlayer",
+  "cpp": "GameCore::Player::Espionage::ChangeTargetCitySpyYieldPercent",
+  "rva": "0x2cf800",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Espionage* this, YieldTypes eYield, int iPercent)",
+  "args": [
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iPercent",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 146,
+  "nav": {
+   "owner": "Lua::PlayerReference",
+   "offset": "0x6f8",
+   "mode": "pointer"
+  }
+ },
+ {
+  "lua": "PlayerGreatPeoplePoints.ChangeBonusPointsPerTurn",
+  "iface": "IPlayerGreatPeoplePoints",
+  "cpp": "GameCore::Player::GreatPeoplePoints::ChangeBonusPointsPerTurn",
+  "rva": "0x2e2e20",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::GreatPeoplePoints* this, GreatPersonClassTypes eClass, FixedPoint xChange)",
+  "args": [
+   {
+    "name": "eClass",
+    "type": "GreatPersonClassTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "xChange",
+    "type": "FixedPoint",
+    "kind": "FIXED"
+   }
+  ],
+  "returns": "VOID",
+  "index": 147,
+  "nav": null
+ },
+ {
+  "lua": "PlayerGreatPeoplePoints.ChangeBonusPointsPerTurnPercent",
+  "iface": "IPlayerGreatPeoplePoints",
+  "cpp": "GameCore::Player::GreatPeoplePoints::ChangeBonusPointsPerTurnPercent",
+  "rva": "0x2e2e90",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::GreatPeoplePoints* this, GreatPersonClassTypes eClass, int iChange)",
+  "args": [
+   {
+    "name": "eClass",
+    "type": "GreatPersonClassTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iChange",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 148,
+  "nav": null
+ },
+ {
+  "lua": "PlayerGreatPeoplePoints.ChangePatronageDiscountPercent",
+  "iface": "IPlayerGreatPeoplePoints",
+  "cpp": "GameCore::Player::GreatPeoplePoints::ChangePatronageDiscountPercent",
+  "rva": "0x2e3110",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::GreatPeoplePoints* this, YieldTypes eYield, int iChange)",
+  "args": [
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iChange",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 149,
+  "nav": null
+ },
+ {
+  "lua": "PlayerGreatPeoplePoints.ChangePointsRefundPercent",
+  "iface": "IPlayerGreatPeoplePoints",
+  "cpp": "GameCore::Player::GreatPeoplePoints::ChangePointsRefundPercent",
+  "rva": "0x2e31c0",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::GreatPeoplePoints* this, int iChange)",
+  "args": [
+   {
+    "name": "iChange",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 150,
+  "nav": null
+ },
+ {
+  "lua": "PlayerGreatPeoplePoints.SetGreatPersonClassNoPoints",
+  "iface": "IPlayerGreatPeoplePoints",
+  "cpp": "GameCore::Player::GreatPeoplePoints::SetGreatPersonClassNoPoints",
+  "rva": "0x2e4550",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::GreatPeoplePoints* this, GreatPersonClassTypes eGPClass, bool bNoPoints)",
+  "args": [
+   {
+    "name": "eGPClass",
+    "type": "GreatPersonClassTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "bNoPoints",
+    "type": "bool",
+    "kind": "BOOL"
+   }
+  ],
+  "returns": "VOID",
+  "index": 151,
+  "nav": null
+ },
+ {
+  "lua": "PlayerGreatPeoplePoints.SetNoPatronageWith",
+  "iface": "IPlayerGreatPeoplePoints",
+  "cpp": "GameCore::Player::GreatPeoplePoints::SetNoPatronageWith",
+  "rva": "0x2e4640",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::GreatPeoplePoints* this, YieldTypes eYield, bool bNewValue)",
+  "args": [
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "bNewValue",
+    "type": "bool",
+    "kind": "BOOL"
+   }
+  ],
+  "returns": "VOID",
+  "index": 152,
+  "nav": null
+ },
+ {
+  "lua": "PlayerGreatPeoplePoints.SetYieldModifierPerEarnedGreatPerson",
+  "iface": "IPlayerGreatPeoplePoints",
+  "cpp": "GameCore::Player::GreatPeoplePoints::SetYieldModifierPerEarnedGreatPerson",
+  "rva": "0x2e47b0",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::GreatPeoplePoints* this, YieldTypes eYield, FixedPoint xValue)",
+  "args": [
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "xValue",
+    "type": "FixedPoint",
+    "kind": "FIXED"
+   }
+  ],
+  "returns": "VOID",
+  "index": 153,
+  "nav": null
+ },
+ {
+  "lua": "Player.AddChopFeatureBehavior",
+  "iface": "IPlayer",
+  "cpp": "GameCore::Player::Instance::AddChopFeatureBehavior",
+  "rva": "0x2f7570",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Instance* this, FeatureTypes eFeature, bool bBan, YieldTypes eYield, int iAmount)",
+  "args": [
+   {
+    "name": "eFeature",
+    "type": "FeatureTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "bBan",
+    "type": "bool",
+    "kind": "BOOL"
+   },
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iAmount",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 154,
+  "nav": {
+   "owner": "Lua::PlayerReference",
+   "offset": "0x0",
+   "mode": "itself"
+  }
+ },
+ {
+  "lua": "Player.ChangeCO2GenerationReduction",
+  "iface": "IPlayer",
+  "cpp": "GameCore::Player::Instance::ChangeCO2GenerationReduction",
+  "rva": "0x2f7720",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Instance* this, ResourceUsageType eUsageType, int iDiscount)",
+  "args": [
+   {
+    "name": "eUsageType",
+    "type": "ResourceUsageType",
+    "kind": "INT"
+   },
+   {
+    "name": "iDiscount",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 155,
+  "nav": {
+   "owner": "Lua::PlayerReference",
+   "offset": "0x0",
+   "mode": "itself"
+  }
+ },
+ {
+  "lua": "Player.ChangeRandomEventModifiedDamageOpposingPlayer",
+  "iface": "IPlayer",
+  "cpp": "GameCore::Player::Instance::ChangeRandomEventModifiedDamageOpposingPlayer",
+  "rva": "0x2f7760",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Instance* this, int iDelta, RandomEventTypes eRandomEvent)",
+  "args": [
+   {
+    "name": "iDelta",
+    "type": "int",
+    "kind": "INT"
+   },
+   {
+    "name": "eRandomEvent",
+    "type": "RandomEventTypes",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 156,
+  "nav": {
+   "owner": "Lua::PlayerReference",
+   "offset": "0x0",
+   "mode": "itself"
+  }
+ },
+ {
+  "lua": "Player.ChangeRandomEventNoUnitDamage",
+  "iface": "IPlayer",
+  "cpp": "GameCore::Player::Instance::ChangeRandomEventNoUnitDamage",
+  "rva": "0x2f77b0",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Instance* this, int iDelta, RandomEventTypes eRandomEvent)",
+  "args": [
+   {
+    "name": "iDelta",
+    "type": "int",
+    "kind": "INT"
+   },
+   {
+    "name": "eRandomEvent",
+    "type": "RandomEventTypes",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 157,
+  "nav": {
+   "owner": "Lua::PlayerReference",
+   "offset": "0x0",
+   "mode": "itself"
+  }
+ },
+ {
+  "lua": "Player.ChangeYieldRate",
+  "iface": "IPlayer",
+  "cpp": "GameCore::Player::Instance::ChangeYieldRate",
+  "rva": "0x2f7800",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Instance* this, YieldTypes eYield, int iAmount)",
+  "args": [
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iAmount",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 158,
+  "nav": {
+   "owner": "Lua::PlayerReference",
+   "offset": "0x0",
+   "mode": "itself"
+  }
+ },
+ {
+  "lua": "Player.RemoveChopFeatureBehavior",
+  "iface": "IPlayer",
+  "cpp": "GameCore::Player::Instance::RemoveChopFeatureBehavior",
+  "rva": "0x2fa1e0",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Instance* this, FeatureTypes eFeature, bool bBan, YieldTypes eYield)",
+  "args": [
+   {
+    "name": "eFeature",
+    "type": "FeatureTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "bBan",
+    "type": "bool",
+    "kind": "BOOL"
+   },
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 159,
+  "nav": {
+   "owner": "Lua::PlayerReference",
+   "offset": "0x0",
+   "mode": "itself"
+  }
+ },
+ {
+  "lua": "PlayerReligion.SetSpreadModifier",
+  "iface": "IPlayerReligion",
+  "cpp": "GameCore::Player::Religion::SetSpreadModifier",
+  "rva": "0x3162b0",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Religion* this, int iSpreadMultiplier, TechTypes eSpreadEnhancingTech, int iTechEnabledSpreadMultiplier)",
+  "args": [
+   {
+    "name": "iSpreadMultiplier",
+    "type": "int",
+    "kind": "INT"
+   },
+   {
+    "name": "eSpreadEnhancingTech",
+    "type": "TechTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iTechEnabledSpreadMultiplier",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 160,
+  "nav": null
+ },
+ {
+  "lua": "PlayerResources.ChangeBannedResource",
+  "iface": "IPlayerResources",
+  "cpp": "GameCore::Player::Resources::ChangeBannedResource",
+  "rva": "0x31e700",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Resources* this, ResourceTypes eResource, int iDelta)",
+  "args": [
+   {
+    "name": "eResource",
+    "type": "ResourceTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iDelta",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 161,
+  "nav": null
+ },
+ {
+  "lua": "PlayerResources.ChangeExtraAccumulationModifier",
+  "iface": "IPlayerResources",
+  "cpp": "GameCore::Player::Resources::ChangeExtraAccumulationModifier",
+  "rva": "0x31e740",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Resources* this, ResourceTypes eResource, int iDelta)",
+  "args": [
+   {
+    "name": "eResource",
+    "type": "ResourceTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iDelta",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 162,
+  "nav": null
+ },
+ {
+  "lua": "PlayerResources.ChangeExtraAmenitiesPerOwnedBonusResource",
+  "iface": "IPlayerResources",
+  "cpp": "GameCore::Player::Resources::ChangeExtraAmenitiesPerOwnedBonusResource",
+  "rva": "0x31e780",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Resources* this, int iChange)",
+  "args": [
+   {
+    "name": "iChange",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 163,
+  "nav": null
+ },
+ {
+  "lua": "PlayerResources.ChangeExtraAmenitiesPerOwnedLuxuryResource",
+  "iface": "IPlayerResources",
+  "cpp": "GameCore::Player::Resources::ChangeExtraAmenitiesPerOwnedLuxuryResource",
+  "rva": "0x31e7c0",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Resources* this, int iChange)",
+  "args": [
+   {
+    "name": "iChange",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 164,
+  "nav": null
+ },
+ {
+  "lua": "PlayerResources.ChangeImportResourceExtracted",
+  "iface": "IPlayerResources",
+  "cpp": "GameCore::Player::Resources::ChangeImportResourceExtracted",
+  "rva": "0x31e870",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Resources* this, ResourceTypes resource, int amount)",
+  "args": [
+   {
+    "name": "resource",
+    "type": "ResourceTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "amount",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 165,
+  "nav": null
+ },
+ {
+  "lua": "PlayerResources.ChangeNoCapResource",
+  "iface": "IPlayerResources",
+  "cpp": "GameCore::Player::Resources::ChangeNoCapResource",
+  "rva": "0x31e8d0",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Resources* this, ResourceTypes eResource, int iDelta)",
+  "args": [
+   {
+    "name": "eResource",
+    "type": "ResourceTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iDelta",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 166,
+  "nav": null
+ },
+ {
+  "lua": "PlayerResources.ChangeResourceStockpileCapModifier",
+  "iface": "IPlayerResources",
+  "cpp": "GameCore::Player::Resources::ChangeResourceStockpileCapModifier",
+  "rva": "0x31eb10",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Resources* this, ResourceTypes eResource, int iDelta)",
+  "args": [
+   {
+    "name": "eResource",
+    "type": "ResourceTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iDelta",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 167,
+  "nav": null
+ },
+ {
+  "lua": "PlayerStats.ChangeScienceVictoryPointsPerTurn",
+  "iface": "IPlayerStats",
+  "cpp": "GameCore::Player::Stats::ChangeScienceVictoryPointsPerTurn",
+  "rva": "0x32aeb0",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Stats* this, FixedPoint xDelta)",
+  "args": [
+   {
+    "name": "xDelta",
+    "type": "FixedPoint",
+    "kind": "FIXED"
+   }
+  ],
+  "returns": "VOID",
+  "index": 168,
+  "nav": null
+ },
+ {
+  "lua": "PlayerTechs.SetNumFreeTechBoostOnNewEra",
+  "iface": "IPlayerTechs",
+  "cpp": "GameCore::Player::Techs::SetNumFreeTechBoostOnNewEra",
+  "rva": "0x335b80",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Techs* this, int numBoosts, bool applyImmediately)",
+  "args": [
+   {
+    "name": "numBoosts",
+    "type": "int",
+    "kind": "INT"
+   },
+   {
+    "name": "applyImmediately",
+    "type": "bool",
+    "kind": "BOOL"
+   }
+  ],
+  "returns": "VOID",
+  "index": 169,
+  "nav": null
+ },
+ {
+  "lua": "PlayerTrade.ChangeCityStateDistrictTradeRouteBonus",
+  "iface": "IPlayerTrade",
+  "cpp": "GameCore::Player::Trade::ChangeCityStateDistrictTradeRouteBonus",
+  "rva": "0x33c180",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Trade* this, YieldTypes eYield, FixedPoint xChange)",
+  "args": [
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "xChange",
+    "type": "FixedPoint",
+    "kind": "FIXED"
+   }
+  ],
+  "returns": "VOID",
+  "index": 170,
+  "nav": null
+ },
+ {
+  "lua": "PlayerTrade.ChangeDestinationYieldForAllyRoute",
+  "iface": "IPlayerTrade",
+  "cpp": "GameCore::Player::Trade::ChangeDestinationYieldForAllyRoute",
+  "rva": "0x33c1e0",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Trade* this, YieldTypes eYield, FixedPoint xChange)",
+  "args": [
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "xChange",
+    "type": "FixedPoint",
+    "kind": "FIXED"
+   }
+  ],
+  "returns": "VOID",
+  "index": 171,
+  "nav": null
+ },
+ {
+  "lua": "PlayerTrade.ChangeDestinationYieldForSuzerainRoute",
+  "iface": "IPlayerTrade",
+  "cpp": "GameCore::Player::Trade::ChangeDestinationYieldForSuzerainRoute",
+  "rva": "0x33c240",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Trade* this, YieldTypes eYield, FixedPoint xChange)",
+  "args": [
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "xChange",
+    "type": "FixedPoint",
+    "kind": "FIXED"
+   }
+  ],
+  "returns": "VOID",
+  "index": 172,
+  "nav": null
+ },
+ {
+  "lua": "PlayerTrade.ChangeDestinationYieldModifier",
+  "iface": "IPlayerTrade",
+  "cpp": "GameCore::Player::Trade::ChangeDestinationYieldModifier",
+  "rva": "0x33c2a0",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Trade* this, YieldTypes eYield, FixedPoint xChange)",
+  "args": [
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "xChange",
+    "type": "FixedPoint",
+    "kind": "FIXED"
+   }
+  ],
+  "returns": "VOID",
+  "index": 173,
+  "nav": null
+ },
+ {
+  "lua": "PlayerTrade.ChangeDestinationYieldPerImprovementAtDestination",
+  "iface": "IPlayerTrade",
+  "cpp": "GameCore::Player::Trade::ChangeDestinationYieldPerImprovementAtDestination",
+  "rva": "0x33c300",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Trade* this, YieldTypes eYield, ImprovementTypes eImprovement, FixedPoint xChange)",
+  "args": [
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "eImprovement",
+    "type": "ImprovementTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "xChange",
+    "type": "FixedPoint",
+    "kind": "FIXED"
+   }
+  ],
+  "returns": "VOID",
+  "index": 174,
+  "nav": null
+ },
+ {
+  "lua": "PlayerTrade.ChangeDestinationYieldPerTerrainForDomestic",
+  "iface": "IPlayerTrade",
+  "cpp": "GameCore::Player::Trade::ChangeDestinationYieldPerTerrainForDomestic",
+  "rva": "0x33c390",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Trade* this, YieldTypes eYield, TerrainTypes eTerrain, FixedPoint xChange)",
+  "args": [
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "eTerrain",
+    "type": "TerrainTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "xChange",
+    "type": "FixedPoint",
+    "kind": "FIXED"
+   }
+  ],
+  "returns": "VOID",
+  "index": 175,
+  "nav": null
+ },
+ {
+  "lua": "PlayerTrade.ChangeDestinationYieldPerTerrainForInternational",
+  "iface": "IPlayerTrade",
+  "cpp": "GameCore::Player::Trade::ChangeDestinationYieldPerTerrainForInternational",
+  "rva": "0x33c420",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Trade* this, YieldTypes eYield, TerrainTypes eTerrain, FixedPoint xChange)",
+  "args": [
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "eTerrain",
+    "type": "TerrainTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "xChange",
+    "type": "FixedPoint",
+    "kind": "FIXED"
+   }
+  ],
+  "returns": "VOID",
+  "index": 176,
+  "nav": null
+ },
+ {
+  "lua": "PlayerTrade.ChangeDomesticTradeDisabledCount",
+  "iface": "IPlayerTrade",
+  "cpp": "GameCore::Player::Trade::ChangeDomesticTradeDisabledCount",
+  "rva": "0x33c4b0",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Trade* this, int iDelta)",
+  "args": [
+   {
+    "name": "iDelta",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 177,
+  "nav": null
+ },
+ {
+  "lua": "PlayerTrade.ChangeFlatYieldBonus",
+  "iface": "IPlayerTrade",
+  "cpp": "GameCore::Player::Trade::ChangeFlatYieldBonus",
+  "rva": "0x33c570",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Trade* this, YieldTypes eYield, FixedPoint xChange)",
+  "args": [
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "xChange",
+    "type": "FixedPoint",
+    "kind": "FIXED"
+   }
+  ],
+  "returns": "VOID",
+  "index": 178,
+  "nav": null
+ },
+ {
+  "lua": "PlayerTrade.ChangeFlatYieldBonusForCityState",
+  "iface": "IPlayerTrade",
+  "cpp": "GameCore::Player::Trade::ChangeFlatYieldBonusForCityState",
+  "rva": "0x33c5d0",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Trade* this, YieldTypes eYield, FixedPoint xChange)",
+  "args": [
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "xChange",
+    "type": "FixedPoint",
+    "kind": "FIXED"
+   }
+  ],
+  "returns": "VOID",
+  "index": 179,
+  "nav": null
+ },
+ {
+  "lua": "PlayerTrade.ChangeFlatYieldBonusForDomestic",
+  "iface": "IPlayerTrade",
+  "cpp": "GameCore::Player::Trade::ChangeFlatYieldBonusForDomestic",
+  "rva": "0x33c630",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Trade* this, YieldTypes eYield, bool bIntercontinental, FixedPoint xChange)",
+  "args": [
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "bIntercontinental",
+    "type": "bool",
+    "kind": "BOOL"
+   },
+   {
+    "name": "xChange",
+    "type": "FixedPoint",
+    "kind": "FIXED"
+   }
+  ],
+  "returns": "VOID",
+  "index": 180,
+  "nav": null
+ },
+ {
+  "lua": "PlayerTrade.ChangeFlatYieldBonusForInternational",
+  "iface": "IPlayerTrade",
+  "cpp": "GameCore::Player::Trade::ChangeFlatYieldBonusForInternational",
+  "rva": "0x33c6c0",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Trade* this, YieldTypes eYield, bool bIntercontinental, FixedPoint xChange)",
+  "args": [
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "bIntercontinental",
+    "type": "bool",
+    "kind": "BOOL"
+   },
+   {
+    "name": "xChange",
+    "type": "FixedPoint",
+    "kind": "FIXED"
+   }
+  ],
+  "returns": "VOID",
+  "index": 181,
+  "nav": null
+ },
+ {
+  "lua": "PlayerTrade.ChangeImprovedRouteLevel",
+  "iface": "IPlayerTrade",
+  "cpp": "GameCore::Player::Trade::ChangeImprovedRouteLevel",
+  "rva": "0x33c750",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Trade* this, int iChange)",
+  "args": [
+   {
+    "name": "iChange",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 182,
+  "nav": null
+ },
+ {
+  "lua": "PlayerTrade.ChangeInternationalMajorsTradeDisabledCount",
+  "iface": "IPlayerTrade",
+  "cpp": "GameCore::Player::Trade::ChangeInternationalMajorsTradeDisabledCount",
+  "rva": "0x33c780",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Trade* this, int iDelta)",
+  "args": [
+   {
+    "name": "iDelta",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 183,
+  "nav": null
+ },
+ {
+  "lua": "PlayerTrade.ChangeInternationalMinorsTradeDisabledCount",
+  "iface": "IPlayerTrade",
+  "cpp": "GameCore::Player::Trade::ChangeInternationalMinorsTradeDisabledCount",
+  "rva": "0x33c7f0",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Trade* this, int iDelta)",
+  "args": [
+   {
+    "name": "iDelta",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 184,
+  "nav": null
+ },
+ {
+  "lua": "PlayerTrade.ChangeInternationalYieldModifier",
+  "iface": "IPlayerTrade",
+  "cpp": "GameCore::Player::Trade::ChangeInternationalYieldModifier",
+  "rva": "0x33c860",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Trade* this, YieldTypes eYield, FixedPoint xChange)",
+  "args": [
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "xChange",
+    "type": "FixedPoint",
+    "kind": "FIXED"
+   }
+  ],
+  "returns": "VOID",
+  "index": 185,
+  "nav": null
+ },
+ {
+  "lua": "PlayerTrade.ChangeInternationalYieldPerImprovementAtOrigin",
+  "iface": "IPlayerTrade",
+  "cpp": "GameCore::Player::Trade::ChangeInternationalYieldPerImprovementAtOrigin",
+  "rva": "0x33c8c0",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Trade* this, YieldTypes eYield, ImprovementTypes eImprovement, FixedPoint xChange)",
+  "args": [
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "eImprovement",
+    "type": "ImprovementTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "xChange",
+    "type": "FixedPoint",
+    "kind": "FIXED"
+   }
+  ],
+  "returns": "VOID",
+  "index": 186,
+  "nav": null
+ },
+ {
+  "lua": "PlayerTrade.ChangeOriginYieldForAllyRoute",
+  "iface": "IPlayerTrade",
+  "cpp": "GameCore::Player::Trade::ChangeOriginYieldForAllyRoute",
+  "rva": "0x33c950",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Trade* this, YieldTypes eYield, FixedPoint xChange)",
+  "args": [
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "xChange",
+    "type": "FixedPoint",
+    "kind": "FIXED"
+   }
+  ],
+  "returns": "VOID",
+  "index": 187,
+  "nav": null
+ },
+ {
+  "lua": "PlayerTrade.ChangeOriginYieldForSuzerainRoute",
+  "iface": "IPlayerTrade",
+  "cpp": "GameCore::Player::Trade::ChangeOriginYieldForSuzerainRoute",
+  "rva": "0x33c9b0",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Trade* this, YieldTypes eYield, FixedPoint xChange)",
+  "args": [
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "xChange",
+    "type": "FixedPoint",
+    "kind": "FIXED"
+   }
+  ],
+  "returns": "VOID",
+  "index": 188,
+  "nav": null
+ },
+ {
+  "lua": "PlayerTrade.ChangeOriginYieldModifier",
+  "iface": "IPlayerTrade",
+  "cpp": "GameCore::Player::Trade::ChangeOriginYieldModifier",
+  "rva": "0x33ca10",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Trade* this, YieldTypes eYield, FixedPoint xChange)",
+  "args": [
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "xChange",
+    "type": "FixedPoint",
+    "kind": "FIXED"
+   }
+  ],
+  "returns": "VOID",
+  "index": 189,
+  "nav": null
+ },
+ {
+  "lua": "PlayerTrade.ChangeOriginYieldPerImprovementAtDestination",
+  "iface": "IPlayerTrade",
+  "cpp": "GameCore::Player::Trade::ChangeOriginYieldPerImprovementAtDestination",
+  "rva": "0x33ca70",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Trade* this, YieldTypes eYield, ImprovementTypes eImprovement, FixedPoint xChange)",
+  "args": [
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "eImprovement",
+    "type": "ImprovementTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "xChange",
+    "type": "FixedPoint",
+    "kind": "FIXED"
+   }
+  ],
+  "returns": "VOID",
+  "index": 190,
+  "nav": null
+ },
+ {
+  "lua": "PlayerTrade.ChangeOriginYieldPerTerrainForDomestic",
+  "iface": "IPlayerTrade",
+  "cpp": "GameCore::Player::Trade::ChangeOriginYieldPerTerrainForDomestic",
+  "rva": "0x33cb00",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Trade* this, YieldTypes eYield, TerrainTypes eTerrain, FixedPoint xChange)",
+  "args": [
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "eTerrain",
+    "type": "TerrainTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "xChange",
+    "type": "FixedPoint",
+    "kind": "FIXED"
+   }
+  ],
+  "returns": "VOID",
+  "index": 191,
+  "nav": null
+ },
+ {
+  "lua": "PlayerTrade.ChangeOriginYieldPerTerrainForInternational",
+  "iface": "IPlayerTrade",
+  "cpp": "GameCore::Player::Trade::ChangeOriginYieldPerTerrainForInternational",
+  "rva": "0x33cb90",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Trade* this, YieldTypes eYield, TerrainTypes eTerrain, FixedPoint xChange)",
+  "args": [
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "eTerrain",
+    "type": "TerrainTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "xChange",
+    "type": "FixedPoint",
+    "kind": "FIXED"
+   }
+  ],
+  "returns": "VOID",
+  "index": 192,
+  "nav": null
+ },
+ {
+  "lua": "PlayerTrade.ChangePerSpecialtyDistrictYieldBonusForDomestic",
+  "iface": "IPlayerTrade",
+  "cpp": "GameCore::Player::Trade::ChangePerSpecialtyDistrictYieldBonusForDomestic",
+  "rva": "0x33cc80",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Trade* this, YieldTypes eYield, FixedPoint xChange)",
+  "args": [
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "xChange",
+    "type": "FixedPoint",
+    "kind": "FIXED"
+   }
+  ],
+  "returns": "VOID",
+  "index": 193,
+  "nav": null
+ },
+ {
+  "lua": "PlayerTrade.ChangePerSpecialtyDistrictYieldBonusForInternational",
+  "iface": "IPlayerTrade",
+  "cpp": "GameCore::Player::Trade::ChangePerSpecialtyDistrictYieldBonusForInternational",
+  "rva": "0x33cce0",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Trade* this, YieldTypes eYield, FixedPoint xChange)",
+  "args": [
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "xChange",
+    "type": "FixedPoint",
+    "kind": "FIXED"
+   }
+  ],
+  "returns": "VOID",
+  "index": 194,
+  "nav": null
+ },
+ {
+  "lua": "PlayerTrade.ChangeYieldPerFollower",
+  "iface": "IPlayerTrade",
+  "cpp": "GameCore::Player::Trade::ChangeYieldPerFollower",
+  "rva": "0x33cd70",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Trade* this, YieldTypes eYield, FixedPoint xChange)",
+  "args": [
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "xChange",
+    "type": "FixedPoint",
+    "kind": "FIXED"
+   }
+  ],
+  "returns": "VOID",
+  "index": 195,
+  "nav": null
+ },
+ {
+  "lua": "PlayerTrade.ChangeYieldPerPathTile",
+  "iface": "IPlayerTrade",
+  "cpp": "GameCore::Player::Trade::ChangeYieldPerPathTile",
+  "rva": "0x33cdc0",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Trade* this, YieldTypes eYield, FixedPoint xChange)",
+  "args": [
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "xChange",
+    "type": "FixedPoint",
+    "kind": "FIXED"
+   }
+  ],
+  "returns": "VOID",
+  "index": 196,
+  "nav": null
+ },
+ {
+  "lua": "PlayerTrade.ChangeYieldPerTradingPostInForeignCity",
+  "iface": "IPlayerTrade",
+  "cpp": "GameCore::Player::Trade::ChangeYieldPerTradingPostInForeignCity",
+  "rva": "0x33ce10",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Trade* this, YieldTypes eYield, FixedPoint xChange)",
+  "args": [
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "xChange",
+    "type": "FixedPoint",
+    "kind": "FIXED"
+   }
+  ],
+  "returns": "VOID",
+  "index": 197,
+  "nav": null
+ },
+ {
+  "lua": "PlayerTrade.ChangeYieldPerTradingPostInOwnCity",
+  "iface": "IPlayerTrade",
+  "cpp": "GameCore::Player::Trade::ChangeYieldPerTradingPostInOwnCity",
+  "rva": "0x33ce60",
+  "this_kind": "virtual",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Trade* this, YieldTypes eYield, FixedPoint xChange)",
+  "args": [
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "xChange",
+    "type": "FixedPoint",
+    "kind": "FIXED"
+   }
+  ],
+  "returns": "VOID",
+  "index": 198,
+  "nav": null
+ },
+ {
+  "lua": "PlayerTreasury.ChangeGoldDiplomaticDeal",
+  "iface": "IPlayerTreasury",
+  "cpp": "GameCore::Player::Treasury::ChangeGoldDiplomaticDeal",
+  "rva": "0x343360",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Treasury* this, uint dealId, uint dealItemId, bool addDeal)",
+  "args": [
+   {
+    "name": "dealId",
+    "type": "uint",
+    "kind": "UINT"
+   },
+   {
+    "name": "dealItemId",
+    "type": "uint",
+    "kind": "UINT"
+   },
+   {
+    "name": "addDeal",
+    "type": "bool",
+    "kind": "BOOL"
+   }
+  ],
+  "returns": "VOID",
+  "index": 199,
+  "nav": null
+ },
+ {
+  "lua": "PlayerTreasury.ChangeGoldInterestPercent",
+  "iface": "IPlayerTreasury",
+  "cpp": "GameCore::Player::Treasury::ChangeGoldInterestPercent",
+  "rva": "0x3434b0",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Treasury* this, FixedPoint xPercent)",
+  "args": [
+   {
+    "name": "xPercent",
+    "type": "FixedPoint",
+    "kind": "FIXED"
+   }
+  ],
+  "returns": "VOID",
+  "index": 200,
+  "nav": null
+ },
+ {
+  "lua": "PlayerUnits.ChangeAddOnDistrictFounding",
+  "iface": "IPlayerUnits",
+  "cpp": "GameCore::Player::Units::ChangeAddOnDistrictFounding",
+  "rva": "0x34cb20",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Units* this, uint32 districtHash, uint32 unitHash, int iDelta)",
+  "args": [
+   {
+    "name": "districtHash",
+    "type": "uint32",
+    "kind": "UINT"
+   },
+   {
+    "name": "unitHash",
+    "type": "uint32",
+    "kind": "UINT"
+   },
+   {
+    "name": "iDelta",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 201,
+  "nav": null
+ },
+ {
+  "lua": "PlayerUnits.ChangeProductionModifier",
+  "iface": "IPlayerUnits",
+  "cpp": "GameCore::Player::Units::ChangeProductionModifier",
+  "rva": "0x9497a0",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Units* this, UnitTypes eUnit, int iDelta)",
+  "args": [
+   {
+    "name": "eUnit",
+    "type": "UnitTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iDelta",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 202,
+  "nav": null
+ },
+ {
+  "lua": "PlayerUnits.SetBannedProductionYield",
+  "iface": "IPlayerUnits",
+  "cpp": "GameCore::Player::Units::SetBannedProductionYield",
+  "rva": "0x350cf0",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Units* this, YieldTypes eNewYield)",
+  "args": [
+   {
+    "name": "eNewYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 203,
+  "nav": null
+ },
+ {
+  "lua": "PlayerUnits.SetModifiedArmyCorpsStrength",
+  "iface": "IPlayerUnits",
+  "cpp": "GameCore::Player::Units::SetModifiedArmyCorpsStrength",
+  "rva": "0x3512d0",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Units* this, bool bLand, bool bCorps, int iAmount)",
+  "args": [
+   {
+    "name": "bLand",
+    "type": "bool",
+    "kind": "BOOL"
+   },
+   {
+    "name": "bCorps",
+    "type": "bool",
+    "kind": "BOOL"
+   },
+   {
+    "name": "iAmount",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 204,
+  "nav": null
+ },
+ {
+  "lua": "PlayerUnits.SetPromotionSelected",
+  "iface": "IPlayerUnits",
+  "cpp": "GameCore::Player::Units::SetPromotionSelected",
+  "rva": "0x351330",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Player::Units* this, IDType iUnitID, UnitPromotionTypes ePromotion, bool bClearProposals)",
+  "args": [
+   {
+    "name": "iUnitID",
+    "type": "IDType",
+    "kind": "INT"
+   },
+   {
+    "name": "ePromotion",
+    "type": "UnitPromotionTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "bClearProposals",
+    "type": "bool",
+    "kind": "BOOL"
+   }
+  ],
+  "returns": "VOID",
+  "index": 205,
+  "nav": null
+ },
+ {
+  "lua": "Unit.SetHomeCityCallback",
+  "iface": "IUnit",
+  "cpp": "GameCore::Unit::Archaeology::SetHomeCityCallback",
+  "rva": "0x394fe0",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Unit::Archaeology* this)",
+  "args": [],
+  "returns": "VOID",
+  "index": 206,
+  "nav": {
+   "owner": "Unit::Instance",
+   "offset": "0x888",
+   "mode": "FAutoVariable"
+  }
+ },
+ {
+  "lua": "Unit.AddEspionageTimeReduction",
+  "iface": "IUnit",
+  "cpp": "GameCore::Unit::Espionage::AddEspionageTimeReduction",
+  "rva": "0x395d70",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Unit::Espionage* this, UnitOperationTypes eOperation, int iReductionPercent)",
+  "args": [
+   {
+    "name": "eOperation",
+    "type": "UnitOperationTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iReductionPercent",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 207,
+  "nav": {
+   "owner": "Unit::Instance",
+   "offset": "0x8c8",
+   "mode": "FAutoVariable"
+  }
+ },
+ {
+  "lua": "Unit.RemoveEspionageTimeReduction",
+  "iface": "IUnit",
+  "cpp": "GameCore::Unit::Espionage::RemoveEspionageTimeReduction",
+  "rva": "0x396210",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Unit::Espionage* this, UnitOperationTypes eOperation, int iReductionPercent)",
+  "args": [
+   {
+    "name": "eOperation",
+    "type": "UnitOperationTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iReductionPercent",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 208,
+  "nav": {
+   "owner": "Unit::Instance",
+   "offset": "0x8c8",
+   "mode": "FAutoVariable"
+  }
+ },
+ {
+  "lua": "Unit.AddBypassWallsPromotionClass",
+  "iface": "IUnit",
+  "cpp": "GameCore::Unit::Instance::AddBypassWallsPromotionClass",
+  "rva": "0x3a1f30",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Unit::Instance* this, UnitPromotionClassTypes ePromotionClass)",
+  "args": [
+   {
+    "name": "ePromotionClass",
+    "type": "UnitPromotionClassTypes",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 209,
+  "nav": null
+ },
+ {
+  "lua": "Unit.AddEnableWallAttackPromotionClass",
+  "iface": "IUnit",
+  "cpp": "GameCore::Unit::Instance::AddEnableWallAttackPromotionClass",
+  "rva": "0x3a2060",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Unit::Instance* this, UnitPromotionClassTypes ePromotionClass)",
+  "args": [
+   {
+    "name": "ePromotionClass",
+    "type": "UnitPromotionClassTypes",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 210,
+  "nav": null
+ },
+ {
+  "lua": "Unit.ChangeBonusPointsPerKill",
+  "iface": "IUnit",
+  "cpp": "GameCore::Unit::Instance::ChangeBonusPointsPerKill",
+  "rva": "0x3a2900",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Unit::Instance* this, GreatPersonClassTypes eClass, int iChange)",
+  "args": [
+   {
+    "name": "eClass",
+    "type": "GreatPersonClassTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iChange",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 211,
+  "nav": null
+ },
+ {
+  "lua": "Unit.ChangeBonusPointsPerKillStrength",
+  "iface": "IUnit",
+  "cpp": "GameCore::Unit::Instance::ChangeBonusPointsPerKillStrength",
+  "rva": "0x3a2940",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Unit::Instance* this, GreatPersonClassTypes eClass, int iChange)",
+  "args": [
+   {
+    "name": "eClass",
+    "type": "GreatPersonClassTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iChange",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 212,
+  "nav": null
+ },
+ {
+  "lua": "Unit.ChangeSightRange",
+  "iface": "IUnit",
+  "cpp": "GameCore::Unit::Instance::ChangeSightRange",
+  "rva": "0x3a2ca0",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Unit::Instance* this, int iRangeDelta)",
+  "args": [
+   {
+    "name": "iRangeDelta",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 213,
+  "nav": null
+ },
+ {
+  "lua": "Unit.ChangeTerritoryHealing",
+  "iface": "IUnit",
+  "cpp": "GameCore::Unit::Instance::ChangeTerritoryHealing",
+  "rva": "0x3a2d30",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Unit::Instance* this, TerritoryTypes eTerritory, int iChange)",
+  "args": [
+   {
+    "name": "eTerritory",
+    "type": "TerritoryTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iChange",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 214,
+  "nav": null
+ },
+ {
+  "lua": "Unit.ChangeTerritoryHealingReligion",
+  "iface": "IUnit",
+  "cpp": "GameCore::Unit::Instance::ChangeTerritoryHealingReligion",
+  "rva": "0x3a2db0",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Unit::Instance* this, TerritoryTypes eTerritory, int iChange)",
+  "args": [
+   {
+    "name": "eTerritory",
+    "type": "TerritoryTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iChange",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 215,
+  "nav": null
+ },
+ {
+  "lua": "Unit.RemoveInvalidTerrain",
+  "iface": "IUnit",
+  "cpp": "GameCore::Unit::Instance::RemoveInvalidTerrain",
+  "rva": "0x3a4cc0",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Unit::Instance* this, TerrainTypes eTerrain)",
+  "args": [
+   {
+    "name": "eTerrain",
+    "type": "TerrainTypes",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 216,
+  "nav": null
+ },
+ {
+  "lua": "Unit.SetCanMoveAfterAttacking",
+  "iface": "IUnit",
+  "cpp": "GameCore::Unit::Instance::SetCanMoveAfterAttacking",
+  "rva": "0x3a58d0",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Unit::Instance* this, int delta)",
+  "args": [
+   {
+    "name": "delta",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 217,
+  "nav": null
+ },
+ {
+  "lua": "Unit.SetCanSeeThroughFeatures",
+  "iface": "IUnit",
+  "cpp": "GameCore::Unit::Instance::SetCanSeeThroughFeatures",
+  "rva": "0x3a5940",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Unit::Instance* this, bool bCanSee)",
+  "args": [
+   {
+    "name": "bCanSee",
+    "type": "bool",
+    "kind": "BOOL"
+   }
+  ],
+  "returns": "VOID",
+  "index": 218,
+  "nav": null
+ },
+ {
+  "lua": "Unit.SetCanSeeThroughTerrain",
+  "iface": "IUnit",
+  "cpp": "GameCore::Unit::Instance::SetCanSeeThroughTerrain",
+  "rva": "0x3a59d0",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Unit::Instance* this, bool bCanSee)",
+  "args": [
+   {
+    "name": "bCanSee",
+    "type": "bool",
+    "kind": "BOOL"
+   }
+  ],
+  "returns": "VOID",
+  "index": 219,
+  "nav": null
+ },
+ {
+  "lua": "Unit.SetOperationDisabled",
+  "iface": "IUnit",
+  "cpp": "GameCore::Unit::Instance::SetOperationDisabled",
+  "rva": "0x3a5e50",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Unit::Instance* this, UnitOperationTypes eOperation, bool newValue)",
+  "args": [
+   {
+    "name": "eOperation",
+    "type": "UnitOperationTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "newValue",
+    "type": "bool",
+    "kind": "BOOL"
+   }
+  ],
+  "returns": "VOID",
+  "index": 220,
+  "nav": null
+ },
+ {
+  "lua": "Unit.SetSeeHiddenType",
+  "iface": "IUnit",
+  "cpp": "GameCore::Unit::Instance::SetSeeHiddenType",
+  "rva": "0x3a5f60",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Unit::Instance* this, HiddenVisibilityTypes eHiddenVisibilityType)",
+  "args": [
+   {
+    "name": "eHiddenVisibilityType",
+    "type": "HiddenVisibilityTypes",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 221,
+  "nav": null
+ },
+ {
+  "lua": "UnitReligion.ChangeInitiationYieldPopulation",
+  "iface": "IUnitReligion",
+  "cpp": "GameCore::Unit::Religion::ChangeInitiationYieldPopulation",
+  "rva": "0x3b2890",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Unit::Religion* this, YieldTypes eYield, int iPopulationAmount)",
+  "args": [
+   {
+    "name": "eYield",
+    "type": "YieldTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "iPopulationAmount",
+    "type": "int",
+    "kind": "INT"
+   }
+  ],
+  "returns": "VOID",
+  "index": 222,
+  "nav": null
+ },
+ {
+  "lua": "Game.BuildCivics",
+  "iface": "IGame",
+  "cpp": "GameCore::Game::Culture::BuildCivics",
+  "rva": "0x1c71c0",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Game::Culture* this)",
+  "args": [],
+  "returns": "VOID",
+  "index": 223,
+  "nav": {
+   "owner": "Game",
+   "offset": "0x1c8250",
+   "mode": "static Game/Map accessor"
+  }
+ },
+ {
+  "lua": "Game.BuildTechs",
+  "iface": "IGame",
+  "cpp": "GameCore::Game::Techs::BuildTechs",
+  "rva": "0x2502e0",
+  "this_kind": "plain",
+  "oracle": false,
+  "vanilla": null,
+  "signature": "void(Game::Techs* this)",
+  "args": [],
+  "returns": "VOID",
+  "index": 224,
+  "nav": {
+   "owner": "Game",
+   "offset": "0x2512c0",
+   "mode": "static Game/Map accessor"
+  }
+ },
+ {
+  "lua": "TeamDiplomacy.DevOracle_IsAtWarWithHumans",
+  "iface": "IPlayerDiplomacy",
+  "cpp": "GameCore::Player::Diplomacy::IsAtWarWithHumans",
+  "rva": "0x2a8810",
+  "this_kind": "virtual",
+  "oracle": true,
+  "vanilla": "IsAtWarWithHumans",
+  "signature": "bool(const Player::Diplomacy* this)",
+  "args": [],
+  "returns": "BOOL",
+  "index": 225,
+  "nav": null
+ },
+ {
+  "lua": "TeamDiplomacy.DevOracle_GetMetTurn",
+  "iface": "IPlayerDiplomacy",
+  "cpp": "GameCore::Player::Diplomacy::GetMetTurn",
+  "rva": "0x2a6030",
+  "this_kind": "virtual",
+  "oracle": true,
+  "vanilla": "GetMetTurn",
+  "signature": "int(const Player::Diplomacy* this, PlayerTypes ePlayer)",
+  "args": [
+   {
+    "name": "ePlayer",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   }
+  ],
+  "returns": "INT",
+  "index": 226,
+  "nav": null
+ },
+ {
+  "lua": "CityBuildings.DevOracle_GetBuildingLocation",
+  "iface": "ICityBuildings",
+  "cpp": "GameCore::City::Buildings::GetBuildingLocation",
+  "rva": "0x10abf0",
+  "this_kind": "plain",
+  "oracle": true,
+  "vanilla": "GetBuildingLocation",
+  "signature": "int(const City::Buildings* this, BuildingTypes eBuilding)",
+  "args": [
+   {
+    "name": "eBuilding",
+    "type": "BuildingTypes",
+    "kind": "INT"
+   }
+  ],
+  "returns": "INT",
+  "index": 227,
+  "nav": null
+ },
+ {
+  "lua": "CityBuildings.DevOracle_GetBuildingMaintenance",
+  "iface": "ICityBuildings",
+  "cpp": "GameCore::City::Buildings::GetBuildingMaintenance",
+  "rva": "0x10ac10",
+  "this_kind": "plain",
+  "oracle": true,
+  "vanilla": "GetBuildingMaintenance",
+  "signature": "int(const City::Buildings* this, BuildingTypes eBuilding)",
+  "args": [
+   {
+    "name": "eBuilding",
+    "type": "BuildingTypes",
+    "kind": "INT"
+   }
+  ],
+  "returns": "INT",
+  "index": 228,
+  "nav": null
+ },
+ {
+  "lua": "Unit.DevOracle_GetAntiAirCombat",
+  "iface": "IUnit",
+  "cpp": "GameCore::Unit::Instance::GetAntiAirCombat",
+  "rva": "0x3a3340",
+  "this_kind": "plain",
+  "oracle": true,
+  "vanilla": "GetAntiAirCombat",
+  "signature": "int(const Unit::Instance* this)",
+  "args": [],
+  "returns": "INT",
+  "index": 229,
+  "nav": null
+ },
+ {
+  "lua": "Unit.DevOracle_GetBombardCombat",
+  "iface": "IUnit",
+  "cpp": "GameCore::Unit::Instance::GetBombardCombat",
+  "rva": "0x3a3480",
+  "this_kind": "plain",
+  "oracle": true,
+  "vanilla": "GetBombardCombat",
+  "signature": "int(const Unit::Instance* this)",
+  "args": [],
+  "returns": "INT",
+  "index": 230,
+  "nav": null
+ },
+ {
+  "lua": "UnitExperience.DevOracle_GetExperienceForNextLevel",
+  "iface": "IUnitExperience",
+  "cpp": "GameCore::Unit::Experience::GetExperienceForNextLevel",
+  "rva": "0x396f20",
+  "this_kind": "plain",
+  "oracle": true,
+  "vanilla": "GetExperienceForNextLevel",
+  "signature": "int(const Unit::Experience* this)",
+  "args": [],
+  "returns": "INT",
+  "index": 231,
+  "nav": null
+ },
+ {
+  "lua": "UnitExperience.DevOracle_HasPromotion",
+  "iface": "IUnitExperience",
+  "cpp": "GameCore::Unit::Experience::HasPromotion",
+  "rva": "0x397170",
+  "this_kind": "plain",
+  "oracle": true,
+  "vanilla": "HasPromotion",
+  "signature": "bool(const Unit::Experience* this, UnitPromotionTypes ePromotion)",
+  "args": [
+   {
+    "name": "ePromotion",
+    "type": "UnitPromotionTypes",
+    "kind": "INT"
+   }
+  ],
+  "returns": "BOOL",
+  "index": 232,
+  "nav": null
+ },
+ {
+  "lua": "District.DevOracle_GetOwner",
+  "iface": "IDistrict",
+  "cpp": "GameCore::District::Instance::GetOwner",
+  "rva": "0x191b50",
+  "this_kind": "plain",
+  "oracle": true,
+  "vanilla": "GetOwner",
+  "signature": "PlayerTypes(const District::Instance* this)",
+  "args": [],
+  "returns": "INT",
+  "index": 233,
+  "nav": null
+ },
+ {
+  "lua": "District.DevOracle_IsPillaged",
+  "iface": "IDistrict",
+  "cpp": "GameCore::District::Instance::IsPillaged",
+  "rva": "0x192910",
+  "this_kind": "plain",
+  "oracle": true,
+  "vanilla": "IsPillaged",
+  "signature": "bool(const District::Instance* this)",
+  "args": [],
+  "returns": "BOOL",
+  "index": 234,
+  "nav": null
+ },
+ {
+  "lua": "PlayerCulture.DevOracle_GetCultureYield",
+  "iface": "IPlayerCulture",
+  "cpp": "GameCore::Player::Culture::GetCultureYield",
+  "rva": "0x27e190",
+  "this_kind": "virtual",
+  "oracle": true,
+  "vanilla": "GetCultureYield",
+  "signature": "FixedPoint(const Player::Culture* this)",
+  "args": [],
+  "returns": "FIXED",
+  "index": 235,
+  "nav": null
+ },
+ {
+  "lua": "PlayerCulture.DevOracle_GetNumPolicySlots",
+  "iface": "IPlayerCulture",
+  "cpp": "GameCore::Player::Culture::GetNumPolicySlots",
+  "rva": "0x27e570",
+  "this_kind": "virtual",
+  "oracle": true,
+  "vanilla": "GetNumPolicySlots",
+  "signature": "int(const Player::Culture* this)",
+  "args": [],
+  "returns": "INT",
+  "index": 236,
+  "nav": null
+ },
+ {
+  "lua": "PlayerTechs.DevOracle_GetResearchingTech",
+  "iface": "IPlayerTechs",
+  "cpp": "GameCore::Player::Techs::GetResearchingTech",
+  "rva": "0x333ef0",
+  "this_kind": "plain",
+  "oracle": true,
+  "vanilla": "GetResearchingTech",
+  "signature": "TechTypes(const Player::Techs* this)",
+  "args": [],
+  "returns": "INT",
+  "index": 237,
+  "nav": null
+ },
+ {
+  "lua": "PlayerTechs.DevOracle_GetScienceYield",
+  "iface": "IPlayerTechs",
+  "cpp": "GameCore::Player::Techs::GetScienceYield",
+  "rva": "0x333f10",
+  "this_kind": "plain",
+  "oracle": true,
+  "vanilla": "GetScienceYield",
+  "signature": "FixedPoint(const Player::Techs* this)",
+  "args": [],
+  "returns": "FIXED",
+  "index": 238,
+  "nav": null
+ },
+ {
+  "lua": "CityGrowth.DevOracle_GetAmenities",
+  "iface": "ICityGrowth",
+  "cpp": "GameCore::City::Growth::GetAmenities",
+  "rva": "0x123860",
+  "this_kind": "plain",
+  "oracle": true,
+  "vanilla": "GetAmenities",
+  "signature": "int(const City::Growth* this)",
+  "args": [],
+  "returns": "INT",
+  "index": 239,
+  "nav": null
+ },
+ {
+  "lua": "CityGrowth.DevOracle_GetAmenitiesFromEntertainment",
+  "iface": "ICityGrowth",
+  "cpp": "GameCore::City::Growth::GetAmenitiesFromEntertainment",
+  "rva": "0x1239a0",
+  "this_kind": "plain",
+  "oracle": true,
+  "vanilla": "GetAmenitiesFromEntertainment",
+  "signature": "int(const City::Growth* this)",
+  "args": [],
+  "returns": "INT",
+  "index": 240,
+  "nav": null
+ },
+ {
+  "lua": "GameGreatPeople.DevOracle_IsClassAvailable",
+  "iface": "IGameGreatPeople",
+  "cpp": "GameCore::Game::GreatPeople::IsClassAvailable",
+  "rva": "0x20d320",
+  "this_kind": "plain",
+  "oracle": true,
+  "vanilla": "IsClassAvailable",
+  "signature": "bool(const Game::GreatPeople* this, GreatPersonClassTypes eClass)",
+  "args": [
+   {
+    "name": "eClass",
+    "type": "GreatPersonClassTypes",
+    "kind": "INT"
+   }
+  ],
+  "returns": "BOOL",
+  "index": 241,
+  "nav": null
+ },
+ {
+  "lua": "GameGreatPeople.DevOracle_CanRecruitPerson",
+  "iface": "IGameGreatPeople",
+  "cpp": "GameCore::Game::GreatPeople::CanRecruitPerson",
+  "rva": "0x209af0",
+  "this_kind": "plain",
+  "oracle": true,
+  "vanilla": "CanRecruitPerson",
+  "signature": "bool(const Game::GreatPeople* this, PlayerTypes ePlayer, GreatPersonIndividualTypes eIndividual)",
+  "args": [
+   {
+    "name": "ePlayer",
+    "type": "PlayerTypes",
+    "kind": "INT"
+   },
+   {
+    "name": "eIndividual",
+    "type": "GreatPersonIndividualTypes",
+    "kind": "INT"
+   }
+  ],
+  "returns": "BOOL",
+  "index": 242,
+  "nav": null
+ },
+ {
+  "lua": "CityDistricts.DevOracle_GetPrereqDistrictPlotID",
+  "iface": "ICityDistricts",
+  "cpp": "GameCore::City::Districts::GetPrereqDistrictPlotID",
+  "rva": "0x11ed40",
+  "this_kind": "plain",
+  "oracle": true,
+  "vanilla": "GetPrereqDistrictPlotID",
+  "signature": "int(const City::Districts* this, DistrictTypes eDistrictType)",
+  "args": [
+   {
+    "name": "eDistrictType",
+    "type": "DistrictTypes",
+    "kind": "INT"
+   }
+  ],
+  "returns": "INT",
+  "index": 243,
+  "nav": null
+ },
+ {
+  "lua": "Deal.DevOracle_HasUnacceptableItems",
+  "iface": "IDeal",
+  "cpp": "GameCore::Diplomacy::Deal::Instance::HasUnacceptableItems",
+  "rva": "0x57f0b0",
+  "this_kind": "plain",
+  "oracle": true,
+  "vanilla": "HasUnacceptableItems",
+  "signature": "bool(const Diplomacy::Deal::Instance* this)",
+  "args": [],
+  "returns": "BOOL",
+  "index": 244,
+  "nav": null
+ },
+ {
+  "lua": "PlayerReligion.DevOracle_GetFaithYield",
+  "iface": "IPlayerReligion",
+  "cpp": "GameCore::Player::Religion::GetFaithYield",
+  "rva": "0x315210",
+  "this_kind": "plain",
+  "oracle": true,
+  "vanilla": "GetFaithYield",
+  "signature": "FixedPoint(const Player::Religion* this)",
+  "args": [],
+  "returns": "FIXED",
+  "index": 245,
+  "nav": null
+ },
+ {
+  "lua": "PlayerReligion.DevOracle_GetPantheon",
+  "iface": "IPlayerReligion",
+  "cpp": "GameCore::Player::Religion::GetPantheon",
+  "rva": "0x315440",
+  "this_kind": "plain",
+  "oracle": true,
+  "vanilla": "GetPantheon",
+  "signature": "BeliefTypes(const Player::Religion* this)",
+  "args": [],
+  "returns": "INT",
+  "index": 246,
+  "nav": null
+ },
+ {
+  "lua": "PlayerStats.DevOracle_GetNumBeliefsInReligion",
+  "iface": "IPlayerStats",
+  "cpp": "GameCore::Player::Stats::GetNumBeliefsInReligion",
+  "rva": "0x32bd10",
+  "this_kind": "virtual",
+  "oracle": true,
+  "vanilla": "GetNumBeliefsInReligion",
+  "signature": "int(const Player::Stats* this)",
+  "args": [],
+  "returns": "INT",
+  "index": 247,
+  "nav": null
+ },
+ {
+  "lua": "PlayerStats.DevOracle_GetNumMyCitiesFollowingSpecificReligion",
+  "iface": "IPlayerStats",
+  "cpp": "GameCore::Player::Stats::GetNumMyCitiesFollowingSpecificReligion",
+  "rva": "0x32cf50",
+  "this_kind": "virtual",
+  "oracle": true,
+  "vanilla": "GetNumMyCitiesFollowingSpecificReligion",
+  "signature": "int(const Player::Stats* this, ReligionTypes eReligion)",
+  "args": [
+   {
+    "name": "eReligion",
+    "type": "ReligionTypes",
+    "kind": "INT"
+   }
+  ],
+  "returns": "INT",
+  "index": 248,
+  "nav": null
+ },
+ {
+  "lua": "PlayerTreasury.DevOracle_GetBuildingMaintenance",
+  "iface": "IPlayerTreasury",
+  "cpp": "GameCore::Player::Treasury::GetBuildingMaintenance",
+  "rva": "0x343910",
+  "this_kind": "plain",
+  "oracle": true,
+  "vanilla": "GetBuildingMaintenance",
+  "signature": "int(const Player::Treasury* this)",
+  "args": [],
+  "returns": "INT",
+  "index": 249,
+  "nav": null
+ },
+ {
+  "lua": "PlayerTreasury.DevOracle_GetDistrictMaintenance",
+  "iface": "IPlayerTreasury",
+  "cpp": "GameCore::Player::Treasury::GetDistrictMaintenance",
+  "rva": "0x343960",
+  "this_kind": "plain",
+  "oracle": true,
+  "vanilla": "GetDistrictMaintenance",
+  "signature": "int(const Player::Treasury* this)",
+  "args": [],
+  "returns": "INT",
+  "index": 250,
+  "nav": null
+ }
+]

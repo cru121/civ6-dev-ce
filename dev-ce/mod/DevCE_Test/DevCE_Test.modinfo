@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Mod id="6b0d0b1c-7f61-4d6e-9d0a-3f2f5c1c7d11" version="1">
+    <Properties>
+        <Name>Dev CE test build</Name>
+        <Description>Development build of a Community-Extension-style GameCore with generated native bridge methods (251). Single-player testing only. Incompatible with other GameCore mods (including the Community Extension).</Description>
+        <Teaser>Dev CE native bridge test</Teaser>
+        <Authors>local test</Authors>
+        <CompatibleVersions>1.2,2.0</CompatibleVersions>
+        <AffectsSavedGames>0</AffectsSavedGames>
+    </Properties>
+    <Dependencies>
+        <Mod id="4873eb62-8ccc-4574-b784-dda455e74e68" title="Expansion: Gathering Storm" />
+    </Dependencies>
+    <FrontEndActions>
+        <UpdateDatabase id="DevCE_Config">
+            <Properties><LoadOrder>10</LoadOrder></Properties>
+            <File>Data/Config.sql</File>
+        </UpdateDatabase>
+    </FrontEndActions>
+    <InGameActions>
+        <AddGameplayScripts id="DevCE_Selftest">
+            <Properties><LoadOrder>10</LoadOrder></Properties>
+            <File>Scripts/DevCE_Selftest.lua</File>
+        </AddGameplayScripts>
+    </InGameActions>
+    <Files>
+        <File>Binaries/Win64/GameCore_XP2_CE_FinalRelease.dll</File>
+        <File>Data/Config.sql</File>
+        <File>Scripts/DevCE_Selftest.lua</File>
+    </Files>
+</Mod>
