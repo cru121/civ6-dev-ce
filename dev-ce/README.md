@@ -19,6 +19,13 @@ the engine classes behind it and the address mapping this fork uses ([`data/`](h
   but it cannot catch silent memory corruption. 216 of the 251 functions return nothing, so you will not see whether they worked unless you read the state some other way.
 * Only **one** GameCore-replacing mod may be enabled (Dev CE, Dev CE test build, the Community Extension, ... never two).
 
+## Try it: Dev CE Playground
+`dev-ce/mod/DevCE_Playground` is a small demo mod with an always-visible button panel (right edge of the screen). Enable it together with one of the Dev CE mods below. Buttons: Golden / Dark Age on and off for yourself (`GameEras:SetGoldenAge` / `SetDarkAge`),
+Era +1 / -1 (`GameEras:SetCurrentEra`, also reaches eras added by other mods), spawn James of St. George (vanilla), action charges of the selected unit (vanilla `Unit:ChangeActionCharges` next to Dev CE's `UnitGreatPerson:ChangeActionCharges`,
+which changes the great person's *Actions* count that vanilla Lua cannot reach), capital food +/-2 and trade route capacity +/-1. Each press reports before/after values in the panel and in `Lua.log`.
+What the demo showed: the era and age functions are raw setters (no era-change popup, no dedication choice, no era score, and Golden and Dark can both be on at once); the charges, food and trade functions do exactly what they say and reverse cleanly.
+It changes your game directly: single player, disposable games only.
+
 ## The two mods
 | mod folder | what it is |
 |---|---|
