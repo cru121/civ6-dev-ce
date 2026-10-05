@@ -41,6 +41,26 @@ local function SetAge(owner, golden, state)
 	Report(owner, name .. ": call " .. (ok and "ok" or ("failed: " .. tostring(err))) .. " (see the Ages line)");
 end
 
+-- Dev CE: GameEras:SetCurrentEra(era). The engine function has no range check, so the target is clamped to the eras that exist here.
+local function Era(owner, delta)
+	local eras = Game.GetEras();
+	if eras.SetCurrentEra == nil then NeedDevCE(owner, "Era"); return; end
+	local count = 0;
+	for _ in GameInfo.Eras() do count = count + 1; end
+	local cur = nil;
+	pcall(function() cur = eras:GetCurrentEra(); end);
+	if cur == nil then Report(owner, "Era: cannot read the current era in the gameplay VM."); return; end
+	local target = cur + delta;
+	if target < 0 or target > count - 1 then Report(owner, "Era: " .. tostring(target) .. " is outside 0.." .. tostring(count - 1) .. ", nothing done."); return; end
+	local ok, err = pcall(function() eras:SetCurrentEra(target); end);
+	local after = "?";
+	pcall(function() after = eras:GetCurrentEra(); end);
+	Report(owner, "Era " .. (delta > 0 and "+1" or "-1") .. ": call " .. (ok and "ok" or ("failed: " .. tostring(err))) .. "; era " .. tostring(cur) .. " -> " .. tostring(after) .. " (see the Era line)");
+end
+
+GameEvents.DevCEPg_EraPlus.Add(function(owner) Era(owner, 1); end);
+GameEvents.DevCEPg_EraMinus.Add(function(owner) Era(owner, -1); end);
+
 GameEvents.DevCEPg_GoldenOn.Add(function(owner) SetAge(owner, true, true); end);
 GameEvents.DevCEPg_GoldenOff.Add(function(owner) SetAge(owner, true, false); end);
 GameEvents.DevCEPg_DarkOn.Add(function(owner) SetAge(owner, false, true); end);

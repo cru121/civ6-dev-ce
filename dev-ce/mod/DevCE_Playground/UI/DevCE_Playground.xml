@@ -2,13 +2,14 @@
 <!-- Dev CE Playground: an always-visible button panel (new InGame context, no base file replaced).
      Root panel: a visible Grid anchored R,C with the SubContainerSmall2 style, the combination that drew on the map HUD in the FreeGP mod. Control IDs map to Controls.<ID> in the Lua file. -->
 <Context>
-	<Grid ID="Pg_Frame" Anchor="R,C" Offset="0,0" Size="250,450" Hidden="0" Style="SubContainerSmall2">
+	<Grid ID="Pg_Frame" Anchor="R,C" Offset="0,0" Size="250,490" Hidden="0" Style="SubContainerSmall2">
 		<Stack ID="Pg_Outer" Anchor="C,T" Offset="0,10" StackGrowth="Bottom" StackPadding="4">
 			<GridButton ID="Pg_Toggle" Anchor="C,T" Size="226,28" Style="MainButtonSmall" String="Dev CE Playground  [-]"/>
 
 			<Stack ID="Pg_Body" Anchor="C,T" StackGrowth="Bottom" StackPadding="4">
 				<Label ID="Pg_Status" Anchor="C,T" Style="FontNormal12" Color="255,236,150,255" WrapWidth="226" String="Dev CE Playground ready."/>
 				<Label ID="Pg_Ages" Anchor="C,T" Style="FontNormal12" Color="150,220,255,255" WrapWidth="226" String="Ages: ?"/>
+				<Label ID="Pg_Era" Anchor="C,T" Style="FontNormal12" Color="150,220,255,255" WrapWidth="226" String="Era: ?"/>
 
 				<Label Anchor="C,T" Style="FontNormal12" Color="200,200,200,255" String="Eras (Dev CE)"/>
 				<Stack Anchor="C,T" StackGrowth="Right" StackPadding="4">
@@ -18,6 +19,10 @@
 				<Stack Anchor="C,T" StackGrowth="Right" StackPadding="4">
 					<GridButton ID="Btn_DarkOn"  Size="111,28" Style="MainButtonSmall" String="Dark ON"/>
 					<GridButton ID="Btn_DarkOff" Size="111,28" Style="MainButtonSmall" String="Dark OFF"/>
+				</Stack>
+				<Stack Anchor="C,T" StackGrowth="Right" StackPadding="4">
+					<GridButton ID="Btn_EraPlus"  Size="111,28" Style="MainButtonSmall" String="Era +1 (risky)"/>
+					<GridButton ID="Btn_EraMinus" Size="111,28" Style="MainButtonSmall" String="Era -1 (risky)"/>
 				</Stack>
 
 				<Label Anchor="C,T" Style="FontNormal12" Color="200,200,200,255" String="Great person (vanilla)"/>

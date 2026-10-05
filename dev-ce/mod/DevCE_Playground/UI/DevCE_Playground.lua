@@ -16,6 +16,8 @@ local BUTTONS = {
 	{ "Btn_GoldenOff",    "DevCEPg_GoldenOff",    "Golden Age OFF" },
 	{ "Btn_DarkOn",       "DevCEPg_DarkOn",       "Dark Age ON" },
 	{ "Btn_DarkOff",      "DevCEPg_DarkOff",      "Dark Age OFF" },
+	{ "Btn_EraPlus",      "DevCEPg_EraPlus",      "Era +1" },
+	{ "Btn_EraMinus",     "DevCEPg_EraMinus",     "Era -1" },
 	{ "Btn_SpawnJames",   "DevCEPg_SpawnJames",   "Spawn James of St. George" },
 	{ "Btn_VChargePlus",  "DevCEPg_VChargePlus",  "vanilla charge +1" },
 	{ "Btn_VChargeMinus", "DevCEPg_VChargeMinus", "vanilla charge -1" },
@@ -27,7 +29,7 @@ local BUTTONS = {
 	{ "Btn_RoutesMinus",  "DevCEPg_RoutesMinus",  "trade routes -1" },
 };
 
-local FRAME_HEIGHT = 450;   -- must match the Grid's height in the XML
+local FRAME_HEIGHT = 490;   -- must match the Grid's height in the XML
 local m_collapsed = false;
 local m_lastSeq = nil;
 
@@ -65,6 +67,9 @@ local function OnUpdate()
 	pcall(function()
 		local eras = Game.GetEras();
 		Controls.Pg_Ages:SetText("Ages:  Golden " .. tostring(eras:HasGoldenAge(pid)) .. "   Dark " .. tostring(eras:HasDarkAge(pid)) .. "   Heroic " .. tostring(eras:HasHeroicGoldenAge(pid)));
+		local e = eras:GetCurrentEra();
+		local row = GameInfo.Eras[e];
+		Controls.Pg_Era:SetText("Era: " .. tostring(e) .. " " .. (row and row.EraType or "?") .. "   started turn " .. tostring(eras:GetCurrentEraStartTurn()));
 	end);
 	local seq, msg;
 	pcall(function()
