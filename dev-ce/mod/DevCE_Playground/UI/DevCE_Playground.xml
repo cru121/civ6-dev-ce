@@ -2,7 +2,7 @@
 <!-- Dev CE Playground: an always-visible button panel (new InGame context, no base file replaced).
      Styles are the ones used by the FreeGP mod (known to exist in the game). Control IDs map to Controls.<ID> in the Lua file. -->
 <Context>
-	<Grid ID="Pg_Frame" Anchor="R,T" Offset="12,110" Size="250,100" AutoSizePadding="0,0" Style="SubContainerSmall2">
+	<Box ID="Pg_Frame" Anchor="L,T" Offset="10,120" Size="250,auto" AutoSizePadding="0,12" Color="40,35,25,235">
 		<Stack ID="Pg_Outer" Anchor="C,T" Offset="0,10" StackGrowth="Bottom" StackPadding="4">
 			<GridButton ID="Pg_Toggle" Anchor="C,T" Size="226,28" Style="MainButtonSmall" String="Dev CE Playground  [-]"/>
 
@@ -43,5 +43,5 @@
 				</Stack>
 			</Stack>
 		</Stack>
-	</Grid>
+	</Box>
 </Context>

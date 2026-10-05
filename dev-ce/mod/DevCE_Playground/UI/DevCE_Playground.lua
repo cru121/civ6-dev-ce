@@ -75,7 +75,7 @@ local function Toggle()
 	Controls.Pg_Body:SetHide(m_collapsed);
 	Controls.Pg_Toggle:SetText(m_collapsed and "Dev CE Playground  [+]" or "Dev CE Playground  [-]");
 	Controls.Pg_Outer:CalculateSize();
-	Controls.Pg_Frame:SetSizeY(Controls.Pg_Outer:GetSizeY() + 22);
+	pcall(function() Controls.Pg_Frame:ReprocessAnchoring(); end);
 end
 
 local function Initialize()
@@ -86,8 +86,13 @@ local function Initialize()
 	Controls.Pg_Toggle:RegisterCallback(Mouse.eLClick, Toggle);
 	ContextPtr:SetUpdate(OnUpdate);
 	Controls.Pg_Outer:CalculateSize();
-	Controls.Pg_Frame:SetSizeY(Controls.Pg_Outer:GetSizeY() + 22);
-	print("[DevCEPg][UI] ready.");
+	pcall(function() Controls.Pg_Frame:ReprocessAnchoring(); end);
+	pcall(function()
+		local sx, sy = UIManager:GetScreenSizeVal();
+		print(string.format("[DevCEPg][UI] ready. screen %sx%s; frame size %sx%s offset %s,%s hidden=%s; context hidden=%s",
+			tostring(sx), tostring(sy), tostring(Controls.Pg_Frame:GetSizeX()), tostring(Controls.Pg_Frame:GetSizeY()),
+			tostring(Controls.Pg_Frame:GetOffsetX()), tostring(Controls.Pg_Frame:GetOffsetY()), tostring(Controls.Pg_Frame:IsHidden()), tostring(ContextPtr:IsHidden())));
+	end);
 end
 
 Initialize();
