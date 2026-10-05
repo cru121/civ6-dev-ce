@@ -58,6 +58,8 @@ end
 
 -- The gameplay VM reports what it did in player properties.
 local function OnUpdate()
+	-- The game creates additional contexts hidden (the log said "context hidden=true"): keep this one shown.
+	if ContextPtr:IsHidden() then ContextPtr:SetHide(false); end
 	local pid = Game.GetLocalPlayer();
 	if pid == nil or pid < 0 then return; end
 	local seq, msg;
@@ -85,7 +87,9 @@ local function Initialize()
 		Controls[ctrl]:RegisterCallback(Mouse.eLClick, function() Send(command, text); end);
 	end
 	Controls.Pg_Toggle:RegisterCallback(Mouse.eLClick, Toggle);
+	ContextPtr:SetHide(false);
 	ContextPtr:SetUpdate(OnUpdate);
+	if Events.LoadScreenClose ~= nil then Events.LoadScreenClose.Add(function() ContextPtr:SetHide(false); end); end
 	Controls.Pg_Outer:CalculateSize();
 	pcall(function()
 		local sx, sy = UIManager:GetScreenSizeVal();
