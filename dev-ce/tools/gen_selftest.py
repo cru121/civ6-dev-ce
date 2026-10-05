@@ -488,12 +488,35 @@ open(os.path.join(PLAYER, 'DevCE.modinfo'), 'w', encoding='utf-8').write('''<?xm
             <File>Data/Config.sql</File>
         </UpdateDatabase>
     </FrontEndActions>
+    <InGameActions>
+        <AddGameplayScripts id="DevCE_Loaded">
+            <Properties><LoadOrder>10</LoadOrder></Properties>
+            <File>Scripts/DevCE_Loaded.lua</File>
+        </AddGameplayScripts>
+    </InGameActions>
     <Files>
         <File>Binaries/Win64/GameCore_XP2_CE_FinalRelease.dll</File>
         <File>Data/Config.sql</File>
+        <File>Scripts/DevCE_Loaded.lua</File>
     </Files>
 </Mod>
 ''' % (PLAYER_GUID, len(man)))
+# A mod without any in-game action is treated by the game as front-end only and its GameCore is NOT used (found 2026-10-06: the first player mod loaded the vanilla DLL).
+# So the player mod carries one in-game script that only writes a line to Lua.log.
+os.makedirs(os.path.join(PLAYER, 'Scripts'), exist_ok=True)
+open(os.path.join(PLAYER, 'Scripts', 'DevCE_Loaded.lua'), 'w', encoding='utf-8').write('''-- SPDX-License-Identifier: AGPL-3.0-only
+-- Part of Dev CE, a fork of the Civilization VI Community Extension by Wild-W. Copyright (C) 2026 cru121. Licensed under the GNU AGPL v3.0 (see LICENSE.txt).
+-- Dev CE (experimental): this script only writes one line to Lua.log at the start of the first turn. (A mod needs at least one in-game action,
+-- otherwise the game treats it as a front-end mod and does not use its GameCore DLL.)
+local done = false
+GameEvents.PlayerTurnStarted.Add(function(playerID)
+    if done then return end
+    done = true
+    local present = false
+    pcall(function() present = (Game.GetEras().SetCurrentEra ~= nil) end)
+    print("DevCE: player mod loaded; Dev CE methods " .. (present and "PRESENT" or "MISSING (the Dev CE GameCore was not loaded)"))
+end)
+''')
 
 dll = os.path.join(DEV, 'build', 'GameCore_XP2_CE_FinalRelease.dll')
 if os.path.exists(dll):

@@ -17,8 +17,15 @@
             <File>Data/Config.sql</File>
         </UpdateDatabase>
     </FrontEndActions>
+    <InGameActions>
+        <AddGameplayScripts id="DevCE_Loaded">
+            <Properties><LoadOrder>10</LoadOrder></Properties>
+            <File>Scripts/DevCE_Loaded.lua</File>
+        </AddGameplayScripts>
+    </InGameActions>
     <Files>
         <File>Binaries/Win64/GameCore_XP2_CE_FinalRelease.dll</File>
         <File>Data/Config.sql</File>
+        <File>Scripts/DevCE_Loaded.lua</File>
     </Files>
 </Mod>
