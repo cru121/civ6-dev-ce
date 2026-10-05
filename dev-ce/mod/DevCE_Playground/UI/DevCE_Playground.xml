@@ -8,6 +8,7 @@
 
 			<Stack ID="Pg_Body" Anchor="C,T" StackGrowth="Bottom" StackPadding="4">
 				<Label ID="Pg_Status" Anchor="C,T" Style="FontNormal12" Color="255,236,150,255" WrapWidth="226" String="Dev CE Playground ready."/>
+				<Label ID="Pg_Ages" Anchor="C,T" Style="FontNormal12" Color="150,220,255,255" WrapWidth="226" String="Ages: ?"/>
 
 				<Label Anchor="C,T" Style="FontNormal12" Color="200,200,200,255" String="Eras (Dev CE)"/>
 				<Stack Anchor="C,T" StackGrowth="Right" StackPadding="4">

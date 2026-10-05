@@ -36,10 +36,9 @@ local function SetAge(owner, golden, state)
 	local setter = golden and eras.SetGoldenAge or eras.SetDarkAge;
 	local name = (golden and "Golden" or "Dark") .. " Age " .. (state and "ON" or "OFF");
 	if setter == nil then NeedDevCE(owner, name); return; end
-	local before = golden and eras:HasGoldenAge(owner) or eras:HasDarkAge(owner);
+	-- the Has...Age getters exist on the UI side only; the panel shows their value ("Ages" line), so no read-back here
 	local ok, err = pcall(function() setter(eras, owner, state); end);
-	local after = golden and eras:HasGoldenAge(owner) or eras:HasDarkAge(owner);
-	Report(owner, name .. ": call " .. (ok and "ok" or ("failed: " .. tostring(err))) .. "; Has" .. (golden and "Golden" or "Dark") .. "Age " .. tostring(before) .. " -> " .. tostring(after));
+	Report(owner, name .. ": call " .. (ok and "ok" or ("failed: " .. tostring(err))) .. " (see the Ages line)");
 end
 
 GameEvents.DevCEPg_GoldenOn.Add(function(owner) SetAge(owner, true, true); end);

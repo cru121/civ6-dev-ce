@@ -62,6 +62,10 @@ local function OnUpdate()
 	if ContextPtr:IsHidden() then ContextPtr:SetHide(false); end
 	local pid = Game.GetLocalPlayer();
 	if pid == nil or pid < 0 then return; end
+	pcall(function()
+		local eras = Game.GetEras();
+		Controls.Pg_Ages:SetText("Ages:  Golden " .. tostring(eras:HasGoldenAge(pid)) .. "   Dark " .. tostring(eras:HasDarkAge(pid)) .. "   Heroic " .. tostring(eras:HasHeroicGoldenAge(pid)));
+	end);
 	local seq, msg;
 	pcall(function()
 		seq = Players[pid]:GetProperty("DEVCEPG_SEQ");
