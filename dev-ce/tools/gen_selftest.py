@@ -340,6 +340,7 @@ L4LINES += [
     'end', '']
 
 os.makedirs(os.path.join(MOD, 'Scripts'), exist_ok=True)
+shutil.copy(os.path.join(DEV, 'tools', 'CE_Proc.lua'), os.path.join(MOD, 'Scripts', 'CE_Proc.lua'))   # processor-fix test (CE issue #5)
 os.makedirs(os.path.join(MOD, 'Data'), exist_ok=True)
 os.makedirs(os.path.join(MOD, 'Binaries', 'Win64'), exist_ok=True)
 
@@ -443,11 +444,16 @@ open(os.path.join(MOD, 'DevCE_Test.modinfo'), 'w', encoding='utf-8').write('''<?
             <Properties><LoadOrder>10</LoadOrder></Properties>
             <File>Scripts/DevCE_Selftest.lua</File>
         </AddGameplayScripts>
+        <AddGameplayScripts id="DevCE_ProcTest">
+            <Properties><LoadOrder>11</LoadOrder></Properties>
+            <File>Scripts/CE_Proc.lua</File>
+        </AddGameplayScripts>
     </InGameActions>
     <Files>
         <File>Binaries/Win64/GameCore_XP2_CE_FinalRelease.dll</File>
         <File>Data/Config.sql</File>
         <File>Scripts/DevCE_Selftest.lua</File>
+        <File>Scripts/CE_Proc.lua</File>
     </Files>
 </Mod>
 ''' % (GUID, len(man)))
