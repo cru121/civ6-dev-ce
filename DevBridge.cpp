@@ -44,6 +44,7 @@ namespace DevBridge {
 		va_end(ap);
 		std::cout << buf << "\n";
 		if (gLog) { fprintf(gLog, "%s\n", buf); fflush(gLog); }
+		LeaveCriticalSection(&gLogLock);
 	}
 
 	// Frida live tool support. DevCE_Marker is exported and does nothing: the tool hooks it to learn when a gameplay-script test window begins (1) and ends (2).
