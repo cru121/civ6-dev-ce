@@ -506,7 +506,6 @@ local LEVEL3 = {
     { name = "PlayerUnits.ChangeProductionModifier", reach = function(p, capital, unit) return p:GetUnits() end, plus = function(o) return o:ChangeProductionModifier(0, 1) end, minus = function(o) return o:ChangeProductionModifier(0, -1) end },
     { name = "Unit.ChangeBonusPointsPerKill", reach = function(p, capital, unit) return unit end, plus = function(o) return o:ChangeBonusPointsPerKill(0, 1) end, minus = function(o) return o:ChangeBonusPointsPerKill(0, -1) end },
     { name = "Unit.ChangeBonusPointsPerKillStrength", reach = function(p, capital, unit) return unit end, plus = function(o) return o:ChangeBonusPointsPerKillStrength(0, 1) end, minus = function(o) return o:ChangeBonusPointsPerKillStrength(0, -1) end },
-    { name = "Unit.ChangeSightRange", reach = function(p, capital, unit) return unit end, plus = function(o) return o:ChangeSightRange(1) end, minus = function(o) return o:ChangeSightRange(-1) end },
     { name = "Unit.ChangeTerritoryHealing", reach = function(p, capital, unit) return unit end, plus = function(o) return o:ChangeTerritoryHealing(0, 1) end, minus = function(o) return o:ChangeTerritoryHealing(0, -1) end },
     { name = "Unit.ChangeTerritoryHealingReligion", reach = function(p, capital, unit) return unit end, plus = function(o) return o:ChangeTerritoryHealingReligion(0, 1) end, minus = function(o) return o:ChangeTerritoryHealingReligion(0, -1) end },
     { name = "UnitReligion.ChangeInitiationYieldPopulation", reach = function(p, capital, unit) return unit:GetReligion() end, plus = function(o) return o:ChangeInitiationYieldPopulation(0, 1) end, minus = function(o) return o:ChangeInitiationYieldPopulation(0, -1) end },
@@ -565,12 +564,342 @@ local function Level3()
     LogF("L3|END")
 end
 
+local LEVEL4 = {
+    { name = "TeamDiplomacy.SetCanEnforceBorders", reach = function(p, capital, unit) return p:GetDiplomacy() end, meth = "SetCanEnforceBorders", static = false, nargs = 1, guarded = false, getter = false },
+    { name = "TeamDiplomacy.SetHasOpenBordersFrom", reach = function(p, capital, unit) return p:GetDiplomacy() end, meth = "SetHasOpenBordersFrom", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "City.RecalculatePower", reach = function(p, capital, unit) return capital end, meth = "RecalculatePower", static = false, nargs = 0, guarded = false, getter = false },
+    { name = "Player.SetAlive", reach = function(p, capital, unit) return p end, meth = "SetAlive", static = false, nargs = 1, guarded = false, getter = false },
+    { name = "CityBuildings.RemoveAllBuildings", reach = function(p, capital, unit) return capital:GetBuildings() end, meth = "RemoveAllBuildings", static = false, nargs = 0, guarded = false, getter = false },
+    { name = "GameEras.SetCurrentEra", reach = function(p, capital, unit) return Game.GetEras() end, meth = "SetCurrentEra", static = false, nargs = 1, guarded = true, getter = false },
+    { name = "Player.AddAgenda", reach = function(p, capital, unit) return p end, meth = "AddAgenda", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "Unit.SetProcessedTurn", reach = function(p, capital, unit) return unit end, meth = "SetProcessedTurn", static = false, nargs = 1, guarded = false, getter = false },
+    { name = "Unit.ChangeBuildCharges", reach = function(p, capital, unit) return unit end, meth = "ChangeBuildCharges", static = false, nargs = 1, guarded = true, getter = false },
+    { name = "City.SetOccupied", reach = function(p, capital, unit) return capital end, meth = "SetOccupied", static = false, nargs = 1, guarded = false, getter = false },
+    { name = "PlayerTrade.ChangeOutgoingRouteCapacity", reach = function(p, capital, unit) return p:GetTrade() end, meth = "ChangeOutgoingRouteCapacity", static = false, nargs = 1, guarded = true, getter = false },
+    { name = "UnitExperience.SetLevel", reach = function(p, capital, unit) return unit:GetExperience() end, meth = "SetLevel", static = false, nargs = 1, guarded = true, getter = false },
+    { name = "City.ChangeYieldChange", reach = function(p, capital, unit) return capital end, meth = "ChangeYieldChange", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "PlayerResources.RevealResourceOnVisibleTiles", reach = function(p, capital, unit) return p:GetResources() end, meth = "RevealResourceOnVisibleTiles", static = false, nargs = 1, guarded = true, getter = false },
+    { name = "UnitGreatPerson.ChangeActionCharges", reach = function(p, capital, unit) return unit:GetGreatPerson() end, meth = "ChangeActionCharges", static = false, nargs = 1, guarded = true, getter = false },
+    { name = "Unit.ChangeDisasterCharges", reach = function(p, capital, unit) return unit end, meth = "ChangeDisasterCharges", static = false, nargs = 1, guarded = true, getter = false },
+    { name = "City.ChangeFollowerYieldModifier", reach = function(p, capital, unit) return capital end, meth = "ChangeFollowerYieldModifier", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "City.ChangeYieldModifier", reach = function(p, capital, unit) return capital end, meth = "ChangeYieldModifier", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "City.ChangeYieldModifierPerGovernorTitle", reach = function(p, capital, unit) return capital end, meth = "ChangeYieldModifierPerGovernorTitle", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "GameEras.ChangePlayerEraScorePerAerodromeBuildingConstructed", reach = function(p, capital, unit) return Game.GetEras() end, meth = "ChangePlayerEraScorePerAerodromeBuildingConstructed", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "GameEras.ChangePlayerEraScorePerArmyKilled", reach = function(p, capital, unit) return Game.GetEras() end, meth = "ChangePlayerEraScorePerArmyKilled", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "GameEras.ChangePlayerEraScorePerArtifactExtracted", reach = function(p, capital, unit) return Game.GetEras() end, meth = "ChangePlayerEraScorePerArtifactExtracted", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "GameEras.ChangePlayerEraScorePerCityReligionConversion", reach = function(p, capital, unit) return Game.GetEras() end, meth = "ChangePlayerEraScorePerCityReligionConversion", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "GameEras.ChangePlayerEraScorePerCivicBoost", reach = function(p, capital, unit) return Game.GetEras() end, meth = "ChangePlayerEraScorePerCivicBoost", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "GameEras.ChangePlayerEraScorePerContinentDiscovered", reach = function(p, capital, unit) return Game.GetEras() end, meth = "ChangePlayerEraScorePerContinentDiscovered", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "GameEras.ChangePlayerEraScorePerCorpsKilled", reach = function(p, capital, unit) return Game.GetEras() end, meth = "ChangePlayerEraScorePerCorpsKilled", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "GameEras.ChangePlayerEraScorePerCultureBuildingConstructed", reach = function(p, capital, unit) return Game.GetEras() end, meth = "ChangePlayerEraScorePerCultureBuildingConstructed", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "GameEras.ChangePlayerEraScorePerCurrentCivic", reach = function(p, capital, unit) return Game.GetEras() end, meth = "ChangePlayerEraScorePerCurrentCivic", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "GameEras.ChangePlayerEraScorePerCurrentTech", reach = function(p, capital, unit) return Game.GetEras() end, meth = "ChangePlayerEraScorePerCurrentTech", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "GameEras.ChangePlayerEraScorePerDistrictConstructed", reach = function(p, capital, unit) return Game.GetEras() end, meth = "ChangePlayerEraScorePerDistrictConstructed", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "GameEras.ChangePlayerEraScorePerGreatPersonEarned", reach = function(p, capital, unit) return Game.GetEras() end, meth = "ChangePlayerEraScorePerGreatPersonEarned", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "GameEras.ChangePlayerEraScorePerIndustrialBuildingConstructed", reach = function(p, capital, unit) return Game.GetEras() end, meth = "ChangePlayerEraScorePerIndustrialBuildingConstructed", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "GameEras.ChangePlayerEraScorePerNaturalWonderDiscovered", reach = function(p, capital, unit) return Game.GetEras() end, meth = "ChangePlayerEraScorePerNaturalWonderDiscovered", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "GameEras.ChangePlayerEraScorePerNonBarbarianUnitKilledByGDR", reach = function(p, capital, unit) return Game.GetEras() end, meth = "ChangePlayerEraScorePerNonBarbarianUnitKilledByGDR", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "GameEras.ChangePlayerEraScorePerNonBarbarianUnitSeaKilled", reach = function(p, capital, unit) return Game.GetEras() end, meth = "ChangePlayerEraScorePerNonBarbarianUnitSeaKilled", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "GameEras.ChangePlayerEraScorePerScienceBuildingConstructed", reach = function(p, capital, unit) return Game.GetEras() end, meth = "ChangePlayerEraScorePerScienceBuildingConstructed", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "GameEras.ChangePlayerEraScorePerSpySuccessfulMission", reach = function(p, capital, unit) return Game.GetEras() end, meth = "ChangePlayerEraScorePerSpySuccessfulMission", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "GameEras.ChangePlayerEraScorePerTechBoost", reach = function(p, capital, unit) return Game.GetEras() end, meth = "ChangePlayerEraScorePerTechBoost", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "GameEras.ChangePlayerEraScorePerTradeRouteCompleted", reach = function(p, capital, unit) return Game.GetEras() end, meth = "ChangePlayerEraScorePerTradeRouteCompleted", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "GameEras.ChangePlayerEraScorePerUnitPromotionEarned", reach = function(p, capital, unit) return Game.GetEras() end, meth = "ChangePlayerEraScorePerUnitPromotionEarned", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "GameEras.RecalculateThresholdShifts", reach = function(p, capital, unit) return Game.GetEras() end, meth = "RecalculateThresholdShifts", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "PlayerGreatPeoplePoints.ChangeFreeGreatPersonPoints", reach = function(p, capital, unit) return p:GetGreatPeoplePoints() end, meth = "ChangeFreeGreatPersonPoints", static = false, nargs = 1, guarded = true, getter = false },
+    { name = "Game.SetLocalPlayerTo", reach = function(p, capital, unit) return Game end, meth = "SetLocalPlayerTo", static = true, nargs = 1, guarded = true, getter = false },
+    { name = "TeamDiplomacy.SetBlockedEntry", reach = function(p, capital, unit) return p:GetDiplomacy() end, meth = "SetBlockedEntry", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "CityBuildings.AddGreatWork", reach = function(p, capital, unit) return capital:GetBuildings() end, meth = "AddGreatWork", static = false, nargs = 1, guarded = true, getter = false },
+    { name = "Map.AddPlotYield", reach = function(p, capital, unit) return Map end, meth = "AddPlotYield", static = true, nargs = 3, guarded = true, getter = false },
+    { name = "Unit.SetLevied", reach = function(p, capital, unit) return unit end, meth = "SetLevied", static = false, nargs = 1, guarded = false, getter = false },
+    { name = "Game.DecrementGameStateLock", reach = function(p, capital, unit) return Game end, meth = "DecrementGameStateLock", static = true, nargs = 0, guarded = false, getter = false },
+    { name = "GameDiplomacy.SetIsInDefensivePact", reach = function(p, capital, unit) return Game.GetGameDiplomacy() end, meth = "SetIsInDefensivePact", static = false, nargs = 3, guarded = true, getter = false },
+    { name = "GameEras.SetDarkAge", reach = function(p, capital, unit) return Game.GetEras() end, meth = "SetDarkAge", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "GameEras.SetGoldenAge", reach = function(p, capital, unit) return Game.GetEras() end, meth = "SetGoldenAge", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "PlayerCulture.SetAllCivicsByPreviousEra", reach = function(p, capital, unit) return p:GetCulture() end, meth = "SetAllCivicsByPreviousEra", static = false, nargs = 1, guarded = true, getter = false },
+    { name = "TeamDiplomacy.AddEspionageIncursion", reach = function(p, capital, unit) return p:GetDiplomacy() end, meth = "AddEspionageIncursion", static = false, nargs = 1, guarded = true, getter = false },
+    { name = "PlayerTechs.SetAllTechsByPreviousEra", reach = function(p, capital, unit) return p:GetTechs() end, meth = "SetAllTechsByPreviousEra", static = false, nargs = 1, guarded = true, getter = false },
+    { name = "TeamDiplomacy.AddIncursionData", reach = function(p, capital, unit) return p:GetDiplomacy() end, meth = "AddIncursionData", static = false, nargs = 3, guarded = true, getter = false },
+    { name = "PlayerResources.ChangeReservedResourceAmount", reach = function(p, capital, unit) return p:GetResources() end, meth = "ChangeReservedResourceAmount", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "CityBuildings.AddGreatWorkToSlot", reach = function(p, capital, unit) return capital:GetBuildings() end, meth = "AddGreatWorkToSlot", static = false, nargs = 3, guarded = true, getter = false },
+    { name = "PlayerCulture.AddTourismAtPlot", reach = function(p, capital, unit) return p:GetCulture() end, meth = "AddTourismAtPlot", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "TeamDiplomacy.SetLastTurnOfferedDeal", reach = function(p, capital, unit) return p:GetDiplomacy() end, meth = "SetLastTurnOfferedDeal", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "City.RemoveDynamicAdjacencyBonus", reach = function(p, capital, unit) return capital end, meth = "RemoveDynamicAdjacencyBonus", static = false, nargs = 7, guarded = true, getter = false },
+    { name = "PlayerTechs.GrantRandomBoostsByEra", reach = function(p, capital, unit) return p:GetTechs() end, meth = "GrantRandomBoostsByEra", static = false, nargs = 3, guarded = true, getter = false },
+    { name = "CityBuildings.ChangeYieldModifier", reach = function(p, capital, unit) return capital:GetBuildings() end, meth = "ChangeYieldModifier", static = false, nargs = 3, guarded = true, getter = false },
+    { name = "GameDiplomacy.SetAtWar", reach = function(p, capital, unit) return Game.GetGameDiplomacy() end, meth = "SetAtWar", static = false, nargs = 3, guarded = true, getter = false },
+    { name = "PlayerCulture.GrantRandomBoostsByEra", reach = function(p, capital, unit) return p:GetCulture() end, meth = "GrantRandomBoostsByEra", static = false, nargs = 3, guarded = true, getter = false },
+    { name = "PlayerCulture.RecomputeTourismOn", reach = function(p, capital, unit) return p:GetCulture() end, meth = "RecomputeTourismOn", static = false, nargs = 1, guarded = true, getter = false },
+    { name = "PlayerResources.ChangeFreeResourcesExtracted", reach = function(p, capital, unit) return p:GetResources() end, meth = "ChangeFreeResourcesExtracted", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "PlayerUnits.SetCanEverTrain", reach = function(p, capital, unit) return p:GetUnits() end, meth = "SetCanEverTrain", static = false, nargs = 0, guarded = false, getter = false },
+    { name = "UnitExperience.ChangeGeneralExperienceModifier", reach = function(p, capital, unit) return unit:GetExperience() end, meth = "ChangeGeneralExperienceModifier", static = false, nargs = 1, guarded = true, getter = false },
+    { name = "UnitExperience.GrantPromotion", reach = function(p, capital, unit) return unit:GetExperience() end, meth = "GrantPromotion", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "CityGrowth.AddGrowth", reach = function(p, capital, unit) return capital:GetGrowth() end, meth = "AddGrowth", static = false, nargs = 1, guarded = true, getter = false },
+    { name = "GameGreatPeople.AwardFreePersonByClass", reach = function(p, capital, unit) return Game.GetGreatPeople() end, meth = "AwardFreePersonByClass", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "Game.IncrementGameStateLock", reach = function(p, capital, unit) return Game end, meth = "IncrementGameStateLock", static = true, nargs = 0, guarded = false, getter = false },
+    { name = "PlayerCulture.ChangeTourismOn", reach = function(p, capital, unit) return p:GetCulture() end, meth = "ChangeTourismOn", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "PlayerCulture.GrantRandomBoostGoodyHut", reach = function(p, capital, unit) return p:GetCulture() end, meth = "GrantRandomBoostGoodyHut", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "TeamDiplomacy.SetOccupyingOriginalCity", reach = function(p, capital, unit) return p:GetDiplomacy() end, meth = "SetOccupyingOriginalCity", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "Player.RecomputeCost", reach = function(p, capital, unit) return p end, meth = "RecomputeCost", static = false, nargs = 1, guarded = true, getter = false },
+    { name = "Game.ClearLists", reach = function(p, capital, unit) return Game end, meth = "ClearLists", static = true, nargs = 0, guarded = false, getter = false },
+    { name = "PlayerTechs.GrantRandomBoostGoodyHut", reach = function(p, capital, unit) return p:GetTechs() end, meth = "GrantRandomBoostGoodyHut", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "PlayerUnits.ChangeExtraBuildCharges", reach = function(p, capital, unit) return p:GetUnits() end, meth = "ChangeExtraBuildCharges", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "CityBuildQueue.ChangeProductionModifier", reach = function(p, capital, unit) return capital:GetBuildQueue() end, meth = "ChangeProductionModifier", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "CityBuildQueue.SetDistrictPercentComplete", reach = function(p, capital, unit) return capital:GetBuildQueue() end, meth = "SetDistrictPercentComplete", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "CityBuildings.ChangeWonderYieldChange", reach = function(p, capital, unit) return capital:GetBuildings() end, meth = "ChangeWonderYieldChange", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "CityBuildings.ChangeYieldChange", reach = function(p, capital, unit) return capital:GetBuildings() end, meth = "ChangeYieldChange", static = false, nargs = 3, guarded = true, getter = false },
+    { name = "CityBuildings.ChangeYieldChangeCityStates", reach = function(p, capital, unit) return capital:GetBuildings() end, meth = "ChangeYieldChangeCityStates", static = false, nargs = 3, guarded = true, getter = false },
+    { name = "CityBuildings.ChangeYieldChangeFromFeature", reach = function(p, capital, unit) return capital:GetBuildings() end, meth = "ChangeYieldChangeFromFeature", static = false, nargs = 3, guarded = true, getter = false },
+    { name = "CityBuildings.SetEraCreatedToGameEra", reach = function(p, capital, unit) return capital:GetBuildings() end, meth = "SetEraCreatedToGameEra", static = false, nargs = 1, guarded = true, getter = false },
+    { name = "City.SetSiegeProtection", reach = function(p, capital, unit) return capital end, meth = "SetSiegeProtection", static = false, nargs = 1, guarded = false, getter = false },
+    { name = "City.ChangeAccumulatedIdentity", reach = function(p, capital, unit) return capital end, meth = "ChangeAccumulatedIdentity", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "City.ChangeCountAlwaysLoyalFlags", reach = function(p, capital, unit) return capital end, meth = "ChangeCountAlwaysLoyalFlags", static = false, nargs = 1, guarded = true, getter = false },
+    { name = "City.ChangeExtraIdentityPerTurnPerCitizen", reach = function(p, capital, unit) return capital end, meth = "ChangeExtraIdentityPerTurnPerCitizen", static = false, nargs = 1, guarded = true, getter = false },
+    { name = "City.ChangeIdentityPressureFromAges", reach = function(p, capital, unit) return capital end, meth = "ChangeIdentityPressureFromAges", static = false, nargs = 1, guarded = true, getter = false },
+    { name = "City.ChangeIdentityPressureFromModifiers", reach = function(p, capital, unit) return capital end, meth = "ChangeIdentityPressureFromModifiers", static = false, nargs = 1, guarded = true, getter = false },
+    { name = "City.ChangeGreatWorkYieldModifier", reach = function(p, capital, unit) return capital end, meth = "ChangeGreatWorkYieldModifier", static = false, nargs = 4, guarded = true, getter = false },
+    { name = "City.ChangeTourism", reach = function(p, capital, unit) return capital end, meth = "ChangeTourism", static = false, nargs = 6, guarded = true, getter = false },
+    { name = "CityDistricts.DestroyAll", reach = function(p, capital, unit) return capital:GetDistricts() end, meth = "DestroyAll", static = false, nargs = 0, guarded = false, getter = false },
+    { name = "City.SetBuildingFaithPurchaseByDistrict", reach = function(p, capital, unit) return capital end, meth = "SetBuildingFaithPurchaseByDistrict", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "CityGrowth.ChangeFeatureAppealModifier", reach = function(p, capital, unit) return capital:GetGrowth() end, meth = "ChangeFeatureAppealModifier", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "City.AddCityHappinessModifier", reach = function(p, capital, unit) return capital end, meth = "AddCityHappinessModifier", static = false, nargs = 5, guarded = true, getter = false },
+    { name = "City.ChangeAllowIncomingRegionalStackingCount", reach = function(p, capital, unit) return capital end, meth = "ChangeAllowIncomingRegionalStackingCount", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "City.RemoveCityHappinessModifier", reach = function(p, capital, unit) return capital end, meth = "RemoveCityHappinessModifier", static = false, nargs = 5, guarded = true, getter = false },
+    { name = "City.ResetCache", reach = function(p, capital, unit) return capital end, meth = "ResetCache", static = false, nargs = 0, guarded = false, getter = false },
+    { name = "City.ChangeFlatYieldBonusForInternational", reach = function(p, capital, unit) return capital end, meth = "ChangeFlatYieldBonusForInternational", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "City.ChangeYieldFromForeignRoutesPassingThrough", reach = function(p, capital, unit) return capital end, meth = "ChangeYieldFromForeignRoutesPassingThrough", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "City.ChangeYieldPerDestinationLuxuryResourceForInternational", reach = function(p, capital, unit) return capital end, meth = "ChangeYieldPerDestinationLuxuryResourceForInternational", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "City.ChangeYieldPerDestinationStrategicResourceForDomestic", reach = function(p, capital, unit) return capital end, meth = "ChangeYieldPerDestinationStrategicResourceForDomestic", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "City.ChangeYieldPerDestinationStrategicResourceForInternational", reach = function(p, capital, unit) return capital end, meth = "ChangeYieldPerDestinationStrategicResourceForInternational", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "City.ChangeYieldPerLocalBonusResourceForDomestic", reach = function(p, capital, unit) return capital end, meth = "ChangeYieldPerLocalBonusResourceForDomestic", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "City.ChangeYieldPerLocalBonusResourceForInternational", reach = function(p, capital, unit) return capital end, meth = "ChangeYieldPerLocalBonusResourceForInternational", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "City.ChangeYieldPerLocalLuxuryResourceForInternational", reach = function(p, capital, unit) return capital end, meth = "ChangeYieldPerLocalLuxuryResourceForInternational", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "City.ChangeYieldPerLocalStrategicResourceForInternational", reach = function(p, capital, unit) return capital end, meth = "ChangeYieldPerLocalStrategicResourceForInternational", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "City.ChangeYieldPerMajorTradePartner", reach = function(p, capital, unit) return capital end, meth = "ChangeYieldPerMajorTradePartner", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "GameDiplomacy.SetJointWarTarget", reach = function(p, capital, unit) return Game.GetGameDiplomacy() end, meth = "SetJointWarTarget", static = false, nargs = 3, guarded = true, getter = false },
+    { name = "GameDiplomacy.SetSharesSuzerain", reach = function(p, capital, unit) return Game.GetGameDiplomacy() end, meth = "SetSharesSuzerain", static = false, nargs = 3, guarded = true, getter = false },
+    { name = "GameEras.ChangeExtraScorePerPrideMoment", reach = function(p, capital, unit) return Game.GetEras() end, meth = "ChangeExtraScorePerPrideMoment", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "GameEras.ChangePlayerAlwaysAllowedCommemorationQuestCount", reach = function(p, capital, unit) return Game.GetEras() end, meth = "ChangePlayerAlwaysAllowedCommemorationQuestCount", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "GameEras.SetMinScoreForExtraEraScore", reach = function(p, capital, unit) return Game.GetEras() end, meth = "SetMinScoreForExtraEraScore", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "Map.SetVolcanoActive", reach = function(p, capital, unit) return Map end, meth = "SetVolcanoActive", static = true, nargs = 1, guarded = false, getter = false },
+    { name = "Map.SetVolcanoInactive", reach = function(p, capital, unit) return Map end, meth = "SetVolcanoInactive", static = true, nargs = 1, guarded = false, getter = false },
+    { name = "Map.ChangeNaturalWonderCount", reach = function(p, capital, unit) return Map end, meth = "ChangeNaturalWonderCount", static = true, nargs = 1, guarded = true, getter = false },
+    { name = "Map.SetRevealedImprovementType", reach = function(p, capital, unit) return Map end, meth = "SetRevealedImprovementType", static = true, nargs = 3, guarded = true, getter = false },
+    { name = "Map.SetRevealedResourceType", reach = function(p, capital, unit) return Map end, meth = "SetRevealedResourceType", static = true, nargs = 3, guarded = true, getter = false },
+    { name = "Map.SetRevealedRouteType", reach = function(p, capital, unit) return Map end, meth = "SetRevealedRouteType", static = true, nargs = 3, guarded = true, getter = false },
+    { name = "Player.ChangeFlatBonus", reach = function(p, capital, unit) return p end, meth = "ChangeFlatBonus", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "Player.ChangeResolutionEffectRefundPercent", reach = function(p, capital, unit) return p end, meth = "ChangeResolutionEffectRefundPercent", static = false, nargs = 3, guarded = true, getter = false },
+    { name = "Player.ChangeIdentityPerTurnForTradeRouteOrigin", reach = function(p, capital, unit) return p end, meth = "ChangeIdentityPerTurnForTradeRouteOrigin", static = false, nargs = 1, guarded = true, getter = false },
+    { name = "PlayerCulture.ChangeGreatWorkObjectTourismModifier", reach = function(p, capital, unit) return p:GetCulture() end, meth = "ChangeGreatWorkObjectTourismModifier", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "PlayerCulture.SetFavorPerTurnFromBuilding", reach = function(p, capital, unit) return p:GetCulture() end, meth = "SetFavorPerTurnFromBuilding", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "PlayerCulture.SetFavorPerTurnFromPolicy", reach = function(p, capital, unit) return p:GetCulture() end, meth = "SetFavorPerTurnFromPolicy", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "PlayerCulture.SetGreatWorkObjectNoTourism", reach = function(p, capital, unit) return p:GetCulture() end, meth = "SetGreatWorkObjectNoTourism", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "PlayerCulture.SetNumFreeCivicBoostOnNewEra", reach = function(p, capital, unit) return p:GetCulture() end, meth = "SetNumFreeCivicBoostOnNewEra", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "PlayerCulture.SetPolicyBanned", reach = function(p, capital, unit) return p:GetCulture() end, meth = "SetPolicyBanned", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "TeamDiplomacy.ChangeYieldPerDelegation", reach = function(p, capital, unit) return p:GetDiplomacy() end, meth = "ChangeYieldPerDelegation", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "TeamDiplomacy.ChangeYieldPerEmbassy", reach = function(p, capital, unit) return p:GetDiplomacy() end, meth = "ChangeYieldPerEmbassy", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "TeamDiplomacy.SetFightingJointWar", reach = function(p, capital, unit) return p:GetDiplomacy() end, meth = "SetFightingJointWar", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "TeamDiplomacy.SetHasDefensivePact", reach = function(p, capital, unit) return p:GetDiplomacy() end, meth = "SetHasDefensivePact", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "TeamDiplomacy.SetResearchAgreementTech", reach = function(p, capital, unit) return p:GetDiplomacy() end, meth = "SetResearchAgreementTech", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "Player.ChangeSpyCapacity", reach = function(p, capital, unit) return p end, meth = "ChangeSpyCapacity", static = false, nargs = 1, guarded = true, getter = false },
+    { name = "Player.ChangeTargetCitySpyYieldPercent", reach = function(p, capital, unit) return p end, meth = "ChangeTargetCitySpyYieldPercent", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "PlayerGreatPeoplePoints.ChangeBonusPointsPerTurn", reach = function(p, capital, unit) return p:GetGreatPeoplePoints() end, meth = "ChangeBonusPointsPerTurn", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "PlayerGreatPeoplePoints.ChangeBonusPointsPerTurnPercent", reach = function(p, capital, unit) return p:GetGreatPeoplePoints() end, meth = "ChangeBonusPointsPerTurnPercent", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "PlayerGreatPeoplePoints.ChangePatronageDiscountPercent", reach = function(p, capital, unit) return p:GetGreatPeoplePoints() end, meth = "ChangePatronageDiscountPercent", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "PlayerGreatPeoplePoints.ChangePointsRefundPercent", reach = function(p, capital, unit) return p:GetGreatPeoplePoints() end, meth = "ChangePointsRefundPercent", static = false, nargs = 1, guarded = true, getter = false },
+    { name = "PlayerGreatPeoplePoints.SetGreatPersonClassNoPoints", reach = function(p, capital, unit) return p:GetGreatPeoplePoints() end, meth = "SetGreatPersonClassNoPoints", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "PlayerGreatPeoplePoints.SetNoPatronageWith", reach = function(p, capital, unit) return p:GetGreatPeoplePoints() end, meth = "SetNoPatronageWith", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "PlayerGreatPeoplePoints.SetYieldModifierPerEarnedGreatPerson", reach = function(p, capital, unit) return p:GetGreatPeoplePoints() end, meth = "SetYieldModifierPerEarnedGreatPerson", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "Player.AddChopFeatureBehavior", reach = function(p, capital, unit) return p end, meth = "AddChopFeatureBehavior", static = false, nargs = 4, guarded = true, getter = false },
+    { name = "Player.ChangeCO2GenerationReduction", reach = function(p, capital, unit) return p end, meth = "ChangeCO2GenerationReduction", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "Player.ChangeRandomEventModifiedDamageOpposingPlayer", reach = function(p, capital, unit) return p end, meth = "ChangeRandomEventModifiedDamageOpposingPlayer", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "Player.ChangeRandomEventNoUnitDamage", reach = function(p, capital, unit) return p end, meth = "ChangeRandomEventNoUnitDamage", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "Player.ChangeYieldRate", reach = function(p, capital, unit) return p end, meth = "ChangeYieldRate", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "Player.RemoveChopFeatureBehavior", reach = function(p, capital, unit) return p end, meth = "RemoveChopFeatureBehavior", static = false, nargs = 3, guarded = true, getter = false },
+    { name = "PlayerReligion.SetSpreadModifier", reach = function(p, capital, unit) return p:GetReligion() end, meth = "SetSpreadModifier", static = false, nargs = 3, guarded = true, getter = false },
+    { name = "PlayerResources.ChangeBannedResource", reach = function(p, capital, unit) return p:GetResources() end, meth = "ChangeBannedResource", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "PlayerResources.ChangeExtraAccumulationModifier", reach = function(p, capital, unit) return p:GetResources() end, meth = "ChangeExtraAccumulationModifier", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "PlayerResources.ChangeExtraAmenitiesPerOwnedBonusResource", reach = function(p, capital, unit) return p:GetResources() end, meth = "ChangeExtraAmenitiesPerOwnedBonusResource", static = false, nargs = 1, guarded = true, getter = false },
+    { name = "PlayerResources.ChangeExtraAmenitiesPerOwnedLuxuryResource", reach = function(p, capital, unit) return p:GetResources() end, meth = "ChangeExtraAmenitiesPerOwnedLuxuryResource", static = false, nargs = 1, guarded = true, getter = false },
+    { name = "PlayerResources.ChangeImportResourceExtracted", reach = function(p, capital, unit) return p:GetResources() end, meth = "ChangeImportResourceExtracted", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "PlayerResources.ChangeNoCapResource", reach = function(p, capital, unit) return p:GetResources() end, meth = "ChangeNoCapResource", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "PlayerResources.ChangeResourceStockpileCapModifier", reach = function(p, capital, unit) return p:GetResources() end, meth = "ChangeResourceStockpileCapModifier", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "PlayerStats.ChangeScienceVictoryPointsPerTurn", reach = function(p, capital, unit) return p:GetStats() end, meth = "ChangeScienceVictoryPointsPerTurn", static = false, nargs = 1, guarded = true, getter = false },
+    { name = "PlayerTechs.SetNumFreeTechBoostOnNewEra", reach = function(p, capital, unit) return p:GetTechs() end, meth = "SetNumFreeTechBoostOnNewEra", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "PlayerTrade.ChangeCityStateDistrictTradeRouteBonus", reach = function(p, capital, unit) return p:GetTrade() end, meth = "ChangeCityStateDistrictTradeRouteBonus", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "PlayerTrade.ChangeDestinationYieldForAllyRoute", reach = function(p, capital, unit) return p:GetTrade() end, meth = "ChangeDestinationYieldForAllyRoute", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "PlayerTrade.ChangeDestinationYieldForSuzerainRoute", reach = function(p, capital, unit) return p:GetTrade() end, meth = "ChangeDestinationYieldForSuzerainRoute", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "PlayerTrade.ChangeDestinationYieldModifier", reach = function(p, capital, unit) return p:GetTrade() end, meth = "ChangeDestinationYieldModifier", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "PlayerTrade.ChangeDestinationYieldPerImprovementAtDestination", reach = function(p, capital, unit) return p:GetTrade() end, meth = "ChangeDestinationYieldPerImprovementAtDestination", static = false, nargs = 3, guarded = true, getter = false },
+    { name = "PlayerTrade.ChangeDestinationYieldPerTerrainForDomestic", reach = function(p, capital, unit) return p:GetTrade() end, meth = "ChangeDestinationYieldPerTerrainForDomestic", static = false, nargs = 3, guarded = true, getter = false },
+    { name = "PlayerTrade.ChangeDestinationYieldPerTerrainForInternational", reach = function(p, capital, unit) return p:GetTrade() end, meth = "ChangeDestinationYieldPerTerrainForInternational", static = false, nargs = 3, guarded = true, getter = false },
+    { name = "PlayerTrade.ChangeDomesticTradeDisabledCount", reach = function(p, capital, unit) return p:GetTrade() end, meth = "ChangeDomesticTradeDisabledCount", static = false, nargs = 1, guarded = true, getter = false },
+    { name = "PlayerTrade.ChangeFlatYieldBonus", reach = function(p, capital, unit) return p:GetTrade() end, meth = "ChangeFlatYieldBonus", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "PlayerTrade.ChangeFlatYieldBonusForCityState", reach = function(p, capital, unit) return p:GetTrade() end, meth = "ChangeFlatYieldBonusForCityState", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "PlayerTrade.ChangeFlatYieldBonusForDomestic", reach = function(p, capital, unit) return p:GetTrade() end, meth = "ChangeFlatYieldBonusForDomestic", static = false, nargs = 3, guarded = true, getter = false },
+    { name = "PlayerTrade.ChangeFlatYieldBonusForInternational", reach = function(p, capital, unit) return p:GetTrade() end, meth = "ChangeFlatYieldBonusForInternational", static = false, nargs = 3, guarded = true, getter = false },
+    { name = "PlayerTrade.ChangeImprovedRouteLevel", reach = function(p, capital, unit) return p:GetTrade() end, meth = "ChangeImprovedRouteLevel", static = false, nargs = 1, guarded = true, getter = false },
+    { name = "PlayerTrade.ChangeInternationalMajorsTradeDisabledCount", reach = function(p, capital, unit) return p:GetTrade() end, meth = "ChangeInternationalMajorsTradeDisabledCount", static = false, nargs = 1, guarded = true, getter = false },
+    { name = "PlayerTrade.ChangeInternationalMinorsTradeDisabledCount", reach = function(p, capital, unit) return p:GetTrade() end, meth = "ChangeInternationalMinorsTradeDisabledCount", static = false, nargs = 1, guarded = true, getter = false },
+    { name = "PlayerTrade.ChangeInternationalYieldModifier", reach = function(p, capital, unit) return p:GetTrade() end, meth = "ChangeInternationalYieldModifier", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "PlayerTrade.ChangeInternationalYieldPerImprovementAtOrigin", reach = function(p, capital, unit) return p:GetTrade() end, meth = "ChangeInternationalYieldPerImprovementAtOrigin", static = false, nargs = 3, guarded = true, getter = false },
+    { name = "PlayerTrade.ChangeOriginYieldForAllyRoute", reach = function(p, capital, unit) return p:GetTrade() end, meth = "ChangeOriginYieldForAllyRoute", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "PlayerTrade.ChangeOriginYieldForSuzerainRoute", reach = function(p, capital, unit) return p:GetTrade() end, meth = "ChangeOriginYieldForSuzerainRoute", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "PlayerTrade.ChangeOriginYieldModifier", reach = function(p, capital, unit) return p:GetTrade() end, meth = "ChangeOriginYieldModifier", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "PlayerTrade.ChangeOriginYieldPerImprovementAtDestination", reach = function(p, capital, unit) return p:GetTrade() end, meth = "ChangeOriginYieldPerImprovementAtDestination", static = false, nargs = 3, guarded = true, getter = false },
+    { name = "PlayerTrade.ChangeOriginYieldPerTerrainForDomestic", reach = function(p, capital, unit) return p:GetTrade() end, meth = "ChangeOriginYieldPerTerrainForDomestic", static = false, nargs = 3, guarded = true, getter = false },
+    { name = "PlayerTrade.ChangeOriginYieldPerTerrainForInternational", reach = function(p, capital, unit) return p:GetTrade() end, meth = "ChangeOriginYieldPerTerrainForInternational", static = false, nargs = 3, guarded = true, getter = false },
+    { name = "PlayerTrade.ChangePerSpecialtyDistrictYieldBonusForDomestic", reach = function(p, capital, unit) return p:GetTrade() end, meth = "ChangePerSpecialtyDistrictYieldBonusForDomestic", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "PlayerTrade.ChangePerSpecialtyDistrictYieldBonusForInternational", reach = function(p, capital, unit) return p:GetTrade() end, meth = "ChangePerSpecialtyDistrictYieldBonusForInternational", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "PlayerTrade.ChangeYieldPerFollower", reach = function(p, capital, unit) return p:GetTrade() end, meth = "ChangeYieldPerFollower", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "PlayerTrade.ChangeYieldPerPathTile", reach = function(p, capital, unit) return p:GetTrade() end, meth = "ChangeYieldPerPathTile", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "PlayerTrade.ChangeYieldPerTradingPostInForeignCity", reach = function(p, capital, unit) return p:GetTrade() end, meth = "ChangeYieldPerTradingPostInForeignCity", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "PlayerTrade.ChangeYieldPerTradingPostInOwnCity", reach = function(p, capital, unit) return p:GetTrade() end, meth = "ChangeYieldPerTradingPostInOwnCity", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "PlayerTreasury.ChangeGoldDiplomaticDeal", reach = function(p, capital, unit) return p:GetTreasury() end, meth = "ChangeGoldDiplomaticDeal", static = false, nargs = 3, guarded = true, getter = false },
+    { name = "PlayerTreasury.ChangeGoldInterestPercent", reach = function(p, capital, unit) return p:GetTreasury() end, meth = "ChangeGoldInterestPercent", static = false, nargs = 1, guarded = true, getter = false },
+    { name = "PlayerUnits.ChangeAddOnDistrictFounding", reach = function(p, capital, unit) return p:GetUnits() end, meth = "ChangeAddOnDistrictFounding", static = false, nargs = 3, guarded = true, getter = false },
+    { name = "PlayerUnits.ChangeProductionModifier", reach = function(p, capital, unit) return p:GetUnits() end, meth = "ChangeProductionModifier", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "PlayerUnits.SetBannedProductionYield", reach = function(p, capital, unit) return p:GetUnits() end, meth = "SetBannedProductionYield", static = false, nargs = 1, guarded = true, getter = false },
+    { name = "PlayerUnits.SetModifiedArmyCorpsStrength", reach = function(p, capital, unit) return p:GetUnits() end, meth = "SetModifiedArmyCorpsStrength", static = false, nargs = 3, guarded = true, getter = false },
+    { name = "PlayerUnits.SetPromotionSelected", reach = function(p, capital, unit) return p:GetUnits() end, meth = "SetPromotionSelected", static = false, nargs = 3, guarded = true, getter = false },
+    { name = "Unit.SetHomeCityCallback", reach = function(p, capital, unit) return unit end, meth = "SetHomeCityCallback", static = false, nargs = 0, guarded = false, getter = false },
+    { name = "Unit.AddEspionageTimeReduction", reach = function(p, capital, unit) return unit end, meth = "AddEspionageTimeReduction", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "Unit.RemoveEspionageTimeReduction", reach = function(p, capital, unit) return unit end, meth = "RemoveEspionageTimeReduction", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "Unit.AddBypassWallsPromotionClass", reach = function(p, capital, unit) return unit end, meth = "AddBypassWallsPromotionClass", static = false, nargs = 1, guarded = true, getter = false },
+    { name = "Unit.AddEnableWallAttackPromotionClass", reach = function(p, capital, unit) return unit end, meth = "AddEnableWallAttackPromotionClass", static = false, nargs = 1, guarded = true, getter = false },
+    { name = "Unit.ChangeBonusPointsPerKill", reach = function(p, capital, unit) return unit end, meth = "ChangeBonusPointsPerKill", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "Unit.ChangeBonusPointsPerKillStrength", reach = function(p, capital, unit) return unit end, meth = "ChangeBonusPointsPerKillStrength", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "Unit.ChangeSightRange", reach = function(p, capital, unit) return unit end, meth = "ChangeSightRange", static = false, nargs = 1, guarded = true, getter = false },
+    { name = "Unit.ChangeTerritoryHealing", reach = function(p, capital, unit) return unit end, meth = "ChangeTerritoryHealing", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "Unit.ChangeTerritoryHealingReligion", reach = function(p, capital, unit) return unit end, meth = "ChangeTerritoryHealingReligion", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "Unit.RemoveInvalidTerrain", reach = function(p, capital, unit) return unit end, meth = "RemoveInvalidTerrain", static = false, nargs = 1, guarded = true, getter = false },
+    { name = "Unit.SetCanMoveAfterAttacking", reach = function(p, capital, unit) return unit end, meth = "SetCanMoveAfterAttacking", static = false, nargs = 1, guarded = true, getter = false },
+    { name = "Unit.SetCanSeeThroughFeatures", reach = function(p, capital, unit) return unit end, meth = "SetCanSeeThroughFeatures", static = false, nargs = 1, guarded = false, getter = false },
+    { name = "Unit.SetCanSeeThroughTerrain", reach = function(p, capital, unit) return unit end, meth = "SetCanSeeThroughTerrain", static = false, nargs = 1, guarded = false, getter = false },
+    { name = "Unit.SetOperationDisabled", reach = function(p, capital, unit) return unit end, meth = "SetOperationDisabled", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "Unit.SetSeeHiddenType", reach = function(p, capital, unit) return unit end, meth = "SetSeeHiddenType", static = false, nargs = 1, guarded = true, getter = false },
+    { name = "UnitReligion.ChangeInitiationYieldPopulation", reach = function(p, capital, unit) return unit:GetReligion() end, meth = "ChangeInitiationYieldPopulation", static = false, nargs = 2, guarded = true, getter = false },
+    { name = "Game.BuildCivics", reach = function(p, capital, unit) return Game end, meth = "BuildCivics", static = true, nargs = 0, guarded = false, getter = false },
+    { name = "Game.BuildTechs", reach = function(p, capital, unit) return Game end, meth = "BuildTechs", static = true, nargs = 0, guarded = false, getter = false },
+    { name = "TeamDiplomacy.DevOracle_IsAtWarWithHumans", reach = function(p, capital, unit) return p:GetDiplomacy() end, meth = "DevOracle_IsAtWarWithHumans", static = false, nargs = 0, guarded = false, getter = true },
+    { name = "TeamDiplomacy.DevOracle_GetMetTurn", reach = function(p, capital, unit) return p:GetDiplomacy() end, meth = "DevOracle_GetMetTurn", static = false, nargs = 1, guarded = true, getter = true },
+    { name = "CityBuildings.DevOracle_GetBuildingLocation", reach = function(p, capital, unit) return capital:GetBuildings() end, meth = "DevOracle_GetBuildingLocation", static = false, nargs = 1, guarded = true, getter = true },
+    { name = "CityBuildings.DevOracle_GetBuildingMaintenance", reach = function(p, capital, unit) return capital:GetBuildings() end, meth = "DevOracle_GetBuildingMaintenance", static = false, nargs = 1, guarded = true, getter = true },
+    { name = "Unit.DevOracle_GetAntiAirCombat", reach = function(p, capital, unit) return unit end, meth = "DevOracle_GetAntiAirCombat", static = false, nargs = 0, guarded = false, getter = true },
+    { name = "Unit.DevOracle_GetBombardCombat", reach = function(p, capital, unit) return unit end, meth = "DevOracle_GetBombardCombat", static = false, nargs = 0, guarded = false, getter = true },
+    { name = "UnitExperience.DevOracle_GetExperienceForNextLevel", reach = function(p, capital, unit) return unit:GetExperience() end, meth = "DevOracle_GetExperienceForNextLevel", static = false, nargs = 0, guarded = false, getter = true },
+    { name = "UnitExperience.DevOracle_HasPromotion", reach = function(p, capital, unit) return unit:GetExperience() end, meth = "DevOracle_HasPromotion", static = false, nargs = 1, guarded = true, getter = true },
+    { name = "PlayerCulture.DevOracle_GetCultureYield", reach = function(p, capital, unit) return p:GetCulture() end, meth = "DevOracle_GetCultureYield", static = false, nargs = 0, guarded = false, getter = true },
+    { name = "PlayerCulture.DevOracle_GetNumPolicySlots", reach = function(p, capital, unit) return p:GetCulture() end, meth = "DevOracle_GetNumPolicySlots", static = false, nargs = 0, guarded = false, getter = true },
+    { name = "PlayerTechs.DevOracle_GetResearchingTech", reach = function(p, capital, unit) return p:GetTechs() end, meth = "DevOracle_GetResearchingTech", static = false, nargs = 0, guarded = false, getter = true },
+    { name = "PlayerTechs.DevOracle_GetScienceYield", reach = function(p, capital, unit) return p:GetTechs() end, meth = "DevOracle_GetScienceYield", static = false, nargs = 0, guarded = false, getter = true },
+    { name = "CityGrowth.DevOracle_GetAmenities", reach = function(p, capital, unit) return capital:GetGrowth() end, meth = "DevOracle_GetAmenities", static = false, nargs = 0, guarded = false, getter = true },
+    { name = "CityGrowth.DevOracle_GetAmenitiesFromEntertainment", reach = function(p, capital, unit) return capital:GetGrowth() end, meth = "DevOracle_GetAmenitiesFromEntertainment", static = false, nargs = 0, guarded = false, getter = true },
+    { name = "GameGreatPeople.DevOracle_IsClassAvailable", reach = function(p, capital, unit) return Game.GetGreatPeople() end, meth = "DevOracle_IsClassAvailable", static = false, nargs = 1, guarded = true, getter = true },
+    { name = "GameGreatPeople.DevOracle_CanRecruitPerson", reach = function(p, capital, unit) return Game.GetGreatPeople() end, meth = "DevOracle_CanRecruitPerson", static = false, nargs = 2, guarded = true, getter = true },
+    { name = "CityDistricts.DevOracle_GetPrereqDistrictPlotID", reach = function(p, capital, unit) return capital:GetDistricts() end, meth = "DevOracle_GetPrereqDistrictPlotID", static = false, nargs = 1, guarded = true, getter = true },
+    { name = "PlayerReligion.DevOracle_GetFaithYield", reach = function(p, capital, unit) return p:GetReligion() end, meth = "DevOracle_GetFaithYield", static = false, nargs = 0, guarded = false, getter = true },
+    { name = "PlayerReligion.DevOracle_GetPantheon", reach = function(p, capital, unit) return p:GetReligion() end, meth = "DevOracle_GetPantheon", static = false, nargs = 0, guarded = false, getter = true },
+    { name = "PlayerStats.DevOracle_GetNumBeliefsInReligion", reach = function(p, capital, unit) return p:GetStats() end, meth = "DevOracle_GetNumBeliefsInReligion", static = false, nargs = 0, guarded = false, getter = true },
+    { name = "PlayerStats.DevOracle_GetNumMyCitiesFollowingSpecificReligion", reach = function(p, capital, unit) return p:GetStats() end, meth = "DevOracle_GetNumMyCitiesFollowingSpecificReligion", static = false, nargs = 1, guarded = true, getter = true },
+    { name = "PlayerTreasury.DevOracle_GetBuildingMaintenance", reach = function(p, capital, unit) return p:GetTreasury() end, meth = "DevOracle_GetBuildingMaintenance", static = false, nargs = 0, guarded = false, getter = true },
+    { name = "PlayerTreasury.DevOracle_GetDistrictMaintenance", reach = function(p, capital, unit) return p:GetTreasury() end, meth = "DevOracle_GetDistrictMaintenance", static = false, nargs = 0, guarded = false, getter = true },
+}
+
+local function Short(v) local s = tostring(v); s = string.gsub(s, "[\r\n]+", " "); if #s > 90 then s = string.sub(s, 1, 90) end; return s end
+local unpack = unpack or table.unpack
+local function Xs(n) local t = {}; for i = 1, n do t[i] = "x" end; return t end
+-- Level 4 (hostile arguments): armed code 6. Every call is under pcall; the outcome is logged line by line (flushed). A hang or crash: the last "L4|BEGIN" line names the function.
+-- ERR = the call raised a Lua error (expected for bad input); OK = it returned. For the "must fail" cases OK is reported as UNEXPECTED_OK.
+local function Level4()
+    local p = Players[0]
+    local capital, unit
+    pcall(function() capital = p:GetCities():GetCapitalCity() end)
+    pcall(function() for _, u in p:GetUnits():Members() do unit = u break end end)
+    DevCE_RecordState(7)
+    local stat = { err = 0, ok = 0, unexpected = 0, fault = 0 }
+    local function Case(name, case, mustFail, f, ...)
+        local ok, r = pcall(f, ...)
+        local res
+        if ok then res = mustFail and "UNEXPECTED_OK" or "OK"; stat.ok = stat.ok + 1; if mustFail then stat.unexpected = stat.unexpected + 1 end
+        else res = "ERR"; stat.err = stat.err + 1; if string.find(tostring(r), "faulted", 1, true) then res = "FAULT"; stat.fault = stat.fault + 1 end end
+        LogF("L4|" .. name .. "|" .. case .. "|" .. res .. "|" .. Short(r))
+    end
+    LogF("L4|START|" .. #LEVEL4 .. " functions")
+    -- section A: functions with a non-bool argument: every case passes "x" for all arguments, so the native function is never reached
+    for _, t in ipairs(LEVEL4) do
+        if t.guarded then
+            local ok0, o = pcall(t.reach, p, capital, unit)
+            if ok0 and o ~= nil then
+                LogF("L4|BEGIN|" .. t.name)
+                local f = o[t.meth]
+                local xs = Xs(t.nargs)
+                if f == nil then LogF("L4|" .. t.name .. "|nomethod|MISSING|")
+                elseif t.static then
+                    Case(t.name, "static-x", true, f, unpack(xs))
+                    Case(t.name, "static-table", true, f, {})
+                    Case(t.name, "static-nil", true, f, nil)
+                else
+                    local other = (o == p) and capital or p
+                    Case(t.name, "noself-x", true, f, unpack(xs))
+                    Case(t.name, "nilself-x", true, f, nil, unpack(xs))
+                    Case(t.name, "stringself-x", true, f, "x", unpack(xs))
+                    Case(t.name, "numberself-x", true, f, 12345, unpack(xs))
+                    Case(t.name, "tableself-x", true, f, {}, unpack(xs))
+                    Case(t.name, "otherobj-x", true, f, other, unpack(xs))
+                    Case(t.name, "noargs", true, f, o)
+                    Case(t.name, "badargs-x", true, f, o, unpack(xs))
+                    Case(t.name, "badargs-table", true, f, o, {})
+                end
+            end
+        end
+    end
+    -- section B: value-hostile calls on the read-only getters (oracle functions). The engine may fault on out-of-range ids: the SEH guard must turn that into an error.
+    local VALUES = { { "m1", -1 }, { "max", 2147483647 }, { "min", -2147483648 }, { "big", 10000000000 }, { "half", 0.5 }, { "huge", 1e300 }, { "nan", 0/0 } }
+    for _, t in ipairs(LEVEL4) do
+        if t.getter and t.nargs > 0 and not t.static then
+            local ok0, o = pcall(t.reach, p, capital, unit)
+            if ok0 and o ~= nil then
+                LogF("L4|BEGIN|" .. t.name .. "|values")
+                local f = o[t.meth]
+                for _, v in ipairs(VALUES) do
+                    local args = {}
+                    for i = 1, t.nargs do args[i] = v[2] end
+                    Case(t.name, "value-" .. v[1], false, f, o, unpack(args))
+                end
+            end
+        end
+    end
+    -- section C: functions WITHOUT a guard (no arguments, or bools only): invalid self values only. If GetInstance wrongly accepted one, the function would run natively.
+    for _, t in ipairs(LEVEL4) do
+        if not t.guarded and not t.static then
+            local ok0, o = pcall(t.reach, p, capital, unit)
+            if ok0 and o ~= nil then
+                LogF("L4|BEGIN|" .. t.name .. "|badself")
+                local f = o[t.meth]
+                local other = (o == p) and capital or p
+                Case(t.name, "noself", true, f)
+                Case(t.name, "nilself", true, f, nil)
+                Case(t.name, "stringself", true, f, "x")
+                Case(t.name, "numberself", true, f, 12345)
+                Case(t.name, "tableself", true, f, {})
+                Case(t.name, "otherobj", true, f, other)
+            end
+        end
+    end
+    LogF("L4|END|err=" .. stat.err .. "|ok=" .. stat.ok .. "|unexpected_ok=" .. stat.unexpected .. "|fault=" .. stat.fault)
+end
+
 local tries = 0
 GameEvents.PlayerTurnStarted.Add(function(playerID)
     if DevCE_RecordState then DevCE_RecordState() end   -- lets the Frida test tool find the gameplay lua_State
     if playerID == 0 and DevCE_IsArmed and DevCE_IsArmed() == 4 then
         local ok4, err4 = pcall(Level3)
         if not ok4 then Log("LEVEL3 error: " .. tostring(err4)) end
+    end
+    if playerID == 0 and DevCE_IsArmed and DevCE_IsArmed() == 6 then
+        local ok6, err6 = pcall(Level4)
+        if not ok6 then Log("LEVEL4 error: " .. tostring(err6)) end
     end
     if playerID == 0 and DevCE_IsArmed and DevCE_IsArmed() == 1 then
         local ok2, err2 = pcall(Level2)

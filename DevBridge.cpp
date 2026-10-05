@@ -20,6 +20,18 @@ namespace DevBridge {
 	typedef void* (__fastcall* PlayerFn)(int);
 	static PlayerFn gEditPlayer = nullptr;   // FAutoVariable::edit, null when its address check failed
 
+	static const char* kVersion = "0.1.0-experimental";
+	static volatile bool gTrace = false;   // log every bridge call BEFORE it runs (flushed): after a hang or crash the last [trace] line names the call
+
+	static void DllPath(char* path, const char* file) {
+		HMODULE self = nullptr;
+		GetModuleHandleExA(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, (LPCSTR)&DllPath, &self);
+		GetModuleFileNameA(self, path, MAX_PATH);
+		char* slash = strrchr(path, '\\');
+		if (slash) *(slash + 1) = 0;
+		strcat_s(path, MAX_PATH, file);
+	}
+
 	static CRITICAL_SECTION gLogLock;
 	static INIT_ONCE gLogLockOnce = INIT_ONCE_STATIC_INIT;
 	static BOOL CALLBACK InitLogLock(PINIT_ONCE, PVOID, PVOID*) { InitializeCriticalSection(&gLogLock); return TRUE; }
@@ -29,12 +41,7 @@ namespace DevBridge {
 		EnterCriticalSection(&gLogLock);
 		if (!gLog) {
 			char path[MAX_PATH] = { 0 };
-			HMODULE self = nullptr;
-			GetModuleHandleExA(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, (LPCSTR)&DevBridge::Log, &self);
-			GetModuleFileNameA(self, path, MAX_PATH);
-			char* slash = strrchr(path, '\\');
-			if (slash) *(slash + 1) = 0;
-			strcat_s(path, "DevBridge.log");
+			DllPath(path, "DevBridge.log");
 			gLog = _fsopen(path, "a", _SH_DENYNO);   // readable while the game runs
 		}
 		char buf[1024];
@@ -70,6 +77,13 @@ namespace DevBridge {
 		return 0;
 	}
 
+	// DevCE_Trace(true/false): switch call tracing at run time (also on at startup when a file named DevBridge.trace exists next to the DLL).
+	static int lTrace(hks::lua_State* L) {
+		gTrace = hks::toboolean(L, 1) != 0;
+		Log("[DevBridge] call tracing %s", gTrace ? "ON" : "OFF");
+		return 0;
+	}
+
 	static int lIsArmed(hks::lua_State* L) {
 		hks::pushinteger(L, (int)DevBridgeArmed);   // 0 off, 1 armed by the tool, 2 handshake done (stubs are recording), 3 finished
 		return 1;
@@ -82,6 +96,8 @@ namespace DevBridge {
 		hks::setfield(L, hks::LUA_GLOBAL, "DevCE_IsArmed");
 		hks::pushnamedcclosure(L, lLog, 0, "lDevCE_Log", 0);
 		hks::setfield(L, hks::LUA_GLOBAL, "DevCE_Log");
+		hks::pushnamedcclosure(L, lTrace, 0, "lDevCE_Trace", 0);
+		hks::setfield(L, hks::LUA_GLOBAL, "DevCE_Trace");
 	}
 
 	typedef uint64_t(__fastcall* RawFn)(uint64_t, uint64_t, uint64_t, uint64_t, uint64_t, uint64_t, uint64_t, uint64_t);
@@ -168,11 +184,13 @@ namespace DevBridge {
 		}
 
 		// Slots beyond the real argument count are ignored by the callee (caller-cleaned x64 convention).
+		if (gTrace) Log("[trace] %s this=%p args=%llx %llx %llx %llx %llx %llx", d.cname, (void*)slots[0], (unsigned long long)slots[1], (unsigned long long)slots[2], (unsigned long long)slots[3], (unsigned long long)slots[4], (unsigned long long)slots[5], (unsigned long long)slots[6]);
 		unsigned long fault = 0;
 		const uint64_t r = CallGuarded(s.fn, slots, &fault);
 		if (fault) {
 			s.faults++;
-			Log("[DevBridge] FAULT 0x%08lx in %s (fault #%lu): the call was aborted, game state may be inconsistent", fault, d.cname, s.faults);
+			Log("[DevBridge] FAULT 0x%08lx in %s (fault #%lu) this=%p args=%llx %llx %llx %llx %llx %llx: the call was aborted, game state may be inconsistent", fault, d.cname, s.faults,
+				(void*)slots[0], (unsigned long long)slots[1], (unsigned long long)slots[2], (unsigned long long)slots[3], (unsigned long long)slots[4], (unsigned long long)slots[5], (unsigned long long)slots[6]);
 			hks::error(L, "DevBridge: %s faulted (0x%08lx); check the arguments", d.luaName, fault);
 			return 0;
 		}
@@ -203,6 +221,13 @@ namespace DevBridge {
 	}
 
 	void Create() {
+		{
+			char path[MAX_PATH] = { 0 };
+			DllPath(path, "");
+			Log("[DevBridge] Dev CE %s, built %s %s, loaded from %s", kVersion, __DATE__, __TIME__, path);
+			DllPath(path, "DevBridge.trace");
+			if (GetFileAttributesA(path) != INVALID_FILE_ATTRIBUTES) { gTrace = true; Log("[DevBridge] DevBridge.trace found: call tracing ON"); }
+		}
 		if (!BuildMatches()) {
 			Log("[DevBridge] this GameCore is not the build the address table was made for (Steam 15038592): ALL Dev CE native functions are disabled");
 			return;

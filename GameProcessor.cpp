@@ -1,5 +1,6 @@
 #include "GameProcessor.h"
 #include "Runtime.h"
+#include "DevBridge.h"
 #include <cmath>
 #include <cstdarg>
 #include <cstdio>
@@ -86,19 +87,17 @@ namespace GameProcessor {
 		return reinterpret_cast<Types::HasGameCoreLock>(vtable[0x30 / sizeof(void*)])(engineUtility) != 0;
 	}
 
-	// Small diagnostic log next to the DLL (first calls only): the CE console is not visible in a normal game.
+	// Diagnostics go to DevBridge.log (first 60 lines per game process, to keep the file small).
 	static void Log(const char* format, ...) {
 		static int lines = 0;
 		if (lines >= 60) return;
 		lines++;
-		FILE* file = _fsopen("GameProcessor.log", "a", _SH_DENYNO);
-		if (file == nullptr) return;
+		char buf[512];
 		va_list args;
 		va_start(args, format);
-		vfprintf(file, format, args);
+		vsnprintf(buf, sizeof(buf), format, args);
 		va_end(args);
-		fputc('\n', file);
-		fclose(file);
+		DevBridge::Log("[GameProcessor] %s", buf);
 	}
 
 	bool Call(const std::string& name, Data::LuaVariantMap& variantMap, bool requireGameCoreLock) {

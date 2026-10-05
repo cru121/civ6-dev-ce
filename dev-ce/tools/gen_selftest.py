@@ -424,9 +424,9 @@ open(os.path.join(MOD, 'DevCE_Test.modinfo'), 'w', encoding='utf-8').write('''<?
 <Mod id="%s" version="1">
     <Properties>
         <Name>Dev CE test build</Name>
-        <Description>Development build of a Community-Extension-style GameCore with generated native bridge methods (%d). Single-player testing only. Incompatible with other GameCore mods (including the Community Extension).</Description>
-        <Teaser>Dev CE native bridge test</Teaser>
-        <Authors>local test</Authors>
+        <Description>EXPERIMENTAL. Dev CE with its automatic self-tests: a fork of the Community Extension GameCore that adds %d engine functions to existing Lua objects, plus scripts that test them at the start of your first turns (results in Lua.log lines containing "DevCE" and in DevBridge.log next to the DLL). SINGLE PLAYER ONLY, may desync multiplayer. Works only with Steam build 15038592 (disables itself otherwise). Incompatible with every other GameCore mod, including the Community Extension. Known unsafe: Unit.ChangeSightRange (hung the game once), PlayerTrade.Change*TradeDisabledCount (routes are not restored). Report problems with DevBridge.log.</Description>
+        <Teaser>Dev CE native bridge with self-tests (experimental)</Teaser>
+        <Authors>cru121, based on the Community Extension by Wild-W</Authors>
         <CompatibleVersions>1.2,2.0</CompatibleVersions>
         <AffectsSavedGames>0</AffectsSavedGames>
     </Properties>
@@ -458,7 +458,41 @@ open(os.path.join(MOD, 'DevCE_Test.modinfo'), 'w', encoding='utf-8').write('''<?
 </Mod>
 ''' % (GUID, len(man)))
 
+# The player mod: same DLL, no scripts (nothing runs by itself). Different id, so it can be told apart from the test mod; enable only one of the two.
+PLAYER = os.path.join(DEV, 'mod', 'DevCE')
+PLAYER_GUID = '2f6d8f0e-5b9a-4a3e-8c55-7d2b6e1c9a40'
+os.makedirs(os.path.join(PLAYER, 'Data'), exist_ok=True)
+os.makedirs(os.path.join(PLAYER, 'Binaries', 'Win64'), exist_ok=True)
+open(os.path.join(PLAYER, 'Data', 'Config.sql'), 'w', encoding='utf-8').write(
+    "UPDATE GameCores\nSET\n    PackageId = '%s',\n    DllPrefix = 'GameCore_XP2_CE'\nWHERE\n    GameCore = 'Expansion2';\n" % PLAYER_GUID)
+open(os.path.join(PLAYER, 'DevCE.modinfo'), 'w', encoding='utf-8').write('''<?xml version="1.0" encoding="utf-8"?>
+<Mod id="%s" version="1">
+    <Properties>
+        <Name>Dev CE (experimental)</Name>
+        <Description>EXPERIMENTAL. A fork of the Community Extension GameCore that adds %d engine functions to existing Lua objects (City, Unit, Player, Game, Map, ...). Nothing runs by itself; call the new methods from your own scripts. SINGLE PLAYER ONLY, may desync multiplayer; ids and indices you pass are not range-checked. Works only with Steam build 15038592 (disables itself otherwise). Incompatible with every other GameCore mod, including the Community Extension. Known unsafe: Unit.ChangeSightRange, PlayerTrade.Change*TradeDisabledCount. DevBridge.log next to the DLL describes what loaded; attach it to bug reports.</Description>
+        <Teaser>Engine functions for Lua modders (experimental)</Teaser>
+        <Authors>cru121, based on the Community Extension by Wild-W</Authors>
+        <CompatibleVersions>1.2,2.0</CompatibleVersions>
+        <AffectsSavedGames>0</AffectsSavedGames>
+    </Properties>
+    <Dependencies>
+        <Mod id="4873eb62-8ccc-4574-b784-dda455e74e68" title="Expansion: Gathering Storm" />
+    </Dependencies>
+    <FrontEndActions>
+        <UpdateDatabase id="DevCE_Config">
+            <Properties><LoadOrder>10</LoadOrder></Properties>
+            <File>Data/Config.sql</File>
+        </UpdateDatabase>
+    </FrontEndActions>
+    <Files>
+        <File>Binaries/Win64/GameCore_XP2_CE_FinalRelease.dll</File>
+        <File>Data/Config.sql</File>
+    </Files>
+</Mod>
+''' % (PLAYER_GUID, len(man)))
+
 dll = os.path.join(DEV, 'build', 'GameCore_XP2_CE_FinalRelease.dll')
 if os.path.exists(dll):
     shutil.copy(dll, os.path.join(MOD, 'Binaries', 'Win64', 'GameCore_XP2_CE_FinalRelease.dll'))
+    shutil.copy(dll, os.path.join(PLAYER, 'Binaries', 'Win64', 'GameCore_XP2_CE_FinalRelease.dll'))
 print('mod written to', MOD, '| methods', len(man), '| interfaces', len(by), '| reachable interfaces', sum(1 for i in by if i in ACCESS))
