@@ -40,7 +40,7 @@
    "changed_getters": [
     "GetBuildCharges"
    ],
-   "runs": 4
+   "runs": 5
   }
  },
  "City.SetOccupied": {
@@ -56,7 +56,7 @@
    "changed_getters": [
     "GetOutgoingRouteCapacity"
    ],
-   "runs": 4
+   "runs": 5
   }
  },
  "UnitExperience.SetLevel": {
@@ -73,7 +73,7 @@
     "GetFoodSurplus",
     "GetTurnsUntilGrowth"
    ],
-   "runs": 4
+   "runs": 5
   }
  },
  "PlayerResources.RevealResourceOnVisibleTiles": {
@@ -89,7 +89,7 @@
    "changed_getters": [
     "GetActionCharges"
    ],
-   "runs": 4
+   "runs": 5
   }
  },
  "Unit.ChangeDisasterCharges": {
@@ -101,7 +101,7 @@
    "changed_getters": [
     "GetDisasterCharges"
    ],
-   "runs": 4
+   "runs": 5
   }
  },
  "City.ChangeFollowerYieldModifier": {
@@ -113,7 +113,7 @@
    "changed_getters": [
     "GetFoodSurplus"
    ],
-   "runs": 4
+   "runs": 5
   }
  },
  "City.ChangeYieldModifier": {
@@ -125,7 +125,7 @@
    "changed_getters": [
     "GetFoodSurplus"
    ],
-   "runs": 4
+   "runs": 5
   }
  },
  "City.ChangeYieldModifierPerGovernorTitle": {
@@ -135,7 +135,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "District.SetSiegeStatus": {
@@ -149,7 +149,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "GameEras.ChangePlayerEraScorePerArmyKilled": {
@@ -159,7 +159,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "GameEras.ChangePlayerEraScorePerArtifactExtracted": {
@@ -169,7 +169,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "GameEras.ChangePlayerEraScorePerCityReligionConversion": {
@@ -179,7 +179,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "GameEras.ChangePlayerEraScorePerCivicBoost": {
@@ -189,7 +189,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "GameEras.ChangePlayerEraScorePerContinentDiscovered": {
@@ -199,7 +199,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "GameEras.ChangePlayerEraScorePerCorpsKilled": {
@@ -209,7 +209,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "GameEras.ChangePlayerEraScorePerCultureBuildingConstructed": {
@@ -219,7 +219,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "GameEras.ChangePlayerEraScorePerCurrentCivic": {
@@ -229,7 +229,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "GameEras.ChangePlayerEraScorePerCurrentTech": {
@@ -239,7 +239,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "GameEras.ChangePlayerEraScorePerDistrictConstructed": {
@@ -249,7 +249,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "GameEras.ChangePlayerEraScorePerGreatPersonEarned": {
@@ -259,7 +259,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "GameEras.ChangePlayerEraScorePerIndustrialBuildingConstructed": {
@@ -269,7 +269,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "GameEras.ChangePlayerEraScorePerNaturalWonderDiscovered": {
@@ -279,7 +279,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "GameEras.ChangePlayerEraScorePerNonBarbarianUnitKilledByGDR": {
@@ -289,7 +289,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "GameEras.ChangePlayerEraScorePerNonBarbarianUnitSeaKilled": {
@@ -299,7 +299,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "GameEras.ChangePlayerEraScorePerScienceBuildingConstructed": {
@@ -309,7 +309,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "GameEras.ChangePlayerEraScorePerSpySuccessfulMission": {
@@ -319,7 +319,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "GameEras.ChangePlayerEraScorePerTechBoost": {
@@ -329,7 +329,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "GameEras.ChangePlayerEraScorePerTradeRouteCompleted": {
@@ -339,7 +339,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "GameEras.ChangePlayerEraScorePerUnitPromotionEarned": {
@@ -349,7 +349,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "GameEras.RecalculateThresholdShifts": {
@@ -363,7 +363,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "Game.SetLocalPlayerTo": {
@@ -425,7 +425,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "CityBuildings.AddGreatWorkToSlot": {
@@ -455,7 +455,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "GameDiplomacy.SetAtWar": {
@@ -477,7 +477,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "PlayerUnits.SetCanEverTrain": {
@@ -491,7 +491,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "UnitExperience.GrantPromotion": {
@@ -553,7 +553,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "CityBuildQueue.ChangeProductionModifier": {
@@ -563,7 +563,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "CityBuildQueue.SetDistrictPercentComplete": {
@@ -574,30 +574,37 @@
   "plumbing": "PASS",
   "this_kind": "plain",
   "delta_probe": {
-   "visible_effect": false,
+   "visible_effect": true,
    "reversible": true,
-   "changed_getters": [],
-   "runs": 3
+   "changed_getters": [
+    "GetFoodSurplus",
+    "GetTurnsUntilGrowth"
+   ],
+   "runs": 4
   }
  },
  "CityBuildings.ChangeYieldChange": {
   "plumbing": "PASS",
   "this_kind": "plain",
   "delta_probe": {
-   "visible_effect": false,
+   "visible_effect": true,
    "reversible": true,
-   "changed_getters": [],
-   "runs": 3
+   "changed_getters": [
+    "GetFoodSurplus"
+   ],
+   "runs": 4
   }
  },
  "CityBuildings.ChangeYieldChangeCityStates": {
   "plumbing": "PASS",
   "this_kind": "plain",
   "delta_probe": {
-   "visible_effect": false,
+   "visible_effect": true,
    "reversible": true,
-   "changed_getters": [],
-   "runs": 3
+   "changed_getters": [
+    "GetFoodSurplus"
+   ],
+   "runs": 4
   }
  },
  "CityBuildings.ChangeYieldChangeFromFeature": {
@@ -623,7 +630,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 2
+   "runs": 3
   }
  },
  "City.ChangeExtraIdentityPerTurnPerCitizen": {
@@ -633,7 +640,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 2
+   "runs": 3
   }
  },
  "City.ChangeIdentityPressureFromAges": {
@@ -643,7 +650,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 2
+   "runs": 3
   }
  },
  "City.ChangeIdentityPressureFromModifiers": {
@@ -653,7 +660,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 2
+   "runs": 3
   }
  },
  "City.ChangeGreatWorkYieldModifier": {
@@ -679,7 +686,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "City.AddCityHappinessModifier": {
@@ -693,7 +700,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "City.RemoveCityHappinessModifier": {
@@ -708,90 +715,115 @@
   "plumbing": "PASS",
   "this_kind": "virtual",
   "delta_probe": {
-   "visible_effect": false,
+   "visible_effect": true,
    "reversible": true,
-   "changed_getters": [],
-   "runs": 2
+   "changed_getters": [
+    "GetFoodSurplus",
+    "GetTurnsUntilGrowth"
+   ],
+   "runs": 3
   }
  },
  "City.ChangeYieldFromForeignRoutesPassingThrough": {
   "plumbing": "PASS",
   "this_kind": "virtual",
   "delta_probe": {
-   "visible_effect": false,
+   "visible_effect": true,
    "reversible": true,
-   "changed_getters": [],
-   "runs": 2
+   "changed_getters": [
+    "GetFoodSurplus",
+    "GetTurnsUntilGrowth"
+   ],
+   "runs": 3
   }
  },
  "City.ChangeYieldPerDestinationLuxuryResourceForInternational": {
   "plumbing": "PASS",
   "this_kind": "virtual",
   "delta_probe": {
-   "visible_effect": false,
+   "visible_effect": true,
    "reversible": true,
-   "changed_getters": [],
-   "runs": 2
+   "changed_getters": [
+    "GetFoodSurplus",
+    "GetTurnsUntilGrowth"
+   ],
+   "runs": 3
   }
  },
  "City.ChangeYieldPerDestinationStrategicResourceForDomestic": {
   "plumbing": "PASS",
   "this_kind": "virtual",
   "delta_probe": {
-   "visible_effect": false,
+   "visible_effect": true,
    "reversible": true,
-   "changed_getters": [],
-   "runs": 2
+   "changed_getters": [
+    "GetFoodSurplus"
+   ],
+   "runs": 3
   }
  },
  "City.ChangeYieldPerDestinationStrategicResourceForInternational": {
   "plumbing": "PASS",
   "this_kind": "virtual",
   "delta_probe": {
-   "visible_effect": false,
+   "visible_effect": true,
    "reversible": true,
-   "changed_getters": [],
-   "runs": 2
+   "changed_getters": [
+    "GetFoodSurplus"
+   ],
+   "runs": 3
   }
  },
  "City.ChangeYieldPerLocalBonusResourceForDomestic": {
   "plumbing": "PASS",
   "this_kind": "virtual",
   "delta_probe": {
-   "visible_effect": false,
+   "visible_effect": true,
    "reversible": true,
-   "changed_getters": [],
-   "runs": 2
+   "changed_getters": [
+    "GetFoodSurplus",
+    "GetTurnsUntilGrowth"
+   ],
+   "runs": 3
   }
  },
  "City.ChangeYieldPerLocalBonusResourceForInternational": {
   "plumbing": "PASS",
   "this_kind": "virtual",
   "delta_probe": {
-   "visible_effect": false,
+   "visible_effect": true,
    "reversible": true,
-   "changed_getters": [],
-   "runs": 2
+   "changed_getters": [
+    "GetFoodSurplus",
+    "GetTurnsUntilGrowth"
+   ],
+   "runs": 3
   }
  },
  "City.ChangeYieldPerLocalLuxuryResourceForInternational": {
   "plumbing": "PASS",
   "this_kind": "virtual",
   "delta_probe": {
-   "visible_effect": false,
+   "visible_effect": true,
    "reversible": true,
-   "changed_getters": [],
-   "runs": 2
+   "changed_getters": [
+    "GetFoodSurplus",
+    "GetTurnsUntilGrowth"
+   ],
+   "runs": 3
   }
  },
  "City.ChangeYieldPerLocalStrategicResourceForInternational": {
   "plumbing": "PASS",
   "this_kind": "virtual",
   "delta_probe": {
-   "visible_effect": false,
+   "visible_effect": true,
    "reversible": true,
-   "changed_getters": [],
-   "runs": 2
+   "changed_getters": [
+    "GetFoodSurplus",
+    "GetTurnsUntilGrowth"
+   ],
+   "runs": 3
   }
  },
  "City.ChangeYieldPerMajorTradePartner": {
@@ -801,7 +833,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 2
+   "runs": 3
   }
  },
  "Deal.RemoveExpiredItems": {
@@ -839,7 +871,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "GameEras.ChangePlayerAlwaysAllowedCommemorationQuestCount": {
@@ -849,7 +881,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "GameEras.SetMinScoreForExtraEraScore": {
@@ -871,7 +903,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 1
+   "runs": 2
   }
  },
  "Map.SetRevealedImprovementType": {
@@ -893,7 +925,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 1
+   "runs": 2
   }
  },
  "Player.ChangeResolutionEffectRefundPercent": {
@@ -903,7 +935,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 1
+   "runs": 2
   }
  },
  "Player.ChangeIdentityPerTurnForTradeRouteOrigin": {
@@ -913,7 +945,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 1
+   "runs": 2
   }
  },
  "PlayerCulture.ChangeGreatWorkObjectTourismModifier": {
@@ -923,7 +955,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "PlayerCulture.SetFavorPerTurnFromBuilding": {
@@ -953,7 +985,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "TeamDiplomacy.ChangeYieldPerEmbassy": {
@@ -963,7 +995,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "TeamDiplomacy.SetFightingJointWar": {
@@ -985,7 +1017,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 1
+   "runs": 2
   }
  },
  "Player.ChangeTargetCitySpyYieldPercent": {
@@ -999,7 +1031,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "PlayerGreatPeoplePoints.ChangeBonusPointsPerTurnPercent": {
@@ -1009,7 +1041,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "PlayerGreatPeoplePoints.ChangePatronageDiscountPercent": {
@@ -1019,7 +1051,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "PlayerGreatPeoplePoints.ChangePointsRefundPercent": {
@@ -1029,7 +1061,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "PlayerGreatPeoplePoints.SetGreatPersonClassNoPoints": {
@@ -1059,7 +1091,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 1
+   "runs": 2
   }
  },
  "Player.ChangeRandomEventNoUnitDamage": {
@@ -1069,7 +1101,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 1
+   "runs": 2
   }
  },
  "Player.ChangeYieldRate": {
@@ -1079,7 +1111,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 1
+   "runs": 2
   }
  },
  "Player.RemoveChopFeatureBehavior": {
@@ -1097,7 +1129,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "PlayerResources.ChangeExtraAccumulationModifier": {
@@ -1107,7 +1139,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "PlayerResources.ChangeExtraAmenitiesPerOwnedBonusResource": {
@@ -1120,17 +1152,22 @@
     "GetAmenities",
     "GetAmenitiesFromLuxuries"
    ],
-   "runs": 4
+   "runs": 5
   }
  },
  "PlayerResources.ChangeExtraAmenitiesPerOwnedLuxuryResource": {
   "plumbing": "PASS",
   "this_kind": "virtual",
   "delta_probe": {
-   "visible_effect": false,
+   "visible_effect": true,
    "reversible": true,
-   "changed_getters": [],
-   "runs": 3
+   "changed_getters": [
+    "GetFaithYield",
+    "GetScienceYield",
+    "GetGoldYield",
+    "GetCultureYield"
+   ],
+   "runs": 4
   }
  },
  "PlayerResources.ChangeImportResourceExtracted": {
@@ -1144,7 +1181,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "PlayerResources.ChangeResourceStockpileCapModifier": {
@@ -1154,7 +1191,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "PlayerStats.ChangeScienceVictoryPointsPerTurn": {
@@ -1164,7 +1201,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 2
+   "runs": 3
   }
  },
  "PlayerTechs.SetNumFreeTechBoostOnNewEra": {
@@ -1175,10 +1212,13 @@
   "plumbing": "PASS",
   "this_kind": "virtual",
   "delta_probe": {
-   "visible_effect": false,
+   "visible_effect": true,
    "reversible": true,
-   "changed_getters": [],
-   "runs": 3
+   "changed_getters": [
+    "GetFoodSurplus",
+    "GetTurnsUntilGrowth"
+   ],
+   "runs": 4
   }
  },
  "PlayerTrade.ChangeDestinationYieldForAllyRoute": {
@@ -1188,7 +1228,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "PlayerTrade.ChangeDestinationYieldForSuzerainRoute": {
@@ -1198,7 +1238,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "PlayerTrade.ChangeDestinationYieldModifier": {
@@ -1208,7 +1248,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "PlayerTrade.ChangeDestinationYieldPerImprovementAtDestination": {
@@ -1218,17 +1258,20 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "PlayerTrade.ChangeDestinationYieldPerTerrainForDomestic": {
   "plumbing": "PASS",
   "this_kind": "virtual",
   "delta_probe": {
-   "visible_effect": false,
+   "visible_effect": true,
    "reversible": true,
-   "changed_getters": [],
-   "runs": 3
+   "changed_getters": [
+    "GetFoodSurplus",
+    "GetTurnsUntilGrowth"
+   ],
+   "runs": 4
   }
  },
  "PlayerTrade.ChangeDestinationYieldPerTerrainForInternational": {
@@ -1238,37 +1281,47 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "PlayerTrade.ChangeDomesticTradeDisabledCount": {
   "plumbing": "PASS",
   "this_kind": "virtual",
   "delta_probe": {
-   "visible_effect": false,
-   "reversible": true,
-   "changed_getters": [],
-   "runs": 3
+   "visible_effect": true,
+   "reversible": false,
+   "changed_getters": [
+    "GetGoldYield",
+    "GetFoodSurplus",
+    "GetTurnsUntilGrowth"
+   ],
+   "runs": 4
   }
  },
  "PlayerTrade.ChangeFlatYieldBonus": {
   "plumbing": "PASS",
   "this_kind": "virtual",
   "delta_probe": {
-   "visible_effect": false,
+   "visible_effect": true,
    "reversible": true,
-   "changed_getters": [],
-   "runs": 3
+   "changed_getters": [
+    "GetFoodSurplus",
+    "GetTurnsUntilGrowth"
+   ],
+   "runs": 4
   }
  },
  "PlayerTrade.ChangeFlatYieldBonusForCityState": {
   "plumbing": "PASS",
   "this_kind": "virtual",
   "delta_probe": {
-   "visible_effect": false,
+   "visible_effect": true,
    "reversible": true,
-   "changed_getters": [],
-   "runs": 3
+   "changed_getters": [
+    "GetFoodSurplus",
+    "GetTurnsUntilGrowth"
+   ],
+   "runs": 4
   }
  },
  "PlayerTrade.ChangeFlatYieldBonusForDomestic": {
@@ -1286,27 +1339,36 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "PlayerTrade.ChangeInternationalMajorsTradeDisabledCount": {
   "plumbing": "PASS",
   "this_kind": "virtual",
   "delta_probe": {
-   "visible_effect": false,
-   "reversible": true,
-   "changed_getters": [],
-   "runs": 3
+   "visible_effect": true,
+   "reversible": false,
+   "changed_getters": [
+    "GetGoldYield"
+   ],
+   "runs": 4
   }
  },
  "PlayerTrade.ChangeInternationalMinorsTradeDisabledCount": {
   "plumbing": "PASS",
   "this_kind": "virtual",
   "delta_probe": {
-   "visible_effect": false,
-   "reversible": true,
-   "changed_getters": [],
-   "runs": 3
+   "visible_effect": true,
+   "reversible": false,
+   "changed_getters": [
+    "GetFaithYield",
+    "GetGoldYield",
+    "GetX",
+    "GetY",
+    "HasPendingOperations",
+    "GetCultureYield"
+   ],
+   "runs": 4
   }
  },
  "PlayerTrade.ChangeInternationalYieldModifier": {
@@ -1316,7 +1378,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "PlayerTrade.ChangeInternationalYieldPerImprovementAtOrigin": {
@@ -1326,7 +1388,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "PlayerTrade.ChangeOriginYieldForAllyRoute": {
@@ -1336,7 +1398,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "PlayerTrade.ChangeOriginYieldForSuzerainRoute": {
@@ -1346,7 +1408,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "PlayerTrade.ChangeOriginYieldModifier": {
@@ -1356,7 +1418,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "PlayerTrade.ChangeOriginYieldPerImprovementAtDestination": {
@@ -1366,7 +1428,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "PlayerTrade.ChangeOriginYieldPerTerrainForDomestic": {
@@ -1376,7 +1438,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "PlayerTrade.ChangeOriginYieldPerTerrainForInternational": {
@@ -1386,7 +1448,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "PlayerTrade.ChangePerSpecialtyDistrictYieldBonusForDomestic": {
@@ -1396,7 +1458,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "PlayerTrade.ChangePerSpecialtyDistrictYieldBonusForInternational": {
@@ -1406,7 +1468,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "PlayerTrade.ChangeYieldPerFollower": {
@@ -1416,7 +1478,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "PlayerTrade.ChangeYieldPerPathTile": {
@@ -1426,7 +1488,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "PlayerTrade.ChangeYieldPerTradingPostInForeignCity": {
@@ -1436,7 +1498,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "PlayerTrade.ChangeYieldPerTradingPostInOwnCity": {
@@ -1446,7 +1508,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "PlayerTreasury.ChangeGoldDiplomaticDeal": {
@@ -1468,7 +1530,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "PlayerUnits.SetBannedProductionYield": {
@@ -1510,7 +1572,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "Unit.ChangeBonusPointsPerKillStrength": {
@@ -1520,7 +1582,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "Unit.ChangeSightRange": {
@@ -1543,7 +1605,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "Unit.ChangeTerritoryHealingReligion": {
@@ -1553,7 +1615,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "Unit.RemoveInvalidTerrain": {
@@ -1587,7 +1649,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 4
   }
  },
  "Game.BuildCivics": {

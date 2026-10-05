@@ -56,6 +56,7 @@ namespace DevBridge {
 		if (hks::isnumber(L, 1)) {
 			const int code = hks::checkinteger(L, 1);
 			if (code == 5) DevBridgeArmed = 5;   // level-3 run finished: do not repeat
+			if (code == 7) DevBridgeArmed = 7;   // level-4 (hostile arguments) run started: do not repeat
 			DevCE_Marker(code);
 		}
 		return 0;

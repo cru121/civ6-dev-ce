@@ -149,10 +149,15 @@ L3LINES += ['}', '']
 DELTA_RE = re.compile(r'^(i|x)?(Change|Delta|Amount|ModDelta|RangeDelta|PopulationAmount|amount)$')
 ag = load_agent()
 L3_TARGETS = []
+# Not run in level 3: Unit.ChangeSightRange hung the game (thread dump: game thread waiting, no fault) on a late-game save 2026-10-05 21:58
+# and has lasting side effects (reveals tiles, meets city states) even when it works.
+L3_SKIP = {'Unit.ChangeSightRange'}
 for e in man:
     if e.get('oracle') or e['iface'] not in ACCESS:
         continue
     fn = e['lua'].split('.', 1)[1]
+    if e['lua'] in L3_SKIP:
+        continue
     if not fn.startswith('Change') or any(a['kind'] not in ('INT', 'UINT', 'I64', 'FIXED') for a in e['args']):
         continue
     if any('Hash' in a['name'] for a in e['args']):
@@ -228,6 +233,112 @@ L3LINES += [
     '    LogF("L3|END")',
     'end', '']
 
+# ---------------------------------------------------------------- level 4: hostile arguments (robustness; nothing here is meant to succeed)
+# Cases that could reach the native function with a valid `this` always pass "x" for every argument, so the call stops at the argument check
+# (checkinteger/checknumber raise) before any native code runs; this only works when the function has a non-bool argument (`guarded`).
+# Cases with an INVALID self (nil, string, number, table, an object of another kind) test GetInstance's type check; for functions without a
+# guard those would run natively if the check wrongly passed, so they come last (section B).
+# Value-hostile calls (-1, INT_MAX, INT_MIN, 1e10, 0.5, NaN) are only made on the read-only oracle getters.
+def lua_bool(b):
+    return 'true' if b else 'false'
+
+
+L4LINES = ['local LEVEL4 = {']
+for e in man:
+    if e['iface'] not in ACCESS:
+        continue
+    static = bool(e.get('nav') and e['nav'].get('owner') in ('Game', 'Map')) or e['iface'] in ('IGame', 'IMap')
+    obj, meth = e['lua'].split('.', 1)
+    guarded = any(a['kind'] != 'BOOL' for a in e['args'])
+    acc = re.sub(r'^DevStatic\((\w+)\)$', r'\g<1>', ACCESS[e['iface']])
+    L4LINES.append('    { name = "%s", reach = function(p, capital, unit) return %s end, meth = "%s", static = %s, nargs = %d, guarded = %s, getter = %s },' % (
+        e['lua'], acc, meth, lua_bool(static), len(e['args']), lua_bool(guarded), lua_bool(bool(e.get('oracle')))))
+L4LINES += ['}', '']
+L4LINES += [
+    'local function Short(v) local s = tostring(v); s = string.gsub(s, "[\\r\\n]+", " "); if #s > 90 then s = string.sub(s, 1, 90) end; return s end',
+    'local unpack = unpack or table.unpack',
+    'local function Xs(n) local t = {}; for i = 1, n do t[i] = "x" end; return t end',
+    '-- Level 4 (hostile arguments): armed code 6. Every call is under pcall; the outcome is logged line by line (flushed). A hang or crash: the last "L4|BEGIN" line names the function.',
+    '-- ERR = the call raised a Lua error (expected for bad input); OK = it returned. For the "must fail" cases OK is reported as UNEXPECTED_OK.',
+    'local function Level4()',
+    '    local p = Players[0]',
+    '    local capital, unit',
+    '    pcall(function() capital = p:GetCities():GetCapitalCity() end)',
+    '    pcall(function() for _, u in p:GetUnits():Members() do unit = u break end end)',
+    '    DevCE_RecordState(7)',
+    '    local stat = { err = 0, ok = 0, unexpected = 0, fault = 0 }',
+    '    local function Case(name, case, mustFail, f, ...)',
+    '        local ok, r = pcall(f, ...)',
+    '        local res',
+    '        if ok then res = mustFail and "UNEXPECTED_OK" or "OK"; stat.ok = stat.ok + 1; if mustFail then stat.unexpected = stat.unexpected + 1 end',
+    '        else res = "ERR"; stat.err = stat.err + 1; if string.find(tostring(r), "faulted", 1, true) then res = "FAULT"; stat.fault = stat.fault + 1 end end',
+    '        LogF("L4|" .. name .. "|" .. case .. "|" .. res .. "|" .. Short(r))',
+    '    end',
+    '    LogF("L4|START|" .. #LEVEL4 .. " functions")',
+    '    -- section A: functions with a non-bool argument: every case passes "x" for all arguments, so the native function is never reached',
+    '    for _, t in ipairs(LEVEL4) do',
+    '        if t.guarded then',
+    '            local ok0, o = pcall(t.reach, p, capital, unit)',
+    '            if ok0 and o ~= nil then',
+    '                LogF("L4|BEGIN|" .. t.name)',
+    '                local f = o[t.meth]',
+    '                local xs = Xs(t.nargs)',
+    '                if f == nil then LogF("L4|" .. t.name .. "|nomethod|MISSING|")',
+    '                elseif t.static then',
+    '                    Case(t.name, "static-x", true, f, unpack(xs))',
+    '                    Case(t.name, "static-table", true, f, {})',
+    '                    Case(t.name, "static-nil", true, f, nil)',
+    '                else',
+    '                    local other = (o == p) and capital or p',
+    '                    Case(t.name, "noself-x", true, f, unpack(xs))',
+    '                    Case(t.name, "nilself-x", true, f, nil, unpack(xs))',
+    '                    Case(t.name, "stringself-x", true, f, "x", unpack(xs))',
+    '                    Case(t.name, "numberself-x", true, f, 12345, unpack(xs))',
+    '                    Case(t.name, "tableself-x", true, f, {}, unpack(xs))',
+    '                    Case(t.name, "otherobj-x", true, f, other, unpack(xs))',
+    '                    Case(t.name, "noargs", true, f, o)',
+    '                    Case(t.name, "badargs-x", true, f, o, unpack(xs))',
+    '                    Case(t.name, "badargs-table", true, f, o, {})',
+    '                end',
+    '            end',
+    '        end',
+    '    end',
+    '    -- section B: value-hostile calls on the read-only getters (oracle functions). The engine may fault on out-of-range ids: the SEH guard must turn that into an error.',
+    '    local VALUES = { { "m1", -1 }, { "max", 2147483647 }, { "min", -2147483648 }, { "big", 10000000000 }, { "half", 0.5 }, { "huge", 1e300 }, { "nan", 0/0 } }',
+    '    for _, t in ipairs(LEVEL4) do',
+    '        if t.getter and t.nargs > 0 and not t.static then',
+    '            local ok0, o = pcall(t.reach, p, capital, unit)',
+    '            if ok0 and o ~= nil then',
+    '                LogF("L4|BEGIN|" .. t.name .. "|values")',
+    '                local f = o[t.meth]',
+    '                for _, v in ipairs(VALUES) do',
+    '                    local args = {}',
+    '                    for i = 1, t.nargs do args[i] = v[2] end',
+    '                    Case(t.name, "value-" .. v[1], false, f, o, unpack(args))',
+    '                end',
+    '            end',
+    '        end',
+    '    end',
+    '    -- section C: functions WITHOUT a guard (no arguments, or bools only): invalid self values only. If GetInstance wrongly accepted one, the function would run natively.',
+    '    for _, t in ipairs(LEVEL4) do',
+    '        if not t.guarded and not t.static then',
+    '            local ok0, o = pcall(t.reach, p, capital, unit)',
+    '            if ok0 and o ~= nil then',
+    '                LogF("L4|BEGIN|" .. t.name .. "|badself")',
+    '                local f = o[t.meth]',
+    '                local other = (o == p) and capital or p',
+    '                Case(t.name, "noself", true, f)',
+    '                Case(t.name, "nilself", true, f, nil)',
+    '                Case(t.name, "stringself", true, f, "x")',
+    '                Case(t.name, "numberself", true, f, 12345)',
+    '                Case(t.name, "tableself", true, f, {})',
+    '                Case(t.name, "otherobj", true, f, other)',
+    '            end',
+    '        end',
+    '    end',
+    '    LogF("L4|END|err=" .. stat.err .. "|ok=" .. stat.ok .. "|unexpected_ok=" .. stat.unexpected .. "|fault=" .. stat.fault)',
+    'end', '']
+
 os.makedirs(os.path.join(MOD, 'Scripts'), exist_ok=True)
 os.makedirs(os.path.join(MOD, 'Data'), exist_ok=True)
 os.makedirs(os.path.join(MOD, 'Binaries', 'Win64'), exist_ok=True)
@@ -275,13 +386,17 @@ L += ['}', '',
       '    end',
       '    Log(string.format("SELFTEST level 1: %d methods present, %d missing, %d not reached", present, missing, unreached))',
       'end', '',
-      ] + L2LINES + ORACLE_LINES + L3LINES + [
+      ] + L2LINES + ORACLE_LINES + L3LINES + L4LINES + [
       'local tries = 0',
       'GameEvents.PlayerTurnStarted.Add(function(playerID)',
       '    if DevCE_RecordState then DevCE_RecordState() end   -- lets the Frida test tool find the gameplay lua_State',
       '    if playerID == 0 and DevCE_IsArmed and DevCE_IsArmed() == 4 then',
       '        local ok4, err4 = pcall(Level3)',
       '        if not ok4 then Log("LEVEL3 error: " .. tostring(err4)) end',
+      '    end',
+      '    if playerID == 0 and DevCE_IsArmed and DevCE_IsArmed() == 6 then',
+      '        local ok6, err6 = pcall(Level4)',
+      '        if not ok6 then Log("LEVEL4 error: " .. tostring(err6)) end',
       '    end',
       '    if playerID == 0 and DevCE_IsArmed and DevCE_IsArmed() == 1 then',
       '        local ok2, err2 = pcall(Level2)',

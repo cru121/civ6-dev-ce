@@ -99,3 +99,22 @@ CE (single player incl. a World Congress; see `../ce_issue5/README.md`), so it i
 * SEH guard around every native call (CallGuarded): a hardware fault becomes a Lua error + 'FAULT' line in DevBridge.log (FnState.faults). Cannot catch silent corruption.
 * DevBridge::Log is now serialised with a critical section.
 * TODO test: DevBridge.log must show the PE line and '251 native functions ready'; level 1/oracle unchanged; then the hostile-argument pass (nil, negative, huge, '.' vs ':') expecting Lua errors, no crash.
+
+### 2026-10-05 first run of the easy-wins build (processor port, build check, SEH guard, log lock)
+* First two runs HUNG at startup: my log-lock edit lacked LeaveCriticalSection (script edit silently not applied), the second thread to log blocked forever. Found with the Frida watchdog dump (tools/civ_watchdog.ps1, hang_dump.py, pdb_sym.py). Fixed.
+* After the fix, new game: PE check OK, 251/251 ready, level 1: 226 present / 13 'missing' (known: Game/Map static tables not enumerable by the script) / 12 not reached; ORACLE 23 match, 0 mismatch; no FAULT lines, no Lua syntax errors. Processor fix not exercised here (CE_Proc_Test not enabled). NOT yet run: level 2/3, save/load, hostile arguments.
+
+### 2026-10-05 late-game save (forum save AutoSave_0388 + Dev CE added by saves-cli), easy-wins build
+* Save loads and plays with Dev CE; a turn ends normally. Level 1 226 present; oracle 23/23 on real late-game values (faith 608.7, building maintenance 789).
+* Level 2 (Frida, 224 stubs): 212 PASS, 27 EXCLUDED, 12 NOT_RUN (District/Deal/Territory/AreaPortal: the self-test script does not find live instances even here -> fix the script accessors). No fault, game responsive.
+
+### 2026-10-05 level 3 on the late-game save: HANG at Unit.ChangeSightRange
+Level 3 ran about 100 functions fine (all `plus=true|minus=true`, restored), then the game stopped responding at `L3|BEGIN|Unit.ChangeSightRange` (no result line; no FAULT, so not a hardware fault).
+The watchdog dump (game thread waiting inside the engine, Lua frames below it, no Dev CE frames) was taken after 20 s and the game was killed. In the earlier small game the same function ran (and revealed tiles, met a city state).
+Cause unknown: the hang is either in the +1 call, in a getter of the snapshot that follows it, or in the engine's reveal handling on a big late-game map; not isolated. Unit.ChangeSightRange is now skipped by level 3 (L3_SKIP in gen_selftest.py) and should be treated as unsafe.
+Log kept: data/devbridge_hang_sightrange.log. The remaining level-3 functions after it (rest of Unit.*) were not run in that pass.
+
+### 2026-10-05 level 3 on the late-game save (without Unit.ChangeSightRange): 112 functions
+* **No crash, 0 call errors**, 112 of 112 executed (+1 and -1). Late-game state (cities, trade routes, resources) makes far more effects visible: **27 with a visible effect through vanilla getters** (was 8 in the small games), all in the direction the names say: city yield changes (food surplus, turns until growth) for City/CityBuildings/PlayerTrade yield functions, PlayerTrade.ChangeOutgoingRouteCapacity 37->38, charges on Unit/UnitGreatPerson, PlayerResources.ChangeExtraAmenitiesPerOwnedLuxuryResource (faith/science/gold yields change). 85 silent.
+* **3 NOT restored by -1: PlayerTrade.ChangeDomesticTradeDisabledCount, ChangeInternationalMajorsTradeDisabledCount, ChangeInternationalMinorsTradeDisabledCount.** +1 disables trade routes (gold 3980 -> 3057, faith -18, a city's food surplus 11 -> 6) and -1 does not bring them back, same class of lasting side effect as Unit.ChangeSightRange: the counter is restored but routes that were switched off / cancelled are not. Treat as destructive in the docs. The game used for this run must not be saved.
+* Tools: dev-ce/tools/level3_report.py, merge_status.py --record late-game-1.
