@@ -23,7 +23,10 @@ namespace AI::CongressSupport {
 
 			std::cout << "Calling Target Chooser: " << name << "!\n";
 
-			if (CallCustomProcessor(name, variantMap)) {
+			// The game's dispatcher only tells us that a handler ran, not what it returned, so a handler claims the decision by setting map.Handled = 1.
+			variantMap.emplace("Handled", LuaVariant(0));
+
+			if (CallCustomProcessor(name, variantMap) && std::get<int>(variantMap.at("Handled")) != 0) {
 				int decisionType = std::get<int>(variantMap.at(decisionKey));
 				std::cout << "Decision type: " << decisionType << '\n';
 				if (decisionType == -1) {

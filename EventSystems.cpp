@@ -1,72 +1,56 @@
 #include "EventSystems.h"
-#include "Runtime.h"
-#include <vector>
+#include "GameProcessor.h"
+#include <mutex>
+#include <unordered_set>
 
 namespace EventSystems {
-	std::unordered_map<std::string, std::vector<std::pair<hks::lua_State*, int>>> logicEvents = {};
+	// Names of the processors a script registered. The handlers themselves live in the game's GameEvents table (not here), so no lua_State
+	// pointer or registry reference is stored and nothing in this file runs Lua outside the game's own dispatcher.
+	static std::mutex namesMutex;
+	static std::unordered_set<std::string> registeredNames;
 
 	int lRegisterProcessor(hks::lua_State* L) {
 		size_t length;
 		const char* name = hks::checklstring(L, 1, &length);
 
-		hks::pushvalue(L, 2);
-		int callbackIndex = hks::ref(L, hks::LUA_REGISTRYINDEX);
-        
-		logicEvents[name].push_back(std::make_pair(L, callbackIndex));
-        return 0;
+		// stack: [name, fn]  ->  GameEvents[name].Add(fn)
+		hks::getfield(L, hks::LUA_GLOBAL, "GameEvents");   // 3
+		hks::getfield(L, 3, name);                         // 4: the event object (created on first use by the game)
+		hks::getfield(L, 4, "Add");                        // 5
+		hks::pushvalue(L, 2);                              // 6: fn
+		if (hks::pcall(L, 1, 0, 0) != 0) {
+			size_t messageLength;
+			const char* message = hks::checklstring(L, -1, &messageLength);
+			hks::error(L, "RegisterProcessor('%s') failed: %s", name, message);
+			return 0;
+		}
+
+		std::lock_guard<std::mutex> lock(namesMutex);
+		registeredNames.insert(name);
+		return 0;
 	}
 
 	bool DoesProcessorExist(const std::string& name) {
-		auto eventIterator = logicEvents.find(name);
-		if (eventIterator == logicEvents.end()) {
-			return false;
-		}
+		std::lock_guard<std::mutex> lock(namesMutex);
+		return registeredNames.find(name) != registeredNames.end();
 	}
 
 	bool CallCustomProcessor(const std::string& name, Data::LuaVariantMap& variantMap) {
-		auto eventIterator = logicEvents.find(name);
-		if (eventIterator == logicEvents.end()) {
-			std::cout << "Could not find processor: " << name << '\n';
-			return false;
-		}
-		
-		for (const auto& luaPair : eventIterator->second) {
-			hks::lua_State* L = luaPair.first;
-			int callbackIndex = luaPair.second;
-			hks::rawgeti(L, hks::LUA_REGISTRYINDEX, callbackIndex);
+		return GameProcessor::Call(name, variantMap);
+	}
 
-			// Push the variant map as a Lua table onto the stack
-			hks::createtable(L, 0, variantMap.size());
-			for (const auto& pair : variantMap) {
-				hks::pushfstring(L, pair.first.c_str());
-				pair.second.push(L);
-				hks::settable(L, -3);
-			}
+	int lProcessorTest(hks::lua_State* L) {
+		size_t length;
+		std::string name = hks::checklstring(L, 1, &length);
+		std::string key = hks::checklstring(L, 2, &length);
+		int value = hks::checkinteger(L, 3);
 
-			int tableIndex = hks::ref(L, hks::LUA_REGISTRYINDEX);
-			hks::rawgeti(L, hks::LUA_REGISTRYINDEX, tableIndex);
+		Data::LuaVariantMap variantMap;
+		variantMap.emplace(key, Data::LuaVariant(value));
+		bool handled = GameProcessor::Call(name, variantMap, false);   // we are inside a Lua handler here: the game released the lock for us
 
-			if (hks::pcall(L, 1, 1, 0) != 0) {
-				size_t length;
-				std::cout << "Error calling processor: " << hks::checklstring(L, -1, &length) << "!\n";
-				hks::unref(L, hks::LUA_REGISTRYINDEX, tableIndex); // Clean up reference in case of error
-				continue;
-			}
-
-			bool result = hks::toboolean(L, -1);
-
-			hks::rawgeti(L, hks::LUA_REGISTRYINDEX, tableIndex);
-			variantMap.rebuild(L);
-
-			hks::pop(L, 1);
-			hks::unref(L, hks::LUA_REGISTRYINDEX, tableIndex);
-
-			std::cout << "result: " << result << '\n';
-
-			if (result) {
-				return true;
-			}
-		}
-		return false;
+		hks::pushboolean(L, handled);
+		hks::pushinteger(L, std::get<int>(variantMap.at(key)));
+		return 2;
 	}
 }

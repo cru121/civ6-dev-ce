@@ -273,6 +273,7 @@
     <ClCompile Include="EconomicManager.cpp" />
     <ClCompile Include="EmergencyManager.cpp" />
     <ClCompile Include="EventSystems.cpp" />
+    <ClCompile Include="GameProcessor.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameDiplomacy.cpp" />
     <ClCompile Include="GovernorManager.cpp" />
@@ -288,6 +289,8 @@
     <ClCompile Include="Runtime.cpp" />
     <ClCompile Include="Unit.cpp" />
     <ClCompile Include="UnitManager.cpp" />
+    <ClCompile Include="DevBridge.cpp" />
+    <ClCompile Include="DevNativeTable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AI.h" />
@@ -372,6 +375,7 @@
     <ClInclude Include="EconomicManager.h" />
     <ClInclude Include="EmergencyManager.h" />
     <ClInclude Include="EventSystems.h" />
+    <ClInclude Include="GameProcessor.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameDiplomacy.h" />
     <ClInclude Include="Governor.h" />
@@ -388,6 +392,7 @@
     <ClInclude Include="Runtime.h" />
     <ClInclude Include="Unit.h" />
     <ClInclude Include="UnitManager.h" />
+    <ClInclude Include="DevBridge.h" />
     <ClInclude Include="Data.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

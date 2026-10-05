@@ -5,6 +5,7 @@
 namespace UnitManager {
 	Types::ChangeOwner ChangeOwner;
 	Types::Get Get;
+	Types::ChangeBuildCharges ChangeBuildCharges;
 
 	ProxyTypes::RegisterMembers base_RegisterMembers;
 	ProxyTypes::RegisterMembers orig_RegisterMembers;
@@ -32,11 +33,21 @@ namespace UnitManager {
 		return 1;
 	}
 
+	// UnitManager.ChangeBuildCharges(unit, delta): adds delta (may be negative) to the unit's build charges; clamps at 0.
+	int lChangeBuildCharges(hks::lua_State* L) {
+		Unit::Instance* unit = Unit::GetInstance(L, 1, true);
+		int delta = hks::checkinteger(L, 2);
+
+		ChangeBuildCharges(unit, delta);
+		return 0;
+	}
+
 	void RegisterMembers(hks::lua_State* L) {
 		std::cout << "Hooked UnitManager::PushMethods!\n";
 
 		PushLuaMethod(L, lChangeOwner, "lChangeOwner", -2, "ChangeOwner");
 		PushLuaMethod(L, lGetInstance, "lGetInstance", -2, "GetInstance");
+		PushLuaMethod(L, lChangeBuildCharges, "lChangeBuildCharges", -2, "ChangeBuildCharges");
 
 		base_RegisterMembers(L);
 	}
@@ -46,6 +57,7 @@ namespace UnitManager {
 
 		ChangeOwner = GetGameCoreGlobalAt<Types::ChangeOwner>(CHANGE_OWNER_OFFSET);
 		Get = GetGameCoreGlobalAt<Types::Get>(GET_OFFSET);
+		ChangeBuildCharges = GetGameCoreGlobalAt<Types::ChangeBuildCharges>(CHANGE_BUILD_CHARGES_OFFSET);
 
 		orig_RegisterMembers = GetGameCoreGlobalAt<ProxyTypes::RegisterMembers>(REGISTER_MEMBERS_OFFSET);
 		CreateHook(orig_RegisterMembers, &RegisterMembers, &base_RegisterMembers);

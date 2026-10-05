@@ -362,3 +362,6 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /GameCore_XP2_FinalRelease.dll
+
+# Dev CE: asmjit/x86 is needed to build but the Visual Studio rule above ignores any x86/ folder
+!asmjit/x86/

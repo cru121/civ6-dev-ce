@@ -24,7 +24,9 @@
 #include "Unit.h"
 #include "AI.h"
 #include "EventSystems.h"
+#include "GameProcessor.h"
 #include "NationalParks.h"
+#include "DevBridge.h"
 
 HANDLE mainThread;
 
@@ -53,12 +55,16 @@ void PushSharedGlobals(hks::lua_State* L) {
     PushLuaMethod(L, MemoryManipulation::LuaExport::lObjMem, "lObjMem", hks::LUA_GLOBAL, "ObjMem");
     PushLuaMethod(L, MemoryManipulation::LuaExport::lRegisterCallEvent, "lRegisterCallEvent", hks::LUA_GLOBAL, "RegisterCallEvent");
     PushLuaMethod(L, EventSystems::lRegisterProcessor, "lRegisterProcessor", hks::LUA_GLOBAL, "RegisterProcessor");
+    PushLuaMethod(L, EventSystems::lProcessorTest, "lProcessorTest", hks::LUA_GLOBAL, "ProcessorTest");
 
     MemoryManipulation::LuaExport::PushFieldTypes(L);
+    DevBridge::RegisterGlobals(L);
 }
 
 void __cdecl Hook_RegisterScriptData(hks::lua_State* L) {
     std::cout << "Registering lua globals!\n";
+    DevBridgeStates[0] = L;    // main gameplay Lua state (read by the Frida live tool)
+    DevBridge::Log("[DevBridge] gameplay lua_State = %p", (void*)L);
 
     PushSharedGlobals(L);
     CCallWithErrorHandling(L, CityTradeManager::Register, NULL);
@@ -75,6 +81,8 @@ void __cdecl Hook_RegisterScriptData(hks::lua_State* L) {
 
 void __cdecl Hook_RegisterScriptDataForUI(hks::lua_State* _, hks::lua_State* L) {
     std::cout << "Registering cache lua globals!\n";
+    DevBridgeStates[1] = L;    // UI cache Lua state
+    DevBridge::Log("[DevBridge] ui lua_State = %p", (void*)L);
 
     PushSharedGlobals(L);
 
@@ -128,6 +136,8 @@ static void InitHooks() {
     AI::CongressSupport::Create();
     AI::Espionage::Create();
     NationalParks::Create();
+    GameProcessor::Create();
+    DevBridge::Create();
 
     std::cout << "Hooks initialized!\n";
 }
