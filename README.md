@@ -55,15 +55,13 @@ A bug report needs: what you did, `DevBridge.log`, the `DevCE` lines of `Lua.log
 They are normal methods on the objects you already have, named like the engine functions (`city:ChangeYieldChange(YieldTypes.FOOD, 2)`, `Game.GetEras():SetCurrentEra(3)`). The full list with C++ names, signatures, argument and
 return kinds is `dev-ce/data/exposed.json`; `dev-ce/data/function_status.json` says how far each one has been tested. Function summaries written by an AI from decompiled code are marked inferred in the docs.
 
-## What was tested (details and raw logs: `dev-ce/RESULTS.md`, `dev-ce/data/`)
-* Startup address check 251/251; methods present on the Lua objects 226 (the rest are `Game`/`Map` static tables the test script cannot enumerate, or objects with no live instance in the test game).
-* Oracle: 23 read-only engine getters give exactly the same value as the vanilla Lua getter, in a new game and a late-game save (covers plain and virtual `this`, fixed-point returns).
-* Argument plumbing (Frida stubs): 212 pass, 27 deliberately excluded (engine-hot functions), 12 not runnable (no District/Deal/Territory/AreaPortal instance found by the test script).
-* Real execution: 112 `Change*` functions called with +1 then -1 on a late-game save; no crash, 109 restored, 27 with a visible effect through vanilla getters, 3 not restorable (above).
-* Hostile arguments: 2,263 calls with wrong object kinds, missing or garbage arguments: all raised a clean Lua error; 5 extreme-value calls on one getter faulted and were caught by the guard.
-* Processor fix (`RegisterProcessor`, CE issue #5): handlers run, return values come back, 11 congress choosers called in a late-game World Congress.
-* Save, quit to menu, load, new game: hooks register identically every time.
-* **Not tested:** multiplayer, loading a save made after a mutator ran in plain CE or vanilla, other game builds, other people's machines, handlers that claim congress decisions.
+## What was tested
+Details and raw logs: [`dev-ce/RESULTS.md`](dev-ce/RESULTS.md).
+* Startup address check 251/251, and 23 read-only getters give exactly the same value as the vanilla Lua getters (new game and a late-game save).
+* 112 `Change*` functions called for real (+1, then -1) on a late-game save: no crash, 109 restored, 3 not (the trade functions above).
+* About 2,000 calls with wrong objects or garbage arguments: all raised a clean Lua error; 5 extreme-value calls on one getter faulted and were caught by the guard.
+* The processor fix works, and save / load / quit to menu / new game cycles register the hooks the same way every time.
+* **Not tested:** multiplayer, loading a save made after a mutator ran in plain CE or vanilla, other game builds, other machines.
 
 ## Credits, licence and provenance
 * **Based on the [Community Extension](https://github.com/Wild-W/CivilizationVI_CommunityExtension) by Wild-W** (see its [wiki](https://github.com/Wild-W/CivilizationVI_CommunityExtension/wiki) for what CE itself adds). Thanks for making it open source.
@@ -74,10 +72,8 @@ return kinds is `dev-ce/data/exposed.json`; `dev-ce/data/function_status.json` s
   Descriptions of what the functions do are written by an AI assistant from decompiled code and marked inferred.
 * Unofficial fan project, not affiliated with or endorsed by Firaxis, 2K or Take-Two, and not endorsed by the Community Extension's author. Please don't use it to cheat in multiplayer.
 
-## Build
-Visual Studio 2022 Build Tools, x64 Release, project `CivilizationVI_CommunityExtension.vcxproj`, with capstone and MinHook on the linker path (`CL=/DCAPSTONE_STATIC`).
-Output name `GameCore_XP2_CE_FinalRelease.dll`. `asmjit/x86` is un-ignored in `.gitignore` (the upstream ignore rule `x86/` otherwise drops it from a clone).
-
-## Tools (`dev-ce/tools`)
-`gen_bridge.py` (table generator), `gen_selftest.py` (test mod generator, levels 1 to 4), `frida_level2.py` / `level3_report.py` / `merge_status.py` (need the Frida live tool, not published here),
-`hang_dump.py`, `pdb_sym.py`, `civ_watchdog.ps1` (dump a hung game, resolve DLL addresses with the PDB).
+## For contributors
+Build: Visual Studio 2022 Build Tools, x64 Release, project `CivilizationVI_CommunityExtension.vcxproj`, capstone and MinHook on the linker path (`CL=/DCAPSTONE_STATIC`); output name `GameCore_XP2_CE_FinalRelease.dll`.
+(`asmjit/x86` is un-ignored in `.gitignore`: the original ignore rule `x86/` drops it from a clone.)
+Tools are in `dev-ce/tools`: `gen_bridge.py` (table generator), `gen_selftest.py` (test mod generator), `hang_dump.py`, `pdb_sym.py` and `civ_watchdog.ps1` (dump a hung game, resolve DLL addresses with the PDB).
+The Frida test drivers there need a live-channel tool that isn't published here.
