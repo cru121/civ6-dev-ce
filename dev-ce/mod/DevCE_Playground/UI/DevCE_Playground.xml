@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Dev CE Playground: an always-visible button panel (new InGame context, no base file replaced).
-     Styles are the ones used by the FreeGP mod (known to exist in the game). Control IDs map to Controls.<ID> in the Lua file. -->
+     Root panel: a visible Grid anchored R,C with the SubContainerSmall2 style, the combination that drew on the map HUD in the FreeGP mod. Control IDs map to Controls.<ID> in the Lua file. -->
 <Context>
-	<Box ID="Pg_Frame" Anchor="L,T" Offset="10,120" Size="250,auto" AutoSizePadding="0,12" Color="40,35,25,235">
+	<Grid ID="Pg_Frame" Anchor="R,C" Offset="0,0" Size="250,450" Hidden="0" Style="SubContainerSmall2">
 		<Stack ID="Pg_Outer" Anchor="C,T" Offset="0,10" StackGrowth="Bottom" StackPadding="4">
 			<GridButton ID="Pg_Toggle" Anchor="C,T" Size="226,28" Style="MainButtonSmall" String="Dev CE Playground  [-]"/>
 
@@ -43,5 +43,5 @@
 				</Stack>
 			</Stack>
 		</Stack>
-	</Box>
+	</Grid>
 </Context>

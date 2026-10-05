@@ -27,6 +27,7 @@ local BUTTONS = {
 	{ "Btn_RoutesMinus",  "DevCEPg_RoutesMinus",  "trade routes -1" },
 };
 
+local FRAME_HEIGHT = 450;   -- must match the Grid's height in the XML
 local m_collapsed = false;
 local m_lastSeq = nil;
 
@@ -75,7 +76,7 @@ local function Toggle()
 	Controls.Pg_Body:SetHide(m_collapsed);
 	Controls.Pg_Toggle:SetText(m_collapsed and "Dev CE Playground  [+]" or "Dev CE Playground  [-]");
 	Controls.Pg_Outer:CalculateSize();
-	pcall(function() Controls.Pg_Frame:ReprocessAnchoring(); end);
+	Controls.Pg_Frame:SetSizeY(m_collapsed and 52 or FRAME_HEIGHT);
 end
 
 local function Initialize()
@@ -86,7 +87,6 @@ local function Initialize()
 	Controls.Pg_Toggle:RegisterCallback(Mouse.eLClick, Toggle);
 	ContextPtr:SetUpdate(OnUpdate);
 	Controls.Pg_Outer:CalculateSize();
-	pcall(function() Controls.Pg_Frame:ReprocessAnchoring(); end);
 	pcall(function()
 		local sx, sy = UIManager:GetScreenSizeVal();
 		print(string.format("[DevCEPg][UI] ready. screen %sx%s; frame size %sx%s offset %s,%s hidden=%s; context hidden=%s",
