@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# Part of Dev CE, a fork of the Civilization VI Community Extension by Wild-W (https://github.com/Wild-W/CivilizationVI_CommunityExtension).
+# Copyright (C) 2026 cru121. Licensed under the GNU Affero General Public License v3.0 (see LICENSE.txt). Not endorsed by Wild-W, Firaxis or 2K.
 """python pdb_sym.py DLL HEXOFFSET... : resolve offsets inside a DLL with its PDB (DbgHelp via ctypes)."""
 import ctypes, sys
 from ctypes import wintypes as w

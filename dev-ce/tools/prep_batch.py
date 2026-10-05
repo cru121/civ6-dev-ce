@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: AGPL-3.0-only
+# Part of Dev CE, a fork of the Civilization VI Community Extension by Wild-W (https://github.com/Wild-W/CivilizationVI_CommunityExtension).
+# Copyright (C) 2026 cru121. Licensed under the GNU Affero General Public License v3.0 (see LICENSE.txt). Not endorsed by Wild-W, Firaxis or 2K.
 """Prepare input files for the decompile-summary agents.
 
 Reads  : gap_shortlist.tsv (350 ranked candidates), tools/gap_decomp.txt (Ghidra decompilation of all gap functions, key = old rva),

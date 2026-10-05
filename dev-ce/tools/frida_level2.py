@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: AGPL-3.0-only
+# Part of Dev CE, a fork of the Civilization VI Community Extension by Wild-W (https://github.com/Wild-W/CivilizationVI_CommunityExtension).
+# Copyright (C) 2026 cru121. Licensed under the GNU Affero General Public License v3.0 (see LICENSE.txt). Not endorsed by Wild-W, Firaxis or 2K.
 """Level-2 plumbing test of the Dev CE native bridge (Frida live channel + the gameplay self-test script).
 
   python dev-ce/tools/frida_level2.py arm       # game running with the Dev CE test build, frida/live/live_daemon.py attached

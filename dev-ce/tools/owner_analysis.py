@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: AGPL-3.0-only
+# Part of Dev CE, a fork of the Civilization VI Community Extension by Wild-W (https://github.com/Wild-W/CivilizationVI_CommunityExtension).
+# Copyright (C) 2026 cru121. Licensed under the GNU Affero General Public License v3.0 (see LICENSE.txt). Not endorsed by Wild-W, Firaxis or 2K.
 """For every class that has exposed-worthy functions but no Lua object (skipped: 'class has no gameplay Lua object'), find which other class holds it as a member
 (from the Linux DWARF types), and whether that owner has a Lua object whose `this` we can already get. Output: dev-ce/data/owner_candidates.json and a printed table.
 

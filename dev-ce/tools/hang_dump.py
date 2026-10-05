@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# Part of Dev CE, a fork of the Civilization VI Community Extension by Wild-W (https://github.com/Wild-W/CivilizationVI_CommunityExtension).
+# Copyright (C) 2026 cru121. Licensed under the GNU Affero General Public License v3.0 (see LICENSE.txt). Not endorsed by Wild-W, Firaxis or 2K.
 """One-off stack dump of a hung Civ VI process: python hang_dump.py  (attaches, prints every thread's backtrace as module+offset, resolves GameCore/DevCE names via frida/live/symbols.json).
 Attaching to a HUNG game only: the detach at exit may crash it, which is fine when it has to be killed anyway."""
 import frida, json, bisect, sys, os, time
@@ -41,7 +44,9 @@ sc = sess.create_script(JS)
 sc.load()
 threads = sc.exports_sync.dump()
 
-syms = json.load(open(r'C:\stuff\claude\DLL\frida\live\symbols.json'))
+# optional symbol table for GameCore names: environment variable DEVCE_SYMBOLS = path of a symbols.json ({name: [rva, ...]}); without it only module+offset is printed
+sympath = os.environ.get('DEVCE_SYMBOLS')
+syms = json.load(open(sympath)) if sympath and os.path.exists(sympath) else {}
 rv = sorted((v, k) for k, vs in syms.items() for v in (vs if isinstance(vs, list) else [vs]))
 keys = [r[0] for r in rv]
 

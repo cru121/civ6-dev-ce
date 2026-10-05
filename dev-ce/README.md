@@ -47,6 +47,19 @@ return kinds is `dev-ce/data/exposed.json`; `dev-ce/data/function_status.json` s
 * Save, quit to menu, load, new game: hooks register identically every time.
 * **Not tested:** multiplayer, loading a save made after a mutator ran in plain CE or vanilla, other game builds, other people's machines, handlers that claim congress decisions.
 
+## Licence, changes and provenance
+* **Licence.** This repository is a fork of the Community Extension and therefore **AGPL-3.0** (`LICENSE.txt`). Files that are new in Dev CE carry an `SPDX-License-Identifier: AGPL-3.0-only` header;
+  files that come from upstream keep upstream's text and Wild-W's copyright. If you give anyone a built DLL, they must be able to get the corresponding source (link this repository).
+* **Changes relative to upstream** (as of 2026-10-05, see the git history for the details): new files `DevBridge.cpp/.h`, `DevNativeTable.cpp` (generated), `GameProcessor.cpp/.h`;
+  modified `Main.cpp` (initialises the bridge and the processor, registers the test globals), `EventSystems.cpp/.h` (rewritten: `RegisterProcessor` goes through the game's own dispatcher, fixes CE issue #5),
+  `AI.cpp` (`Handled` key for congress choosers), `UnitManager.cpp/.h` (`ChangeBuildCharges`), the project file (new sources), `.gitignore` (`asmjit/x86` is no longer ignored); everything under `dev-ce/` is new.
+* **Where the function names and addresses come from.** The names (`GameCore::Player::Culture::GetCultureYield`, ...) were recovered from debug symbols that shipped with an older build of the game, following the method in the
+  Community Extension contributor's guide, and mapped to the current Steam build 15038592 by byte-for-byte matching and call-graph analysis; struct layouts were cross-checked against the Linux port's debug information.
+  The addresses are therefore only valid for that build. The mapping is published in [civ6-gamecore-reference](https://github.com/cru121/civ6-gamecore-reference) (`data/`).
+* **What is not here.** No game binaries, assets or scripts, no decompiled code, and no Firaxis source. The table in `DevNativeTable.cpp` contains function names, addresses, short prologue bytes (to detect a wrong build) and argument kinds.
+  Descriptions of what a function does were written by an AI assistant from decompiled code and are marked inferred; they are guesses until a test shows an effect.
+* Unofficial fan project. **Not affiliated with or endorsed by Firaxis Games, 2K or Take-Two; not endorsed by the Community Extension's author.** Use it for modding and understanding the game; do not use it to cheat in multiplayer or to circumvent protection.
+
 ## Build
 Visual Studio 2022 Build Tools, x64 Release, project `CivilizationVI_CommunityExtension.vcxproj`, with capstone and MinHook on the linker path (`CL=/DCAPSTONE_STATIC`).
 Output name `GameCore_XP2_CE_FinalRelease.dll`. `asmjit/x86` is un-ignored in `.gitignore` (the upstream ignore rule `x86/` otherwise drops it from a clone).
