@@ -5,6 +5,10 @@ A fork of [Wild-W's Civilization VI Community Extension](https://github.com/Wild
 tested dispatcher (`DevBridge.cpp`), instead of one hand-written wrapper each.
 Licence: **AGPL-3.0**, same as upstream. Not endorsed by Wild-W, Firaxis or 2K.
 
+**Looking up a function?** The [GameCore reference](https://cru121.github.io/civ6-gamecore-reference/) has a [Dev CE section](https://cru121.github.io/civ6-gamecore-reference/devce/) with one page per Lua object:
+every exposed method with its engine signature, argument and return meaning, test status and an (AI-written, flagged inferred) summary of what the engine function does. The same reference documents the vanilla Lua API,
+the engine classes behind it and the address mapping this fork uses ([`data/`](https://github.com/cru121/civ6-gamecore-reference/tree/main/data)).
+
 ## Read this first
 * **Experimental. Single player only.** Many functions change game state directly and can desync multiplayer. There is no multiplayer guard.
 * **Steam build 15038592 only** (GameCore build stamp is checked at startup; on any other build the bridge disables itself and says so in `DevBridge.log`).
