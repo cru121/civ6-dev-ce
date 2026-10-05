@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Mod id="9b1f3c52-7e0a-4d6b-8f21-3a5c7d9e1b04" version="1">
+	<Properties>
+		<Name>Dev CE Playground</Name>
+		<Teaser>A button panel for trying the engine functions that Dev CE adds to Lua (experimental).</Teaser>
+		<Description>EXPERIMENTAL, SINGLE PLAYER ONLY. A small always-visible panel with buttons: Golden Age / Dark Age on and off for yourself, spawn the Great Engineer James of St. George in your capital, add or remove action charges on the selected unit (the vanilla Lua call next to the Dev CE one), +/- food in the capital, +/- trade route capacity. Needs the Dev CE GameCore mod (the "Dev CE (experimental)" or "Dev CE test build" mod, only one of them enabled) for the Dev CE buttons; without it only the vanilla buttons work and the panel says so. Buttons change your game directly, do not use this in a game you care about.</Description>
+		<Authors>cru121</Authors>
+		<AffectsSavedGames>0</AffectsSavedGames>
+		<CompatibleVersions>2.0</CompatibleVersions>
+	</Properties>
+
+	<Dependencies>
+		<Mod id="4873eb62-8ccc-4574-b784-dda455e74e68" title="Expansion: Gathering Storm" />
+	</Dependencies>
+
+	<InGameActions>
+		<!-- Gameplay VM: the buttons' handlers (they call the Dev CE methods). -->
+		<AddGameplayScripts id="DevCEPg_Gameplay">
+			<Properties><LoadOrder>200</LoadOrder></Properties>
+			<File>Scripts/DevCE_Playground_Gameplay.lua</File>
+		</AddGameplayScripts>
+
+		<!-- UI VM: the panel. -->
+		<AddUserInterfaces id="DevCEPg_UI">
+			<Properties><Context>InGame</Context><LoadOrder>200</LoadOrder></Properties>
+			<File>UI/DevCE_Playground.xml</File>
+		</AddUserInterfaces>
+		<ImportFiles id="DevCEPg_UI_Files">
+			<File>UI/DevCE_Playground.xml</File>
+			<File>UI/DevCE_Playground.lua</File>
+		</ImportFiles>
+	</InGameActions>
+
+	<Files>
+		<File>Scripts/DevCE_Playground_Gameplay.lua</File>
+		<File>UI/DevCE_Playground.xml</File>
+		<File>UI/DevCE_Playground.lua</File>
+	</Files>
+</Mod>
