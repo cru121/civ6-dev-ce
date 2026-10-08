@@ -23,7 +23,7 @@ namespace DevBridge {
 	typedef void* (__fastcall* PlayerFn)(int);
 	static PlayerFn gEditPlayer = nullptr;   // FAutoVariable::edit, null when its address check failed
 
-	static const char* kVersion = "0.1.0-experimental";
+	static const char* kVersion = "0.2.0-experimental";
 	static volatile bool gTrace = false;   // log every bridge call BEFORE it runs (flushed): after a hang or crash the last [trace] line names the call
 
 	static void DllPath(char* path, const char* file) {

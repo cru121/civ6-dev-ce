@@ -9,9 +9,9 @@ every exposed method with its engine signature, argument and return meaning, tes
 the engine classes behind it and the address mapping this fork uses ([`data/`](https://github.com/cru121/civ6-gamecore-reference/tree/main/data)).
 
 ## Install
-**This branch (1033 functions) has no release zip yet** (the repository contains no binaries). Build the DLL yourself (see *For contributors* at the end, about one minute with Visual Studio 2022 Build Tools) or use the older
-[v0.1.0 release](https://github.com/cru121/civ6-dev-ce/releases) (251 functions, `DevCE-0.1.0-experimental.zip`; check the SHA-256 in the release notes).
-1. Copy the folder `dev-ce/mod/DevCE` (or `DevCE_Test`, see *The mods*) to `Documents/My Games/Sid Meier's Civilization VI/Mods/`, create `Binaries/Win64/` inside it and put the DLL there. Optional: also copy `dev-ce/mod/DevCE_Playground` (the demo button panel, see below).
+Download `DevCE-0.2.0-experimental.zip` from the [Releases](https://github.com/cru121/civ6-dev-ce/releases) page (1033 functions; check the SHA-256 in the release notes), or build the DLL yourself (see *For contributors* at the end, about one minute with Visual Studio 2022 Build Tools).
+The older v0.1.0 release has 251 functions.
+1. Copy the folder `DevCE` from the zip into `Documents/My Games/Sid Meier's Civilization VI/Mods/`. (If you built the DLL yourself: copy `dev-ce/mod/DevCE` there, create `Binaries/Win64/` inside it and put the DLL there.) Optional: also copy `DevCE_Playground` (the demo button panel, see below).
 2. Start the game, open **Additional Content** and enable **Dev CE (experimental)** (and **Dev CE Playground** if you copied it). Disable every other mod that replaces the GameCore (the Community Extension, other DLL mods).
 3. Start a **new single-player game**. `Mods/DevCE/Binaries/Win64/DevBridge.log` should now exist, and `Lua.log` should contain `DevCE: player mod loaded; Dev CE methods PRESENT` after the first turn.
 Windows and the Steam version of the game only. Your antivirus may warn about the DLL because it replaces the game's GameCore, as the Community Extension does; the source is in this repository.

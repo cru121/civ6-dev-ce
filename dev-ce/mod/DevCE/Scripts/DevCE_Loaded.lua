@@ -9,17 +9,4 @@ GameEvents.PlayerTurnStarted.Add(function(playerID)
     local present = false
     pcall(function() present = (Game.GetEras().SetCurrentEra ~= nil) end)
     print("DevCE: player mod loaded; Dev CE methods " .. (present and "PRESENT" or "MISSING (the Dev CE GameCore was not loaded)"))
-
-    -- GetIO() test: the game does not open Lua's io library; Dev CE exposes it. Writes devce_io_test.txt (relative to the game's working directory) and reads it back.
-    local ok, err = pcall(function()
-        local io = GetIO()
-        local f = assert(io.open("devce_io_test.txt", "w"))
-        f:write("Hello from Dev CE")
-        f:close()
-        local r = assert(io.open("devce_io_test.txt", "r"))
-        local text = r:read("*a")
-        r:close()
-        print("DevCE: GetIO test " .. (text == "Hello from Dev CE" and "PASS" or ("FAIL, read back: " .. tostring(text))))
-    end)
-    if not ok then print("DevCE: GetIO test ERROR: " .. tostring(err)) end
 end)

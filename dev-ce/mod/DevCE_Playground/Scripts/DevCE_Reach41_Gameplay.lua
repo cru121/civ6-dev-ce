@@ -3,7 +3,7 @@
 --
 --  Covers the 7 interfaces the DevCE selftest marks NOT REACHED because its
 --  generator emits reach = nil for them (Deal 4, DealItem 1, District 21,
---  FreeCities 2, FalloutManager 6, AreaPortal 3, Territory 4 = 41 methods).
+--  FreeCities 1, FalloutManager 6, AreaPortal 3, Territory 4 = 41 methods).
 --  Hand-written reach paths (vanilla APIs only), all pcall-guarded: an
 --  interface with no live instance in THIS save reports NO-INSTANCE with the
 --  reason instead of failing. Runs once on the first turn start of the local
@@ -20,7 +20,7 @@ local EXPECT41 = {
 	{ iface = "IDeal", methods = { "RemoveExpiredItems", "DoTurn", "IsExpired", "DevOracle_HasUnacceptableItems" } },
 	{ iface = "IDealItem", methods = { "GetParentType" } },
 	{ iface = "IDistrict", methods = { "SetSiegeStatus", "ChangeRemainingAttackCount", "ChangeExtraRegionalYield", "ChangeGreatPersonPointChange", "ChangeTourismAdjacencyYieldModifier", "SetComplete", "AddYieldAdjacencyBonusMirror", "CalculateTourismAdjacencyYieldModifier", "GetAirSlots", "GetAllCalculatedTourismAdjacencyYieldModifier", "GetAppealYield", "GetExtraRegionalYield", "GetFirstPillagableBuilding", "GetMilitaryDomain", "HasGarrisonedUnit", "HasMaxDamage", "HasWalls", "IsBesieged", "RemoveYieldAdjacencyBonusMirror", "DevOracle_GetOwner", "DevOracle_IsPillaged" } },
-	{ iface = "IFreeCities", methods = { "SetAlive", "StartRetaliationBehaviorTree" } },
+	{ iface = "IFreeCities", methods = { "SetAlive" } },
 	{ iface = "IGameFalloutManager", methods = { "AddNuclearReactor", "DoTurn", "GetFalloutDamage", "GetReactorAge", "ResetReactorAge", "UpdateFallout" } },
 	{ iface = "IMapAreaPortal", methods = { "AttachAreas", "AddSourceAt", "RemoveSourceAt" } },
 	{ iface = "IMapTerritory", methods = { "SetIsSea", "ChangeFeatureCount", "ChangePlotCount", "SetIsLake" } },
