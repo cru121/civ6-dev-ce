@@ -18,6 +18,7 @@
 		<AddGameplayScripts id="DevCEPg_Gameplay">
 			<Properties><LoadOrder>200</LoadOrder></Properties>
 			<File>Scripts/DevCE_Playground_Gameplay.lua</File>
+			<File>Scripts/DevCE_Reach41_Gameplay.lua</File>
 		</AddGameplayScripts>
 
 		<!-- UI VM: the panel. -->
@@ -33,6 +34,7 @@
 
 	<Files>
 		<File>Scripts/DevCE_Playground_Gameplay.lua</File>
+		<File>Scripts/DevCE_Reach41_Gameplay.lua</File>
 		<File>UI/DevCE_Playground.xml</File>
 		<File>UI/DevCE_Playground.lua</File>
 	</Files>

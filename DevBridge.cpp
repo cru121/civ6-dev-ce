@@ -87,6 +87,19 @@ namespace DevBridge {
 		return 0;
 	}
 
+	// GetIO(): returns Lua's standard io table (io.open, io.lines, ...), which the game does not open. Calls the Havok Script library opener on first use per state.
+	// local io = GetIO(); local f = io.open("test.txt", "w"); f:write("hi"); f:close()
+	static int lGetIO(hks::lua_State* L) {
+		if (!hks::luaopen_io) {
+			hks::error(L, "GetIO: luaopen_io is not exported by this HavokScript build");
+			return 0;
+		}
+		// Lua 5.1 style opener: leaves the library table on the stack (and may also set the global 'io'). Calling it again just builds another table.
+		const int n = hks::luaopen_io(L);
+		Log("[DevBridge] GetIO: luaopen_io returned %d", n);
+		return n > 0 ? 1 : 0;
+	}
+
 	static int lIsArmed(hks::lua_State* L) {
 		hks::pushinteger(L, (int)DevBridgeArmed);   // 0 off, 1 armed by the tool, 2 handshake done (stubs are recording), 3 finished
 		return 1;
@@ -99,6 +112,8 @@ namespace DevBridge {
 		hks::setfield(L, hks::LUA_GLOBAL, "DevCE_IsArmed");
 		hks::pushnamedcclosure(L, lLog, 0, "lDevCE_Log", 0);
 		hks::setfield(L, hks::LUA_GLOBAL, "DevCE_Log");
+		hks::pushnamedcclosure(L, lGetIO, 0, "lGetIO", 0);
+		hks::setfield(L, hks::LUA_GLOBAL, "GetIO");
 		hks::pushnamedcclosure(L, lTrace, 0, "lDevCE_Trace", 0);
 		hks::setfield(L, hks::LUA_GLOBAL, "DevCE_Trace");
 	}

@@ -27,9 +27,32 @@ local BUTTONS = {
 	{ "Btn_FoodMinus",    "DevCEPg_FoodMinus",    "capital food -2" },
 	{ "Btn_RoutesPlus",   "DevCEPg_RoutesPlus",   "trade routes +1" },
 	{ "Btn_RoutesMinus",  "DevCEPg_RoutesMinus",  "trade routes -1" },
+	-- Sets B-I samples (one section in the panel; I eras reuses the 6 Era/Age buttons above)
+	{ "Btn_BTokensRead",  "DevCEPg_BTokensRead",  "B: influence tokens readout" },
+	{ "Btn_BTokensPlus",  "DevCEPg_BTokensPlus",  "B: influence tokens +1" },
+	{ "Btn_BTokensMinus", "DevCEPg_BTokensMinus", "B: influence tokens -1" },
+	{ "Btn_CMetRead",     "DevCEPg_CMetRead",     "C: majors met readout" },
+	{ "Btn_CAllyPlus",    "DevCEPg_CAllyPlus",    "C: alliance points +1" },
+	{ "Btn_CAllyMinus",   "DevCEPg_CAllyMinus",   "C: alliance points -1" },
+	{ "Btn_DTourists",    "DevCEPg_DTourists",    "D: tourists readout" },
+	{ "Btn_DParksMod",    "DevCEPg_DParksMod",    "D: parks tourism mod readout" },
+	{ "Btn_DCivics",      "DevCEPg_DCivics",      "D: civics completed readout" },
+	{ "Btn_EBuildProg",   "DevCEPg_EBuildProg",   "E: capital build progress" },
+	{ "Btn_EProdPlus",    "DevCEPg_EProdPlus",    "E: capital production +1" },
+	{ "Btn_EProdMinus",   "DevCEPg_EProdMinus",   "E: capital production -1" },
+	{ "Btn_FGoldSet",     "DevCEPg_FGoldSet",     "F: gold rate SET +5 (one-way)" },
+	{ "Btn_FGoldRestore", "DevCEPg_FGoldRestore", "F: gold rate restore 0" },
+	{ "Btn_GScoreRead",   "DevCEPg_GScoreRead",   "G: era score readout" },
+	{ "Btn_GScorePlus",   "DevCEPg_GScorePlus",   "G: era score +1" },
+	{ "Btn_GScoreMinus",  "DevCEPg_GScoreMinus",  "G: era score -1" },
+	{ "Btn_HParkPlus",    "DevCEPg_HParkPlus",    "H: park charges +1" },
+	{ "Btn_HParkMinus",   "DevCEPg_HParkMinus",   "H: park charges -1" },
+	{ "Btn_HLevelPlus",   "DevCEPg_HLevelPlus",   "H: XP level +1 (one-way)" },
+	{ "Btn_R41Deal",      "DevCEPg_R41Deal",      "R41: deal check (negotiating)" },
 };
 
-local FRAME_HEIGHT = 490;   -- must match the Grid's height in the XML
+local FRAME_HEIGHT = 820;   -- must match Pg_Frame height in the XML
+local FRAME2_HEIGHT = 400;  -- must match Pg_Frame2 (left E-H column) height in the XML
 local m_collapsed = false;
 local m_lastSeq = nil;
 
@@ -87,7 +110,17 @@ local function Toggle()
 	Controls.Pg_Body:SetHide(m_collapsed);
 	Controls.Pg_Toggle:SetText(m_collapsed and "Dev CE Playground  [+]" or "Dev CE Playground  [-]");
 	Controls.Pg_Outer:CalculateSize();
+	Controls.Pg_Outer2:CalculateSize();
 	Controls.Pg_Frame:SetSizeY(m_collapsed and 52 or FRAME_HEIGHT);
+end
+
+local m_collapsed2 = false;
+local function Toggle2()
+	m_collapsed2 = not m_collapsed2;
+	Controls.Pg_Body2:SetHide(m_collapsed2);
+	Controls.Pg_Toggle2:SetText(m_collapsed2 and "Sets E-H samples  [+]" or "Sets E-H samples  [-]");
+	Controls.Pg_Outer2:CalculateSize();
+	Controls.Pg_Frame2:SetSizeY(m_collapsed2 and 52 or FRAME2_HEIGHT);
 end
 
 local function Initialize()
@@ -96,10 +129,12 @@ local function Initialize()
 		Controls[ctrl]:RegisterCallback(Mouse.eLClick, function() Send(command, text); end);
 	end
 	Controls.Pg_Toggle:RegisterCallback(Mouse.eLClick, Toggle);
+	Controls.Pg_Toggle2:RegisterCallback(Mouse.eLClick, Toggle2);
 	ContextPtr:SetHide(false);
 	ContextPtr:SetUpdate(OnUpdate);
 	if Events.LoadScreenClose ~= nil then Events.LoadScreenClose.Add(function() ContextPtr:SetHide(false); end); end
 	Controls.Pg_Outer:CalculateSize();
+	Controls.Pg_Outer2:CalculateSize();
 	pcall(function()
 		local sx, sy = UIManager:GetScreenSizeVal();
 		print(string.format("[DevCEPg][UI] ready. screen %sx%s; frame size %sx%s offset %s,%s hidden=%s; context hidden=%s",

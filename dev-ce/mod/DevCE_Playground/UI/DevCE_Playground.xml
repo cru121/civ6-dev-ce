@@ -2,7 +2,7 @@
 <!-- Dev CE Playground: an always-visible button panel (new InGame context, no base file replaced).
      Root panel: a visible Grid anchored R,C with the SubContainerSmall2 style, the combination that drew on the map HUD in the FreeGP mod. Control IDs map to Controls.<ID> in the Lua file. -->
 <Context>
-	<Grid ID="Pg_Frame" Anchor="R,C" Offset="0,0" Size="250,490" Hidden="0" Style="SubContainerSmall2">
+	<Grid ID="Pg_Frame" Anchor="R,C" Offset="0,0" Size="250,820" Hidden="0" Style="SubContainerSmall2">
 		<Stack ID="Pg_Outer" Anchor="C,T" Offset="0,10" StackGrowth="Bottom" StackPadding="4">
 			<GridButton ID="Pg_Toggle" Anchor="C,T" Size="226,28" Style="MainButtonSmall" String="Dev CE Playground  [-]"/>
 
@@ -47,6 +47,57 @@
 					<GridButton ID="Btn_RoutesPlus"  Size="111,28" Style="MainButtonSmall" String="Routes +1"/>
 					<GridButton ID="Btn_RoutesMinus" Size="111,28" Style="MainButtonSmall" String="Routes -1"/>
 				</Stack>
+				<Label Anchor="C,T" Style="FontNormal12" Color="200,200,200,255" String="Sets B-D samples (Dev CE)"/>
+				<Label Anchor="C,T" Style="FontNormal12" Color="200,200,200,255" String="B: influence"/>
+				<GridButton ID="Btn_BTokensRead" Size="226,28" Style="MainButtonSmall" String="B: tokens readout"/>
+				<Stack Anchor="C,T" StackGrowth="Right" StackPadding="4">
+					<GridButton ID="Btn_BTokensPlus"  Size="111,28" Style="MainButtonSmall" String="B: tokens +1"/>
+					<GridButton ID="Btn_BTokensMinus" Size="111,28" Style="MainButtonSmall" String="B: tokens -1"/>
+				</Stack>
+				<Label Anchor="C,T" Style="FontNormal12" Color="200,200,200,255" String="C: diplomacy"/>
+				<GridButton ID="Btn_CMetRead" Size="226,28" Style="MainButtonSmall" String="C: majors met"/>
+				<Stack Anchor="C,T" StackGrowth="Right" StackPadding="4">
+					<GridButton ID="Btn_CAllyPlus"  Size="111,28" Style="MainButtonSmall" String="C: ally pts +1"/>
+					<GridButton ID="Btn_CAllyMinus" Size="111,28" Style="MainButtonSmall" String="C: ally pts -1"/>
+				</Stack>
+				<Label Anchor="C,T" Style="FontNormal12" Color="200,200,200,255" String="D: culture (read-only)"/>
+				<GridButton ID="Btn_DTourists" Size="226,28" Style="MainButtonSmall" String="D: tourists readout"/>
+				<GridButton ID="Btn_DParksMod" Size="226,28" Style="MainButtonSmall" String="D: parks mod readout"/>
+				<GridButton ID="Btn_DCivics" Size="226,28" Style="MainButtonSmall" String="D: civics readout"/>
+			</Stack>
+		</Stack>
+	</Grid>
+	<Grid ID="Pg_Frame2" Anchor="L,C" Offset="0,-70" Size="250,400" Hidden="0" Style="SubContainerSmall2">
+		<Stack ID="Pg_Outer2" Anchor="C,T" Offset="0,10" StackGrowth="Bottom" StackPadding="4">
+			<GridButton ID="Pg_Toggle2" Anchor="C,T" Size="226,28" Style="MainButtonSmall" String="Sets E-H samples  [-]"/>
+
+			<Stack ID="Pg_Body2" Anchor="C,T" StackGrowth="Bottom" StackPadding="4">
+				<Label Anchor="C,T" Style="FontNormal12" Color="200,200,200,255" String="Sets E-H samples (Dev CE)"/>
+				<Label Anchor="C,T" Style="FontNormal12" Color="200,200,200,255" String="E: capital city"/>
+				<GridButton ID="Btn_EBuildProg" Size="226,28" Style="MainButtonSmall" String="E: build progress"/>
+				<Stack Anchor="C,T" StackGrowth="Right" StackPadding="4">
+					<GridButton ID="Btn_EProdPlus"  Size="111,28" Style="MainButtonSmall" String="E: prod +1"/>
+					<GridButton ID="Btn_EProdMinus" Size="111,28" Style="MainButtonSmall" String="E: prod -1"/>
+				</Stack>
+				<Label Anchor="C,T" Style="FontNormal12" Color="200,200,200,255" String="F: treasury (disposable save)"/>
+				<Stack Anchor="C,T" StackGrowth="Right" StackPadding="4">
+					<GridButton ID="Btn_FGoldSet"     Size="111,28" Style="MainButtonSmall" String="F: gold SET+5"/>
+					<GridButton ID="Btn_FGoldRestore" Size="111,28" Style="MainButtonSmall" String="F: gold =0"/>
+				</Stack>
+				<Label Anchor="C,T" Style="FontNormal12" Color="200,200,200,255" String="G: era score"/>
+				<GridButton ID="Btn_GScoreRead" Size="226,28" Style="MainButtonSmall" String="G: score readout"/>
+				<Stack Anchor="C,T" StackGrowth="Right" StackPadding="4">
+					<GridButton ID="Btn_GScorePlus"  Size="111,28" Style="MainButtonSmall" String="G: score +1"/>
+					<GridButton ID="Btn_GScoreMinus" Size="111,28" Style="MainButtonSmall" String="G: score -1"/>
+				</Stack>
+				<Label Anchor="C,T" Style="FontNormal12" Color="200,200,200,255" String="H: selected unit (disposable)"/>
+				<Stack Anchor="C,T" StackGrowth="Right" StackPadding="4">
+					<GridButton ID="Btn_HParkPlus"  Size="111,28" Style="MainButtonSmall" String="H: park +1"/>
+					<GridButton ID="Btn_HParkMinus" Size="111,28" Style="MainButtonSmall" String="H: park -1"/>
+				</Stack>
+				<GridButton ID="Btn_HLevelPlus" Size="226,28" Style="MainButtonSmall" String="H: XP level +1 (one-way)"/>
+				<Label Anchor="C,T" Style="FontNormal12" Color="200,200,200,255" String="R41 manual (mid-turn)"/>
+				<GridButton ID="Btn_R41Deal" Size="226,28" Style="MainButtonSmall" String="R41: deal check (negotiating)"/>
 			</Stack>
 		</Stack>
 	</Grid>

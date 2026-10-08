@@ -5,7 +5,7 @@
 
 local function Log(msg) print("DevCE: " .. msg) end
 -- Game and Map are static tables (Game.Foo(x), no object): wrap them so the generated tests can use the o:Method(x) form for every interface.
-local function DevStatic(t) return setmetatable({}, { __index = function(_, k) local f = t[k]; return function(_, ...) return f(...) end end }) end
+local function DevStatic(t) return setmetatable({ __devreal = t }, { __index = function(_, k) local f = t[k]; return function(_, ...) return f(...) end end }) end
 
 local EXPECT = {
     { iface = "IBarbarianTribes", object = "BarbarianTribes", reach = function(p, capital, unit) return Game.GetBarbarianManager() end, methods = { "DoTurnActivate", "GetBribeClanGoldCost", "GetCurrentEra", "GetHireClanGoldCost", "GetRaidClanGoldReward", "GetUniqueUnitClaimTribe", "CanTribeTrainUnitNow", "ChangeSpawnRate", "CreateCamps", "GetPreviousCampDistanceFromPlot", "GetRaidScoreForTribe", "GetRampageTarget", "GetTribeType", "IsDefender", "RemoveTribe" } },
@@ -19,7 +19,7 @@ local EXPECT = {
     { iface = "IDeal", object = "Deal", reach = nil, methods = { "RemoveExpiredItems", "DoTurn", "IsExpired", "DevOracle_HasUnacceptableItems" } },
     { iface = "IDealItem", object = "DealItem", reach = nil, methods = { "GetParentType" } },
     { iface = "IDistrict", object = "District", reach = nil, methods = { "SetSiegeStatus", "ChangeRemainingAttackCount", "ChangeExtraRegionalYield", "ChangeGreatPersonPointChange", "ChangeTourismAdjacencyYieldModifier", "SetComplete", "AddYieldAdjacencyBonusMirror", "CalculateTourismAdjacencyYieldModifier", "GetAirSlots", "GetAllCalculatedTourismAdjacencyYieldModifier", "GetAppealYield", "GetExtraRegionalYield", "GetFirstPillagableBuilding", "GetMilitaryDomain", "HasGarrisonedUnit", "HasMaxDamage", "HasWalls", "IsBesieged", "RemoveYieldAdjacencyBonusMirror", "DevOracle_GetOwner", "DevOracle_IsPillaged" } },
-    { iface = "IFreeCities", object = "FreeCities", reach = nil, methods = { "SetAlive", "StartRetaliationBehaviorTree" } },
+    { iface = "IFreeCities", object = "FreeCities", reach = nil, methods = { "SetAlive" } },
     { iface = "IGame", object = "Game", reach = function(p, capital, unit) return Game end, methods = { "SetLocalPlayerTo", "DecrementGameStateLock", "IncrementGameStateLock", "ClearLists", "BuildCivics", "BuildTechs", "AttachScoreListeners", "DetachScoreListeners", "DoTurn", "CheckForEndingDroughts", "DoActiveOneOffs", "GetCurrentTurnDeforestationPoints", "GetScaledWeightForMap", "GetStormDirection", "GetStormNearestPlayer", "IsTerrainValid", "MoveActiveStorms", "ResetPlayerTurnResourceConsumption", "CanAddGreatWork", "GetFreeGreatWorkForSlot", "HasGreatWorkBeenCreated", "IsValidObjectForSlot", "CalculatePlayerControlledResources", "CalculateResourceMonopolies", "CanCreateNewProduct", "GetCorporationPlayer", "GetGoldFromMonopolies", "GetNumControlledResources", "GetNumCorporations", "GetNumIndustries", "HasAvailableBuildingForProduct", "HasIndustryOf", "HasResourceMonopolyOf", "IsActive", "CalculateMaxTurn", "CreateComponents", "GetGameEndTurn", "IsAiProcessing", "SetPaused", "GetNumTechs", "GetFirstTurnActiveHuman", "IsAI", "IsBarbarian", "IsFreeCities", "IsMajor", "IsMinor", "SetAsObserver", "CalculatePurchaseCostFromProductionCost", "GetHappinessGrowthModifier", "GetHappinessIdentityPerTurnChange", "GetHappinessInEra", "GetHousingSurplusReduction", "GetMaxVoteswithFavor", "IsSpecialtyDistrict", "GetNumRollsForResult" } },
     { iface = "IGameDiplomacy", object = "GameDiplomacy", reach = function(p, capital, unit) return Game.GetGameDiplomacy() end, methods = { "SetIsInDefensivePact", "SetAtWar", "SetJointWarTarget", "SetSharesSuzerain", "ChangeGrievanceAndTension", "ChangeTensionScore", "DoTurn", "GetAllianceType", "GetGrievanceScore", "GetJointWarTarget", "GetLastTurnPlayerWasOfferedDeal", "GetResearchAgreementTech", "GetTensionScore", "ResetAllianceDuration", "SetIsAllied", "SetResearchAgreementTech" } },
     { iface = "IGameEras", object = "GameEras", reach = function(p, capital, unit) return Game.GetEras() end, methods = { "SetCurrentEra", "ChangePlayerEraScorePerAerodromeBuildingConstructed", "ChangePlayerEraScorePerArmyKilled", "ChangePlayerEraScorePerArtifactExtracted", "ChangePlayerEraScorePerCityReligionConversion", "ChangePlayerEraScorePerCivicBoost", "ChangePlayerEraScorePerContinentDiscovered", "ChangePlayerEraScorePerCorpsKilled", "ChangePlayerEraScorePerCultureBuildingConstructed", "ChangePlayerEraScorePerCurrentCivic", "ChangePlayerEraScorePerCurrentTech", "ChangePlayerEraScorePerDistrictConstructed", "ChangePlayerEraScorePerGreatPersonEarned", "ChangePlayerEraScorePerIndustrialBuildingConstructed", "ChangePlayerEraScorePerNaturalWonderDiscovered", "ChangePlayerEraScorePerNonBarbarianUnitKilledByGDR", "ChangePlayerEraScorePerNonBarbarianUnitSeaKilled", "ChangePlayerEraScorePerScienceBuildingConstructed", "ChangePlayerEraScorePerSpySuccessfulMission", "ChangePlayerEraScorePerTechBoost", "ChangePlayerEraScorePerTradeRouteCompleted", "ChangePlayerEraScorePerUnitPromotionEarned", "RecalculateThresholdShifts", "SetDarkAge", "SetGoldenAge", "ChangeExtraScorePerPrideMoment", "ChangePlayerAlwaysAllowedCommemorationQuestCount", "SetMinScoreForExtraEraScore", "DoGoldenAgesAndDarkAges", "DoTurn", "GetCurrentEraMaximumEndTurn", "GetCurrentEraMinimumEndTurn", "GetCurrentEraNumPlayersAsOrLessAdvanced", "GetCurrentEraNumPlayersMoreAdvanced", "GetExtraScorePerPrideMoment", "GetMinScoreForExtraEraScore", "GetPlayerCurrentScore", "GetPlayerEraScorePerAerodromeBuildingConstructed", "GetPlayerEraScorePerArtifactExtracted", "GetPlayerEraScorePerCityReligionConversion", "GetPlayerEraScorePerCivicBoost", "GetPlayerEraScorePerContinentDiscovered", "GetPlayerEraScorePerCultureBuildingConstructed", "GetPlayerEraScorePerCurrentCivic", "GetPlayerEraScorePerCurrentTech", "GetPlayerEraScorePerDistrictConstructed", "GetPlayerEraScorePerGreatPersonEarned", "GetPlayerEraScorePerIndustrialBuildingConstructed", "GetPlayerEraScorePerNaturalWonderDiscovered", "GetPlayerEraScorePerScienceBuildingConstructed", "GetPlayerEraScorePerSpySuccessfulMission", "GetPlayerEraScorePerTechBoost", "GetPlayerEraScorePerTradeRouteCompleted", "GetPlayerGoldenAgeThreshold", "GetPlayerNumAllowedCommemorations", "HasActiveCommemoration", "HasDarkAge", "HasGoldenAge", "HasHeroicGoldenAge", "IsPlayerAlwaysAllowedCommemorationQuest", "IsReadyForTransition", "Commemorate", "UncommemorateAll", "ComplimentPrideMoment", "HandleDarkAgeCityLoss", "ChangeEraScore" } },
@@ -58,6 +58,7 @@ local function Methods(o)
     local idx = mt and mt.__index
     local set = {}
     if type(idx) == "table" then for k, v in pairs(idx) do set[tostring(k)] = true end end
+    if next(set) == nil and type(o) == "table" then for k, v in pairs(o) do set[tostring(k)] = true end end
     return set
 end
 
@@ -85,6 +86,17 @@ local function Run()
         end
     end
     Log(string.format("SELFTEST level 1: %d methods present, %d missing, %d not reached", present, missing, unreached))
+    local okio, errio = pcall(function()
+        local io = GetIO()
+        local f = assert(io.open("devce_io_test.txt", "w"))
+        f:write("Hello from Dev CE")
+        f:close()
+        local r = assert(io.open("devce_io_test.txt", "r"))
+        local text = r:read("*a")
+        r:close()
+        Log("GETIO test " .. (text == "Hello from Dev CE" and "PASS" or ("FAIL, read back: " .. tostring(text))))
+    end)
+    if not okio then Log("GETIO test ERROR: " .. tostring(errio)) end
 end
 
 local LEVEL2 = {

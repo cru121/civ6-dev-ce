@@ -20,6 +20,9 @@ import json, os, re, sys
 ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))
 sys.path.insert(0, os.path.join(ROOT, 'frida', 'live'))
 import civ  # noqa: E402
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import l2chunk  # noqa: E402
+CHUNK = l2chunk.chunk_set(json.load(open(os.path.join(ROOT, 'dev-ce', 'data', 'exposed.json'), encoding='utf-8')))
 
 LOG = os.path.expandvars(r"%LOCALAPPDATA%\Firaxis Games\Sid Meier's Civilization VI\Logs\Lua.log")
 RET_SENTINEL = {'VOID': 0, 'BOOL': 1, 'INT': 4242, 'UINT': 4243, 'I64': 4244, 'FIXED': 4864}   # FIXED: raw 4864 = 19.0
@@ -58,14 +61,15 @@ def arm():
     man = manifest()
     st = json.loads(call('devstates'))
     print('Dev CE DLL found; registerArg check:', st.get('registerArgCheck'))
-    man = [e for e in man if not hot(e)]
+    man = [e for e in man if not hot(e) and (CHUNK is None or e['lua'] in CHUNK)]
+    print('stubbing %d functions (chunk %s)' % (len(man), os.environ.get('DEVCE_L2CHUNK', 'all')))
     for e in man:
         base = 1 + (1 if e['returns'] == 'FIXED' else 0)          # slot of the first argument (slot 0 = this; FixedPoint return = hidden buffer in slot 1)
         mask = sum(1 << (base + i) for i, a in enumerate(e['args']) if a['kind'] == 'FIXED')   # by-value FixedPoint arguments are passed by pointer
         call('stub %s %d %d %d' % (e['rva'], RET_SENTINEL[e['returns']], mask, 1 if e['returns'] == 'FIXED' else 0))
     print(call('devmarker'))
     info = json.loads(call('devarm'))
-    if info['stubs'] != len([e for e in man if not hot(e)]):
+    if info['stubs'] != len(man):
         sys.exit('only %d of %d stubs installed; NOT arming' % (info['stubs'], len(man)))
     print(call('stubon 0'))
     info = json.loads(call('devarm 1'))
@@ -90,6 +94,8 @@ def collect():
     calls = json.loads(call('stubcalls') or '{}')
     results = []
     for lua, e in by_lua.items():
+        if CHUNK is not None and lua not in CHUNK:
+            continue
         rec = calls.get(e['rva'], [])
         status, detail = None, ''
         ok_s, ret = rows.get(lua, (None, None))
@@ -121,7 +127,12 @@ def collect():
         print('%-11s %s %s' % (status, lua, detail[:110]))
     print(call('devarm 0'))
     print(call('stubon 0'))
-    json.dump(results, open(os.path.join(ROOT, 'dev-ce', 'data', 'level2_results.json'), 'w', encoding='utf-8'), indent=1)
+    outp = os.path.join(ROOT, 'dev-ce', 'data', 'level2_results.json')
+    if CHUNK is not None and os.path.exists(outp):   # chunked run: keep the other chunks' rows
+        old = {r['lua']: r for r in json.load(open(outp, encoding='utf-8'))}
+        old.update({r['lua']: r for r in results})
+        results = list(old.values())
+    json.dump(results, open(outp, 'w', encoding='utf-8'), indent=1)
     from collections import Counter
     print(dict(Counter(r['status'] for r in results)))
 

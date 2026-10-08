@@ -9,6 +9,8 @@ exposed methods and checks by reflection that each generated method is really th
 Objects it cannot reach from the player/first city/first unit are listed as NOT REACHED. Nothing is called at this level.
 """
 import json, os, re, shutil, sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import l2chunk
 
 ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))
 DEV = os.path.join(ROOT, 'dev-ce')
@@ -36,8 +38,11 @@ def sentinel_lua(kind, i):
 
 
 L2LINES = ['local LEVEL2 = {']
+L2CHUNK = l2chunk.chunk_set(man)
 for e in man:
     if e['iface'] not in ACCESS:
+        continue
+    if L2CHUNK is not None and e['lua'] not in L2CHUNK:
         continue
     if e.get('nav') and e['nav']['owner'] in ('Lua::PlayerReference', 'Game'):
         continue   # never stub-tested (engine-hot risk, see frida_level2.py hot())
@@ -352,7 +357,7 @@ L = ['-- SPDX-License-Identifier: AGPL-3.0-only', '-- Part of Dev CE, a fork of 
      '-- Output goes to Lua.log; search for "DevCE".', '',
      'local function Log(msg) print("DevCE: " .. msg) end',
      '-- Game and Map are static tables (Game.Foo(x), no object): wrap them so the generated tests can use the o:Method(x) form for every interface.',
-     'local function DevStatic(t) return setmetatable({}, { __index = function(_, k) local f = t[k]; return function(_, ...) return f(...) end end }) end', '',
+     'local function DevStatic(t) return setmetatable({ __devreal = t }, { __index = function(_, k) local f = t[k]; return function(_, ...) return f(...) end end }) end', '',
      'local EXPECT = {']
 for itf, es in sorted(by.items()):
     names = ', '.join('"%s"' % e['lua'].split('.', 1)[1] for e in es)
@@ -364,6 +369,7 @@ L += ['}', '',
       '    local idx = mt and mt.__index',
       '    local set = {}',
       '    if type(idx) == "table" then for k, v in pairs(idx) do set[tostring(k)] = true end end',
+      '    if next(set) == nil and type(o) == "table" then for k, v in pairs(o) do set[tostring(k)] = true end end',
       '    return set',
       'end', '',
       'local done = false',
@@ -390,6 +396,17 @@ L += ['}', '',
       '        end',
       '    end',
       '    Log(string.format("SELFTEST level 1: %d methods present, %d missing, %d not reached", present, missing, unreached))',
+      '    local okio, errio = pcall(function()',
+      '        local io = GetIO()',
+      '        local f = assert(io.open("devce_io_test.txt", "w"))',
+      '        f:write("Hello from Dev CE")',
+      '        f:close()',
+      '        local r = assert(io.open("devce_io_test.txt", "r"))',
+      '        local text = r:read("*a")',
+      '        r:close()',
+      '        Log("GETIO test " .. (text == "Hello from Dev CE" and "PASS" or ("FAIL, read back: " .. tostring(text))))',
+      '    end)',
+      '    if not okio then Log("GETIO test ERROR: " .. tostring(errio)) end',
       'end', '',
       ] + L2LINES + ORACLE_LINES + L3LINES + L4LINES + [
       'local tries = 0',

@@ -1,8 +1,9 @@
-# Testing the large function sets (branch `sets-b-i`)
+# Testing Dev CE (1,033 functions)
 
-This branch has **1,034** generated bridge entries on 39 Lua objects (the released v0.1.0 has 251). The extra ~780 come from eight "sets" in `dev-ce/data/sets/`
-(see `SETS.md` there: influence, diplomacy, culture/religion/stats, city, player/economy, world, unit, eras). **None of the new entries has run in a game yet.** They were only
-generated and compiled. Names and signatures come from debug symbols of another platform; what a function does is unknown until someone runs it.
+This repository has **1,033** generated bridge entries on 43 Lua objects (the released v0.1.0 has 251). The extra ~780 come from eight "sets" in `dev-ce/data/sets/`
+(see `SETS.md` there: influence, diplomacy, culture/religion/stats, city, player/economy, world, unit, eras). **Status: plumbing-verified, behavior mostly unverified.** All of them load, are called
+with the right arguments and returned values, and 115 mutators were executed for real without a crash (see `dev-ce/RESULTS.md`). What a function does in the game is known for only a small part of them.
+Names and signatures come from debug symbols of another platform. If you want to help, test the effect of functions that interest you (single player, disposable game) and report what you see.
 
 ## What you need
 * Windows, Steam Civilization VI with Gathering Storm (build 15038592 or 15296837, same GameCore DLL; the bridge checks this at startup and switches itself off on anything else).

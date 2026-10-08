@@ -19,7 +19,6 @@ Emergency::Manager::AttachScoreListeners
 Emergency::Manager::DetachScoreListeners
 Emergency::Manager::DoTurn
 FreeCities::Instance::SetAlive
-FreeCities::Instance::StartRetaliationBehaviorTree
 Game::Climate::Manager::CheckForEndingDroughts
 Game::Climate::Manager::DoActiveOneOffs
 Game::Climate::Manager::GetCurrentTurnDeforestationPoints

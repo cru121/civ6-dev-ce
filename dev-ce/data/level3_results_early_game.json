@@ -26,7 +26,7 @@
   "changed": 1,
   "restored": "yes",
   "diff": [
-   "13.GetOutgoingRouteCapacity:36->37"
+   "13.GetOutgoingRouteCapacity:0->1"
   ],
   "stuck": ""
  },
@@ -34,10 +34,11 @@
   "lua": "City.ChangeYieldChange",
   "plus": true,
   "minus": true,
-  "changed": 1,
+  "changed": 2,
   "restored": "yes",
   "diff": [
-   "21.GetFoodSurplus:11->12"
+   "21.GetFoodSurplus:1->2",
+   "21.GetTurnsUntilGrowth:13->7"
   ],
   "stuck": ""
  },
@@ -67,11 +68,10 @@
   "lua": "City.ChangeFollowerYieldModifier",
   "plus": true,
   "minus": true,
-  "changed": 2,
+  "changed": 1,
   "restored": "yes",
   "diff": [
-   "21.GetFoodSurplus:11->18.1484375",
-   "21.GetTurnsUntilGrowth:11->7"
+   "21.GetFoodSurplus:1->1.02734375"
   ],
   "stuck": ""
  },
@@ -82,7 +82,7 @@
   "changed": 1,
   "restored": "yes",
   "diff": [
-   "21.GetFoodSurplus:11->11.546875"
+   "21.GetFoodSurplus:1->1.02734375"
   ],
   "stuck": ""
  },
@@ -360,34 +360,27 @@
   "lua": "CityBuildings.ChangeWonderYieldChange",
   "plus": true,
   "minus": true,
-  "changed": 2,
+  "changed": 0,
   "restored": "yes",
-  "diff": [
-   "21.GetFoodSurplus:11->14",
-   "21.GetTurnsUntilGrowth:11->9"
-  ],
+  "diff": [],
   "stuck": ""
  },
  {
   "lua": "CityBuildings.ChangeYieldChange",
   "plus": true,
   "minus": true,
-  "changed": 1,
+  "changed": 0,
   "restored": "yes",
-  "diff": [
-   "21.GetFoodSurplus:11->12"
-  ],
+  "diff": [],
   "stuck": ""
  },
  {
   "lua": "CityBuildings.ChangeYieldChangeCityStates",
   "plus": true,
   "minus": true,
-  "changed": 1,
+  "changed": 0,
   "restored": "yes",
-  "diff": [
-   "21.GetFoodSurplus:11->12"
-  ],
+  "diff": [],
   "stuck": ""
  },
  {
@@ -448,106 +441,81 @@
   "lua": "City.ChangeFlatYieldBonusForInternational",
   "plus": true,
   "minus": true,
-  "changed": 2,
+  "changed": 0,
   "restored": "yes",
-  "diff": [
-   "21.GetFoodSurplus:11->13",
-   "21.GetTurnsUntilGrowth:11->10"
-  ],
+  "diff": [],
   "stuck": ""
  },
  {
   "lua": "City.ChangeYieldFromForeignRoutesPassingThrough",
   "plus": true,
   "minus": true,
-  "changed": 2,
+  "changed": 0,
   "restored": "yes",
-  "diff": [
-   "21.GetFoodSurplus:11->13",
-   "21.GetTurnsUntilGrowth:11->10"
-  ],
+  "diff": [],
   "stuck": ""
  },
  {
   "lua": "City.ChangeYieldPerDestinationLuxuryResourceForInternational",
   "plus": true,
   "minus": true,
-  "changed": 2,
+  "changed": 0,
   "restored": "yes",
-  "diff": [
-   "21.GetFoodSurplus:11->13",
-   "21.GetTurnsUntilGrowth:11->10"
-  ],
+  "diff": [],
   "stuck": ""
  },
  {
   "lua": "City.ChangeYieldPerDestinationStrategicResourceForDomestic",
   "plus": true,
   "minus": true,
-  "changed": 1,
+  "changed": 0,
   "restored": "yes",
-  "diff": [
-   "21.GetFoodSurplus:11->12"
-  ],
+  "diff": [],
   "stuck": ""
  },
  {
   "lua": "City.ChangeYieldPerDestinationStrategicResourceForInternational",
   "plus": true,
   "minus": true,
-  "changed": 1,
+  "changed": 0,
   "restored": "yes",
-  "diff": [
-   "21.GetFoodSurplus:11->12"
-  ],
+  "diff": [],
   "stuck": ""
  },
  {
   "lua": "City.ChangeYieldPerLocalBonusResourceForDomestic",
   "plus": true,
   "minus": true,
-  "changed": 2,
+  "changed": 0,
   "restored": "yes",
-  "diff": [
-   "21.GetFoodSurplus:11->13",
-   "21.GetTurnsUntilGrowth:11->10"
-  ],
+  "diff": [],
   "stuck": ""
  },
  {
   "lua": "City.ChangeYieldPerLocalBonusResourceForInternational",
   "plus": true,
   "minus": true,
-  "changed": 2,
+  "changed": 0,
   "restored": "yes",
-  "diff": [
-   "21.GetFoodSurplus:11->15",
-   "21.GetTurnsUntilGrowth:11->9"
-  ],
+  "diff": [],
   "stuck": ""
  },
  {
   "lua": "City.ChangeYieldPerLocalLuxuryResourceForInternational",
   "plus": true,
   "minus": true,
-  "changed": 2,
+  "changed": 0,
   "restored": "yes",
-  "diff": [
-   "21.GetFoodSurplus:11->15",
-   "21.GetTurnsUntilGrowth:11->9"
-  ],
+  "diff": [],
   "stuck": ""
  },
  {
   "lua": "City.ChangeYieldPerLocalStrategicResourceForInternational",
   "plus": true,
   "minus": true,
-  "changed": 2,
+  "changed": 0,
   "restored": "yes",
-  "diff": [
-   "21.GetFoodSurplus:11->15",
-   "21.GetTurnsUntilGrowth:11->9"
-  ],
+  "diff": [],
   "stuck": ""
  },
  {
@@ -752,14 +720,9 @@
   "lua": "PlayerResources.ChangeExtraAmenitiesPerOwnedLuxuryResource",
   "plus": true,
   "minus": true,
-  "changed": 4,
+  "changed": 0,
   "restored": "yes",
-  "diff": [
-   "10.GetFaithYield:657.80859375->662.609375",
-   "12.GetScienceYield:957.45703125->964.40625",
-   "14.GetGoldYield:3923.953125->3956",
-   "5.GetCultureYield:2471.71484375->2488.16796875"
-  ],
+  "diff": [],
   "stuck": ""
  },
  {
@@ -793,12 +756,9 @@
   "lua": "PlayerTrade.ChangeCityStateDistrictTradeRouteBonus",
   "plus": true,
   "minus": true,
-  "changed": 2,
+  "changed": 0,
   "restored": "yes",
-  "diff": [
-   "21.GetFoodSurplus:11->27",
-   "21.GetTurnsUntilGrowth:11->5"
-  ],
+  "diff": [],
   "stuck": ""
  },
  {
@@ -841,12 +801,9 @@
   "lua": "PlayerTrade.ChangeDestinationYieldPerTerrainForDomestic",
   "plus": true,
   "minus": true,
-  "changed": 2,
+  "changed": 0,
   "restored": "yes",
-  "diff": [
-   "21.GetFoodSurplus:11->16",
-   "21.GetTurnsUntilGrowth:11->8"
-  ],
+  "diff": [],
   "stuck": ""
  },
  {
@@ -862,38 +819,27 @@
   "lua": "PlayerTrade.ChangeDomesticTradeDisabledCount",
   "plus": true,
   "minus": true,
-  "changed": 4,
-  "restored": "NO:4",
-  "diff": [
-   "14.GetGoldYield:3923.953125->3828.453125",
-   "17.GetProductionYield:111.796875->102.69921875",
-   "21.GetFoodSurplus:11->6",
-   "21.GetTurnsUntilGrowth:11->21"
-  ],
-  "stuck": "14.GetGoldYield:3923.953125->3828.453125;17.GetProductionYield:111.796875->102.69921875;21.GetFoodSurplus:11->6;21.GetTurnsUntilGrowth:11->21"
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
  },
  {
   "lua": "PlayerTrade.ChangeFlatYieldBonus",
   "plus": true,
   "minus": true,
-  "changed": 2,
+  "changed": 0,
   "restored": "yes",
-  "diff": [
-   "21.GetFoodSurplus:6->8",
-   "21.GetTurnsUntilGrowth:21->16"
-  ],
+  "diff": [],
   "stuck": ""
  },
  {
   "lua": "PlayerTrade.ChangeFlatYieldBonusForCityState",
   "plus": true,
   "minus": true,
-  "changed": 2,
+  "changed": 0,
   "restored": "yes",
-  "diff": [
-   "21.GetFoodSurplus:6->8",
-   "21.GetTurnsUntilGrowth:21->16"
-  ],
+  "diff": [],
   "stuck": ""
  },
  {
@@ -909,28 +855,19 @@
   "lua": "PlayerTrade.ChangeInternationalMajorsTradeDisabledCount",
   "plus": true,
   "minus": true,
-  "changed": 1,
-  "restored": "NO:1",
-  "diff": [
-   "14.GetGoldYield:3828.453125->3790.5546875"
-  ],
-  "stuck": "14.GetGoldYield:3828.453125->3790.5546875"
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
  },
  {
   "lua": "PlayerTrade.ChangeInternationalMinorsTradeDisabledCount",
   "plus": true,
   "minus": true,
-  "changed": 7,
-  "restored": "NO:7",
-  "diff": [
-   "10.GetFaithYield:657.80859375->640.80859375",
-   "14.GetGoldYield:3790.5546875->3023.2109375",
-   "17.GetProductionYield:102.69921875->97.5",
-   "24.GetX:21->17",
-   "24.GetY:22->37",
-   "24.HasPendingOperations:true->false"
-  ],
-  "stuck": "10.GetFaithYield:657.80859375->640.80859375;14.GetGoldYield:3790.5546875->3023.2109375;17.GetProductionYield:102.69921875->97.5;24.GetX:21->17"
+  "changed": 0,
+  "restored": "yes",
+  "diff": [],
+  "stuck": ""
  },
  {
   "lua": "PlayerTrade.ChangeInternationalYieldModifier",

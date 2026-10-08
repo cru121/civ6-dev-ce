@@ -140,4 +140,238 @@ end
 GameEvents.DevCEPg_RoutesPlus.Add(function(owner) Routes(owner, 1); end);
 GameEvents.DevCEPg_RoutesMinus.Add(function(owner) Routes(owner, -1); end);
 
+-- ---------------------------------------------------------------- Sets B-I samples (Dev CE)
+-- First other alive player for pair-wise methods (influence tokens, alliance
+-- points). Falls back to self when alone: the stored value is still a valid
+-- int pair, pcall-guarded, reversible with the paired button.
+local function OtherPlayer(owner)
+	local found = nil;
+	pcall(function()
+		for i = 0, 63 do
+			if i ~= owner then
+				local p = Players[i];
+				if p ~= nil and p:IsAlive() then found = i; break; end
+			end
+		end
+	end);
+	if found == nil then found = owner; end
+	return found;
+end
+
+-- B influence (Dev CE: PlayerInfluence:ChangeTokensReceived / GetTotalTokensReceived).
+-- Prerequisite: none, any player works; counter-party shown in the report.
+local function InfluenceTokens(owner, delta)
+	local inf = nil;
+	pcall(function() inf = Players[owner]:GetInfluence(); end);
+	if inf == nil or inf.ChangeTokensReceived == nil or inf.GetTotalTokensReceived == nil then NeedDevCE(owner, "Influence tokens"); return; end
+	local other = OtherPlayer(owner);
+	local function Read() local v = "?"; pcall(function() v = inf:GetTotalTokensReceived(); end); return v; end
+	if delta == 0 then Report(owner, "Influence tokens: total received " .. tostring(Read()) .. " (counter-party would be player " .. tostring(other) .. ")"); return; end
+	local before = Read();
+	local ok, err = pcall(function() inf:ChangeTokensReceived(other, delta); end);
+	Report(owner, "Influence tokens " .. (delta > 0 and "+" or "") .. delta .. " (vs player " .. tostring(other) .. "): " .. (ok and "ok" or ("failed: " .. tostring(err))) .. "; total " .. tostring(before) .. " -> " .. tostring(Read()));
+end
+
+GameEvents.DevCEPg_BTokensRead.Add(function(owner) InfluenceTokens(owner, 0); end);
+GameEvents.DevCEPg_BTokensPlus.Add(function(owner) InfluenceTokens(owner, 1); end);
+GameEvents.DevCEPg_BTokensMinus.Add(function(owner) InfluenceTokens(owner, -1); end);
+
+-- C diplomacy (Dev CE: TeamDiplomacy:GetNumMajorsMet / ChangeAlliancePointsWithPlayer).
+-- Prerequisite: another civ in the game for the +/- pair (else counter-party is self).
+local function AlliancePoints(owner, delta)
+	local dip = nil;
+	pcall(function() dip = Players[owner]:GetDiplomacy(); end);
+	if dip == nil or dip.ChangeAlliancePointsWithPlayer == nil or dip.GetAlliancePointsWithPlayer == nil then NeedDevCE(owner, "Alliance points"); return; end
+	local other = OtherPlayer(owner);
+	local function Read() local v = "?"; pcall(function() v = dip:GetAlliancePointsWithPlayer(other); end); return v; end
+	local before = Read();
+	local ok, err = pcall(function() dip:ChangeAlliancePointsWithPlayer(other, delta); end);
+	Report(owner, "Alliance points " .. (delta > 0 and "+" or "") .. delta .. " (vs player " .. tostring(other) .. "): " .. (ok and "ok" or ("failed: " .. tostring(err))) .. "; " .. tostring(before) .. " -> " .. tostring(Read()));
+end
+
+GameEvents.DevCEPg_CMetRead.Add(function(owner)
+	local dip = nil;
+	pcall(function() dip = Players[owner]:GetDiplomacy(); end);
+	if dip == nil or dip.GetNumMajorsMet == nil then NeedDevCE(owner, "Majors met"); return; end
+	local v = "?";
+	pcall(function() v = dip:GetNumMajorsMet(); end);
+	Report(owner, "Majors met: " .. tostring(v) .. " (meet more civs to test pair-wise buttons)");
+end);
+GameEvents.DevCEPg_CAllyPlus.Add(function(owner) AlliancePoints(owner, 1); end);
+GameEvents.DevCEPg_CAllyMinus.Add(function(owner) AlliancePoints(owner, -1); end);
+
+-- D culture/religion: read-only (Dev CE: PlayerCulture getters). No grant buttons by design.
+-- Prerequisite: none.
+local function CultureRead(owner, what, fn)
+	local cult = nil;
+	pcall(function() cult = Players[owner]:GetCulture(); end);
+	if cult == nil then NeedDevCE(owner, what); return; end
+	local v = "?";
+	local ok, err = pcall(function() v = fn(cult); end);
+	if not ok then NeedDevCE(owner, what .. " (" .. tostring(err) .. ")"); return; end
+	Report(owner, what .. ": " .. tostring(v));
+end
+
+GameEvents.DevCEPg_DTourists.Add(function(owner) CultureRead(owner, "Tourists to you", function(c) return c:GetTouristsTo(); end); end);
+GameEvents.DevCEPg_DParksMod.Add(function(owner) CultureRead(owner, "Tourism national-parks modifier", function(c) return c:GetTourismNationalParksModifier(); end); end);
+GameEvents.DevCEPg_DCivics.Add(function(owner) CultureRead(owner, "Civics completed", function(c) return c:GetNumCivicsCompleted(false); end); end);
+
+-- E city (Dev CE: City:ChangeFlatYieldBonusForDomestic on the capital; readout via the build queue).
+-- Prerequisite: you own a capital city.
+local function CapitalProd(owner, delta)
+	local city = nil;
+	pcall(function() city = Players[owner]:GetCities():GetCapitalCity(); end);
+	if city == nil then Report(owner, "Capital production: no capital."); return; end
+	if city.ChangeFlatYieldBonusForDomestic == nil then NeedDevCE(owner, "Capital production"); return; end
+	local function Read() local v = "?"; pcall(function() v = city:GetYield(YieldTypes.PRODUCTION); end); return v; end
+	local before = Read();
+	local ok, err = pcall(function() city:ChangeFlatYieldBonusForDomestic(YieldTypes.PRODUCTION, delta); end);
+	Report(owner, "Capital production flat " .. (delta > 0 and "+" or "") .. delta .. ": " .. (ok and "ok" or ("failed: " .. tostring(err))) .. "; city production yield " .. tostring(before) .. " -> " .. tostring(Read()) .. " (confirm on the city panel)");
+end
+
+GameEvents.DevCEPg_EBuildProg.Add(function(owner)
+	local city = nil;
+	pcall(function() city = Players[owner]:GetCities():GetCapitalCity(); end);
+	if city == nil then Report(owner, "Capital build progress: no capital."); return; end
+	local v, prog = "?", "?";
+	pcall(function()
+		local bq = city:GetBuildQueue();
+		if bq ~= nil and bq.GetCurrentBuildProgress ~= nil then prog = bq:GetCurrentBuildProgress(); end
+		if city.GetYield ~= nil then v = city:GetYield(YieldTypes.PRODUCTION); end
+	end);
+	if prog == "?" then NeedDevCE(owner, "Capital build progress"); return; end
+	Report(owner, "Capital build progress: " .. tostring(prog) .. " (production yield " .. tostring(v) .. ")");
+end);
+GameEvents.DevCEPg_EProdPlus.Add(function(owner) CapitalProd(owner, 1); end);
+GameEvents.DevCEPg_EProdMinus.Add(function(owner) CapitalProd(owner, -1); end);
+
+-- F player treasury (Dev CE: PlayerTreasury:SetGoldRateChange, absolute SET).
+-- One-way by nature: the +5 button sets an absolute bonus, the restore button sets 0.
+-- Prerequisite: none; use a disposable save, it changes your gold income.
+local function GoldRate(owner, value, label)
+	local treas = nil;
+	pcall(function() treas = Players[owner]:GetTreasury(); end);
+	if treas == nil or treas.SetGoldRateChange == nil then NeedDevCE(owner, "Gold rate"); return; end
+	local function Read() local v = "?"; pcall(function() v = treas:GetGoldYield(); end); return v; end
+	local before = Read();
+	local ok, err = pcall(function() treas:SetGoldRateChange(value); end);
+	Report(owner, "Gold rate " .. label .. ": " .. (ok and "ok" or ("failed: " .. tostring(err))) .. "; gold yield/turn " .. tostring(before) .. " -> " .. tostring(Read()) .. " (disposable save)");
+end
+
+GameEvents.DevCEPg_FGoldSet.Add(function(owner) GoldRate(owner, 5, "SET +5"); end);
+GameEvents.DevCEPg_FGoldRestore.Add(function(owner) GoldRate(owner, 0, "restore 0"); end);
+
+-- G world era score (Dev CE: GameEras:GetPlayerCurrentScore / ChangeEraScore).
+-- ChangeEraScore takes an EraScoreTypes value with no proven enum yet, so 0 is
+-- passed (selftest used arbitrary ints the same way); the before/after score
+-- readout confirms the effect. Prerequisite: none; disposable save.
+local function EraScore(owner, delta)
+	local eras = Game.GetEras();
+	if eras == nil or eras.GetPlayerCurrentScore == nil or eras.ChangeEraScore == nil then NeedDevCE(owner, "Era score"); return; end
+	local function Read() local v = "?"; pcall(function() v = eras:GetPlayerCurrentScore(owner); end); return v; end
+	if delta == 0 then Report(owner, "Era score: current " .. tostring(Read())); return; end
+	local before = Read();
+	local ok, err = pcall(function() eras:ChangeEraScore(owner, delta, 0); end);
+	Report(owner, "Era score " .. (delta > 0 and "+" or "") .. delta .. ": " .. (ok and "ok" or ("failed: " .. tostring(err))) .. "; " .. tostring(before) .. " -> " .. tostring(Read()));
+end
+
+GameEvents.DevCEPg_GScoreRead.Add(function(owner) EraScore(owner, 0); end);
+GameEvents.DevCEPg_GScorePlus.Add(function(owner) EraScore(owner, 1); end);
+GameEvents.DevCEPg_GScoreMinus.Add(function(owner) EraScore(owner, -1); end);
+
+-- H unit (Dev CE: Unit:ChangeParkCharges reversible; UnitExperience:SetLevelAndExperience absolute).
+-- Prerequisite: select a disposable unit first (the carrier); park charges need a unit that has them.
+local function ParkCharges(owner, unitID, delta)
+	local u = GetUnit(owner, unitID);
+	if u == nil then Report(owner, "Park charges: selected unit not found."); return; end
+	if u.ChangeParkCharges == nil then NeedDevCE(owner, "Park charges"); return; end
+	local function Read() local v = "?"; pcall(function() v = u:GetParkCharges(); end); return v; end
+	local before = Read();
+	local ok, err = pcall(function() u:ChangeParkCharges(delta); end);
+	Report(owner, "Park charges " .. (delta > 0 and "+" or "") .. delta .. ": " .. (ok and "ok" or ("failed: " .. tostring(err))) .. "; " .. tostring(before) .. " -> " .. tostring(Read()) .. " (confirm on the unit panel)");
+end
+
+GameEvents.DevCEPg_HParkPlus.Add(function(owner, unitID) ParkCharges(owner, unitID, 1); end);
+GameEvents.DevCEPg_HParkMinus.Add(function(owner, unitID) ParkCharges(owner, unitID, -1); end);
+GameEvents.DevCEPg_HLevelPlus.Add(function(owner, unitID)
+	local u = GetUnit(owner, unitID);
+	if u == nil then Report(owner, "XP level: selected unit not found."); return; end
+	local exp = nil;
+	pcall(function() exp = u:GetExperience(); end);
+	if exp == nil or exp.SetLevelAndExperience == nil then NeedDevCE(owner, "XP level"); return; end
+	local before, bexp = "?", "?";
+	pcall(function() before = exp:GetLevel(); end);
+	pcall(function() bexp = exp:GetExperiencePoints(); end);
+	if before == "?" then Report(owner, "XP level: cannot read the unit level."); return; end
+	local ok, err = pcall(function() exp:SetLevelAndExperience(before + 1, 0); end);
+	local after = "?";
+	pcall(function() after = exp:GetLevel(); end);
+	Report(owner, "XP level +1 (one-way, disposable unit): " .. (ok and "ok" or ("failed: " .. tostring(err))) .. "; level " .. tostring(before) .. " (xp " .. tostring(bexp) .. ") -> " .. tostring(after));
+end);
+
+-- R41 manual probe: Deal + DealItem only make sense mid-negotiation, so this
+-- button runs on demand instead of at turn start. Self-contained (no cross-file
+-- globals: gameplay script contexts do not reliably share _G here).
+local R41_DEAL_METHODS = { "RemoveExpiredItems", "DoTurn", "IsExpired", "DevOracle_HasUnacceptableItems" };
+local R41_DEALITEM_METHODS = { "GetParentType" };
+local function R41DealProbe(owner)
+	local parts = {};
+	local deal = nil;
+	pcall(function()
+		if DealManager == nil then return end
+		-- Working deal needs both parties (vanilla UI passes from/to IDs);
+		-- brute-force read-only over majors since the other party is unknown.
+		for other = 0, 62 do
+			if owner ~= nil and other ~= owner then
+				local cands = {
+					function() return DealManager.GetWorkingDeal(owner, other) end,
+					function() return DealManager.GetWorkingDeal(other, owner) end,
+					function() return DealManager.GetWorkingDeal(0, owner, other) end,
+					function() return DealManager.GetWorkingDeal(1, owner, other) end,
+					function() return DealManager.GetWorkingDeal(0, other, owner) end,
+					function() return DealManager.GetWorkingDeal(1, other, owner) end,
+				};
+				for _, f in ipairs(cands) do
+					pcall(function() deal = f() end);
+					if deal ~= nil then return end
+				end
+			end
+		end
+	end);
+	if deal == nil then
+		return "IDeal NO-INSTANCE (nothing under negotiation) | IDealItem NO-INSTANCE (no deal)";
+	end
+	local function have(inst)
+		local set = {};
+		pcall(function()
+			local mt = getmetatable(inst);
+			local idx = mt and mt.__index;
+			if type(idx) == "table" then for k, v in pairs(idx) do set[tostring(k)] = true end end
+		end);
+		return set;
+	end
+	local dh = have(deal);
+	local dp, dm = 0, {};
+	for _, m in ipairs(R41_DEAL_METHODS) do
+		if dh[m] then dp = dp + 1 else dm[#dm + 1] = m end
+	end
+	parts[#parts + 1] = "IDeal " .. tostring(dp) .. " present, " .. tostring(#dm) .. " missing"
+		.. (#dm > 0 and (" (" .. table.concat(dm, ",") .. ")") or "");
+	local item = nil;
+	pcall(function()
+		if deal.Items ~= nil then for it in deal:Items() do item = it; break; end end
+	end);
+	if item == nil then
+		parts[#parts + 1] = "IDealItem NO-INSTANCE (deal has no items)";
+	else
+		local ih = have(item);
+		parts[#parts + 1] = "IDealItem " .. (ih["GetParentType"] and "1 present, 0 missing" or "0 present, 1 missing (GetParentType)");
+	end
+	return table.concat(parts, " | ");
+end
+GameEvents.DevCEPg_R41Deal.Add(function(owner)
+	local ok, msg = pcall(R41DealProbe, owner);
+	Report(owner, "R41 deal (press while negotiating): " .. (ok and tostring(msg) or ("failed: " .. tostring(msg))));
+end);
+
 print("[DevCEPg][GP] ready.");

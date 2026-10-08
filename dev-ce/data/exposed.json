@@ -17672,26 +17672,6 @@
   "nav": null
  },
  {
-  "lua": "FreeCities.StartRetaliationBehaviorTree",
-  "iface": "IFreeCities",
-  "cpp": "GameCore::FreeCities::Instance::StartRetaliationBehaviorTree",
-  "rva": "0x1ac590",
-  "this_kind": "plain",
-  "oracle": false,
-  "vanilla": null,
-  "signature": "bool(FreeCities::Instance* this, PlayerTypes target)",
-  "args": [
-   {
-    "name": "target",
-    "type": "PlayerTypes",
-    "kind": "INT"
-   }
-  ],
-  "returns": "BOOL",
-  "index": 808,
-  "nav": null
- },
- {
   "lua": "Game.CheckForEndingDroughts",
   "iface": "IGame",
   "cpp": "GameCore::Game::Climate::Manager::CheckForEndingDroughts",
@@ -17702,7 +17682,7 @@
   "signature": "void(Game::Climate::Manager* this)",
   "args": [],
   "returns": "VOID",
-  "index": 809,
+  "index": 808,
   "nav": {
    "owner": "Game",
    "offset": "0x1bcc00",
@@ -17720,7 +17700,7 @@
   "signature": "void(Game::Climate::Manager* this)",
   "args": [],
   "returns": "VOID",
-  "index": 810,
+  "index": 809,
   "nav": {
    "owner": "Game",
    "offset": "0x1bcc00",
@@ -17738,7 +17718,7 @@
   "signature": "int(Game::Climate::Manager* this)",
   "args": [],
   "returns": "INT",
-  "index": 811,
+  "index": 810,
   "nav": {
    "owner": "Game",
    "offset": "0x1bcc00",
@@ -17762,7 +17742,7 @@
    }
   ],
   "returns": "INT",
-  "index": 812,
+  "index": 811,
   "nav": {
    "owner": "Game",
    "offset": "0x1bcc00",
@@ -17786,7 +17766,7 @@
    }
   ],
   "returns": "INT",
-  "index": 813,
+  "index": 812,
   "nav": {
    "owner": "Game",
    "offset": "0x1bcc00",
@@ -17810,7 +17790,7 @@
    }
   ],
   "returns": "INT",
-  "index": 814,
+  "index": 813,
   "nav": {
    "owner": "Game",
    "offset": "0x1bcc00",
@@ -17839,7 +17819,7 @@
    }
   ],
   "returns": "BOOL",
-  "index": 815,
+  "index": 814,
   "nav": {
    "owner": "Game",
    "offset": "0x1bcc00",
@@ -17857,7 +17837,7 @@
   "signature": "void(Game::Climate::Manager* this)",
   "args": [],
   "returns": "VOID",
-  "index": 816,
+  "index": 815,
   "nav": {
    "owner": "Game",
    "offset": "0x1bcc00",
@@ -17881,7 +17861,7 @@
    }
   ],
   "returns": "VOID",
-  "index": 817,
+  "index": 816,
   "nav": {
    "owner": "Game",
    "offset": "0x1bcc00",
@@ -17905,7 +17885,7 @@
    }
   ],
   "returns": "BOOL",
-  "index": 818,
+  "index": 817,
   "nav": {
    "owner": "Game",
    "offset": "0x1c8250",
@@ -17939,7 +17919,7 @@
    }
   ],
   "returns": "INT",
-  "index": 819,
+  "index": 818,
   "nav": {
    "owner": "Game",
    "offset": "0x1c8250",
@@ -17963,7 +17943,7 @@
    }
   ],
   "returns": "BOOL",
-  "index": 820,
+  "index": 819,
   "nav": {
    "owner": "Game",
    "offset": "0x1c8250",
@@ -17992,7 +17972,7 @@
    }
   ],
   "returns": "BOOL",
-  "index": 821,
+  "index": 820,
   "nav": {
    "owner": "Game",
    "offset": "0x1c8250",
@@ -18010,7 +17990,7 @@
   "signature": "void(Game::Economic::Manager* this)",
   "args": [],
   "returns": "VOID",
-  "index": 822,
+  "index": 821,
   "nav": {
    "owner": "Game",
    "offset": "0x62cdf0",
@@ -18028,7 +18008,7 @@
   "signature": "void(Game::Economic::Manager* this)",
   "args": [],
   "returns": "VOID",
-  "index": 823,
+  "index": 822,
   "nav": {
    "owner": "Game",
    "offset": "0x62cdf0",
@@ -18057,7 +18037,7 @@
    }
   ],
   "returns": "BOOL",
-  "index": 824,
+  "index": 823,
   "nav": {
    "owner": "Game",
    "offset": "0x62cdf0",
@@ -18081,7 +18061,7 @@
    }
   ],
   "returns": "INT",
-  "index": 825,
+  "index": 824,
   "nav": {
    "owner": "Game",
    "offset": "0x62cdf0",
@@ -18105,7 +18085,7 @@
    }
   ],
   "returns": "INT",
-  "index": 826,
+  "index": 825,
   "nav": {
    "owner": "Game",
    "offset": "0x62cdf0",
@@ -18134,7 +18114,7 @@
    }
   ],
   "returns": "INT",
-  "index": 827,
+  "index": 826,
   "nav": {
    "owner": "Game",
    "offset": "0x62cdf0",
@@ -18163,7 +18143,7 @@
    }
   ],
   "returns": "INT",
-  "index": 828,
+  "index": 827,
   "nav": {
    "owner": "Game",
    "offset": "0x62cdf0",
@@ -18192,7 +18172,7 @@
    }
   ],
   "returns": "INT",
-  "index": 829,
+  "index": 828,
   "nav": {
    "owner": "Game",
    "offset": "0x62cdf0",
@@ -18216,7 +18196,7 @@
    }
   ],
   "returns": "BOOL",
-  "index": 830,
+  "index": 829,
   "nav": {
    "owner": "Game",
    "offset": "0x62cdf0",
@@ -18245,7 +18225,7 @@
    }
   ],
   "returns": "BOOL",
-  "index": 831,
+  "index": 830,
   "nav": {
    "owner": "Game",
    "offset": "0x62cdf0",
@@ -18274,7 +18254,7 @@
    }
   ],
   "returns": "BOOL",
-  "index": 832,
+  "index": 831,
   "nav": {
    "owner": "Game",
    "offset": "0x62cdf0",
@@ -18292,7 +18272,7 @@
   "signature": "bool(const Game::Economic::Manager* this)",
   "args": [],
   "returns": "BOOL",
-  "index": 833,
+  "index": 832,
   "nav": {
    "owner": "Game",
    "offset": "0x62cdf0",
@@ -18321,7 +18301,7 @@
    }
   ],
   "returns": "VOID",
-  "index": 834,
+  "index": 833,
   "nav": null
  },
  {
@@ -18335,7 +18315,7 @@
   "signature": "void(Game::Eras* this)",
   "args": [],
   "returns": "VOID",
-  "index": 835,
+  "index": 834,
   "nav": null
  },
  {
@@ -18349,7 +18329,7 @@
   "signature": "int(const Game::Eras* this)",
   "args": [],
   "returns": "INT",
-  "index": 836,
+  "index": 835,
   "nav": null
  },
  {
@@ -18363,7 +18343,7 @@
   "signature": "int(const Game::Eras* this)",
   "args": [],
   "returns": "INT",
-  "index": 837,
+  "index": 836,
   "nav": null
  },
  {
@@ -18377,7 +18357,7 @@
   "signature": "int(const Game::Eras* this)",
   "args": [],
   "returns": "INT",
-  "index": 838,
+  "index": 837,
   "nav": null
  },
  {
@@ -18391,7 +18371,7 @@
   "signature": "int(const Game::Eras* this)",
   "args": [],
   "returns": "INT",
-  "index": 839,
+  "index": 838,
   "nav": null
  },
  {
@@ -18411,7 +18391,7 @@
    }
   ],
   "returns": "INT",
-  "index": 840,
+  "index": 839,
   "nav": null
  },
  {
@@ -18431,7 +18411,7 @@
    }
   ],
   "returns": "INT",
-  "index": 841,
+  "index": 840,
   "nav": null
  },
  {
@@ -18451,7 +18431,7 @@
    }
   ],
   "returns": "INT",
-  "index": 842,
+  "index": 841,
   "nav": null
  },
  {
@@ -18471,7 +18451,7 @@
    }
   ],
   "returns": "INT",
-  "index": 843,
+  "index": 842,
   "nav": null
  },
  {
@@ -18491,7 +18471,7 @@
    }
   ],
   "returns": "INT",
-  "index": 844,
+  "index": 843,
   "nav": null
  },
  {
@@ -18511,7 +18491,7 @@
    }
   ],
   "returns": "INT",
-  "index": 845,
+  "index": 844,
   "nav": null
  },
  {
@@ -18531,7 +18511,7 @@
    }
   ],
   "returns": "INT",
-  "index": 846,
+  "index": 845,
   "nav": null
  },
  {
@@ -18551,7 +18531,7 @@
    }
   ],
   "returns": "INT",
-  "index": 847,
+  "index": 846,
   "nav": null
  },
  {
@@ -18571,7 +18551,7 @@
    }
   ],
   "returns": "INT",
-  "index": 848,
+  "index": 847,
   "nav": null
  },
  {
@@ -18591,7 +18571,7 @@
    }
   ],
   "returns": "INT",
-  "index": 849,
+  "index": 848,
   "nav": null
  },
  {
@@ -18611,7 +18591,7 @@
    }
   ],
   "returns": "INT",
-  "index": 850,
+  "index": 849,
   "nav": null
  },
  {
@@ -18631,7 +18611,7 @@
    }
   ],
   "returns": "INT",
-  "index": 851,
+  "index": 850,
   "nav": null
  },
  {
@@ -18651,7 +18631,7 @@
    }
   ],
   "returns": "INT",
-  "index": 852,
+  "index": 851,
   "nav": null
  },
  {
@@ -18671,7 +18651,7 @@
    }
   ],
   "returns": "INT",
-  "index": 853,
+  "index": 852,
   "nav": null
  },
  {
@@ -18691,7 +18671,7 @@
    }
   ],
   "returns": "INT",
-  "index": 854,
+  "index": 853,
   "nav": null
  },
  {
@@ -18711,7 +18691,7 @@
    }
   ],
   "returns": "INT",
-  "index": 855,
+  "index": 854,
   "nav": null
  },
  {
@@ -18731,7 +18711,7 @@
    }
   ],
   "returns": "INT",
-  "index": 856,
+  "index": 855,
   "nav": null
  },
  {
@@ -18751,7 +18731,7 @@
    }
   ],
   "returns": "INT",
-  "index": 857,
+  "index": 856,
   "nav": null
  },
  {
@@ -18771,7 +18751,7 @@
    }
   ],
   "returns": "INT",
-  "index": 858,
+  "index": 857,
   "nav": null
  },
  {
@@ -18791,7 +18771,7 @@
    }
   ],
   "returns": "INT",
-  "index": 859,
+  "index": 858,
   "nav": null
  },
  {
@@ -18811,7 +18791,7 @@
    }
   ],
   "returns": "INT",
-  "index": 860,
+  "index": 859,
   "nav": null
  },
  {
@@ -18836,7 +18816,7 @@
    }
   ],
   "returns": "BOOL",
-  "index": 861,
+  "index": 860,
   "nav": null
  },
  {
@@ -18856,7 +18836,7 @@
    }
   ],
   "returns": "BOOL",
-  "index": 862,
+  "index": 861,
   "nav": null
  },
  {
@@ -18876,7 +18856,7 @@
    }
   ],
   "returns": "BOOL",
-  "index": 863,
+  "index": 862,
   "nav": null
  },
  {
@@ -18896,7 +18876,7 @@
    }
   ],
   "returns": "BOOL",
-  "index": 864,
+  "index": 863,
   "nav": null
  },
  {
@@ -18916,7 +18896,7 @@
    }
   ],
   "returns": "BOOL",
-  "index": 865,
+  "index": 864,
   "nav": null
  },
  {
@@ -18930,7 +18910,7 @@
   "signature": "bool(Game::Eras* this)",
   "args": [],
   "returns": "BOOL",
-  "index": 866,
+  "index": 865,
   "nav": null
  },
  {
@@ -18955,7 +18935,7 @@
    }
   ],
   "returns": "VOID",
-  "index": 867,
+  "index": 866,
   "nav": null
  },
  {
@@ -18969,7 +18949,7 @@
   "signature": "void(Game::Fallout::Manager* this)",
   "args": [],
   "returns": "VOID",
-  "index": 868,
+  "index": 867,
   "nav": null
  },
  {
@@ -18983,7 +18963,7 @@
   "signature": "int(const Game::Fallout::Manager* this)",
   "args": [],
   "returns": "INT",
-  "index": 869,
+  "index": 868,
   "nav": null
  },
  {
@@ -19003,7 +18983,7 @@
    }
   ],
   "returns": "INT",
-  "index": 870,
+  "index": 869,
   "nav": null
  },
  {
@@ -19023,7 +19003,7 @@
    }
   ],
   "returns": "VOID",
-  "index": 871,
+  "index": 870,
   "nav": null
  },
  {
@@ -19037,7 +19017,7 @@
   "signature": "void(Game::Fallout::Manager* this)",
   "args": [],
   "returns": "VOID",
-  "index": 872,
+  "index": 871,
   "nav": null
  },
  {
@@ -19067,7 +19047,7 @@
    }
   ],
   "returns": "VOID",
-  "index": 873,
+  "index": 872,
   "nav": null
  },
  {
@@ -19092,7 +19072,7 @@
    }
   ],
   "returns": "INT",
-  "index": 874,
+  "index": 873,
   "nav": null
  },
  {
@@ -19117,7 +19097,7 @@
    }
   ],
   "returns": "BOOL",
-  "index": 875,
+  "index": 874,
   "nav": null
  },
  {
@@ -19131,7 +19111,7 @@
   "signature": "void(Game::GreatPeople* this)",
   "args": [],
   "returns": "VOID",
-  "index": 876,
+  "index": 875,
   "nav": null
  },
  {
@@ -19151,7 +19131,7 @@
    }
   ],
   "returns": "INT",
-  "index": 877,
+  "index": 876,
   "nav": null
  },
  {
@@ -19165,7 +19145,7 @@
   "signature": "void(Game::GreatPeople* this)",
   "args": [],
   "returns": "VOID",
-  "index": 878,
+  "index": 877,
   "nav": null
  },
  {
@@ -19185,7 +19165,7 @@
    }
   ],
   "returns": "INT",
-  "index": 879,
+  "index": 878,
   "nav": null
  },
  {
@@ -19205,7 +19185,7 @@
    }
   ],
   "returns": "INT",
-  "index": 880,
+  "index": 879,
   "nav": null
  },
  {
@@ -19230,7 +19210,7 @@
    }
   ],
   "returns": "INT",
-  "index": 881,
+  "index": 880,
   "nav": null
  },
  {
@@ -19250,7 +19230,7 @@
    }
   ],
   "returns": "INT",
-  "index": 882,
+  "index": 881,
   "nav": null
  },
  {
@@ -19270,7 +19250,7 @@
    }
   ],
   "returns": "INT",
-  "index": 883,
+  "index": 882,
   "nav": null
  },
  {
@@ -19290,7 +19270,7 @@
    }
   ],
   "returns": "INT",
-  "index": 884,
+  "index": 883,
   "nav": null
  },
  {
@@ -19310,7 +19290,7 @@
    }
   ],
   "returns": "BOOL",
-  "index": 885,
+  "index": 884,
   "nav": null
  },
  {
@@ -19330,7 +19310,7 @@
    }
   ],
   "returns": "BOOL",
-  "index": 886,
+  "index": 885,
   "nav": null
  },
  {
@@ -19355,7 +19335,7 @@
    }
   ],
   "returns": "BOOL",
-  "index": 887,
+  "index": 886,
   "nav": null
  },
  {
@@ -19369,7 +19349,7 @@
   "signature": "int(Game::Instance* this)",
   "args": [],
   "returns": "INT",
-  "index": 888,
+  "index": 887,
   "nav": {
    "owner": "Game",
    "offset": "0x951550",
@@ -19387,7 +19367,7 @@
   "signature": "void(Game::Instance* this)",
   "args": [],
   "returns": "VOID",
-  "index": 889,
+  "index": 888,
   "nav": {
    "owner": "Game",
    "offset": "0x951550",
@@ -19405,7 +19385,7 @@
   "signature": "int(const Game::Instance* this)",
   "args": [],
   "returns": "INT",
-  "index": 890,
+  "index": 889,
   "nav": {
    "owner": "Game",
    "offset": "0x951550",
@@ -19423,7 +19403,7 @@
   "signature": "bool(const Game::Instance* this)",
   "args": [],
   "returns": "BOOL",
-  "index": 891,
+  "index": 890,
   "nav": {
    "owner": "Game",
    "offset": "0x951550",
@@ -19447,7 +19427,7 @@
    }
   ],
   "returns": "VOID",
-  "index": 892,
+  "index": 891,
   "nav": {
    "owner": "Game",
    "offset": "0x951550",
@@ -19465,7 +19445,7 @@
   "signature": "uint(const Game::Techs* this)",
   "args": [],
   "returns": "UINT",
-  "index": 893,
+  "index": 892,
   "nav": {
    "owner": "Game",
    "offset": "0x2512c0",
@@ -19489,7 +19469,7 @@
    }
   ],
   "returns": "VOID",
-  "index": 894,
+  "index": 893,
   "nav": {
    "owner": "Game",
    "offset": "0x7236b0",
@@ -19507,7 +19487,7 @@
   "signature": "void(Map::Feature::Manager* this)",
   "args": [],
   "returns": "VOID",
-  "index": 895,
+  "index": 894,
   "nav": {
    "owner": "Game",
    "offset": "0x7236b0",
@@ -19531,7 +19511,7 @@
    }
   ],
   "returns": "BOOL",
-  "index": 896,
+  "index": 895,
   "nav": {
    "owner": "Game",
    "offset": "0x7236b0",
@@ -19565,7 +19545,7 @@
    }
   ],
   "returns": "INT",
-  "index": 897,
+  "index": 896,
   "nav": {
    "owner": "Game",
    "offset": "0x7236b0",
@@ -19583,7 +19563,7 @@
   "signature": "void(Map::Feature::Manager* this)",
   "args": [],
   "returns": "VOID",
-  "index": 898,
+  "index": 897,
   "nav": {
    "owner": "Game",
    "offset": "0x7236b0",
@@ -19607,7 +19587,7 @@
    }
   ],
   "returns": "INT",
-  "index": 899,
+  "index": 898,
   "nav": {
    "owner": "Game",
    "offset": "0x7236b0",
@@ -19625,7 +19605,7 @@
   "signature": "int(const Map::Feature::Manager* this)",
   "args": [],
   "returns": "INT",
-  "index": 900,
+  "index": 899,
   "nav": {
    "owner": "Game",
    "offset": "0x7236b0",
@@ -19643,7 +19623,7 @@
   "signature": "int(const Map::Feature::Manager* this)",
   "args": [],
   "returns": "INT",
-  "index": 901,
+  "index": 900,
   "nav": {
    "owner": "Game",
    "offset": "0x7236b0",
@@ -19661,7 +19641,7 @@
   "signature": "uint(const Map::Feature::Manager* this)",
   "args": [],
   "returns": "UINT",
-  "index": 902,
+  "index": 901,
   "nav": {
    "owner": "Game",
    "offset": "0x7236b0",
@@ -19679,7 +19659,7 @@
   "signature": "int(const Map::Feature::Manager* this)",
   "args": [],
   "returns": "INT",
-  "index": 903,
+  "index": 902,
   "nav": {
    "owner": "Game",
    "offset": "0x7236b0",
@@ -19703,7 +19683,7 @@
    }
   ],
   "returns": "INT",
-  "index": 904,
+  "index": 903,
   "nav": {
    "owner": "Game",
    "offset": "0x7236b0",
@@ -19721,7 +19701,7 @@
   "signature": "uint(const Map::Feature::Manager* this)",
   "args": [],
   "returns": "UINT",
-  "index": 905,
+  "index": 904,
   "nav": {
    "owner": "Game",
    "offset": "0x7236b0",
@@ -19739,7 +19719,7 @@
   "signature": "int(const Map::Feature::Manager* this)",
   "args": [],
   "returns": "INT",
-  "index": 906,
+  "index": 905,
   "nav": {
    "owner": "Game",
    "offset": "0x7236b0",
@@ -19768,7 +19748,7 @@
    }
   ],
   "returns": "INT",
-  "index": 907,
+  "index": 906,
   "nav": {
    "owner": "Game",
    "offset": "0x7236b0",
@@ -19786,7 +19766,7 @@
   "signature": "int(const Map::Feature::Manager* this)",
   "args": [],
   "returns": "INT",
-  "index": 908,
+  "index": 907,
   "nav": {
    "owner": "Game",
    "offset": "0x7236b0",
@@ -19815,7 +19795,7 @@
    }
   ],
   "returns": "FIXED",
-  "index": 909,
+  "index": 908,
   "nav": {
    "owner": "Game",
    "offset": "0x7236b0",
@@ -19839,7 +19819,7 @@
    }
   ],
   "returns": "INT",
-  "index": 910,
+  "index": 909,
   "nav": {
    "owner": "Game",
    "offset": "0x7236b0",
@@ -19863,7 +19843,7 @@
    }
   ],
   "returns": "INT",
-  "index": 911,
+  "index": 910,
   "nav": {
    "owner": "Game",
    "offset": "0x7236b0",
@@ -19887,7 +19867,7 @@
    }
   ],
   "returns": "BOOL",
-  "index": 912,
+  "index": 911,
   "nav": {
    "owner": "Game",
    "offset": "0x7236b0",
@@ -19911,7 +19891,7 @@
    }
   ],
   "returns": "BOOL",
-  "index": 913,
+  "index": 912,
   "nav": {
    "owner": "Game",
    "offset": "0x7236b0",
@@ -19945,7 +19925,7 @@
    }
   ],
   "returns": "VOID",
-  "index": 914,
+  "index": 913,
   "nav": {
    "owner": "Game",
    "offset": "0x7236b0",
@@ -19963,7 +19943,7 @@
   "signature": "void(Map::Feature::Manager* this)",
   "args": [],
   "returns": "VOID",
-  "index": 915,
+  "index": 914,
   "nav": {
    "owner": "Game",
    "offset": "0x7236b0",
@@ -19987,7 +19967,7 @@
    }
   ],
   "returns": "VOID",
-  "index": 916,
+  "index": 915,
   "nav": {
    "owner": "Game",
    "offset": "0x526c0",
@@ -20016,7 +19996,7 @@
    }
   ],
   "returns": "BOOL",
-  "index": 917,
+  "index": 916,
   "nav": {
    "owner": "Game",
    "offset": "0x44d70",
@@ -20040,7 +20020,7 @@
    }
   ],
   "returns": "UINT",
-  "index": 918,
+  "index": 917,
   "nav": {
    "owner": "Game",
    "offset": "0x44d70",
@@ -20069,7 +20049,7 @@
    }
   ],
   "returns": "INT",
-  "index": 919,
+  "index": 918,
   "nav": {
    "owner": "Game",
    "offset": "0x44d70",
@@ -20098,7 +20078,7 @@
    }
   ],
   "returns": "INT",
-  "index": 920,
+  "index": 919,
   "nav": {
    "owner": "Game",
    "offset": "0x44d70",
@@ -20122,7 +20102,7 @@
    }
   ],
   "returns": "BOOL",
-  "index": 921,
+  "index": 920,
   "nav": {
    "owner": "Game",
    "offset": "0x44d70",
@@ -20146,7 +20126,7 @@
    }
   ],
   "returns": "BOOL",
-  "index": 922,
+  "index": 921,
   "nav": {
    "owner": "Game",
    "offset": "0x44d70",
@@ -20175,7 +20155,7 @@
    }
   ],
   "returns": "BOOL",
-  "index": 923,
+  "index": 922,
   "nav": {
    "owner": "Game",
    "offset": "0x44d70",
@@ -20193,7 +20173,7 @@
   "signature": "void(Map::Player::Visibility::Manager* this)",
   "args": [],
   "returns": "VOID",
-  "index": 924,
+  "index": 923,
   "nav": {
    "owner": "Game",
    "offset": "0x44d70",
@@ -20222,7 +20202,7 @@
    }
   ],
   "returns": "BOOL",
-  "index": 925,
+  "index": 924,
   "nav": {
    "owner": "Game",
    "offset": "0x44d70",
@@ -20240,7 +20220,7 @@
   "signature": "void(Map::Plot::Instance* this)",
   "args": [],
   "returns": "VOID",
-  "index": 926,
+  "index": 925,
   "nav": null
  },
  {
@@ -20254,7 +20234,7 @@
   "signature": "bool(const Map::Plot::Instance* this)",
   "args": [],
   "returns": "BOOL",
-  "index": 927,
+  "index": 926,
   "nav": null
  },
  {
@@ -20268,7 +20248,7 @@
   "signature": "bool(const Map::Plot::Instance* this)",
   "args": [],
   "returns": "BOOL",
-  "index": 928,
+  "index": 927,
   "nav": null
  },
  {
@@ -20282,7 +20262,7 @@
   "signature": "bool(const Map::Plot::Instance* this)",
   "args": [],
   "returns": "BOOL",
-  "index": 929,
+  "index": 928,
   "nav": null
  },
  {
@@ -20302,7 +20282,7 @@
    }
   ],
   "returns": "VOID",
-  "index": 930,
+  "index": 929,
   "nav": null
  },
  {
@@ -20322,7 +20302,7 @@
    }
   ],
   "returns": "BOOL",
-  "index": 931,
+  "index": 930,
   "nav": null
  },
  {
@@ -20342,7 +20322,7 @@
    }
   ],
   "returns": "BOOL",
-  "index": 932,
+  "index": 931,
   "nav": null
  },
  {
@@ -20367,7 +20347,7 @@
    }
   ],
   "returns": "VOID",
-  "index": 933,
+  "index": 932,
   "nav": null
  },
  {
@@ -20387,7 +20367,7 @@
    }
   ],
   "returns": "VOID",
-  "index": 934,
+  "index": 933,
   "nav": null
  },
  {
@@ -20407,7 +20387,7 @@
    }
   ],
   "returns": "VOID",
-  "index": 935,
+  "index": 934,
   "nav": null
  },
  {
@@ -20421,7 +20401,7 @@
   "signature": "PlayerTypes(const Player::Manager* this)",
   "args": [],
   "returns": "INT",
-  "index": 936,
+  "index": 935,
   "nav": {
    "owner": "Game",
    "offset": "0x306b80",
@@ -20445,7 +20425,7 @@
    }
   ],
   "returns": "BOOL",
-  "index": 937,
+  "index": 936,
   "nav": {
    "owner": "Game",
    "offset": "0x306b80",
@@ -20469,7 +20449,7 @@
    }
   ],
   "returns": "BOOL",
-  "index": 938,
+  "index": 937,
   "nav": {
    "owner": "Game",
    "offset": "0x306b80",
@@ -20493,7 +20473,7 @@
    }
   ],
   "returns": "BOOL",
-  "index": 939,
+  "index": 938,
   "nav": {
    "owner": "Game",
    "offset": "0x306b80",
@@ -20517,7 +20497,7 @@
    }
   ],
   "returns": "BOOL",
-  "index": 940,
+  "index": 939,
   "nav": {
    "owner": "Game",
    "offset": "0x306b80",
@@ -20541,7 +20521,7 @@
    }
   ],
   "returns": "BOOL",
-  "index": 941,
+  "index": 940,
   "nav": {
    "owner": "Game",
    "offset": "0x306b80",
@@ -20565,7 +20545,7 @@
    }
   ],
   "returns": "VOID",
-  "index": 942,
+  "index": 941,
   "nav": {
    "owner": "Game",
    "offset": "0x306b80",
@@ -20594,7 +20574,7 @@
    }
   ],
   "returns": "INT",
-  "index": 943,
+  "index": 942,
   "nav": {
    "owner": "Game",
    "offset": "0x370f30",
@@ -20618,7 +20598,7 @@
    }
   ],
   "returns": "FIXED",
-  "index": 944,
+  "index": 943,
   "nav": {
    "owner": "Game",
    "offset": "0x370f30",
@@ -20642,7 +20622,7 @@
    }
   ],
   "returns": "INT",
-  "index": 945,
+  "index": 944,
   "nav": {
    "owner": "Game",
    "offset": "0x370f30",
@@ -20671,7 +20651,7 @@
    }
   ],
   "returns": "INT",
-  "index": 946,
+  "index": 945,
   "nav": {
    "owner": "Game",
    "offset": "0x370f30",
@@ -20695,7 +20675,7 @@
    }
   ],
   "returns": "FIXED",
-  "index": 947,
+  "index": 946,
   "nav": {
    "owner": "Game",
    "offset": "0x370f30",
@@ -20719,7 +20699,7 @@
    }
   ],
   "returns": "INT",
-  "index": 948,
+  "index": 947,
   "nav": {
    "owner": "Game",
    "offset": "0x370f30",
@@ -20743,7 +20723,7 @@
    }
   ],
   "returns": "BOOL",
-  "index": 949,
+  "index": 948,
   "nav": {
    "owner": "Game",
    "offset": "0x370f30",
@@ -20772,7 +20752,7 @@
    }
   ],
   "returns": "INT",
-  "index": 950,
+  "index": 949,
   "nav": {
    "owner": "Game",
    "offset": "0x373910",
@@ -20796,7 +20776,7 @@
    }
   ],
   "returns": "BOOL",
-  "index": 951,
+  "index": 950,
   "nav": {
    "owner": "Trade::Manager",
    "offset": "0xc0",
@@ -20820,7 +20800,7 @@
    }
   ],
   "returns": "BOOL",
-  "index": 952,
+  "index": 951,
   "nav": {
    "owner": "Trade::Manager",
    "offset": "0xc0",
@@ -20838,7 +20818,7 @@
   "signature": "uint(Trade::Manager* this)",
   "args": [],
   "returns": "UINT",
-  "index": 953,
+  "index": 952,
   "nav": null
  },
  {
@@ -20858,7 +20838,7 @@
    }
   ],
   "returns": "VOID",
-  "index": 954,
+  "index": 953,
   "nav": null
  },
  {
@@ -20878,7 +20858,7 @@
    }
   ],
   "returns": "VOID",
-  "index": 955,
+  "index": 954,
   "nav": null
  },
  {
@@ -20898,7 +20878,7 @@
    }
   ],
   "returns": "VOID",
-  "index": 956,
+  "index": 955,
   "nav": null
  },
  {
@@ -20912,7 +20892,7 @@
   "signature": "void(Trade::Manager* this)",
   "args": [],
   "returns": "VOID",
-  "index": 957,
+  "index": 956,
   "nav": null
  },
  {
@@ -20932,7 +20912,7 @@
    }
   ],
   "returns": "INT",
-  "index": 958,
+  "index": 957,
   "nav": null
  },
  {
@@ -20962,7 +20942,7 @@
    }
   ],
   "returns": "BOOL",
-  "index": 959,
+  "index": 958,
   "nav": null
  },
  {
@@ -20982,7 +20962,7 @@
    }
   ],
   "returns": "BOOL",
-  "index": 960,
+  "index": 959,
   "nav": null
  },
  {
@@ -21012,7 +20992,7 @@
    }
   ],
   "returns": "VOID",
-  "index": 961,
+  "index": 960,
   "nav": {
    "owner": "Unit::Instance",
    "offset": "0x8c8",
@@ -21041,7 +21021,7 @@
    }
   ],
   "returns": "INT",
-  "index": 962,
+  "index": 961,
   "nav": {
    "owner": "Unit::Instance",
    "offset": "0x8c8",
@@ -21065,7 +21045,7 @@
    }
   ],
   "returns": "INT",
-  "index": 963,
+  "index": 962,
   "nav": {
    "owner": "Unit::Instance",
    "offset": "0x8c8",
@@ -21099,7 +21079,7 @@
    }
   ],
   "returns": "VOID",
-  "index": 964,
+  "index": 963,
   "nav": {
    "owner": "Unit::Instance",
    "offset": "0x8c8",
@@ -21123,7 +21103,7 @@
    }
   ],
   "returns": "VOID",
-  "index": 965,
+  "index": 964,
   "nav": {
    "owner": "Unit::Instance",
    "offset": "0x8c8",
@@ -21152,7 +21132,7 @@
    }
   ],
   "returns": "BOOL",
-  "index": 966,
+  "index": 965,
   "nav": null
  },
  {
@@ -21166,7 +21146,7 @@
   "signature": "void(Unit::Experience* this)",
   "args": [],
   "returns": "VOID",
-  "index": 967,
+  "index": 966,
   "nav": null
  },
  {
@@ -21186,7 +21166,7 @@
    }
   ],
   "returns": "FIXED",
-  "index": 968,
+  "index": 967,
   "nav": null
  },
  {
@@ -21211,7 +21191,7 @@
    }
   ],
   "returns": "VOID",
-  "index": 969,
+  "index": 968,
   "nav": null
  },
  {
@@ -21225,7 +21205,7 @@
   "signature": "bool(const Unit::GreatPerson* this)",
   "args": [],
   "returns": "BOOL",
-  "index": 970,
+  "index": 969,
   "nav": null
  },
  {
@@ -21239,7 +21219,7 @@
   "signature": "void(Unit::Instance* this)",
   "args": [],
   "returns": "VOID",
-  "index": 971,
+  "index": 970,
   "nav": null
  },
  {
@@ -21259,7 +21239,7 @@
    }
   ],
   "returns": "BOOL",
-  "index": 972,
+  "index": 971,
   "nav": null
  },
  {
@@ -21279,7 +21259,7 @@
    }
   ],
   "returns": "VOID",
-  "index": 973,
+  "index": 972,
   "nav": null
  },
  {
@@ -21299,7 +21279,7 @@
    }
   ],
   "returns": "BOOL",
-  "index": 974,
+  "index": 973,
   "nav": null
  },
  {
@@ -21319,7 +21299,7 @@
    }
   ],
   "returns": "VOID",
-  "index": 975,
+  "index": 974,
   "nav": null
  },
  {
@@ -21339,7 +21319,7 @@
    }
   ],
   "returns": "INT",
-  "index": 976,
+  "index": 975,
   "nav": null
  },
  {
@@ -21359,7 +21339,7 @@
    }
   ],
   "returns": "INT",
-  "index": 977,
+  "index": 976,
   "nav": null
  },
  {
@@ -21379,7 +21359,7 @@
    }
   ],
   "returns": "INT",
-  "index": 978,
+  "index": 977,
   "nav": null
  },
  {
@@ -21393,7 +21373,7 @@
   "signature": "EraTypes(const Unit::Instance* this)",
   "args": [],
   "returns": "INT",
-  "index": 979,
+  "index": 978,
   "nav": null
  },
  {
@@ -21413,7 +21393,7 @@
    }
   ],
   "returns": "BOOL",
-  "index": 980,
+  "index": 979,
   "nav": null
  },
  {
@@ -21433,7 +21413,7 @@
    }
   ],
   "returns": "BOOL",
-  "index": 981,
+  "index": 980,
   "nav": null
  },
  {
@@ -21447,7 +21427,7 @@
   "signature": "int(const Unit::Instance* this)",
   "args": [],
   "returns": "INT",
-  "index": 982,
+  "index": 981,
   "nav": null
  },
  {
@@ -21461,7 +21441,7 @@
   "signature": "bool(const Unit::Instance* this)",
   "args": [],
   "returns": "BOOL",
-  "index": 983,
+  "index": 982,
   "nav": null
  },
  {
@@ -21475,7 +21455,7 @@
   "signature": "bool(const Unit::Instance* this)",
   "args": [],
   "returns": "BOOL",
-  "index": 984,
+  "index": 983,
   "nav": null
  },
  {
@@ -21495,7 +21475,7 @@
    }
   ],
   "returns": "BOOL",
-  "index": 985,
+  "index": 984,
   "nav": null
  },
  {
@@ -21515,7 +21495,7 @@
    }
   ],
   "returns": "BOOL",
-  "index": 986,
+  "index": 985,
   "nav": null
  },
  {
@@ -21529,7 +21509,7 @@
   "signature": "bool(const Unit::Instance* this)",
   "args": [],
   "returns": "BOOL",
-  "index": 987,
+  "index": 986,
   "nav": null
  },
  {
@@ -21549,7 +21529,7 @@
    }
   ],
   "returns": "BOOL",
-  "index": 988,
+  "index": 987,
   "nav": null
  },
  {
@@ -21569,7 +21549,7 @@
    }
   ],
   "returns": "VOID",
-  "index": 989,
+  "index": 988,
   "nav": null
  },
  {
@@ -21589,7 +21569,7 @@
    }
   ],
   "returns": "VOID",
-  "index": 990,
+  "index": 989,
   "nav": null
  },
  {
@@ -21609,7 +21589,7 @@
    }
   ],
   "returns": "VOID",
-  "index": 991,
+  "index": 990,
   "nav": null
  },
  {
@@ -21629,7 +21609,7 @@
    }
   ],
   "returns": "INT",
-  "index": 992,
+  "index": 991,
   "nav": null
  },
  {
@@ -21654,7 +21634,7 @@
    }
   ],
   "returns": "VOID",
-  "index": 993,
+  "index": 992,
   "nav": null
  },
  {
@@ -21674,7 +21654,7 @@
    }
   ],
   "returns": "VOID",
-  "index": 994,
+  "index": 993,
   "nav": null
  },
  {
@@ -21699,7 +21679,7 @@
    }
   ],
   "returns": "VOID",
-  "index": 995,
+  "index": 994,
   "nav": null
  },
  {
@@ -21719,7 +21699,7 @@
    }
   ],
   "returns": "VOID",
-  "index": 996,
+  "index": 995,
   "nav": null
  },
  {
@@ -21749,7 +21729,7 @@
    }
   ],
   "returns": "VOID",
-  "index": 997,
+  "index": 996,
   "nav": null
  },
  {
@@ -21763,7 +21743,7 @@
   "signature": "bool(const Player::Diplomacy* this)",
   "args": [],
   "returns": "BOOL",
-  "index": 998,
+  "index": 997,
   "nav": null
  },
  {
@@ -21783,7 +21763,7 @@
    }
   ],
   "returns": "INT",
-  "index": 999,
+  "index": 998,
   "nav": null
  },
  {
@@ -21803,7 +21783,7 @@
    }
   ],
   "returns": "INT",
-  "index": 1000,
+  "index": 999,
   "nav": null
  },
  {
@@ -21823,7 +21803,7 @@
    }
   ],
   "returns": "INT",
-  "index": 1001,
+  "index": 1000,
   "nav": null
  },
  {
@@ -21837,7 +21817,7 @@
   "signature": "bool(const Player::Influence* this)",
   "args": [],
   "returns": "BOOL",
-  "index": 1002,
+  "index": 1001,
   "nav": null
  },
  {
@@ -21851,7 +21831,7 @@
   "signature": "bool(const Player::Influence* this)",
   "args": [],
   "returns": "BOOL",
-  "index": 1003,
+  "index": 1002,
   "nav": null
  },
  {
@@ -21865,7 +21845,7 @@
   "signature": "int(const Unit::Instance* this)",
   "args": [],
   "returns": "INT",
-  "index": 1004,
+  "index": 1003,
   "nav": null
  },
  {
@@ -21879,7 +21859,7 @@
   "signature": "int(const Unit::Instance* this)",
   "args": [],
   "returns": "INT",
-  "index": 1005,
+  "index": 1004,
   "nav": null
  },
  {
@@ -21893,7 +21873,7 @@
   "signature": "int(const Unit::Experience* this)",
   "args": [],
   "returns": "INT",
-  "index": 1006,
+  "index": 1005,
   "nav": null
  },
  {
@@ -21913,7 +21893,7 @@
    }
   ],
   "returns": "BOOL",
-  "index": 1007,
+  "index": 1006,
   "nav": null
  },
  {
@@ -21927,7 +21907,7 @@
   "signature": "PlayerTypes(const District::Instance* this)",
   "args": [],
   "returns": "INT",
-  "index": 1008,
+  "index": 1007,
   "nav": null
  },
  {
@@ -21941,7 +21921,7 @@
   "signature": "bool(const District::Instance* this)",
   "args": [],
   "returns": "BOOL",
-  "index": 1009,
+  "index": 1008,
   "nav": null
  },
  {
@@ -21955,7 +21935,7 @@
   "signature": "FixedPoint(const Player::Culture* this)",
   "args": [],
   "returns": "FIXED",
-  "index": 1010,
+  "index": 1009,
   "nav": null
  },
  {
@@ -21969,7 +21949,7 @@
   "signature": "int(const Player::Culture* this)",
   "args": [],
   "returns": "INT",
-  "index": 1011,
+  "index": 1010,
   "nav": null
  },
  {
@@ -21983,7 +21963,7 @@
   "signature": "TechTypes(const Player::Techs* this)",
   "args": [],
   "returns": "INT",
-  "index": 1012,
+  "index": 1011,
   "nav": null
  },
  {
@@ -21997,7 +21977,7 @@
   "signature": "FixedPoint(const Player::Techs* this)",
   "args": [],
   "returns": "FIXED",
-  "index": 1013,
+  "index": 1012,
   "nav": null
  },
  {
@@ -22011,7 +21991,7 @@
   "signature": "int(const City::Growth* this)",
   "args": [],
   "returns": "INT",
-  "index": 1014,
+  "index": 1013,
   "nav": null
  },
  {
@@ -22025,7 +22005,7 @@
   "signature": "int(const City::Growth* this)",
   "args": [],
   "returns": "INT",
-  "index": 1015,
+  "index": 1014,
   "nav": null
  },
  {
@@ -22045,7 +22025,7 @@
    }
   ],
   "returns": "BOOL",
-  "index": 1016,
+  "index": 1015,
   "nav": null
  },
  {
@@ -22070,7 +22050,7 @@
    }
   ],
   "returns": "BOOL",
-  "index": 1017,
+  "index": 1016,
   "nav": null
  },
  {
@@ -22090,7 +22070,7 @@
    }
   ],
   "returns": "INT",
-  "index": 1018,
+  "index": 1017,
   "nav": null
  },
  {
@@ -22104,7 +22084,7 @@
   "signature": "bool(const Diplomacy::Deal::Instance* this)",
   "args": [],
   "returns": "BOOL",
-  "index": 1019,
+  "index": 1018,
   "nav": null
  },
  {
@@ -22118,7 +22098,7 @@
   "signature": "FixedPoint(const Player::Religion* this)",
   "args": [],
   "returns": "FIXED",
-  "index": 1020,
+  "index": 1019,
   "nav": null
  },
  {
@@ -22132,7 +22112,7 @@
   "signature": "BeliefTypes(const Player::Religion* this)",
   "args": [],
   "returns": "INT",
-  "index": 1021,
+  "index": 1020,
   "nav": null
  },
  {
@@ -22146,7 +22126,7 @@
   "signature": "int(const Player::Stats* this)",
   "args": [],
   "returns": "INT",
-  "index": 1022,
+  "index": 1021,
   "nav": null
  },
  {
@@ -22166,7 +22146,7 @@
    }
   ],
   "returns": "INT",
-  "index": 1023,
+  "index": 1022,
   "nav": null
  },
  {
@@ -22180,7 +22160,7 @@
   "signature": "int(const Player::Treasury* this)",
   "args": [],
   "returns": "INT",
-  "index": 1024,
+  "index": 1023,
   "nav": null
  },
  {
@@ -22194,7 +22174,7 @@
   "signature": "int(const Player::Treasury* this)",
   "args": [],
   "returns": "INT",
-  "index": 1025,
+  "index": 1024,
   "nav": null
  },
  {
@@ -22214,7 +22194,7 @@
    }
   ],
   "returns": "BOOL",
-  "index": 1026,
+  "index": 1025,
   "nav": null
  },
  {
@@ -22234,7 +22214,7 @@
    }
   ],
   "returns": "BOOL",
-  "index": 1027,
+  "index": 1026,
   "nav": null
  },
  {
@@ -22254,7 +22234,7 @@
    }
   ],
   "returns": "BOOL",
-  "index": 1028,
+  "index": 1027,
   "nav": null
  },
  {
@@ -22274,7 +22254,7 @@
    }
   ],
   "returns": "BOOL",
-  "index": 1029,
+  "index": 1028,
   "nav": null
  },
  {
@@ -22288,7 +22268,7 @@
   "signature": "BeliefTypes(const City::Religion* this)",
   "args": [],
   "returns": "INT",
-  "index": 1030,
+  "index": 1029,
   "nav": null
  },
  {
@@ -22302,7 +22282,7 @@
   "signature": "const int(const Player::Governors* this)",
   "args": [],
   "returns": "INT",
-  "index": 1031,
+  "index": 1030,
   "nav": null
  },
  {
@@ -22316,7 +22296,7 @@
   "signature": "int(const Map::Plot::Instance* this)",
   "args": [],
   "returns": "INT",
-  "index": 1032,
+  "index": 1031,
   "nav": null
  },
  {
@@ -22330,7 +22310,7 @@
   "signature": "FlowDirectionTypes(const Map::Plot::Instance* this)",
   "args": [],
   "returns": "INT",
-  "index": 1033,
+  "index": 1032,
   "nav": null
  }
 ]

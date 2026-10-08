@@ -23,6 +23,20 @@
   "plumbing": "PASS",
   "this_kind": "virtual"
  },
+ "PlayerInfluence.ChangeTokensReceivedModifier": {
+  "plumbing": "PASS",
+  "this_kind": "plain",
+  "delta_probe": {
+   "visible_effect": false,
+   "reversible": true,
+   "changed_getters": [],
+   "runs": 2
+  }
+ },
+ "PlayerInfluence.ClearAllTokensReceived": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
  "Player.AddAgenda": {
   "plumbing": "EXCLUDED",
   "this_kind": "virtual"
@@ -40,7 +54,7 @@
    "changed_getters": [
     "GetBuildCharges"
    ],
-   "runs": 5
+   "runs": 7
   }
  },
  "City.SetOccupied": {
@@ -56,7 +70,7 @@
    "changed_getters": [
     "GetOutgoingRouteCapacity"
    ],
-   "runs": 5
+   "runs": 7
   }
  },
  "UnitExperience.SetLevel": {
@@ -73,7 +87,7 @@
     "GetFoodSurplus",
     "GetTurnsUntilGrowth"
    ],
-   "runs": 5
+   "runs": 7
   }
  },
  "PlayerResources.RevealResourceOnVisibleTiles": {
@@ -89,7 +103,7 @@
    "changed_getters": [
     "GetActionCharges"
    ],
-   "runs": 5
+   "runs": 7
   }
  },
  "Unit.ChangeDisasterCharges": {
@@ -101,7 +115,7 @@
    "changed_getters": [
     "GetDisasterCharges"
    ],
-   "runs": 5
+   "runs": 7
   }
  },
  "City.ChangeFollowerYieldModifier": {
@@ -113,7 +127,7 @@
    "changed_getters": [
     "GetFoodSurplus"
    ],
-   "runs": 5
+   "runs": 7
   }
  },
  "City.ChangeYieldModifier": {
@@ -125,7 +139,7 @@
    "changed_getters": [
     "GetFoodSurplus"
    ],
-   "runs": 5
+   "runs": 7
   }
  },
  "City.ChangeYieldModifierPerGovernorTitle": {
@@ -135,7 +149,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "District.SetSiegeStatus": {
@@ -149,7 +163,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "GameEras.ChangePlayerEraScorePerArmyKilled": {
@@ -159,7 +173,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "GameEras.ChangePlayerEraScorePerArtifactExtracted": {
@@ -169,7 +183,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "GameEras.ChangePlayerEraScorePerCityReligionConversion": {
@@ -179,7 +193,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "GameEras.ChangePlayerEraScorePerCivicBoost": {
@@ -189,7 +203,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "GameEras.ChangePlayerEraScorePerContinentDiscovered": {
@@ -199,7 +213,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "GameEras.ChangePlayerEraScorePerCorpsKilled": {
@@ -209,7 +223,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "GameEras.ChangePlayerEraScorePerCultureBuildingConstructed": {
@@ -219,7 +233,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "GameEras.ChangePlayerEraScorePerCurrentCivic": {
@@ -229,7 +243,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "GameEras.ChangePlayerEraScorePerCurrentTech": {
@@ -239,7 +253,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "GameEras.ChangePlayerEraScorePerDistrictConstructed": {
@@ -249,7 +263,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "GameEras.ChangePlayerEraScorePerGreatPersonEarned": {
@@ -259,7 +273,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "GameEras.ChangePlayerEraScorePerIndustrialBuildingConstructed": {
@@ -269,7 +283,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "GameEras.ChangePlayerEraScorePerNaturalWonderDiscovered": {
@@ -279,7 +293,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "GameEras.ChangePlayerEraScorePerNonBarbarianUnitKilledByGDR": {
@@ -289,7 +303,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "GameEras.ChangePlayerEraScorePerNonBarbarianUnitSeaKilled": {
@@ -299,7 +313,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "GameEras.ChangePlayerEraScorePerScienceBuildingConstructed": {
@@ -309,7 +323,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "GameEras.ChangePlayerEraScorePerSpySuccessfulMission": {
@@ -319,7 +333,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "GameEras.ChangePlayerEraScorePerTechBoost": {
@@ -329,7 +343,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "GameEras.ChangePlayerEraScorePerTradeRouteCompleted": {
@@ -339,7 +353,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "GameEras.ChangePlayerEraScorePerUnitPromotionEarned": {
@@ -349,12 +363,16 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "GameEras.RecalculateThresholdShifts": {
   "plumbing": "PASS",
   "this_kind": "virtual"
+ },
+ "PlayerCities.SetCityUrbanDefenses": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
  },
  "PlayerGreatPeoplePoints.ChangeFreeGreatPersonPoints": {
   "plumbing": "PASS",
@@ -363,11 +381,39 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
+ },
+ "PlayerInfluence.ChangeBasePointsPerTurn": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerInfluence.ChangePointsThreshold": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerInfluence.ChangeTokensPerThreshold": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerInfluence.IncrementLevyTurnCounter": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerInfluence.SetBasePointsPerTurn": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerInfluence.SetPointsEarned": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
  },
  "Game.SetLocalPlayerTo": {
   "plumbing": "EXCLUDED",
+  "this_kind": "plain"
+ },
+ "PlayerInfluence.UpdateSuzerain": {
+  "plumbing": "PASS",
   "this_kind": "plain"
  },
  "TeamDiplomacy.SetBlockedEntry": {
@@ -410,6 +456,16 @@
   "plumbing": "PASS",
   "this_kind": "virtual"
  },
+ "PlayerInfluence.ChangeSuzerainUniqueBonusDisabledCount": {
+  "plumbing": "PASS",
+  "this_kind": "plain",
+  "delta_probe": {
+   "visible_effect": false,
+   "reversible": true,
+   "changed_getters": [],
+   "runs": 2
+  }
+ },
  "PlayerTechs.SetAllTechsByPreviousEra": {
   "plumbing": "PASS",
   "this_kind": "plain"
@@ -425,7 +481,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "CityBuildings.AddGreatWorkToSlot": {
@@ -455,12 +511,16 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "GameDiplomacy.SetAtWar": {
   "plumbing": "PASS",
   "this_kind": "virtual"
+ },
+ "PlayerCities.SetCanEverConstruct": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
  },
  "PlayerCulture.GrantRandomBoostsByEra": {
   "plumbing": "PASS",
@@ -477,7 +537,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "PlayerUnits.SetCanEverTrain": {
@@ -491,7 +551,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "UnitExperience.GrantPromotion": {
@@ -553,7 +613,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "CityBuildQueue.ChangeProductionModifier": {
@@ -563,7 +623,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "CityBuildQueue.SetDistrictPercentComplete": {
@@ -580,7 +640,7 @@
     "GetFoodSurplus",
     "GetTurnsUntilGrowth"
    ],
-   "runs": 4
+   "runs": 6
   }
  },
  "CityBuildings.ChangeYieldChange": {
@@ -592,7 +652,7 @@
    "changed_getters": [
     "GetFoodSurplus"
    ],
-   "runs": 4
+   "runs": 6
   }
  },
  "CityBuildings.ChangeYieldChangeCityStates": {
@@ -604,7 +664,7 @@
    "changed_getters": [
     "GetFoodSurplus"
    ],
-   "runs": 4
+   "runs": 6
   }
  },
  "CityBuildings.ChangeYieldChangeFromFeature": {
@@ -630,7 +690,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 5
   }
  },
  "City.ChangeExtraIdentityPerTurnPerCitizen": {
@@ -640,7 +700,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 5
   }
  },
  "City.ChangeIdentityPressureFromAges": {
@@ -650,7 +710,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 5
   }
  },
  "City.ChangeIdentityPressureFromModifiers": {
@@ -660,7 +720,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 5
   }
  },
  "City.ChangeGreatWorkYieldModifier": {
@@ -686,7 +746,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "City.AddCityHappinessModifier": {
@@ -700,7 +760,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "City.RemoveCityHappinessModifier": {
@@ -721,7 +781,7 @@
     "GetFoodSurplus",
     "GetTurnsUntilGrowth"
    ],
-   "runs": 3
+   "runs": 5
   }
  },
  "City.ChangeYieldFromForeignRoutesPassingThrough": {
@@ -734,7 +794,7 @@
     "GetFoodSurplus",
     "GetTurnsUntilGrowth"
    ],
-   "runs": 3
+   "runs": 5
   }
  },
  "City.ChangeYieldPerDestinationLuxuryResourceForInternational": {
@@ -747,7 +807,7 @@
     "GetFoodSurplus",
     "GetTurnsUntilGrowth"
    ],
-   "runs": 3
+   "runs": 5
   }
  },
  "City.ChangeYieldPerDestinationStrategicResourceForDomestic": {
@@ -759,7 +819,7 @@
    "changed_getters": [
     "GetFoodSurplus"
    ],
-   "runs": 3
+   "runs": 5
   }
  },
  "City.ChangeYieldPerDestinationStrategicResourceForInternational": {
@@ -771,7 +831,7 @@
    "changed_getters": [
     "GetFoodSurplus"
    ],
-   "runs": 3
+   "runs": 5
   }
  },
  "City.ChangeYieldPerLocalBonusResourceForDomestic": {
@@ -784,7 +844,7 @@
     "GetFoodSurplus",
     "GetTurnsUntilGrowth"
    ],
-   "runs": 3
+   "runs": 5
   }
  },
  "City.ChangeYieldPerLocalBonusResourceForInternational": {
@@ -797,7 +857,7 @@
     "GetFoodSurplus",
     "GetTurnsUntilGrowth"
    ],
-   "runs": 3
+   "runs": 5
   }
  },
  "City.ChangeYieldPerLocalLuxuryResourceForInternational": {
@@ -810,7 +870,7 @@
     "GetFoodSurplus",
     "GetTurnsUntilGrowth"
    ],
-   "runs": 3
+   "runs": 5
   }
  },
  "City.ChangeYieldPerLocalStrategicResourceForInternational": {
@@ -823,7 +883,7 @@
     "GetFoodSurplus",
     "GetTurnsUntilGrowth"
    ],
-   "runs": 3
+   "runs": 5
   }
  },
  "City.ChangeYieldPerMajorTradePartner": {
@@ -833,7 +893,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 5
   }
  },
  "Deal.RemoveExpiredItems": {
@@ -871,7 +931,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "GameEras.ChangePlayerAlwaysAllowedCommemorationQuestCount": {
@@ -881,7 +941,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "GameEras.SetMinScoreForExtraEraScore": {
@@ -903,7 +963,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 2
+   "runs": 4
   }
  },
  "Map.SetRevealedImprovementType": {
@@ -925,8 +985,26 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
+   "runs": 4
+  }
+ },
+ "PlayerCities.ChangeExtraStartingPopulationOffHomeContinent": {
+  "plumbing": "PASS",
+  "this_kind": "plain",
+  "delta_probe": {
+   "visible_effect": false,
+   "reversible": true,
+   "changed_getters": [],
    "runs": 2
   }
+ },
+ "PlayerCities.SetDistrictBuildingBanned": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerCities.SetPopulationAfterConquest": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
  },
  "Player.ChangeResolutionEffectRefundPercent": {
   "plumbing": "EXCLUDED",
@@ -935,7 +1013,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 2
+   "runs": 4
   }
  },
  "Player.ChangeIdentityPerTurnForTradeRouteOrigin": {
@@ -945,7 +1023,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 2
+   "runs": 4
   }
  },
  "PlayerCulture.ChangeGreatWorkObjectTourismModifier": {
@@ -955,7 +1033,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "PlayerCulture.SetFavorPerTurnFromBuilding": {
@@ -985,7 +1063,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "TeamDiplomacy.ChangeYieldPerEmbassy": {
@@ -995,7 +1073,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "TeamDiplomacy.SetFightingJointWar": {
@@ -1017,7 +1095,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 2
+   "runs": 4
   }
  },
  "Player.ChangeTargetCitySpyYieldPercent": {
@@ -1031,7 +1109,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "PlayerGreatPeoplePoints.ChangeBonusPointsPerTurnPercent": {
@@ -1041,7 +1119,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "PlayerGreatPeoplePoints.ChangePatronageDiscountPercent": {
@@ -1051,7 +1129,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "PlayerGreatPeoplePoints.ChangePointsRefundPercent": {
@@ -1061,7 +1139,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "PlayerGreatPeoplePoints.SetGreatPersonClassNoPoints": {
@@ -1073,6 +1151,50 @@
   "this_kind": "plain"
  },
  "PlayerGreatPeoplePoints.SetYieldModifierPerEarnedGreatPerson": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerInfluence.DecrementOpenBordersCount": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerInfluence.GiveTokenToPlayer": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerInfluence.SetDuplicateFirstTokens": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerInfluence.SetDuplicateTokensWhenRivalGovernment": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerInfluence.SetDuplicateTokensWhenSameReligion": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerInfluence.SetDuplicateTokensWhenTradeRouteTo": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerInfluence.SetTokensOnFirstToMeet": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerInfluence.SetTokensOnTradeRouteStarted": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerInfluence.SetYieldModifierPerTributary": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerInfluence.SetYieldPerGivenToken": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerInfluence.SetYieldPerTributary": {
   "plumbing": "PASS",
   "this_kind": "plain"
  },
@@ -1091,7 +1213,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 2
+   "runs": 4
   }
  },
  "Player.ChangeRandomEventNoUnitDamage": {
@@ -1101,7 +1223,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 2
+   "runs": 4
   }
  },
  "Player.ChangeYieldRate": {
@@ -1111,7 +1233,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 2
+   "runs": 4
   }
  },
  "Player.RemoveChopFeatureBehavior": {
@@ -1129,7 +1251,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "PlayerResources.ChangeExtraAccumulationModifier": {
@@ -1139,7 +1261,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "PlayerResources.ChangeExtraAmenitiesPerOwnedBonusResource": {
@@ -1152,7 +1274,7 @@
     "GetAmenities",
     "GetAmenitiesFromLuxuries"
    ],
-   "runs": 5
+   "runs": 7
   }
  },
  "PlayerResources.ChangeExtraAmenitiesPerOwnedLuxuryResource": {
@@ -1167,7 +1289,7 @@
     "GetGoldYield",
     "GetCultureYield"
    ],
-   "runs": 4
+   "runs": 6
   }
  },
  "PlayerResources.ChangeImportResourceExtracted": {
@@ -1181,7 +1303,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "PlayerResources.ChangeResourceStockpileCapModifier": {
@@ -1191,7 +1313,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "PlayerStats.ChangeScienceVictoryPointsPerTurn": {
@@ -1201,7 +1323,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 3
+   "runs": 5
   }
  },
  "PlayerTechs.SetNumFreeTechBoostOnNewEra": {
@@ -1218,7 +1340,7 @@
     "GetFoodSurplus",
     "GetTurnsUntilGrowth"
    ],
-   "runs": 4
+   "runs": 6
   }
  },
  "PlayerTrade.ChangeDestinationYieldForAllyRoute": {
@@ -1228,7 +1350,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "PlayerTrade.ChangeDestinationYieldForSuzerainRoute": {
@@ -1238,7 +1360,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "PlayerTrade.ChangeDestinationYieldModifier": {
@@ -1248,7 +1370,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "PlayerTrade.ChangeDestinationYieldPerImprovementAtDestination": {
@@ -1258,7 +1380,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "PlayerTrade.ChangeDestinationYieldPerTerrainForDomestic": {
@@ -1271,7 +1393,7 @@
     "GetFoodSurplus",
     "GetTurnsUntilGrowth"
    ],
-   "runs": 4
+   "runs": 6
   }
  },
  "PlayerTrade.ChangeDestinationYieldPerTerrainForInternational": {
@@ -1281,7 +1403,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "PlayerTrade.ChangeDomesticTradeDisabledCount": {
@@ -1295,7 +1417,7 @@
     "GetFoodSurplus",
     "GetTurnsUntilGrowth"
    ],
-   "runs": 4
+   "runs": 6
   }
  },
  "PlayerTrade.ChangeFlatYieldBonus": {
@@ -1308,7 +1430,7 @@
     "GetFoodSurplus",
     "GetTurnsUntilGrowth"
    ],
-   "runs": 4
+   "runs": 6
   }
  },
  "PlayerTrade.ChangeFlatYieldBonusForCityState": {
@@ -1321,7 +1443,7 @@
     "GetFoodSurplus",
     "GetTurnsUntilGrowth"
    ],
-   "runs": 4
+   "runs": 6
   }
  },
  "PlayerTrade.ChangeFlatYieldBonusForDomestic": {
@@ -1339,7 +1461,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "PlayerTrade.ChangeInternationalMajorsTradeDisabledCount": {
@@ -1351,7 +1473,7 @@
    "changed_getters": [
     "GetGoldYield"
    ],
-   "runs": 4
+   "runs": 6
   }
  },
  "PlayerTrade.ChangeInternationalMinorsTradeDisabledCount": {
@@ -1368,7 +1490,7 @@
     "HasPendingOperations",
     "GetCultureYield"
    ],
-   "runs": 4
+   "runs": 6
   }
  },
  "PlayerTrade.ChangeInternationalYieldModifier": {
@@ -1378,7 +1500,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "PlayerTrade.ChangeInternationalYieldPerImprovementAtOrigin": {
@@ -1388,7 +1510,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "PlayerTrade.ChangeOriginYieldForAllyRoute": {
@@ -1398,7 +1520,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "PlayerTrade.ChangeOriginYieldForSuzerainRoute": {
@@ -1408,7 +1530,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "PlayerTrade.ChangeOriginYieldModifier": {
@@ -1418,7 +1540,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "PlayerTrade.ChangeOriginYieldPerImprovementAtDestination": {
@@ -1428,7 +1550,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "PlayerTrade.ChangeOriginYieldPerTerrainForDomestic": {
@@ -1438,7 +1560,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "PlayerTrade.ChangeOriginYieldPerTerrainForInternational": {
@@ -1448,7 +1570,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "PlayerTrade.ChangePerSpecialtyDistrictYieldBonusForDomestic": {
@@ -1458,7 +1580,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "PlayerTrade.ChangePerSpecialtyDistrictYieldBonusForInternational": {
@@ -1468,7 +1590,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "PlayerTrade.ChangeYieldPerFollower": {
@@ -1478,7 +1600,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "PlayerTrade.ChangeYieldPerPathTile": {
@@ -1488,7 +1610,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "PlayerTrade.ChangeYieldPerTradingPostInForeignCity": {
@@ -1498,7 +1620,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "PlayerTrade.ChangeYieldPerTradingPostInOwnCity": {
@@ -1508,7 +1630,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "PlayerTreasury.ChangeGoldDiplomaticDeal": {
@@ -1530,7 +1652,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "PlayerUnits.SetBannedProductionYield": {
@@ -1572,7 +1694,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "Unit.ChangeBonusPointsPerKillStrength": {
@@ -1582,7 +1704,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "Unit.ChangeSightRange": {
@@ -1605,7 +1727,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "Unit.ChangeTerritoryHealingReligion": {
@@ -1615,7 +1737,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "Unit.RemoveInvalidTerrain": {
@@ -1649,7 +1771,7 @@
    "visible_effect": false,
    "reversible": true,
    "changed_getters": [],
-   "runs": 4
+   "runs": 6
   }
  },
  "Game.BuildCivics": {
@@ -1659,6 +1781,2990 @@
  "Game.BuildTechs": {
   "plumbing": "EXCLUDED",
   "this_kind": "plain"
+ },
+ "PlayerInfluence.AddLevyDiscountPercent": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerInfluence.CanGiveTokensToAnyPlayer": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerInfluence.CanReceiveInfluenceFrom": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerInfluence.ChangeTokensReceived": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerInfluence.ChangeVirtualTokensReceived": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerInfluence.CheckForTokensEarned": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerInfluence.CheckSendTokenNotification": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerInfluence.CountTokensGivenToAnyPlayer": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerInfluence.CountTributaries": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerInfluence.DecrementCopyLuxuriesCount": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerInfluence.DecrementCopyStrategicsCount": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerInfluence.DoTurn": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerInfluence.GetEnemyNonVirtualTokensReceived": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerInfluence.GetLevyTurnLimit": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerInfluence.GetMaxTokensReceived": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerInfluence.GetTotalTokensReceived": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerInfluence.GetVirtualTokensReceived": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerInfluence.GetYieldFromGivenTokens": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerInfluence.GetYieldFromTributaries": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerInfluence.GetYieldModifierFromTributaries": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerInfluence.GetYieldModifierPerTributary": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerInfluence.GetYieldPerGivenToken": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerInfluence.GetYieldPerTributary": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerInfluence.GrantPlayerSuzerainship": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerInfluence.IncrementCopyLuxuriesCount": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerInfluence.IncrementCopyStrategicsCount": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerInfluence.IncrementOpenBordersCount": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerInfluence.RemoveLevyDiscountPercent": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerInfluence.RemoveNonSuzerainTokens": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerInfluence.ResetLevyTurnCounter": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerInfluence.SetVirtualTokensReceived": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "Deal.DoTurn": {
+  "plumbing": "NOT_RUN",
+  "this_kind": "plain"
+ },
+ "Deal.IsExpired": {
+  "plumbing": "NOT_RUN",
+  "this_kind": "plain"
+ },
+ "DealItem.GetParentType": {
+  "plumbing": "NOT_RUN",
+  "this_kind": "plain"
+ },
+ "GameDiplomacy.ChangeGrievanceAndTension": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "GameDiplomacy.ChangeTensionScore": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "GameDiplomacy.DoTurn": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "GameDiplomacy.GetAllianceType": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "GameDiplomacy.GetGrievanceScore": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "GameDiplomacy.GetJointWarTarget": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "GameDiplomacy.GetLastTurnPlayerWasOfferedDeal": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "GameDiplomacy.GetResearchAgreementTech": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "GameDiplomacy.GetTensionScore": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "GameDiplomacy.ResetAllianceDuration": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "GameDiplomacy.SetIsAllied": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "GameDiplomacy.SetResearchAgreementTech": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "TeamDiplomacy.AddBannedDiploActionsSpecificCivilizations": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "TeamDiplomacy.AddDiploActionPrereqOverride": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "TeamDiplomacy.AddDiplomaticCombatModifier": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "TeamDiplomacy.AddDiplomaticMovementModifier": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "TeamDiplomacy.AddDiplomaticYieldModifier": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "TeamDiplomacy.AddDynamicVisibility": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "TeamDiplomacy.AddPromiseData": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "TeamDiplomacy.ApplyWarWeariness": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "TeamDiplomacy.CalculateYieldPerDelegation": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "TeamDiplomacy.CalculateYieldPerEmbassy": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "TeamDiplomacy.CanLiberateCityTo": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "TeamDiplomacy.ChangeAlliancePointsWithPlayer": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "TeamDiplomacy.ClearLastPromiseData": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "TeamDiplomacy.DoTurn": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "TeamDiplomacy.DoWarWearinessDecay": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "TeamDiplomacy.GetAlliancePointsWithPlayer": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "TeamDiplomacy.GetAllianceTurnsUntilEnd": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "TeamDiplomacy.GetAllianceType": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "TeamDiplomacy.GetCultureFromAlliances": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "TeamDiplomacy.GetCurrentDiplomaticCombatModifier": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "TeamDiplomacy.GetCurrentDiplomaticYieldModifier": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "TeamDiplomacy.GetFaithBonusFromAlliances": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "TeamDiplomacy.GetGrievancesFromPlayer": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "TeamDiplomacy.GetMetEra": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "TeamDiplomacy.GetNumAlliances": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "TeamDiplomacy.GetNumGossipReports": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "TeamDiplomacy.GetNumMajorsMet": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "TeamDiplomacy.GetNumMinorsMet": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "TeamDiplomacy.GetPlayerWithAllianceType": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "TeamDiplomacy.GetScienceMultiplierFromAlliances": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "TeamDiplomacy.GetTourismFromAlliances": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "TeamDiplomacy.GetTurnsSinceOpenBordersEnded": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "TeamDiplomacy.HasActiveDOWOnMinor": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "TeamDiplomacy.HasConqueredMinor": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "TeamDiplomacy.HasPermanentAlliance": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "TeamDiplomacy.IncrementGossipReports": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "TeamDiplomacy.IsAtWarWithAnyMajorCiv": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "TeamDiplomacy.IsEnforcingBorders": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "TeamDiplomacy.IsJointWarTypeAllowed": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "TeamDiplomacy.IsOccupyingOriginalCapital": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "TeamDiplomacy.IsThirdPartyWarTypeAllowed": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "TeamDiplomacy.RemoveBannedDiploActionsSpecificCivilizations": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "TeamDiplomacy.RemoveDiplomaticYieldModifier": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "TeamDiplomacy.ResetDenouncement": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "TeamDiplomacy.ResetOccupiedCities": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "TeamDiplomacy.SetHadFriendlyMeeting": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "TeamDiplomacy.SetHasDenounced": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "TeamDiplomacy.UpdateAvailableCasusBelli": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "TeamDiplomacy.UpdateIncursionData": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "TeamDiplomacy.UpdatePromise": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "GameReligion.AddUnit": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "GameReligion.DoTurn": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "GameReligion.UpdateNextReligionForCities": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerCulture.AddTourismIntoFavor": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerCulture.ApplyTourism": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerCulture.CanFillAllPolicySlots": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerCulture.CanTriggerBoost": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerCulture.ChangeTourismModifier": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerCulture.CheckForDominance": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerCulture.ComputeTourismOn": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerCulture.ComputeTurnsUntilDominant": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerCulture.DoCulture": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerCulture.DoEndTurn": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerCulture.GetFavorPerTurnFromBuilding": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerCulture.GetFavorPerTurnFromPolicy": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerCulture.GetGreatWorkObjectNoTourism": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerCulture.GetGreatWorkObjectTourismModifier": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerCulture.GetNumCivicsCompleted": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerCulture.GetNumPoliciesEnactedSpecificType": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerCulture.GetNumPoliciesUnlocked": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerCulture.GetNumPolicySlotsOpen": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerCulture.GetOtherGovernmentIntoleranceModifier": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerCulture.GetSlotType": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerCulture.GetTourismNationalParksModifier": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerCulture.GetTouristsTo": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerCulture.GrantRandomCivics": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerCulture.HasFeaturesModifiedUnlock": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerCulture.IsCivicRevealed": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerCulture.IsProgressingCivic": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerCulture.RemoveCultureBombTrigger": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerCulture.RemoveGovernmentTypeSlotModifier": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerCulture.RemoveModifiedPolicySlot": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerCulture.RemoveReplacedPolicySlot": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerCulture.RemoveTourismIntoFavor": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerCulture.SetCultureRateChange": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerCulture.SetFeatureModifiedUnlock": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerCulture.SetGovernmentTypeSlotModifier": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerCulture.SetModifiedPolicySlot": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerCulture.SetPolicyChangeMade": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerCulture.SetReplacedPolicySlot": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerEras.CalculateEra": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerEras.DoTurnActivate": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerEras.HasDarkAge": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerEras.HasGoldenAge": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerGreatPeoplePoints.AddGreatPersonEarnedBoost": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerGreatPeoplePoints.CalculateYieldChangePerEarnedGreatPersonClassOnResource": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerGreatPeoplePoints.ChangeChangeYieldChangePerEarnedGreatPersonClassOnResource": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerGreatPeoplePoints.DoTurn": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerGreatPeoplePoints.GetCachedPointsPerTurn": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerGreatPeoplePoints.GetFaithFromUnusedGreatPeoplePoints": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerGreatPeoplePoints.GetYieldModifierFromEarnedGreatPeople": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerGreatPeoplePoints.GetYieldModifierPerEarnedGreatPerson": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerGreatPeoplePoints.IsGreatPersonClassNoPoints": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerGreatPeoplePoints.RemoveGreatPersonEarnedBoost": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerGreatPeoplePoints.SetBonusPointsPerTurn": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerReligion.AddBeliefYield": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerReligion.AddReligiousBuildingModifier": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerReligion.CheckNewPurchases": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerReligion.DoReligion": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerReligion.GetEnableWallAttackWholeGameSameReligionPromotionClass": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerReligion.GetFaithFromPeacefulReligionFounders": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerReligion.GetReligiousBuildingYieldMultiplier": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerReligion.GetSpreadModifier": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerReligion.GetUnitsReligionStrengthByReligion": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerReligion.GetWorshipBuilding": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerReligion.GetYieldFromBeliefs": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerReligion.HasReligiousFoundingUnit": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerReligion.IsReligionCreatedBy": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerReligion.SetAdoptsAllyFoundedReligions": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerReligion.SetFaithRateChange": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerReligion.SetGainsAllFollowerBeliefs": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerReligion.SetGreatPersonFounder": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerReligion.SetLaunchedInquisition": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerReligion.SetTreatAllyCapitalAsHolyCity": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerReligion.SetTreatHolySitesAsHolyCities": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerStats.AddWonderLostPlot": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerStats.CalculateImprovedTilePercentage": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerStats.CalculateMilitaryStrength": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerStats.ChangeEmergenciesJoined": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerStats.ChangeGoldSpentLevying": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerStats.ChangeWMDCityHits": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerStats.DoTurnActivate": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerStats.GetAverageNumConstructableDistricts": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerStats.GetBestUnitOfDomain": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerStats.GetBestUnitOfPromotionClass": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerStats.GetMaxRangedStrengthTrained": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerStats.GetMilitaryStrength": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerStats.GetNumArmada": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerStats.GetNumArmy": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerStats.GetNumBuildingsCompleted": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerStats.GetNumCitiesOnLandmassOfSize": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerStats.GetNumCivicsCulturevated": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerStats.GetNumCivicsCulturevatedPerEra": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerStats.GetNumCombatUnits": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerStats.GetNumCorps": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerStats.GetNumDifferentTerrainTypesForCities": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerStats.GetNumDistrictsCompleted": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerStats.GetNumDistrictsOfType": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerStats.GetNumDistrictsPossible": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerStats.GetNumGreatPeopleEarned": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerStats.GetNumGreatWorks": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerStats.GetNumHolySitesFollowingReligion": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerStats.GetNumImprovedTiles": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerStats.GetNumImprovementsOfType": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerStats.GetNumLandUnits": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerStats.GetNumNavalUnits": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerStats.GetNumOwnedCoastalLandTiles": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerStats.GetNumOwnedTiles": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerStats.GetNumProjectsAdvanced": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerStats.GetNumReligiousUnits": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerStats.GetNumTechnologiesResearchedPerEra": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerStats.GetNumTechsResearched": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerStats.GetNumThemedBuildings": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerStats.GetNumUniqueDistrictsAvailable": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerStats.GetNumUniqueDistrictsCompleted": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerStats.GetNumUnitsOfPromotionClass": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerStats.GetNumUnpillagedImprovements": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerStats.GetNumWMDsOfType": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerStats.GetNumWonders": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerStats.GetOverallHappiness": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerStats.GetPopulation": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerStats.GetTourism": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerStats.GetYield": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerStats.IsUnitAffectMaxStrengthStats": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerStats.IsWonderLostPlot": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "CityBuildQueue.AddDistrictBuildingModifier": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityBuildQueue.DoBuilds": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityBuildQueue.DoTurnActivate": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityBuildQueue.GetAdjacentCityRiverBuildingProductionMultiplierCalclulated": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityBuildQueue.GetBestFormationFor": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityBuildQueue.GetCurrentBuildProgress": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityBuildQueue.GetCurrentProductionBuilding": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityBuildQueue.GetCurrentProductionDistrict": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityBuildQueue.GetCurrentProductionTypeModifier": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityBuildQueue.GetCurrentProductionUnit": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityBuildQueue.GetDistrictProductionCost": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityBuildQueue.GetDistrictZonedAtLocation": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityBuildQueue.GetExtraUnitCopy": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityBuildQueue.GetProductionYield": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityBuildQueue.GetProjectProductionCost": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityBuildQueue.GetProjectProductionMultiplier": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityBuildQueue.GetTotalDistrictBuildingModifier": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityBuildQueue.GetUnitArmyProductionCost": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityBuildQueue.GetUnitCorpsProductionCost": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityBuildQueue.GetUnitProductionCost": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityBuildQueue.GetUnitResourceCost": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityBuildQueue.GetValidFeatureForDistrict": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityBuildQueue.GetValidFeatureForWonder": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityBuildQueue.GetZoningPlot": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityBuildQueue.IsConstructionPlotRiver": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityBuildQueue.IsConstructionPlotValidAdjacentNaturalWonder": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityBuildQueue.IsValidDomainForUnit": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityBuildQueue.IsZoningPlotRiver": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityBuildQueue.IsZoningPlotValidAdjacentNaturalWonder": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityBuildQueue.RemoveAll": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityBuildQueue.RemoveAllIncompleteBuildings": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityBuildQueue.RemoveDistrictBuildingModifier": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityBuildQueue.RemoveDistrictDependentBuildings": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityBuildQueue.RemoveModifierValidFeatureDistricts": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityBuildQueue.SetModifierValidFeatureDistricts": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityBuildings.CheckForThemedBuilding": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityBuildings.GetFreeSlot": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityBuildings.GetFreeSlotOfType": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityBuildings.GetNumBuildings": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityBuildings.GetNumBuildingsAtLocation": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityBuildings.GetNumFreeSlots": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityBuildings.GetNumGreatWorks": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityBuildings.GetNumWonders": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityBuildings.GetTourismFromGreatWorks": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityBuildings.GetTourismFromOneWonder": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityBuildings.GetTourismFromWonders": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityBuildings.GetYieldChange": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityBuildings.GetYieldChangeCityStates": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityBuildings.GetYieldChangeFromFeature": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityBuildings.GetYieldFromGreatWorks": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityBuildings.GetYieldModifier": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityBuildings.IsInCity": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityBuildings.RemoveYieldModifier": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityCitizens.DoFoundCity": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityCitizens.RemoveAllCitizenWorkers": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "City.ApplyOuterDefenseHealing": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.GetHighestOuterDefenseDamage": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.GetLastTurnAnyDistrictDamaged": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.CalculateIdentityPerTurn": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.CalculateLoyaltyPerTurn": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.ChangeIdentityPerTurnFromModifiers": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.DoRejectedByPlayer": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.DoTurnActivate": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.GetAccumulatedIdentityPercent": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.GetIdentityPerTurnFromGovernor": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.GetIdentityPerTurnFromHappiness": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.GetIdentityPerTurnFromInfluenceTokens": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.GetIdentityPerTurnFromMartialLaw": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.GetIdentityPerTurnFromOccupation": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.GetIdentityPerTurnFromOriginalOwnership": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.GetIdentityPerTurnFromOwnershipBeforeOccupation": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.GetIdentityPerTurnFromReligion": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.GetIdentityPerTurnFromStarvation": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.GetIdentityPerTurnFromTradeRoutes": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.GetIdentityPerTurnPerCitizen": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.GetIdentityPressureFromOwnership": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.GetLoyaltyLevel": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.HasBeenRejectedByPlayer": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.IsAlwaysFullyLoyal": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.ResetAccumulatedIdentity": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.DoBorderExpansion": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.DoFoundCity": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.GetCultureCostNextPlot": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.GetCultureYield": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.GetGreatWorkTourismModifier": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.GetGreatWorkYieldChange": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.GetGreatWorkYieldModifier": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.GetImprovementTourismModifier": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.GetNonreligiousTourism": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.GetNumStartingPlots": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.GetReligiousTourism": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.GetReligiousTourismModifier": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.GetTourism": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.GetTourismFromDistricts": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.GetTourismFromFeatures": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.GetTourismFromImprovements": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.GetTurnsLeft": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.GetWonderTourismModifier": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "CityDistricts.AreAnyPillaged": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityDistricts.GetNumAllowedDistricts": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityDistricts.HasDistrictOfMilitaryDomain": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "City.CanPlaceUnit": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.GetBuildingPurchaseCost": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.GetDistrictPurchaseCost": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.GetGoldFromCitizens": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.GetUnitPurchaseCost": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "CityGrowth.DoCityGrowth": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityGrowth.GetAmenitiesLostFromWarWeariness": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityGrowth.GetAmenitiesNeeded": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityGrowth.GetFeatureAppealModifier": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityGrowth.GetHappinessGrowthModifier": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityGrowth.GetHousingGrowthModifier": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityGrowth.GetLoyaltyGrowthModifier": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityGrowth.GetOccupationGrowthModifier": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityGrowth.GetOtherGrowthModifier": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityGrowth.GetTurnsUntilStarvation": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityGrowth.HasDroughtPrevention": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityGrowth.RemoveFeatureAppealModifier": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "City.AddCityAllowedImprovement": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.AddCityTerrainModifier": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.AddCityValidTerrainImprovement": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.AddYieldPerTerrainClassCitiesImprovement": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.AddYieldPerTerrainType": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.CalculateYieldFromOwnedBuilding": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.CalculateYieldPerTerrainType": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.CanBuildUnitsOfDomain": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.GetCityHappinessYieldModifier": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.GetCityTerrainAdjacentImprovementModifier": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.GetYieldFromBuildings": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.GetYieldFromMajorTradePartners": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.GetYieldFromOutgoingTradeRoutes": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.GetYieldFromPopulation": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.GetYieldFromTiles": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.GetYieldPerTerrainClassCitiesImprovement": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.HasCityTerrainAdjacentImprovementModifier": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.HasDistrict": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.IsAllowIncomingRegionalStacking": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.IsCityState": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.IsOccupied": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.RemoveCityAllowedImprovement": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.RemoveCityTerrainModifier": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.RemoveCityValidTerrainImprovement": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.RemoveImprovementAdjacencyBonus": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.RemoveYieldPerTerrainClassCitiesImprovement": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.RemoveYieldPerTerrainType": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.SetComponentID": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.ChangeRequiredPower": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.ChangeRequiredPowerFromModifiers": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.CheckNotifications": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.GetFreePower": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.IsFullyPoweredByActiveProject": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.ResetTemporaryPower": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "CityReligion.CanConvert": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityReligion.GetPressureFromCity": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityReligion.GetTotalPressureOnCity": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityReligion.HasBeenInitiated": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityReligion.RecomputeNextReligion": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "City.ChangeFlatYieldBonusForDomestic": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.ChangeFlatYieldBonusFromOthers": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.ChangeFlatYieldBonusToOthers": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.ChangeFlatYieldBonusToOthersForDomestic": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.ChangeNumForeignRoutesPassingThrough": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.CountIncomingRoutes": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.CountOutgoingRoutes": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.GetYieldFromForeignRoutesPassingThrough": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.GetYieldPerMajorTradePartner": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.HasActiveTradingPost": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "City.HasInactiveTradingPost": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "District.AddYieldAdjacencyBonusMirror": {
+  "plumbing": "NOT_RUN",
+  "this_kind": "plain"
+ },
+ "District.CalculateTourismAdjacencyYieldModifier": {
+  "plumbing": "NOT_RUN",
+  "this_kind": "plain"
+ },
+ "District.GetAirSlots": {
+  "plumbing": "NOT_RUN",
+  "this_kind": "plain"
+ },
+ "District.GetAllCalculatedTourismAdjacencyYieldModifier": {
+  "plumbing": "NOT_RUN",
+  "this_kind": "plain"
+ },
+ "District.GetAppealYield": {
+  "plumbing": "NOT_RUN",
+  "this_kind": "plain"
+ },
+ "District.GetExtraRegionalYield": {
+  "plumbing": "NOT_RUN",
+  "this_kind": "plain"
+ },
+ "District.GetFirstPillagableBuilding": {
+  "plumbing": "NOT_RUN",
+  "this_kind": "plain"
+ },
+ "District.GetMilitaryDomain": {
+  "plumbing": "NOT_RUN",
+  "this_kind": "plain"
+ },
+ "District.HasGarrisonedUnit": {
+  "plumbing": "NOT_RUN",
+  "this_kind": "plain"
+ },
+ "District.HasMaxDamage": {
+  "plumbing": "NOT_RUN",
+  "this_kind": "plain"
+ },
+ "District.HasWalls": {
+  "plumbing": "NOT_RUN",
+  "this_kind": "plain"
+ },
+ "District.IsBesieged": {
+  "plumbing": "NOT_RUN",
+  "this_kind": "plain"
+ },
+ "District.RemoveYieldAdjacencyBonusMirror": {
+  "plumbing": "NOT_RUN",
+  "this_kind": "plain"
+ },
+ "PlayerCities.AddBuildingReplacementOverride": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerCities.CheckUnhandledCityDecisions": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerCities.DoEndTurn": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerCities.DoSetTurnComplete": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerCities.DoTurnActivate": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerCities.GetAICitiesCaptured": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerCities.GetNumBuildings": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerCities.GetNumCapturedCityStates": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerCities.GetNumOriginalCapitalsCaptured": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerCities.HasCityOnContinent": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerCities.HasSlotForGreatWork": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerCities.IsDistrictBuildingBanned": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerCities.RemoveBuildingReplacementOverride": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerCities.RemoveUnassignedProductionOverflow": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "Player.ChangeWantsCongressToMeet": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.DoTurn": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.GetResolutionEffectRefundPercent": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.ChangeExtraCapitalPressureRadius": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.GetCapitalPressureRadius": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.AddDistrictAndBuildingsCreateUnitWithAbilityByClass": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.AddDistrictCreateUnit": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.AddDistrictCreateYield": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.GetDistrictCannotBeBuiltAdjacentToCity": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.GetDistrictCreationUnit": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.GetMilitaryDomainDistrict": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.GetNumDistrictsOfType": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.HasAnyRequiredFeatures": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.HasThisRequiredFeatureForSpecialtyDistrict": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.RemoveDistrictAndBuildingsCreateUnitWithAbilityByClass": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.RemoveDistrictCreateUnit": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.RemoveDistrictCreateYield": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.SetCanEverZone": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.SetDistrictUnlockCivic": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.SetDistrictUnlockTech": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.AddCounterSpyYieldAwardPerLevel": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.CheckNotifications": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.GetCounterSpyYieldAwardPerLevel": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.GetPromotionGlobalDefenseBonus": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.GetPromotionGlobalOffenseBonus": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.GetSpyNameIndex": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.HasEscapingSpy": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.IsTrackingSpy": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.RemoveCapturedSpy": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.RemoveCounterSpyYieldAwardPerLevel": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.UpdateWithEscapeResult": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "PlayerGovernors.CanAppoint": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerGovernors.CanEverEarnPromotion": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerGovernors.CanPromote": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerGovernors.DoTurn": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerGovernors.HasGovernor": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "Player.AddAdditionalPillaging": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.AddSpecialAllowedImprovement": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.GetAvoidedRandomEvents": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.GetChopExtraYield": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.GetControlType": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.GetFavor": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.GetRandomEventModifiedDamageOpposingPlayer": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.GetRandomEventNoUnitDamage": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.GetRevealedFeature": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.GetSpecialAllowedProject": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.GetVisibilityForAgenda": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.GetYieldRate": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.HasFoundAnyNewContinent": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.HasFoundContinent": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.IsAgendaAllowed": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.IsChopBanned": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.IsSimultaneousTurns": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.IsValid": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.RemoveAdditionalPillaging": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.RemoveAvoidedRandomEvents": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.RemoveDistrictAddNavalUnits": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.RemoveFoundForeignContinentCityAddUnitClasses": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.RemoveSpecialAllowedImprovement": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.SetAvoidedRandomEvents": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.SetHasEncountered": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.SetHasFoundContinent": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.SetRevealedFeature": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "PlayerResources.CalculateExcessLuxuries": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerResources.ChangePowerResourceDemandPerTurn": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerResources.CheckNotifications": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerResources.DoTurnActivate": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerResources.DoTurnDeactivate": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerResources.DoTurnResourceMaintenance": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerResources.EndExportResource": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerResources.GetAvailableResourceAmount": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerResources.GetFreeResourcesExtracted": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerResources.GetNumOwnedLuxuries": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerResources.GetResourceImportedExtracted": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerResources.GetResourceStockpileCap": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerResources.GetUnitResourceDemandPerTurn": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerResources.IncrementAccumulatedResources": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerResources.IsNoCapResource": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerResources.SetFreeResourceVisibility": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerTechs.CanTriggerBoost": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerTechs.DoResearch": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerTechs.FindBestTechtoStealFromPlayer": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerTechs.GetNumTechsResearched": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerTechs.GrantAllBoostsByEra": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerTechs.GrantRandomTechs": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerTechs.SetScienceRateChange": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerTrade.ChangeExtraWaterRangeRefuel": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerTrade.ChangeYieldBonusForProgressDifference": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerTrade.CheckCapacityNotification": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerTrade.DoTurnActivate": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerTrade.GetDestinationYieldModifier": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerTrade.GetInternationalYieldModifier": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerTrade.GetOriginYieldModifier": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "PlayerTreasury.ApplyBankruptcyPenalties": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerTreasury.ApplySiphonLosses": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerTreasury.CalculateGoldYieldExcludingTrade": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerTreasury.DoTaxForGold": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerTreasury.SetGoldRateChange": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "Player.DoEndTurn": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.DoTurnActivate": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "Player.DoTurnDeactivate": {
+  "plumbing": "not-run",
+  "this_kind": "virtual"
+ },
+ "PlayerUnits.AddEmbarkUnitPass": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerUnits.AddRandomBasePromotion": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerUnits.AddUnlimitedPromotionChoiceUnitType": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerUnits.AssignBasePromotionsToUnits": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerUnits.CanEmbark": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerUnits.ChangeBasePromotionCount": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerUnits.ChangeFreePass": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerUnits.DoEndTurn": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerUnits.DoTurnActivate": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerUnits.GetCost": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerUnits.GetNumUnitsFromCity": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerUnits.GetNumUnitsOfType": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerUnits.GetResourceCost": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerUnits.IsProposedPromotion": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerUnits.RemoveEmbarkUnitPass": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerUnits.RemoveFreePass": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerUnits.RemoveUnlimitedPromotionChoiceUnitType": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerUnits.SetCorpsArmyUnlockCivic": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerUnits.SetCorpsArmyUnlockTech": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerWMDs.GetAllWMDCounts": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerWMDs.SetWeaponCount": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "BarbarianTribes.DoTurnActivate": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "BarbarianTribes.GetBribeClanGoldCost": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "BarbarianTribes.GetCurrentEra": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "BarbarianTribes.GetHireClanGoldCost": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "BarbarianTribes.GetRaidClanGoldReward": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "BarbarianTribes.GetUniqueUnitClaimTribe": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "BarbarianTribes.CanTribeTrainUnitNow": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "BarbarianTribes.ChangeSpawnRate": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "BarbarianTribes.CreateCamps": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "BarbarianTribes.GetPreviousCampDistanceFromPlot": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "BarbarianTribes.GetRaidScoreForTribe": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "BarbarianTribes.GetRampageTarget": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "BarbarianTribes.GetTribeType": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "BarbarianTribes.IsDefender": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "BarbarianTribes.RemoveTribe": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "Game.AttachScoreListeners": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Game.DetachScoreListeners": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Game.DoTurn": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "FreeCities.SetAlive": {
+  "plumbing": "NOT_RUN",
+  "this_kind": "plain"
+ },
+ "Game.CheckForEndingDroughts": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Game.DoActiveOneOffs": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Game.GetCurrentTurnDeforestationPoints": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Game.GetScaledWeightForMap": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Game.GetStormDirection": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Game.GetStormNearestPlayer": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Game.IsTerrainValid": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Game.MoveActiveStorms": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Game.ResetPlayerTurnResourceConsumption": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Game.CanAddGreatWork": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Game.GetFreeGreatWorkForSlot": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Game.HasGreatWorkBeenCreated": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Game.IsValidObjectForSlot": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Game.CalculatePlayerControlledResources": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Game.CalculateResourceMonopolies": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Game.CanCreateNewProduct": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Game.GetCorporationPlayer": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Game.GetGoldFromMonopolies": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Game.GetNumControlledResources": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Game.GetNumCorporations": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Game.GetNumIndustries": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Game.HasAvailableBuildingForProduct": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Game.HasIndustryOf": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Game.HasResourceMonopolyOf": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Game.IsActive": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "GameEras.DoGoldenAgesAndDarkAges": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "GameEras.DoTurn": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "GameEras.GetCurrentEraMaximumEndTurn": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "GameEras.GetCurrentEraMinimumEndTurn": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "GameEras.GetCurrentEraNumPlayersAsOrLessAdvanced": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "GameEras.GetCurrentEraNumPlayersMoreAdvanced": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "GameEras.GetExtraScorePerPrideMoment": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "GameEras.GetMinScoreForExtraEraScore": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "GameEras.GetPlayerCurrentScore": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "GameEras.GetPlayerEraScorePerAerodromeBuildingConstructed": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "GameEras.GetPlayerEraScorePerArtifactExtracted": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "GameEras.GetPlayerEraScorePerCityReligionConversion": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "GameEras.GetPlayerEraScorePerCivicBoost": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "GameEras.GetPlayerEraScorePerContinentDiscovered": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "GameEras.GetPlayerEraScorePerCultureBuildingConstructed": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "GameEras.GetPlayerEraScorePerCurrentCivic": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "GameEras.GetPlayerEraScorePerCurrentTech": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "GameEras.GetPlayerEraScorePerDistrictConstructed": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "GameEras.GetPlayerEraScorePerGreatPersonEarned": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "GameEras.GetPlayerEraScorePerIndustrialBuildingConstructed": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "GameEras.GetPlayerEraScorePerNaturalWonderDiscovered": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "GameEras.GetPlayerEraScorePerScienceBuildingConstructed": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "GameEras.GetPlayerEraScorePerSpySuccessfulMission": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "GameEras.GetPlayerEraScorePerTechBoost": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "GameEras.GetPlayerEraScorePerTradeRouteCompleted": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "GameEras.GetPlayerGoldenAgeThreshold": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "GameEras.GetPlayerNumAllowedCommemorations": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "GameEras.HasActiveCommemoration": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "GameEras.HasDarkAge": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "GameEras.HasGoldenAge": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "GameEras.HasHeroicGoldenAge": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "GameEras.IsPlayerAlwaysAllowedCommemorationQuest": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "GameEras.IsReadyForTransition": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "GameFalloutManager.AddNuclearReactor": {
+  "plumbing": "NOT_RUN",
+  "this_kind": "virtual"
+ },
+ "GameFalloutManager.DoTurn": {
+  "plumbing": "NOT_RUN",
+  "this_kind": "virtual"
+ },
+ "GameFalloutManager.GetFalloutDamage": {
+  "plumbing": "NOT_RUN",
+  "this_kind": "virtual"
+ },
+ "GameFalloutManager.GetReactorAge": {
+  "plumbing": "NOT_RUN",
+  "this_kind": "virtual"
+ },
+ "GameFalloutManager.ResetReactorAge": {
+  "plumbing": "NOT_RUN",
+  "this_kind": "virtual"
+ },
+ "GameFalloutManager.UpdateFallout": {
+  "plumbing": "NOT_RUN",
+  "this_kind": "virtual"
+ },
+ "GameGreatPeople.AddGuarantee": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "GameGreatPeople.CalculatePersonCost": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "GameGreatPeople.CanClaimPerson": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "GameGreatPeople.CheckLapsedClaims": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "GameGreatPeople.CountPeopleAnywhereInTimeline": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "GameGreatPeople.DoTurn": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "GameGreatPeople.GetAvailablePersonByClass": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "GameGreatPeople.GetAvailablePersonEraByClass": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "GameGreatPeople.GetMaximumPeopleAllowedInTimeline": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "GameGreatPeople.GetNumActiveClaims": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "GameGreatPeople.GetNumPeopleReceived": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "GameGreatPeople.GetPersonBeenRecruitedBy": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "GameGreatPeople.HasPassiveEffect": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "GameGreatPeople.IsPersonAnywhereInTimeline": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "GameGreatPeople.IsPersonClaimedAnywhereInTimeline": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "Game.CalculateMaxTurn": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Game.CreateComponents": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Game.GetGameEndTurn": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Game.IsAiProcessing": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Game.SetPaused": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Game.GetNumTechs": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Map.AddVolcano": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Map.CalculateSusceptibleTiles": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Map.CanSufferEruption": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Map.ComputePlotYieldDrop": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Map.DoTurn": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Map.GetIceLossEvent": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Map.GetNumActiveVolcanoes": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Map.GetNumEruptions": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Map.GetNumNaturalWonderVolcanoes": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Map.GetNumNaturalWondersEruptions": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Map.GetNumNormalVolcanoes": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Map.GetNumVolcanoes": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Map.GetPercentVolcanoesActive": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Map.GetPlotYield": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Map.GetTotalVolcanoes": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Map.GetVolcanicPeriod": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Map.GetVolcanoType": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Map.GetVolcanoTypeAtIndex": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Map.IsActive": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Map.IsTileEruptionSusceptible": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Map.RemovePlotYield": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Map.UpdateVolcanoes": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Map.ChangeLandPlotCount": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Map.AddOutgoingVisibilityBlocker": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Map.GetLayerIndexID": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Map.GetRevealedImprovementType": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Map.GetRevealedRouteType": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Map.IsVisibleToAnyHuman": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Map.IsVisibleToAnyPlayer": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Map.IsVisibleToPlayerOfCivLevel": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Map.RecalculateOutgoingVisibility": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Map.RemoveOutgoingVisibilityBlocker": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Plot.ClearCityAttributes": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "Plot.IsForcedWorkedState": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "Plot.IsGoodyHut": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "Plot.IsGoodyNotify": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "Plot.SetImprovementOwner": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "MapAreaPortal.AddSourceAt": {
+  "plumbing": "NOT_RUN",
+  "this_kind": "plain"
+ },
+ "MapAreaPortal.RemoveSourceAt": {
+  "plumbing": "NOT_RUN",
+  "this_kind": "plain"
+ },
+ "Territory.ChangeFeatureCount": {
+  "plumbing": "NOT_RUN",
+  "this_kind": "plain"
+ },
+ "Territory.ChangePlotCount": {
+  "plumbing": "NOT_RUN",
+  "this_kind": "plain"
+ },
+ "Territory.SetIsLake": {
+  "plumbing": "NOT_RUN",
+  "this_kind": "plain"
+ },
+ "Game.GetFirstTurnActiveHuman": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Game.IsAI": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Game.IsBarbarian": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Game.IsFreeCities": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Game.IsMajor": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Game.IsMinor": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Game.SetAsObserver": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Game.CalculatePurchaseCostFromProductionCost": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Game.GetHappinessGrowthModifier": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Game.GetHappinessIdentityPerTurnChange": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Game.GetHappinessInEra": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Game.GetHousingSurplusReduction": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Game.GetMaxVoteswithFavor": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Game.IsSpecialtyDistrict": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "Game.GetNumRollsForResult": {
+  "plumbing": "not-run",
+  "this_kind": "plain"
+ },
+ "TradeManager.HasActiveRoute": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "TradeManager.RemoveEdgeByID": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "TradeManager.ClearTempRoutes": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "TradeManager.DisableDomesticRoutesForPlayer": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "TradeManager.DisableInternationalMajorsRoutesForPlayer": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "TradeManager.DisableInternationalMinorsRoutesForPlayer": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "TradeManager.DoTurn": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "TradeManager.GetEarliestEndTurnForRoute": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "TradeManager.IsLandRouteAllowed": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "TradeManager.IsWaterRouteAllowed": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "Unit.AddEspionageBonus": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "Unit.GetEspionageBonus": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "Unit.GetEspionageTimeReduction": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "Unit.RemoveEspionageBonus": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "Unit.SetOperation": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "UnitExperience.CanEarnPromotion": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "UnitExperience.CheckPromoteNotification": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "UnitExperience.GetExperienceModifier": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "UnitExperience.SetLevelAndExperience": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "UnitGreatPerson.HasUsedActionCharges": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "Unit.AddInitialAbilities": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "Unit.CanBeLevied": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "Unit.ChangeAttackRange": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "Unit.ChangeAttacksRemaining": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "Unit.ChangeParkCharges": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "Unit.GetBaseMoves": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "Unit.GetBonusPointsPerKill": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "Unit.GetBonusPointsPerKillStrength": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "Unit.GetEra": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "Unit.GetIgnoreFeature": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "Unit.GetIgnoreTerrain": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "Unit.GetMaxNumAttacks": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "Unit.HasAdjacentMove": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "Unit.HasAttacked": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "Unit.HasBypassWallsPromotionClass": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "Unit.HasEnableWallAttackPromotionClass": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "Unit.IsFortifyable": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "Unit.IsOperationDisabled": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "Unit.RemoveBypassWallsPromotionClass": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "Unit.RemoveEnableWallAttackPromotionClass": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "Unit.SetAttacksRemaining": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "UnitReligion.GetInitiationYieldPopulation": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "GameEras.Commemorate": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "GameEras.UncommemorateAll": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "GameEras.ComplimentPrideMoment": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "GameEras.HandleDarkAgeCityLoss": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "GameEras.ChangeEraScore": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
  },
  "TeamDiplomacy.DevOracle_IsAtWarWithHumans": {
   "plumbing": "PASS",
@@ -1673,6 +4779,14 @@
   "this_kind": "plain"
  },
  "CityBuildings.DevOracle_GetBuildingMaintenance": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerInfluence.DevOracle_CanGiveInfluence": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerInfluence.DevOracle_CanReceiveInfluence": {
   "plumbing": "PASS",
   "this_kind": "plain"
  },
@@ -1761,6 +4875,38 @@
   "this_kind": "plain"
  },
  "PlayerTreasury.DevOracle_GetDistrictMaintenance": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "GameReligion.DevOracle_HasBeenFounded": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "GameReligion.DevOracle_IsInSomePantheon": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "CityCitizens.DevOracle_IsYieldDisfavored": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityCitizens.DevOracle_IsYieldFavored": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "CityReligion.DevOracle_GetActivePantheon": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "PlayerGovernors.DevOracle_GetGovernorPointsSpent": {
+  "plumbing": "PASS",
+  "this_kind": "virtual"
+ },
+ "Plot.DevOracle_GetIndex": {
+  "plumbing": "PASS",
+  "this_kind": "plain"
+ },
+ "Plot.DevOracle_GetRiverEFlowDirection": {
   "plumbing": "PASS",
   "this_kind": "plain"
  }
