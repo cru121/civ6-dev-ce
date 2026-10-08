@@ -1,0 +1,34 @@
+# set_h_unit: Units
+# interfaces: IUnit, IUnitExperience, IUnitGreatPerson, IUnitReligion
+Unit::Espionage::AddEspionageBonus
+Unit::Espionage::GetEspionageBonus
+Unit::Espionage::GetEspionageTimeReduction
+Unit::Espionage::RemoveEspionageBonus
+Unit::Espionage::SetOperation
+Unit::Experience::CanEarnPromotion
+Unit::Experience::CheckPromoteNotification
+Unit::Experience::GetExperienceModifier
+Unit::Experience::SetLevelAndExperience
+Unit::GreatPerson::HasUsedActionCharges
+Unit::Instance::AddInitialAbilities
+Unit::Instance::CanBeLevied
+Unit::Instance::ChangeAttackRange
+Unit::Instance::ChangeAttacksRemaining
+Unit::Instance::ChangeParkCharges
+Unit::Instance::GetBaseMoves
+Unit::Instance::GetBonusPointsPerKill
+Unit::Instance::GetBonusPointsPerKillStrength
+Unit::Instance::GetEra
+Unit::Instance::GetIgnoreFeature
+Unit::Instance::GetIgnoreTerrain
+Unit::Instance::GetMaxNumAttacks
+Unit::Instance::HasAdjacentMove
+Unit::Instance::HasAttacked
+Unit::Instance::HasBypassWallsPromotionClass
+Unit::Instance::HasEnableWallAttackPromotionClass
+Unit::Instance::IsFortifyable
+Unit::Instance::IsOperationDisabled
+Unit::Instance::RemoveBypassWallsPromotionClass
+Unit::Instance::RemoveEnableWallAttackPromotionClass
+Unit::Instance::SetAttacksRemaining
+Unit::Religion::GetInitiationYieldPopulation

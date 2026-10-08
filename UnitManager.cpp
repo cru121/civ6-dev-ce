@@ -1,4 +1,5 @@
 #include "UnitManager.h"
+#include "DevBridge.h"
 #include "Runtime.h"
 #include "ProxyTypes.h"
 
@@ -45,6 +46,7 @@ namespace UnitManager {
 	void RegisterMembers(hks::lua_State* L) {
 		std::cout << "Hooked UnitManager::PushMethods!\n";
 
+		DevBridge::PushExtra_IUnitManager(L, -2);   // Dev CE bridge methods
 		PushLuaMethod(L, lChangeOwner, "lChangeOwner", -2, "ChangeOwner");
 		PushLuaMethod(L, lGetInstance, "lGetInstance", -2, "GetInstance");
 		PushLuaMethod(L, lChangeBuildCharges, "lChangeBuildCharges", -2, "ChangeBuildCharges");

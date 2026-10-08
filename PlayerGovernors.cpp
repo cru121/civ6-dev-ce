@@ -1,4 +1,5 @@
 #include "PlayerGovernors.h"
+#include "DevBridge.h"
 #include "Runtime.h"
 #include "Game.h"
 #include <unordered_map>
@@ -157,6 +158,7 @@ namespace PlayerGovernors {
         PushLuaMethod(L, lChangeNeutralizedIndefinitely, "lChangeNeutralizedIndefinitely", stackOffset, "ChangeNeutralizedIndefinitely");
         PushLuaMethod(L, lGetNeutralizedIndefinitely, "lGetNeutralizedIndefinitely", stackOffset, "GetNeutralizedIndefinitely");
 
+        DevBridge::PushExtra_IPlayerGovernors(L, stackOffset);   // Dev CE bridge methods
         base_PushMethods(playerGovernors, L, stackOffset);
     }
 

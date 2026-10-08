@@ -1,4 +1,5 @@
 #include "Plot.h"
+#include "DevBridge.h"
 #include <set>
 #include "Runtime.h"
 
@@ -47,6 +48,7 @@ namespace Plot {
         PushLuaMethod(L, lSetAppeal, "lSetAppeal", stackOffset, "SetAppeal");
         PushLuaMethod(L, lLockAppeal, "lLockAppeal", stackOffset, "LockAppeal");
 
+        DevBridge::PushExtra_IMapPlot(L, stackOffset);   // Dev CE bridge methods
         base_PushMethods(L, stackOffset);
     }
 

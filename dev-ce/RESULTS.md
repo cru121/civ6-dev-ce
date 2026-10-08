@@ -148,3 +148,16 @@ Not tested: a save made AFTER calling a mutator (persistence of changed state), 
 The first player mod (no scripts, no InGameActions) did NOT load its GameCore: the game ran the vanilla GameCore_XP2_FinalRelease.dll (process modules) although the mod was enabled, and the Playground reported 'Dev CE not loaded'. Every working DLL mod (DevCE_Test, CE_Proc_Test, GW_Archive) has an InGameActions block. A mod with no in-game action is treated as front-end only and its GameCore is not used. Fix: the player mod now carries Scripts/DevCE_Loaded.lua (one print at the first turn: 'DevCE: player mod loaded; Dev CE methods PRESENT/MISSING'). Zip rebuilt. To be re-tested.
 * **Player mod re-test PASS**: with DevCE_Loaded.lua the game loads the Dev CE DLL from Mods\DevCE (process modules: GameCore_XP2_CE_FinalRelease.dll next to the vanilla one), DevBridge.log: version header, PE check OK, 251/251 ready, no FAULT; Lua.log: 'DevCE: player mod loaded; Dev CE methods PRESENT'.
 * Player mod in use: Playground 'Dev CE +1' on the spawned engineer: great-person actions 3 -> 4, unit charges unchanged, no FAULT (user also saw the engineer gain the action).
+
+## 2026-10-06 shared registration hook + Influence/Cities batch (BUILT / generated, NOT tested in game)
+* Problem: 27 functions of Player::Influence and Player::Cities were skipped because CE already hooks those two interfaces' PushMethods (MinHook cannot hook one address twice).
+* Fix: gen_bridge.py no longer emits its own hook for an interface whose registration rva CE hooks; it emits `DevBridge::PushExtra_<iface>(L, t)` instead (5 shared interfaces:
+  IPlayerInfluence, IPlayerCities, IPlayerGovernors, IMapPlot, IUnitManager). CE's own hooks in PlayerInfluence.cpp and PlayerCities.cpp call it right before the original
+  registration function. (Governors/Plot/UnitManager hooks do not call it yet: no exposures there; add the same one-line call when a set needs them.)
+* Base build now 279 entries (251 + 26 Influence/Cities + 2 oracle getters PlayerInfluence.DevOracle_CanGiveInfluence/CanReceiveInfluence). AddPalace stays skipped (City::Instance* argument).
+* Self-test accessors added: IPlayerInfluence = p:GetInfluence(), IPlayerCities = p:GetCities().
+* Test sets prepared (not built into the DLL): `gen_bridge.py --scope gap` finds 742 further functions the generator can expose; `make_sets.py` splits them into 7 themed sets
+  under dev-ce/data/sets (see SETS.md). Build with `gen_bridge.py --include set_b_influence,...`.
+* 2026-10-06: base + sets B and C built together: 375 entries (279 + 31 influence + 65 diplomacy, incl. oracles), 32 interfaces, DLL 2,778,112 bytes in build/ and mod/DevCE_Test (not deployed to Mods, not tested).
+* 2026-10-06: base + sets B, C, D built: 502 entries (DLL in build/ and mod/DevCE_Test, not deployed/tested). Added self-test accessors IPlayerEras = p:GetEras(), IGameReligion = Game.GetReligion().
+* 2026-10-06: base + ALL sets B-I built: 1034 entries on 39 interfaces (shared hooks: Influence 54, Cities 19, Governors 6, MapPlot 7). Not deployed/tested. Added self-test accessors ICityCitizens, ICityReligion, IPlayerGovernors, IPlayerWMDs, IMapPlot (unverified names).

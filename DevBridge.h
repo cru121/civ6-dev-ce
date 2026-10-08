@@ -53,6 +53,14 @@ namespace DevBridge {
 	extern const uintptr_t kEditPlayerRva;   // generated: Context::Globals::EditPlayer(PlayerTypes) -> Player::Instance&
 	extern const uint8_t kEditPlayerPrologue[8];
 
+	// Interfaces whose registration function CE already hooks (MinHook cannot hook one address twice): CE's own hook calls these (generated) right before it
+	// calls the original registration function.
+	void PushExtra_IPlayerInfluence(hks::lua_State* L, int t);
+	void PushExtra_IPlayerCities(hks::lua_State* L, int t);
+	void PushExtra_IPlayerGovernors(hks::lua_State* L, int t);
+	void PushExtra_IMapPlot(hks::lua_State* L, int t);
+	void PushExtra_IUnitManager(hks::lua_State* L, int t);
+
 	int Dispatch(hks::lua_State* L, int index);   // called by the generated thin wrappers
 	void InstallGeneratedHooks();                 // generated: hooks the PushMethods/RegisterMembers of each interface
 	void Log(const char* fmt, ...);               // appends to DevBridge.log next to the DLL (and the CE console)

@@ -1,5 +1,6 @@
 #include "PlayerCities.h"
 #include "Runtime.h"
+#include "DevBridge.h"
 
 namespace PlayerCities {
 	ProxyTypes::PushMethods base_PushMethods;
@@ -22,6 +23,7 @@ namespace PlayerCities {
 
 		PushLuaMethod(L, lAddGreatWork, "lAddGreatWork", stackOffset, "AddGreatWork");
 
+		DevBridge::PushExtra_IPlayerCities(L, stackOffset);   // Dev CE bridge methods
 		base_PushMethods(L, stackOffset);
 	}
 

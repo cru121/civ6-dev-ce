@@ -1,0 +1,33 @@
+# set_b_influence: City-state influence (rest of Player::Influence)
+# interfaces: IPlayerInfluence
+Player::Influence::AddLevyDiscountPercent
+Player::Influence::CanGiveTokensToAnyPlayer
+Player::Influence::CanReceiveInfluenceFrom
+Player::Influence::ChangeTokensReceived
+Player::Influence::ChangeVirtualTokensReceived
+Player::Influence::CheckForTokensEarned
+Player::Influence::CheckSendTokenNotification
+Player::Influence::CountTokensGivenToAnyPlayer
+Player::Influence::CountTributaries
+Player::Influence::DecrementCopyLuxuriesCount
+Player::Influence::DecrementCopyStrategicsCount
+Player::Influence::DoTurn
+Player::Influence::GetEnemyNonVirtualTokensReceived
+Player::Influence::GetLevyTurnLimit
+Player::Influence::GetMaxTokensReceived
+Player::Influence::GetTotalTokensReceived
+Player::Influence::GetVirtualTokensReceived
+Player::Influence::GetYieldFromGivenTokens
+Player::Influence::GetYieldFromTributaries
+Player::Influence::GetYieldModifierFromTributaries
+Player::Influence::GetYieldModifierPerTributary
+Player::Influence::GetYieldPerGivenToken
+Player::Influence::GetYieldPerTributary
+Player::Influence::GrantPlayerSuzerainship
+Player::Influence::IncrementCopyLuxuriesCount
+Player::Influence::IncrementCopyStrategicsCount
+Player::Influence::IncrementOpenBordersCount
+Player::Influence::RemoveLevyDiscountPercent
+Player::Influence::RemoveNonSuzerainTokens
+Player::Influence::ResetLevyTurnCounter
+Player::Influence::SetVirtualTokensReceived

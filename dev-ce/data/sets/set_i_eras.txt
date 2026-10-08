@@ -1,0 +1,28 @@
+# set_i_eras: the deferred Eras functions (decompiled 2026-10-06, see findings/topics/eras-transition-and-commemorations.md)
+# interfaces: IGameEras, IPlayerEras
+Game::Eras::Commemorate
+Game::Eras::UncommemorateAll
+Game::Eras::ComplimentPrideMoment
+Game::Eras::HandleDarkAgeCityLoss
+Game::Eras::DoGoldenAgesAndDarkAges
+Game::Eras::DoTurn
+Game::Eras::IsReadyForTransition
+Game::Eras::ChangeEraScore
+Game::Eras::GetPlayerGoldenAgeThreshold
+Game::Eras::GetPlayerNumAllowedCommemorations
+Game::Eras::HasActiveCommemoration
+Game::Eras::HasHeroicGoldenAge
+Game::Eras::HasGoldenAge
+Game::Eras::HasDarkAge
+Game::Eras::GetPlayerCurrentScore
+Game::Eras::GetCurrentEraMinimumEndTurn
+Game::Eras::GetCurrentEraMaximumEndTurn
+Game::Eras::GetCurrentEraNumPlayersMoreAdvanced
+Game::Eras::GetCurrentEraNumPlayersAsOrLessAdvanced
+Game::Eras::IsPlayerAlwaysAllowedCommemorationQuest
+Game::Eras::GetMinScoreForExtraEraScore
+Game::Eras::GetExtraScorePerPrideMoment
+Player::Eras::CalculateEra
+Player::Eras::DoTurnActivate
+Player::Eras::HasDarkAge
+Player::Eras::HasGoldenAge

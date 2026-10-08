@@ -182,8 +182,19 @@ def parse_sig(sig):
 # ---------------------------------------------------------------- candidate list
 if scope == 'candidates':
     cands = [('GameCore::%s::%s' % (c['class'], c['function'])).replace('GameCore::', '', 1) for c in json.load(open(os.path.join(DEV, 'data', 'candidates.json')))]
+elif scope == 'gap':
+    # every gap_list function (action-style, no Lua wrapper) with exposure 0 that the earlier scope did not consider: used to plan further sets
+    import csv
+    _done = {('%s::%s' % (c['class'], c['function'])) for c in json.load(open(os.path.join(DEV, 'data', 'candidates.json')))}
+    cands = sorted({'%s::%s' % (r['class'], r['function']) for r in csv.DictReader((l for l in open(os.path.join(ROOT, 'gap_list.tsv'), encoding='utf-8') if not l.startswith('#')), delimiter='	')
+                    if r['exposure'] == '0' and r['category'] in ('mutator', 'getter', 'check') and not r['class'].startswith(('Exports::', 'AI::', 'Configuration::', 'Data::'))} - _done)
 else:
     cands = sorted({r[0] for r in fi if r[7] and r[4] == 'game-logic'})
+# extra sets (dev-ce/data/sets/<name>.txt = one qualified C++ name per line) added on top of the scope with --include name1,name2
+if '--include' in sys.argv:
+    for _n in sys.argv[sys.argv.index('--include') + 1].split(','):
+        cands += [l.strip() for l in open(os.path.join(DEV, 'data', 'sets', _n + '.txt'), encoding='utf-8') if l.strip() and not l.startswith('#')]
+cands = list(dict.fromkeys(cands))
 
 exposed = []
 for qn in cands:
@@ -230,8 +241,6 @@ for qn in cands:
     iface, gi_rva, this_kind = pick[0]
     if iface not in register:
         skip(qn, 'interface has no mapped PushMethods/RegisterMembers'); continue
-    if register[iface][1] in ce_hooked:
-        skip(qn, 'interface registration already hooked by CE (needs a shared hook)'); continue
     if len(args) > 7:
         skip(qn, 'more than 7 arguments'); continue
     if len(args) > 6 and ret.strip() == 'FixedPoint':
@@ -343,7 +352,19 @@ L.append('')
 by_iface = collections.defaultdict(list)
 for i, e in enumerate(exposed):
     by_iface[e['iface']].append(i)
-ifaces = sorted(by_iface)
+ifaces = sorted(i for i in by_iface if register[i][1] not in ce_hooked)
+shared = sorted(i for i in register if register[i][1] in ce_hooked)   # CE hooks these registration functions itself (MinHook cannot hook an address twice):
+# CE's own hook calls DevBridge::PushExtra_<iface>(L, t) right before it calls the original function.
+for itf in shared:
+    L.append('void PushExtra_%s(hks::lua_State* L, int t) {' % itf)
+    for i in by_iface.get(itf, []):
+        e = exposed[i]
+        L.append('	if (gStates[%d].ok) { PushLuaMethod(L, l_%d, "lDev%s", t, "%s"); }' % (i, i, e['fn'], e['fn']))
+    if by_iface.get(itf):
+        L.append('	Log("[DevBridge] %s: %d methods added to the Lua object (shared hook)", "%s", %d);' % (itf, len(by_iface[itf]), itf, len(by_iface[itf])))
+    L.append('}')
+L.append('')
+print('shared-hook interfaces:', {i: len(by_iface.get(i, [])) for i in shared})
 for k, itf in enumerate(ifaces):
     kind, rva, has_this, sig = register[itf]
     Lname = 'b' if has_this else 'a'
@@ -389,8 +410,8 @@ manifest = [{'lua': '%s.%s' % (e['obj'] or e['iface'], e['fn']), 'iface': e['ifa
              'this_kind': e['this_kind'], 'oracle': e.get('oracle', False), 'vanilla': e.get('vanilla'), 'signature': e['sig'], 'args': [{'name': a[1], 'type': a[0], 'kind': a[2]} for a in e['args']], 'returns': e['ret'], 'index': i,
              'nav': ({'owner': e['nav'][0], 'offset': hex(e['nav'][1]), 'mode': {0: 'itself', 1: 'FAutoVariable', 2: 'embedded', 3: 'pointer', 4: 'static Get(player)', 5: 'static Game/Map accessor'}[e['nav'][2]]} if e.get('nav') else None)}
             for i, e in enumerate(exposed)]
-json.dump(manifest, open(os.path.join(DEV, 'data', 'exposed.json'), 'w', encoding='utf-8'), indent=1)
-json.dump({k: v for k, v in SKIP.items()}, open(os.path.join(DEV, 'data', 'skipped.json'), 'w', encoding='utf-8'), indent=1)
+json.dump(manifest, open((sys.argv[sys.argv.index('--manifest') + 1] if '--manifest' in sys.argv else os.path.join(DEV, 'data', 'exposed.json')), 'w', encoding='utf-8'), indent=1)
+json.dump({k: v for k, v in SKIP.items()}, open((sys.argv[sys.argv.index('--skipped') + 1] if '--skipped' in sys.argv else os.path.join(DEV, 'data', 'skipped.json')), 'w', encoding='utf-8'), indent=1)
 print('scope', scope, '| considered', len(cands), '| exposed', len(exposed), '| interfaces hooked', len(ifaces))
 for k, v in sorted(SKIP.items(), key=lambda kv: -len(kv[1])):
     print('  skipped %4d  %s' % (len(v), k))

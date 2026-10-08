@@ -2,7 +2,7 @@
 <Mod id="6b0d0b1c-7f61-4d6e-9d0a-3f2f5c1c7d11" version="1">
     <Properties>
         <Name>Dev CE test build</Name>
-        <Description>EXPERIMENTAL. Dev CE with its automatic self-tests: a fork of the Community Extension GameCore that adds 251 engine functions to existing Lua objects, plus scripts that test them at the start of your first turns (results in Lua.log lines containing "DevCE" and in DevBridge.log next to the DLL). SINGLE PLAYER ONLY, may desync multiplayer. Works only with Steam build 15038592 (disables itself otherwise). Incompatible with every other GameCore mod, including the Community Extension. Potentially unsafe: Unit.ChangeSightRange (hung the game once on a late-game save), PlayerTrade.Change*TradeDisabledCount (routes are not restored). Report problems with DevBridge.log.</Description>
+        <Description>EXPERIMENTAL. Dev CE with its automatic self-tests: a fork of the Community Extension GameCore that adds 1034 engine functions to existing Lua objects, plus scripts that test them at the start of your first turns (results in Lua.log lines containing "DevCE" and in DevBridge.log next to the DLL). SINGLE PLAYER ONLY, may desync multiplayer. Works only with Steam builds 15038592 and 15296837 (same GameCore DLL; disables itself otherwise). Incompatible with every other GameCore mod, including the Community Extension. Potentially unsafe: Unit.ChangeSightRange (hung the game once on a late-game save), PlayerTrade.Change*TradeDisabledCount (routes are not restored). Report problems with DevBridge.log.</Description>
         <Teaser>Dev CE native bridge with self-tests (experimental)</Teaser>
         <Authors>cru121, based on the Community Extension by Wild-W</Authors>
         <CompatibleVersions>1.2,2.0</CompatibleVersions>

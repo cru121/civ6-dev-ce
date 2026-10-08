@@ -1,5 +1,6 @@
 #include "PlayerInfluence.h"
 #include "Runtime.h"
+#include "DevBridge.h"
 
 namespace PlayerInfluence {
     ProxyTypes::PushMethods base_PushMethods;
@@ -39,6 +40,7 @@ namespace PlayerInfluence {
         PushLuaMethod(L, lSetPoints, "lSetPoints", stackOffset, "SetPoints");
         PushLuaMethod(L, lAdjustPoints, "lAdjustPoints", stackOffset, "AdjustPoints");
 
+        DevBridge::PushExtra_IPlayerInfluence(L, stackOffset);   // Dev CE bridge methods
         base_PushMethods(L, stackOffset);
     }
 
