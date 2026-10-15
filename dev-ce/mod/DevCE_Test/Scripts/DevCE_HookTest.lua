@@ -137,6 +137,19 @@ local function runTests()
     debug.sethook()
     check("coroutine with an inherited hook mask", ok and val == 5050, tostring(ok) .. "," .. tostring(val))
 
+    -- (k) debug.sethook(thread, ...) / debug.gethook(thread): hook a suspended coroutine from outside; the main thread must see no events
+    local mainEv, coEv = 0, 0
+    local co2 = coroutine.create(function() local z = 0 for i = 1, 20 do z = z + i end coroutine.yield(z) return z end)
+    debug.sethook(co2, function() coEv = coEv + 1 end, "l")
+    local gh2, gm2 = debug.gethook(co2)
+    local mh = debug.gethook()
+    local ok2, v2 = coroutine.resume(co2)
+    debug.sethook(co2)
+    local gh3 = debug.gethook(co2)
+    check("thread argument: gethook(thread) sees the hook, the running state does not", type(gh2) == "function" and gm2 == "l" and mh == nil, tostring(gm2))
+    check("thread argument: coroutine hooked from outside produced line events", ok2 and v2 == 210 and coEv >= 3, tostring(v2) .. "," .. coEv)
+    check("thread argument: hook removed with sethook(thread)", gh3 == nil)
+
     -- (j) cost: loop of 3M iterations before the patch existed, with the patch but no hook, with a count hook, with a line hook (informational)
     local noHook, xx = timedLoop(3000000)
     check("loop result with the patch installed", xx == 4500001500000, xx)

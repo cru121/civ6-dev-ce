@@ -51,6 +51,7 @@ struct Api {
 	int(__cdecl* sethook)(lua_State*, HookFn, int, int) = nullptr;
 	void(__cdecl* checkstack)(lua_State*, int, const char*) = nullptr;
 	int(__cdecl* type)(lua_State*, int) = nullptr;
+	lua_State*(__cdecl* tothread)(lua_State*, int) = nullptr;
 	const char* (__cdecl* typenameOf)(lua_State*, int) = nullptr;
 	void(__cdecl* settop)(lua_State*, int) = nullptr;
 	int(__cdecl* gettop)(lua_State*) = nullptr;
@@ -111,6 +112,10 @@ bool IsTable(lua_State* L, int idx) {
 bool IsNoneOrNil(lua_State* L, int idx) {
 	const char* n = g_api.typenameOf(L, g_api.type(L, idx));
 	return !n || std::strcmp(n, "nil") == 0 || std::strcmp(n, "no value") == 0;
+}
+bool IsThread(lua_State* L, int idx) {
+	const char* n = g_api.typenameOf(L, g_api.type(L, idx));
+	return n && std::strcmp(n, "thread") == 0;
 }
 bool IsNumber(lua_State* L, int idx) {
 	const char* n = g_api.typenameOf(L, g_api.type(L, idx));
@@ -401,42 +406,46 @@ bool Install() {
 
 // ---- Lua API: debug.sethook / debug.gethook (PUC Lua 5.1 semantics for the current thread) -----------------------------------------------------------
 int __cdecl l_sethook(lua_State* L) {
-	// debug.sethook([hook, mask [, count]])  - the thread argument of PUC Lua is not supported (hooks apply to the running state; coroutines created later inherit the mask)
+	// debug.sethook([thread,] [hook, mask [, count]])  - PUC Lua 5.1 semantics; with a thread argument the hook is set on that coroutine
+	// (it is called on the thread that runs the hooked code, so the Lua hook function sees the coroutine as its running state).
 	if (!InitApi()) { hks::error(L, "debug.sethook: HavokScript API not available"); return 0; }
-	if (IsNoneOrNil(L, 1)) {                                                   // remove the hook
-		g_api.sethook(L, nullptr, 0, 0);
+	int arg = 0;
+	lua_State* L1 = L;
+	if (IsThread(L, 1)) { arg = 1; L1 = g_api.tothread(L, 1); if (!L1) { hks::error(L, "debug.sethook: bad thread"); return 0; } }
+	if (IsNoneOrNil(L, arg + 1)) {                                             // remove the hook
+		g_api.sethook(L1, nullptr, 0, 0);
 		hks::getfield(L, hks::LUA_REGISTRYINDEX, HOOKKEY);
-		if (IsTable(L, -1)) { hks::pushlightuserdata(L, L); g_api.pushnil(L); g_api.rawset(L, -3); }
+		if (IsTable(L, -1)) { hks::pushlightuserdata(L, L1); g_api.pushnil(L); g_api.rawset(L, -3); }
 		g_api.settop(L, -2);
 		ClearCaches();
 		return 0;
 	}
-	if (!IsFunction(L, 1)) { hks::error(L, "debug.sethook: bad argument #1 (function expected)"); return 0; }
+	if (!IsFunction(L, arg + 1)) { hks::error(L, "debug.sethook: bad argument (function expected)"); return 0; }
 	size_t len = 0;
-	const char* smask = g_api.tolstring(L, 2, &len);
-	if (!smask) { hks::error(L, "debug.sethook: bad argument #2 (string expected)"); return 0; }
-	int count = IsNumber(L, 3) ? static_cast<int>(g_api.tonumber(L, 3)) : 0;
+	const char* smask = g_api.tolstring(L, arg + 2, &len);
+	if (!smask) { hks::error(L, "debug.sethook: bad mask argument (string expected)"); return 0; }
+	int count = IsNumber(L, arg + 3) ? static_cast<int>(g_api.tonumber(L, arg + 3)) : 0;
 	int mask = 0;
 	for (const char* p = smask; *p; ++p) {
 		if (*p == 'c') mask |= MASK_CALL; else if (*p == 'r') mask |= MASK_RET; else if (*p == 'l') mask |= MASK_LINE;
 	}
 	if (count > 0) mask |= MASK_COUNT; else count = 0;
-	if (mask == 0) { g_api.sethook(L, nullptr, 0, 0); return 0; }
+	if (mask == 0) { g_api.sethook(L1, nullptr, 0, 0); return 0; }
 	if (!Install()) { hks::error(L, "debug.sethook: the VM patch could not be installed (see DevBridge.log)"); return 0; }
 
-	hks::getfield(L, hks::LUA_REGISTRYINDEX, HOOKKEY);                         // registry[HOOKKEY][lightuserdata(L)] = hook
+	hks::getfield(L, hks::LUA_REGISTRYINDEX, HOOKKEY);                         // registry[HOOKKEY][lightuserdata(L1)] = hook
 	if (!IsTable(L, -1)) {
 		g_api.settop(L, -2);
 		hks::createtable(L, 0, 0);
 		hks::pushvalue(L, -1);
 		hks::setfield(L, hks::LUA_REGISTRYINDEX, HOOKKEY);
 	}
-	hks::pushlightuserdata(L, L);
-	hks::pushvalue(L, 1);
+	hks::pushlightuserdata(L, L1);
+	hks::pushvalue(L, arg + 1);
 	g_api.rawset(L, -3);
 	g_api.settop(L, -2);
 	ClearCaches();
-	g_api.sethook(L, &HookF, mask, count);
+	g_api.sethook(L1, &HookF, mask, count);
 	return 0;
 }
 
@@ -447,14 +456,16 @@ int __cdecl l_clockms(lua_State* L) {
 }
 
 int __cdecl l_gethook(lua_State* L) {
-	// debug.gethook() -> hook function (or nil), mask string, count  (PUC Lua 5.1 db_gethook, for the running state)
+	// debug.gethook([thread]) -> hook function (or nil), mask string, count  (PUC Lua 5.1 db_gethook)
 	if (!InitApi()) { hks::error(L, "debug.gethook: HavokScript API not available"); return 0; }
-	const int mask = I32(L, OFF_MASK), count = I32(L, OFF_COUNT);
-	HookFn hook = *reinterpret_cast<HookFn*>(LB(L) + OFF_HOOKFN);
+	lua_State* L1 = L;
+	if (IsThread(L, 1)) { L1 = g_api.tothread(L, 1); if (!L1) { hks::error(L, "debug.gethook: bad thread"); return 0; } }
+	const int mask = I32(L1, OFF_MASK), count = I32(L1, OFF_COUNT);
+	HookFn hook = *reinterpret_cast<HookFn*>(LB(L1) + OFF_HOOKFN);
 	if (!hook) g_api.pushnil(L);
 	else {
 		hks::getfield(L, hks::LUA_REGISTRYINDEX, HOOKKEY);
-		if (IsTable(L, -1)) { hks::pushlightuserdata(L, L); g_api.rawget(L, -2); }     // the registry table stays below the three results
+		if (IsTable(L, -1)) { hks::pushlightuserdata(L, L1); g_api.rawget(L, -2); }     // the registry table stays below the three results
 		else g_api.pushnil(L);
 	}
 	char buf[4]; int n = 0;
