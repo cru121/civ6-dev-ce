@@ -328,9 +328,13 @@ void* AllocNear(uintptr_t target, size_t size) {
 	for (uintptr_t off = gran; off < limit; off += gran) {
 		for (int dir = 0; dir < 2; dir++) {
 			uintptr_t cand = dir == 0 ? (target & ~(gran - 1)) - off : (target & ~(gran - 1)) + off;
-			if (dir == 0 && cand > target) continue;
+			if (dir == 0 && cand > target) continue;                                // unsigned wrap-around (module loaded low)
+			if (cand < 0x10000) continue;                                           // VirtualAlloc(NULL) would pick ANY address (first failure seen: HavokScript at 0x9F0000, target - off == 0)
 			void* p = VirtualAlloc(reinterpret_cast<void*>(cand), size, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
-			if (p) return p;
+			if (!p) continue;
+			const intptr_t dist = static_cast<intptr_t>(reinterpret_cast<uintptr_t>(p)) - static_cast<intptr_t>(target);
+			if (dist > 0x7FF00000 || dist < -0x7FF00000) { VirtualFree(p, 0, MEM_RELEASE); continue; }   // never hand out memory a rel32 jmp cannot reach
+			return p;
 		}
 	}
 	return nullptr;

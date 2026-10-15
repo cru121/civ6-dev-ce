@@ -1,6 +1,6 @@
 # Dev CE Lua debugger over a socket (plan)
 
-Status: PLAN, nothing built. Written 2026-10-15 on top of the working native hooks (`LuaHooks.cpp`, branch `feature/lua-hooks`, `DESIGN_LUA_HOOKS.md`, self-test 24/24). Reference implementation of the behaviour: the Frida debugger `frida/live/cmds/luadbg.js` + `frida/live/dap_adapter.py` (breakpoints, step in/over/out, stack, locals, value inspector, `debug.c_breakpoint`, DAP front end).
+Status: IMPLEMENTED in 0.3.0 (`LuaDebugger.cpp`, D0-D4); this document is the plan, the "D0 .. D4 RESULTS" sections below record what was built and measured. Written 2026-10-15 on top of the working native hooks (`LuaHooks.cpp`, branch `feature/lua-hooks`, `DESIGN_LUA_HOOKS.md`, self-test 24/24). Reference implementation of the behaviour: the Frida debugger `frida/live/cmds/luadbg.js` + `frida/live/dap_adapter.py` (breakpoints, step in/over/out, stack, locals, value inspector, `debug.c_breakpoint`, DAP front end).
 
 ## Goal
 Attach an editor / small CLI to a running game with the Dev CE DLL loaded and no Frida: set breakpoints by file and line, stop, look at the stack, locals, upvalues and tables, evaluate expressions, step, continue. Opt-in, loopback only.

@@ -1,6 +1,6 @@
 # Design: native Lua hooks for Dev CE (`debug.sethook` / `debug.gethook` that really fire)
 
-Status: PLAN, nothing built. Written 2026-10-15 after the Frida debugger (`frida/live/cmds/luadbg.js`) proved the approach. Build 15038592 / 15296837 only (same HavokScript_FinalRelease.dll). Background: `findings/topics/lua-debugger-and-tuner.md`, handoff notes for the profiler: `findings/topics/lua-hook-engine-handoff-for-profiler.md`.
+Status: IMPLEMENTED in 0.3.0 (`LuaHooks.cpp`); this document is the original plan, the sections "M0 / M1 / M2 RESULTS" below record what was measured and built. Written 2026-10-15 after the Frida debugger (`frida/live/cmds/luadbg.js`) proved the approach. Build 15038592 / 15296837 only (same HavokScript_FinalRelease.dll). Background: `findings/topics/lua-debugger-and-tuner.md`, handoff notes for the profiler: `findings/topics/lua-hook-engine-handoff-for-profiler.md`.
 
 ## Goal
 Lua scripts (and WildW's CE `l_sethook`/`l_gethook` registration, unchanged) can call `debug.sethook(f, "lcr", count)` in any state that has the `debug` table and get call / return / line / count events, like PUC Lua 5.1. Also the base for a native debugger and profiler (same detour).
@@ -86,3 +86,5 @@ Lua scripts (and WildW's CE `l_sethook`/`l_gethook` registration, unchanged) can
 - Not covered: C functions called from C (lua_call, pcall's callee, metamethods) do not pass the CALL handler; tail returns; variants A and C of the interpreter (never ran in our measurements).
 - Native line lookup: deliberately NOT done. The pc->line cache already makes repeated lines free (0.3 us per event) and the getstack/getinfo miss path is only hit once per pc.
 - Tools: `tools/dmp_exc.py FILE.dmp` prints exception code, faulting module+RVA and registers of a minidump (the game's own crash package is discarded, but Windows writes `%LOCALAPPDATA%\CrashDumps\CivilizationVI.exe.PID.dmp` for hard crashes).
+
+- Fixed before the 0.3.0 release: `AllocNear` could hand out memory outside the +-2 GB jmp range. When HavokScript is mapped at a low address (seen: base 0x9F0000) `target - off` becomes exactly 0 for one offset and `VirtualAlloc(NULL, ...)` picks any address; that was the one unexplained "stub out of jmp range" failure. Candidates below 0x10000 are skipped and the distance of the result is verified.
