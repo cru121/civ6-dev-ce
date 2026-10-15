@@ -59,11 +59,13 @@ std::atomic<bool> g_pauseReq{ false };
 std::atomic<int> g_stepMode{ 0 };                     // 0 none, 1 in, 2 over, 3 out
 std::atomic<lua_State*> g_stepL{ nullptr };
 std::atomic<long long> g_stepDepth{ 0 };
+std::atomic<uint64_t> g_lineBits[1024];                 // bit (line & 0xFFFF) set for every breakpoint line: lets the VM skip the hook for all other lines
 std::atomic<int> g_armed{ 0 };                         // states that armed themselves (diagnostics)
 
 std::atomic<SOCKET> g_client{ INVALID_SOCKET };
 std::mutex g_sendMu;
 std::atomic<bool> g_started{ false };
+std::atomic<bool> g_demo{ false };                    // marker file line 2 == "demo": the demo script (DevCE_DebugDemo.lua) runs
 std::atomic<int> g_port{ DEFAULT_PORT };
 
 // ---- tiny JSON helpers (requests are flat objects with string / integer members) ---------------------------------------------------------------------------
@@ -127,6 +129,11 @@ void Reply(int id, bool ok, const std::string& members) {
 
 void __cdecl DbgHook(lua_State* L, void* ar);
 
+std::string StatsJson() {
+	const LuaHooks::Stats s = LuaHooks::GetStats();
+	return ",\"fetchSlow\":" + std::to_string(s.fetchSlow) + ",\"lineDelivered\":" + std::to_string(s.lineDelivered) + ",\"lineFiltered\":" + std::to_string(s.lineFiltered);
+}
+
 long long CallDepth(lua_State* L) {                    // callinfo entries (24 bytes): current - base, same rule as LuaHooks
 	const uint8_t* b = reinterpret_cast<const uint8_t*>(L);
 	return (*reinterpret_cast<const long long*>(b + 0x28) - *reinterpret_cast<const long long*>(b + 0x18)) / 24;
@@ -144,6 +151,11 @@ bool BpMatches(const std::string& src, const Bp& b) {
 	return src.size() == b.file.size() || b.file[0] == '/' || src[src.size() - b.file.size() - 1] == '/';
 }
 
+void RebuildLineBits() {                               // call with g_bpMu held
+	for (auto& w : g_lineBits) w.store(0, std::memory_order_relaxed);
+	for (const Bp& b : g_bps) { const unsigned l = static_cast<unsigned>(b.line) & 0xFFFF; g_lineBits[l >> 6].fetch_or(1ull << (l & 63), std::memory_order_relaxed); }
+}
+
 // Arm mode: while breakpoints, a pause request or a step exist, every state that runs Lua gets the line hook ON ITS OWN THREAD (LuaHooks arm handler). The
 // server thread never touches another thread's lua_State. Idle hooks remove themselves at their next line event (DbgHook).
 void UpdateArm() { LuaHooks::SetArmFlag(g_hasBps.load() || g_pauseReq.load() || g_stepMode.load() != 0); }
@@ -154,7 +166,7 @@ void __cdecl ArmSelf(lua_State* L) {
 }
 
 void ResetSession() {                                  // client gone: no breakpoints, no stepping; armed hooks remove themselves
-	{ std::lock_guard<std::mutex> g(g_bpMu); g_bps.clear(); }
+	{ std::lock_guard<std::mutex> g(g_bpMu); g_bps.clear(); RebuildLineBits(); }
 	g_hasBps = false; g_pauseReq = false; g_stepMode = 0; g_stepL = nullptr;
 	UpdateArm();
 }
@@ -435,6 +447,17 @@ if (hit) StopHere(L, "breakpoint");
 	}
 }
 
+// Line filter used by the VM stub (LuaHooks::SetLineFilter): idle hooks get one event so DbgHook can remove them; otherwise only stepping / pause / breakpoint lines.
+bool __cdecl LineWanted(lua_State* L, int line) {
+	const bool pause = g_pauseReq.load();
+	const int sm = g_stepMode.load();
+	const bool bps = g_hasBps.load();
+	if (!bps && !pause && sm == 0) return true;
+	if (pause || (sm != 0 && g_stepL.load() == L)) return true;
+	const unsigned l = static_cast<unsigned>(line) & 0xFFFF;
+	return (g_lineBits[l >> 6].load(std::memory_order_relaxed) >> (l & 63)) & 1;
+}
+
 // ---- server thread ------------------------------------------------------------------------------------------------------------------------------------------
 void HandleLine(const std::string& line) {
 	int id = 0; GetInt(line, "id", id);
@@ -442,7 +465,7 @@ void HandleLine(const std::string& line) {
 	if (cmd == "status") {
 		std::lock_guard<std::mutex> g(g_mu);
 		char st[40]; std::snprintf(st, sizeof(st), "%p", static_cast<void*>(g_pausedL));
-		Reply(id, true, std::string("\"paused\":") + (g_paused ? "true" : "false") + ",\"state\":\"" + (g_paused ? st : "") + "\",\"reason\":\"" + Esc(g_pausedReason) + "\",\"armedStates\":" + std::to_string(g_armed.load()));
+		Reply(id, true, std::string("\"paused\":") + (g_paused ? "true" : "false") + ",\"state\":\"" + (g_paused ? st : "") + "\",\"reason\":\"" + Esc(g_pausedReason) + "\",\"armedStates\":" + std::to_string(g_armed.load()) + StatsJson());
 	} else if (cmd == "break" || cmd == "clear" || cmd == "breaks") {
 		std::string file; int ln = 0; GetStr(line, "file", file); GetInt(line, "line", ln);
 		{
@@ -460,6 +483,7 @@ void HandleLine(const std::string& line) {
 				else { const std::string nf = NormPath(file.data(), file.size()); g_bps.erase(std::remove_if(g_bps.begin(), g_bps.end(), [&](const Bp& b) { return b.file == nf && (ln <= 0 || b.line == ln); }), g_bps.end()); }
 			}
 			g_hasBps = !g_bps.empty();
+			RebuildLineBits();
 			std::string list = "\"breakpoints\":[";
 			for (size_t i = 0; i < g_bps.size(); i++) list += (i ? "," : "") + std::string("{\"file\":\"") + Esc(g_bps[i].file) + "\",\"line\":" + std::to_string(g_bps[i].line) + ",\"cond\":\"" + Esc(g_bps[i].cond) + "\",\"log\":\"" + Esc(g_bps[i].log) + "\",\"hit\":" + std::to_string(g_bps[i].hit) + ",\"hits\":" + std::to_string(g_bps[i].hits) + "}";
 			Reply(id, true, list + "]");
@@ -527,6 +551,7 @@ void Start(int port) {
 	if (g_started.exchange(true)) return;
 	g_port = port;
 	LuaHooks::SetArmHandler(ArmSelf);
+	LuaHooks::SetLineFilter(DbgHook, LineWanted);
 	std::thread(ServerMain).detach();
 }
 
@@ -551,6 +576,19 @@ int __cdecl l_wait(lua_State* L) {                                           // 
 	return 1;
 }
 
+int __cdecl l_mark(lua_State* L) {                                           // DevCE_DebugMark(name): log + event with the slow-path counters (turn-cost measurements)
+	const Api* A = LuaHooks::GetApi();
+	std::string name = "mark";
+	if (A && A->gettop(L) >= 1) { size_t n = 0; const char* s = A->tolstring(L, 1, &n); if (s) name.assign(s, n); }
+	const LuaHooks::Stats s = LuaHooks::GetStats();
+	const long long ms = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+	DevBridge::Log("[Mark] %s t=%lld fetchSlow=%llu lineDelivered=%llu lineFiltered=%llu", name.c_str(), ms, s.fetchSlow, s.lineDelivered, s.lineFiltered);
+	Send("{\"event\":\"mark\",\"name\":\"" + Esc(name) + "\",\"t\":" + std::to_string(ms) + StatsJson() + "}");
+	return 0;
+}
+
+int __cdecl l_demo(lua_State* L) { hks::pushnumber(L, g_demo.load() ? 1.0 : 0.0); return 1; }
+
 int __cdecl l_active(lua_State* L) { hks::pushnumber(L, g_started.load() ? 1.0 : 0.0); return 1; }
 
 void ReadMarker() {
@@ -567,6 +605,8 @@ void ReadMarker() {
 	char line[64] = { 0 };
 	int port = DEFAULT_PORT;
 	if (std::fgets(line, sizeof(line), f)) { const int p = std::atoi(line); if (p >= 1024 && p <= 65535) port = p; }
+	char l2[32] = { 0 };
+	if (std::fgets(l2, sizeof(l2), f) && std::strncmp(l2, "demo", 4) == 0) g_demo = true;
 	std::fclose(f);
 	Start(port);
 }
@@ -583,6 +623,8 @@ void RegisterGlobals(lua_State* L) {
 	PushLuaMethod(L, l_listen, "l_debuglisten", hks::LUA_GLOBAL, "DevCE_DebugListen");
 	PushLuaMethod(L, l_wait, "l_debugwait", hks::LUA_GLOBAL, "DevCE_DebugWait");
 	PushLuaMethod(L, l_active, "l_debugactive", hks::LUA_GLOBAL, "DevCE_DebugActive");
+	PushLuaMethod(L, l_demo, "l_debugdemo", hks::LUA_GLOBAL, "DevCE_DebugDemo");
+	PushLuaMethod(L, l_mark, "l_debugmark", hks::LUA_GLOBAL, "DevCE_DebugMark");
 	static std::once_flag once;
 	std::call_once(once, ReadMarker);
 }

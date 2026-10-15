@@ -146,6 +146,9 @@ thread_local int t_inHook = 0;                // no hooks while a hook runs on t
 thread_local lua_State* t_cacheL = nullptr;
 thread_local HookState* t_cacheSt = nullptr;
 thread_local uint32_t t_cacheGen = 0;
+Stats g_stats = { 0, 0, 0 };
+LineFilter g_filterFn = nullptr;
+void* g_filterHook = nullptr;
 ArmHandler g_armFn = nullptr;                // see SetArmFlag
 volatile uint8_t* g_armFlag = nullptr;       // byte in the stub block, read by the stub's fast path
 
@@ -263,6 +266,7 @@ void __cdecl OnCRet(lua_State* L) { if (!t_inHook && (I32(L, OFF_MASK) & MASK_RE
 // Called by the stub for every VM instruction of a state whose hook mask is non-zero. Returns non-zero when a hook ran (the stub then reloads the frame base).
 int __cdecl OnFetch(lua_State* L, const uint32_t* pc) {
 	if (t_inHook) return 0;
+	++g_stats.fetchSlow;
 	const int mask = I32(L, OFF_MASK);
 	if (!mask || !*reinterpret_cast<void**>(LB(L) + OFF_HOOKFN)) {
 		if (g_armFlag && *g_armFlag && g_armFn) g_armFn(L);                      // armed mode: let the debugger hook this state (we are on its own thread)
@@ -292,6 +296,8 @@ int __cdecl OnFetch(lua_State* L, const uint32_t* pc) {
 		int& prev = st->lines[slot];
 		// PUC Lua: a line event when the line changes or the pc jumps backwards (a loop iteration on the same line)
 		if (line != prev || (last && !grew && pc <= last)) { lineDue = true; prev = line; }
+		if (lineDue && g_filterFn && *reinterpret_cast<void**>(LB(L) + OFF_HOOKFN) == g_filterHook && !g_filterFn(L, line)) { lineDue = false; ++g_stats.lineFiltered; }
+		else if (lineDue) ++g_stats.lineDelivered;
 	}
 	if (!(callDue || lineDue || countDue || retDue)) return 0;
 	if (line < 0 && (retDue || callDue || countDue)) line = LineOf(L, pc);
@@ -618,6 +624,8 @@ bool SetNativeHook(lua_State* L, NativeHook fn, int mask, int count, bool clearC
 }
 
 void SetArmHandler(ArmHandler fn) { g_armFn = fn; }
+Stats GetStats() { return g_stats; }
+void SetLineFilter(NativeHook forHook, LineFilter fn) { g_filterHook = reinterpret_cast<void*>(forHook); g_filterFn = fn; }
 
 bool SetArmFlag(bool on) {
 	if (on && !Install()) return false;

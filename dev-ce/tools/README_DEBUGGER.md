@@ -4,7 +4,7 @@ Works with the Dev CE GameCore DLL (build 15038592 / 15296837 of Civ VI). Not an
 
 ## Switch it on
 1. Install the Dev CE DLL as usual (the `GameCore_XP2_CE_FinalRelease.dll` of your mod).
-2. Create a text file `DevCE_Debug.txt` next to that DLL. Optional first line: the TCP port (default 4320). Remove the file to switch the debugger off.
+2. Create a text file `DevCE_Debug.txt` next to that DLL. Optional first line: the TCP port (default 4320); a second line `demo` also enables the demo script of the DevCE_Test mod. Remove the file to switch the debugger off.
 3. Start the game. The log (`DevBridge.log` next to the DLL) says `[LuaDebugger] listening on 127.0.0.1:4320`. The server only accepts connections from the same PC.
 
 ## Command line client

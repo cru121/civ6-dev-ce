@@ -4,7 +4,7 @@ server is up, because dev-ce/mod/DevCE_Test/Scripts/DevCE_DebugDemo.lua waits 60
 
     python devce_dap_selftest.py [--retry 600]
 
-Needs the DevCE_Test mod deployed and the marker file DevCE_Debug.txt next to the DLL. Prints PASS / FAIL per check, exit code 0 when all pass.
+Needs the DevCE_Test mod deployed and the marker file DevCE_Debug.txt next to the DLL with two lines: 4320 and demo. Prints PASS / FAIL per check, exit code 0 when all pass.
 Line numbers refer to DevCE_DebugDemo.lua (22 / 23 in probe(), 26 / 27 in work()).
 """
 import argparse, json, os, queue, subprocess, sys, threading, time

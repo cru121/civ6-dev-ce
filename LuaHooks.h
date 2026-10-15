@@ -49,6 +49,15 @@ namespace LuaHooks {
 	void SetArmHandler(ArmHandler fn);
 	bool SetArmFlag(bool on);
 
+	// Statistics of the slow path (plain counters, races only lose counts): VM instructions that went through the C++ side (hooked states, or any state while the arm
+	// flag is set), line events delivered to the hook, line events suppressed by the line filter.
+	struct Stats { unsigned long long fetchSlow, lineDelivered, lineFiltered; };
+	Stats GetStats();
+	// Line filter for ONE native hook function: while hook `forHook` is installed on a state, line events are only delivered when fn(L, line) is true. Saves the cost of
+	// building the lua_Debug record and entering the hook for lines that cannot matter (breakpoints elsewhere, no stepping).
+	typedef bool(__cdecl* LineFilter)(hks::lua_State*, int line);
+	void SetLineFilter(NativeHook forHook, LineFilter fn);
+
 	// Adds debug.sethook / debug.gethook to the global `debug` table of this state (creating the table with HavokScript's own luaopen_debug if it is missing).
 	void RegisterGlobals(hks::lua_State* L);
 

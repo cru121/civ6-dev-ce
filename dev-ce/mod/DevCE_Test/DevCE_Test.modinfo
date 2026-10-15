@@ -30,6 +30,10 @@
             <Properties><LoadOrder>13</LoadOrder></Properties>
             <File>Scripts/DevCE_DebugDemo.lua</File>
         </AddGameplayScripts>
+        <AddGameplayScripts id="DevCE_TurnTimer">
+            <Properties><LoadOrder>14</LoadOrder></Properties>
+            <File>Scripts/DevCE_TurnTimer.lua</File>
+        </AddGameplayScripts>
         <AddGameplayScripts id="DevCE_HookTest">
             <Properties><LoadOrder>12</LoadOrder></Properties>
             <File>Scripts/DevCE_HookTest.lua</File>
@@ -42,5 +46,6 @@
         <File>Scripts/CE_Proc.lua</File>
         <File>Scripts/DevCE_HookTest.lua</File>
         <File>Scripts/DevCE_DebugDemo.lua</File>
+        <File>Scripts/DevCE_TurnTimer.lua</File>
     </Files>
 </Mod>

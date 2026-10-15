@@ -1,7 +1,7 @@
--- DevCE_DebugDemo.lua: target for the Dev CE socket debugger (dev-ce/tools/devce_dbg.py). Does nothing unless the debugger server is running
--- (marker file DevCE_Debug.txt next to the DLL). Waits up to 60 s for a client, then runs: a call chain that stops at debug.c_breakpoint(), probe()
+-- DevCE_DebugDemo.lua: target for the Dev CE socket debugger (dev-ce/tools/devce_dbg.py). Does nothing unless the marker file has the line "demo" (DevCE_DebugDemo() == 1)
+-- (second line of DevCE_Debug.txt next to the DLL). Waits up to 60 s for a client, then runs: a call chain that stops at debug.c_breakpoint(), probe()
 -- (locals, an upvalue and nested tables to inspect), a loop calling work() three times, and a busy loop of up to 25 s (target for `pause`).
-if DevCE_DebugActive and DevCE_DebugActive() == 1 then
+if DevCE_DebugDemo and DevCE_DebugDemo() == 1 then
     DemoMarker = "hello from the demo"
     local upv = 100
     local function inner(a, b)
