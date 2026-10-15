@@ -35,6 +35,18 @@ constexpr size_t SITE_OFFSET_IN_CHECK = 10;                                    /
 constexpr size_t SITE_PATCH_LEN = 5;                                           // jmp rel32
 constexpr size_t SITE_DISPLACED_LEN = 7;                                       // mov [rdi+0x30],rax (4) + mov rsi,rax (3): the stub re-executes them
 
+// C-function calls: the interpreter's CALL handler runs `inc dword [L+0x98]` (C call depth) right before `call rbx` (the C function) and, after it returns,
+// `dec dword [L+0x98]; test eax,eax; js error_path`. Call hook = the `inc` (6 bytes -> jmp rel32 + nop); return hook = `test eax,eax; js` (8 bytes, re-encoded in the stub).
+// Not patched: the `call rbx` and the `dec` after it. Their address is the C function's return address, and the Windows x64 unwinder treats a `jmp` at a return
+// address as an epilogue (first attempt: error() inside a hook died with STATUS_BAD_STACK). No stub frame exists while the C function runs, either.
+// Calls made from C code (lua_call, pcall, metamethods) do not pass here.
+constexpr uintptr_t CPRE_RVA = 0x6b8c6, CPOST_RVA = 0x6b8f8, CCHECK_RVA = 0x6b8c2;
+constexpr size_t CCHECK_LEN = 62;
+const uint8_t CCHECK_BYTES[CCHECK_LEN] = {
+	0x48,0x8b,0x5b,0x10, 0xff,0x87,0x98,0x00,0x00,0x00, 0x81,0xbf,0x98,0x00,0x00,0x00,0x80,0x00,0x00,0x00, 0x7e,0x15, 0x41,0xb8,0x80,0x00,0x00,0x00,
+	0x48,0x8d,0x15,0xcb,0x74,0x00,0x00, 0x48,0x8b,0xcf, 0xe8,0x33,0x79,0xfc,0xff, 0x48,0x8b,0xcf, 0xff,0xd3, 0xff,0x8f,0x98,0x00,0x00,0x00, 0x85,0xc0, 0x0f,0x88,0xb8,0x1e,0x00,0x00 };
+constexpr size_t CPRE_LEN = 6, CPOST_LEN = 8;
+
 // lua_State field offsets (HavokScript_FinalRelease.dll 15038592 / 15296837; confirmed with Frida, see DESIGN_LUA_HOOKS.md)
 constexpr int OFF_CI_BASE = 0x18, OFF_CI_CUR = 0x28, OFF_PC = 0x30, OFF_TOP = 0x48, OFF_BASE = 0x50;
 constexpr int OFF_HOOKPC = 0x38, OFF_HOOKIDX = 0x40;   // read by the frame-pc lookup (0x28180): frame index == [L+0x40] -> pc = [L+0x38]
@@ -241,6 +253,26 @@ void CallHook(lua_State* L, int event, int line, const uint32_t* pc) {
 	--t_inHook;
 }
 
+// Call / return hook for a C function (frame already pushed by the interpreter, level 0 = the C function): no pc, no line.
+void CallHookC(lua_State* L, int event) {
+	HookFn hook = *reinterpret_cast<HookFn*>(LB(L) + OFF_HOOKFN);
+	if (!hook) return;
+	++t_inHook;
+	const int64_t topOff = I64(L, OFF_TOP) - I64(L, OFF_BASE);
+	g_api.checkstack(L, 40, "hook");
+	alignas(16) uint8_t ar[AR_SIZE];
+	std::memset(ar, 0, sizeof(ar));
+	g_api.getstack(L, 0, ar);
+	*reinterpret_cast<int*>(ar + AR_EVENT) = event;
+	*reinterpret_cast<int*>(ar + AR_CURRENTLINE) = -1;
+	hook(L, ar);
+	I64(L, OFF_TOP) = I64(L, OFF_BASE) + topOff;
+	--t_inHook;
+}
+// Called by the C-call stubs (the stub saves all volatile registers).
+void __cdecl OnCCall(lua_State* L) { if (!t_inHook && (I32(L, OFF_MASK) & MASK_CALL)) CallHookC(L, EV_CALL); }
+void __cdecl OnCRet(lua_State* L) { if (!t_inHook && (I32(L, OFF_MASK) & MASK_RET)) CallHookC(L, EV_RET); }
+
 // Called by the stub for every VM instruction of a state whose hook mask is non-zero. Returns non-zero when a hook ran (the stub then reloads the frame base).
 int __cdecl OnFetch(lua_State* L, const uint32_t* pc) {
 	if (t_inHook) return 0;
@@ -284,6 +316,7 @@ int __cdecl OnFetch(lua_State* L, const uint32_t* pc) {
 std::mutex g_installMu;
 std::atomic<bool> g_installed{ false };
 std::atomic<bool> g_installFailed{ false };
+bool g_cEvents = false;                      // C call/return patches installed
 
 struct Asm {
 	std::vector<uint8_t> b;
@@ -307,8 +340,9 @@ void* AllocNear(uintptr_t target, size_t size) {
 	return nullptr;
 }
 
-// Suspends every other thread of the process, checks that none is executing inside [site, site+len), runs `patch`, resumes. Retries a few times.
-bool WithThreadsFrozen(uintptr_t site, size_t len, void (*patch)(void*), void* arg) {
+// Suspends every other thread of the process, checks that none is executing inside one of the ranges, runs `patch`, resumes. Retries a few times.
+struct Range { uintptr_t lo; size_t len; };
+bool WithThreadsFrozen(const Range* ranges, int nr, void (*patch)(void*), void* arg) {
 	for (int attempt = 0; attempt < 20; attempt++) {
 		std::vector<DWORD> ids;
 		const DWORD self = GetCurrentThreadId(), pid = GetCurrentProcessId();
@@ -325,7 +359,7 @@ bool WithThreadsFrozen(uintptr_t site, size_t len, void (*patch)(void*), void* a
 			if (SuspendThread(h) == static_cast<DWORD>(-1)) { CloseHandle(h); continue; }
 			hs.push_back(h);
 			CONTEXT ctx; ctx.ContextFlags = CONTEXT_CONTROL;
-			if (GetThreadContext(h, &ctx) && ctx.Rip >= site && ctx.Rip < site + len) clash = true;
+			if (GetThreadContext(h, &ctx)) for (int i = 0; i < nr; i++) if (ctx.Rip >= ranges[i].lo && ctx.Rip < ranges[i].lo + ranges[i].len) clash = true;
 		}
 		if (!clash) patch(arg);
 		for (HANDLE h : hs) { ResumeThread(h); CloseHandle(h); }
@@ -335,14 +369,44 @@ bool WithThreadsFrozen(uintptr_t site, size_t len, void (*patch)(void*), void* a
 	return false;
 }
 
-struct PatchArg { uint8_t* site; uint8_t bytes[SITE_PATCH_LEN]; };
+struct PatchItem { uint8_t* site; uint8_t bytes[8]; size_t len; };
+struct PatchArg { PatchItem items[3]; int n = 0; };
 void DoPatch(void* p) {
 	PatchArg* a = static_cast<PatchArg*>(p);
-	DWORD old = 0;
-	VirtualProtect(a->site, SITE_PATCH_LEN, PAGE_EXECUTE_READWRITE, &old);
-	std::memcpy(a->site, a->bytes, SITE_PATCH_LEN);
-	FlushInstructionCache(GetCurrentProcess(), a->site, SITE_PATCH_LEN);
-	VirtualProtect(a->site, SITE_PATCH_LEN, old, &old);
+	for (int i = 0; i < a->n; i++) {
+		PatchItem& it = a->items[i];
+		DWORD old = 0;
+		VirtualProtect(it.site, it.len, PAGE_EXECUTE_READWRITE, &old);
+		std::memcpy(it.site, it.bytes, it.len);
+		FlushInstructionCache(GetCurrentProcess(), it.site, it.len);
+		VirtualProtect(it.site, it.len, old, &old);
+	}
+}
+
+// Stub for a C-call site (jsTarget != 0: the return-hook variant, see CPOST_RVA): when the state's mask has `maskBit`, save everything volatile, call handler(L = rdi), restore; then run the displaced 6-byte instruction and
+// resume. Assumes rsp is 16-byte aligned at the site (the interpreter calls other functions from the same frame without adjusting it) and rdi = L.
+std::vector<uint8_t> BuildCStub(uintptr_t codeBase, uintptr_t slotHandler, uintptr_t resume, const uint8_t* displaced, uint32_t maskBit, uintptr_t jsTarget) {
+	Asm a;
+	auto rel = [&](uintptr_t target, size_t instrEnd) { return static_cast<uint32_t>(static_cast<int32_t>(target - (codeBase + instrEnd))); };
+	if (jsTarget) {                                                          // return-hook stub: replays `test eax,eax; js error_path` first (a negative count skips the hook)
+		a.bytes({ 0x85, 0xC0 });
+		a.bytes({ 0x0F, 0x88 }); a.u32(rel(jsTarget, a.pos() + 4));
+	}
+	a.bytes({ 0xF7, 0x87, 0xD0, 0x00, 0x00, 0x00 }); a.u32(maskBit);          // test dword ptr [rdi+0xd0], maskBit
+	a.bytes({ 0x0F, 0x84 }); const size_t jzFix = a.pos(); a.u32(0);           // jz plain
+	a.bytes({ 0x9C, 0x50, 0x51, 0x52, 0x41, 0x50, 0x41, 0x51, 0x41, 0x52, 0x41, 0x53 });   // pushfq; push rax, rcx, rdx, r8, r9, r10, r11 (8 pushes: alignment kept)
+	a.bytes({ 0x48, 0x81, 0xEC, 0xA0, 0x00, 0x00, 0x00 });                   // sub rsp, 0xa0
+	for (int i = 0; i < 6; i++) a.bytes({ 0xF3, 0x0F, 0x7F, static_cast<uint8_t>(0x44 | (i << 3)), 0x24, static_cast<uint8_t>(0x20 + 0x10 * i) });
+	a.bytes({ 0x48, 0x89, 0xF9 });                                           // mov rcx, rdi
+	a.bytes({ 0xFF, 0x15 }); { const size_t at = a.pos(); a.u32(rel(slotHandler, at + 4)); }   // call [handler]
+	for (int i = 0; i < 6; i++) a.bytes({ 0xF3, 0x0F, 0x6F, static_cast<uint8_t>(0x44 | (i << 3)), 0x24, static_cast<uint8_t>(0x20 + 0x10 * i) });
+	a.bytes({ 0x48, 0x81, 0xC4, 0xA0, 0x00, 0x00, 0x00 });                   // add rsp, 0xa0
+	a.bytes({ 0x41, 0x5B, 0x41, 0x5A, 0x41, 0x59, 0x41, 0x58, 0x5A, 0x59, 0x58, 0x9D });   // pop r11, r10, r9, r8, rdx, rcx, rax; popfq
+	const size_t plain = a.pos();
+	{ const int32_t r = static_cast<int32_t>(plain - (jzFix + 4)); std::memcpy(&a.b[jzFix], &r, 4); }
+	if (!jsTarget) for (size_t i = 0; i < CPRE_LEN; i++) a.b.push_back(displaced[i]);   // displaced `inc dword [rdi+0x98]`
+	a.bytes({ 0xE9 }); a.u32(rel(resume, a.pos() + 4));
+	return a.b;
 }
 
 bool Install() {
@@ -403,15 +467,47 @@ bool Install() {
 	std::memcpy(blk + 0x40, a.b.data(), a.b.size());
 	FlushInstructionCache(GetCurrentProcess(), blk, 0x1000);
 
-	PatchArg pa; pa.site = site;
-	const int64_t rel = static_cast<int64_t>(codeBase) - static_cast<int64_t>(reinterpret_cast<uintptr_t>(site) + SITE_PATCH_LEN);
-	if (rel > INT32_MAX || rel < INT32_MIN) { DevBridge::Log("[LuaHooks] site=%p stub=%p rel=%lld", (void*)site, (void*)codeBase, (long long)rel); return fail("stub out of jmp range"); }
-	pa.bytes[0] = 0xE9;
-	const int32_t rel32 = static_cast<int32_t>(rel);
-	std::memcpy(pa.bytes + 1, &rel32, 4);
-	if (!WithThreadsFrozen(reinterpret_cast<uintptr_t>(site), SITE_DISPLACED_LEN, &DoPatch, &pa)) return fail("could not freeze the other threads outside the patched bytes");
+	PatchArg pa;
+	std::vector<Range> ranges;
+	{
+		const int64_t rel = static_cast<int64_t>(codeBase) - static_cast<int64_t>(reinterpret_cast<uintptr_t>(site) + SITE_PATCH_LEN);
+		if (rel > INT32_MAX || rel < INT32_MIN) { DevBridge::Log("[LuaHooks] site=%p stub=%p rel=%lld", (void*)site, (void*)codeBase, (long long)rel); return fail("stub out of jmp range"); }
+		PatchItem& it = pa.items[pa.n++];
+		it.site = site; it.len = SITE_PATCH_LEN; it.bytes[0] = 0xE9;
+		const int32_t rel32 = static_cast<int32_t>(rel);
+		std::memcpy(it.bytes + 1, &rel32, 4);
+		ranges.push_back({ reinterpret_cast<uintptr_t>(site), SITE_DISPLACED_LEN });
+	}
+	// C-function call / return events: optional, only when the surrounding bytes match
+	if (std::memcmp(base + CCHECK_RVA, CCHECK_BYTES, CCHECK_LEN) == 0) {
+		uint8_t* targets[2] = { base + CPRE_RVA, base + CPOST_RVA };
+		uint8_t* at[2] = { blk + 0x400, blk + 0x600 };
+		const uintptr_t slots[2] = { reinterpret_cast<uintptr_t>(blk) + 0x18, reinterpret_cast<uintptr_t>(blk) + 0x20 };
+		const uint32_t bits[2] = { MASK_CALL, MASK_RET };
+		*reinterpret_cast<void**>(blk + 0x18) = reinterpret_cast<void*>(&OnCCall);
+		*reinterpret_cast<void**>(blk + 0x20) = reinterpret_cast<void*>(&OnCRet);
+		for (int i = 0; i < 2; i++) {
+			const size_t plen = i == 0 ? CPRE_LEN : CPOST_LEN;
+			uintptr_t jsTarget = 0;
+			if (i == 1) { int32_t jr; std::memcpy(&jr, targets[1] + 4, 4); jsTarget = reinterpret_cast<uintptr_t>(targets[1]) + 8 + jr; }   // js rel32 at +2 (0f 88 at +2..+3), disp at +4
+			std::vector<uint8_t> code = BuildCStub(reinterpret_cast<uintptr_t>(at[i]), slots[i], reinterpret_cast<uintptr_t>(targets[i]) + plen, targets[i], bits[i], jsTarget);
+			if (code.size() > 0x1f0) return fail("C stub too large");
+			std::memcpy(at[i], code.data(), code.size());
+			const int64_t r = static_cast<int64_t>(reinterpret_cast<uintptr_t>(at[i])) - static_cast<int64_t>(reinterpret_cast<uintptr_t>(targets[i]) + 5);
+			if (r > INT32_MAX || r < INT32_MIN) return fail("C stub out of jmp range");
+			PatchItem& it = pa.items[pa.n++];
+			it.site = targets[i]; it.len = plen; it.bytes[0] = 0xE9;
+			const int32_t r32 = static_cast<int32_t>(r);
+			std::memcpy(it.bytes + 1, &r32, 4);
+			for (size_t k = 5; k < plen; k++) it.bytes[k] = 0x90;
+			ranges.push_back({ reinterpret_cast<uintptr_t>(targets[i]), plen });
+		}
+		FlushInstructionCache(GetCurrentProcess(), blk, 0x1000);
+		g_cEvents = true;
+	} else DevBridge::Log("[LuaHooks] C-call site bytes differ: call/return events for C functions disabled");
+	if (!WithThreadsFrozen(ranges.data(), static_cast<int>(ranges.size()), &DoPatch, &pa)) return fail("could not freeze the other threads outside the patched bytes");
 	g_installed = true;
-	DevBridge::Log("[LuaHooks] fetch site patched (HavokScript+0x%llx -> stub at %p)", (unsigned long long)SITE_RVA, (void*)(blk + 0x40));
+	DevBridge::Log("[LuaHooks] fetch site patched (HavokScript+0x%llx -> stub at %p), C call/return events %s", (unsigned long long)SITE_RVA, (void*)(blk + 0x40), g_cEvents ? "on" : "off");
 	return true;
 }
 

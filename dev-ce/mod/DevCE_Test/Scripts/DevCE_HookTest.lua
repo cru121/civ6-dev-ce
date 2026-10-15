@@ -137,6 +137,29 @@ local function runTests()
     debug.sethook()
     check("coroutine with an inherited hook mask", ok and val == 5050, tostring(ok) .. "," .. tostring(val))
 
+    -- (l) call / return events for C functions (math.abs): the hook sees getinfo(2).what == "C" at level 2
+    local cCalls, cRets, cWhat = 0, 0, nil
+    local mabs = math.abs
+    debug.sethook(function(e)
+        local info = debug.getinfo(2, "Sf")
+        if info and info.what == "C" and info.func == mabs then
+            if e == "call" then cCalls = cCalls + 1 else cRets = cRets + 1 end
+            cWhat = info.what
+        end
+    end, "cr")
+    local av = mabs(-5) + mabs(-6)
+    debug.sethook()
+    check("C call/return hook: results intact", av == 11, av)
+    check("C call/return hook: two calls and two returns of math.abs seen", cCalls == 2 and cRets == 2, cCalls .. "," .. cRets .. "," .. tostring(cWhat))
+
+    -- (m) a C function that raises an error under call/return hooks: pcall must still catch it and execution continues
+    local en = 0
+    debug.sethook(function() en = en + 1 end, "cr")
+    local okE, errE = pcall(error, "x")
+    local okF, errF = pcall(function() return math.abs(-1) end)
+    debug.sethook()
+    check("C call/return hook: error() inside pcall still caught", okE == false and okF == true and errF == 1 and en > 0, tostring(okE) .. "," .. tostring(okF) .. "," .. en)
+
     -- (k) debug.sethook(thread, ...) / debug.gethook(thread): hook a suspended coroutine from outside; the main thread must see no events
     -- (steps are logged first: a crash here would otherwise leave no trace)
     local coEv = 0
