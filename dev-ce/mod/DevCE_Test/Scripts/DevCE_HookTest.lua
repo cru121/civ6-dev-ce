@@ -70,6 +70,13 @@ local function runTests()
         events, tostring(match), levelHits[0], levelHits[1], levelHits[2], levelHits[3]))
     check("line hook: getinfo(2).currentline equals the line argument (PUC numbering)", levelHits[2] == events, match)
 
+    -- (a2) a loop on a single line: PUC Lua fires a line event per iteration (the pc jumps backwards)
+    local lc = 0
+    debug.sethook(function() lc = lc + 1 end, "l")
+    for i = 1, 5 do local z = i end
+    debug.sethook()
+    check("line hook: one event per iteration of a single-line loop", lc >= 5 and lc <= 9, lc)
+
     -- (h) gethook after sethook
     local f = function() end
     debug.sethook(f, "lcr", 0)

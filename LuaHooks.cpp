@@ -117,29 +117,52 @@ bool IsNumber(lua_State* L, int idx) {
 	return n && std::strcmp(n, "number") == 0;
 }
 
-// ---- per-state bookkeeping (only states with a hook ever get an entry) --------------------------------------------------------------------------------
+// ---- per-state bookkeeping (only states with a hook ever get an entry; entries are never freed so threads may cache the pointer) -------------------------
+constexpr int MAX_DEPTH = 256;
 struct HookState {
+	uint32_t gen = 0;                           // reset when the global generation changes (sethook / hook removal)
 	int64_t depth = -1;                         // call depth at the previous fetch of this state
 	const uint32_t* lastPc = nullptr;
-	std::vector<int> lines;                     // last reported line per call depth
+	int lines[MAX_DEPTH];                       // last reported line per call depth
+	HookState() { std::memset(lines, 0xff, sizeof(lines)); }
 };
 std::mutex g_mu;
-std::unordered_map<lua_State*, HookState> g_states;
-std::unordered_map<uintptr_t, int> g_lineCache;   // pc -> line, filled lazily through lua_getstack/lua_getinfo
+std::unordered_map<lua_State*, HookState*> g_states;
+std::atomic<uint32_t> g_gen{ 1 };
 thread_local int t_inHook = 0;                // no hooks while a hook runs on this thread (PUC: allowhook = 0)
+thread_local lua_State* t_cacheL = nullptr;
+thread_local HookState* t_cacheSt = nullptr;
+thread_local uint32_t t_cacheGen = 0;
+
+// pc -> line cache, lock-free: entry = ((pc >> 2) << 19) | (line + 1) with line in [-1, 524286]
+constexpr size_t LINE_CACHE_SIZE = 1u << 16;
+std::atomic<uint64_t> g_lineCache[LINE_CACHE_SIZE];
 
 void ClearCaches() {
-	std::lock_guard<std::mutex> g(g_mu);
-	g_lineCache.clear();
-	g_states.clear();
+	g_gen.fetch_add(1);
+	for (size_t i = 0; i < LINE_CACHE_SIZE; i++) g_lineCache[i].store(0, std::memory_order_relaxed);
+}
+
+HookState* StateOf(lua_State* L) {
+	const uint32_t gen = g_gen.load(std::memory_order_relaxed);
+	HookState* st;
+	if (t_cacheL == L && t_cacheSt) st = t_cacheSt;
+	else {
+		std::lock_guard<std::mutex> g(g_mu);
+		HookState*& slot = g_states[L];
+		if (!slot) slot = new HookState();
+		st = slot;
+		t_cacheL = L; t_cacheSt = st;
+	}
+	if (st->gen != gen) { st->gen = gen; st->depth = -1; st->lastPc = nullptr; std::memset(st->lines, 0xff, sizeof(st->lines)); }
+	return st;
 }
 
 int LineOf(lua_State* L, const uint32_t* pc) {
-	{
-		std::lock_guard<std::mutex> g(g_mu);
-		auto it = g_lineCache.find(reinterpret_cast<uintptr_t>(pc));
-		if (it != g_lineCache.end()) return it->second;
-	}
+	const uint64_t key = reinterpret_cast<uintptr_t>(pc) >> 2;
+	std::atomic<uint64_t>& slot = g_lineCache[key & (LINE_CACHE_SIZE - 1)];
+	const uint64_t e = slot.load(std::memory_order_relaxed);
+	if (e != 0 && (e >> 19) == key) return static_cast<int>(e & 0x7FFFF) - 1;
 	alignas(16) uint8_t ar[AR_SIZE];
 	std::memset(ar, 0, sizeof(ar));
 	*reinterpret_cast<const void**>(LB(L) + OFF_PC) = pc;                  // the patched instruction (which stores pc) has not run yet
@@ -148,9 +171,8 @@ int LineOf(lua_State* L, const uint32_t* pc) {
 		g_api.getinfo(L, "l", ar);
 		line = *reinterpret_cast<int*>(ar + AR_CURRENTLINE);
 	}
-	std::lock_guard<std::mutex> g(g_mu);
-	if (g_lineCache.size() > 2000000) g_lineCache.clear();
-	g_lineCache[reinterpret_cast<uintptr_t>(pc)] = line;
+	const int enc = (line < -1 || line > 524286) ? 0 : line + 1;
+	slot.store((key << 19) | static_cast<uint64_t>(enc), std::memory_order_relaxed);
 	return line;
 }
 
@@ -210,38 +232,28 @@ int __cdecl OnFetch(lua_State* L, const uint32_t* pc) {
 	if (!mask || !*reinterpret_cast<void**>(LB(L) + OFF_HOOKFN)) return 0;
 	const uint32_t op = *pc >> 25;
 	const int64_t depth = (I64(L, OFF_CI_CUR) - I64(L, OFF_CI_BASE)) / 24;
+	const int slot = depth < 0 ? 0 : (depth >= MAX_DEPTH ? MAX_DEPTH - 1 : static_cast<int>(depth));
 
-	bool callDue = false, lineDue = false, countDue = false, retDue = false;
-	int line = -1;
-	{
-		std::lock_guard<std::mutex> g(g_mu);
-		if (g_states.size() > 100000) g_states.clear();
-		HookState& st = g_states[L];
-		if (st.depth >= 0 && depth > st.depth && (mask & MASK_CALL)) callDue = true;
-		if (st.depth >= 0 && depth > st.depth && depth < 4096) {            // entering a new function: its line history starts empty
-			if (st.lines.size() <= static_cast<size_t>(depth)) st.lines.resize(static_cast<size_t>(depth) + 1, -1);
-			st.lines[static_cast<size_t>(depth)] = -1;
-		}
-		const bool first = st.depth < 0;
-		st.depth = depth;
-		const uint32_t* last = st.lastPc;
-		st.lastPc = pc;
-		if (mask & MASK_RET) retDue = (op == OP_RETURN);
-		if (mask & MASK_COUNT) {
-			int c = ++I32(L, OFF_COUNTER);
-			if (c >= I32(L, OFF_COUNT)) { I32(L, OFF_COUNTER) = 0; countDue = true; }
-		}
-		(void)first; (void)last;
+	HookState* st = StateOf(L);
+	const bool grew = st->depth >= 0 && depth > st->depth;
+	const bool callDue = grew && (mask & MASK_CALL);
+	if (grew) st->lines[slot] = -1;                                           // entering a new function: its line history starts empty
+	st->depth = depth;
+	const uint32_t* last = st->lastPc;
+	st->lastPc = pc;
+	const bool retDue = (mask & MASK_RET) && op == OP_RETURN;
+	bool countDue = false;
+	if (mask & MASK_COUNT) {
+		int c = ++I32(L, OFF_COUNTER);
+		if (c >= I32(L, OFF_COUNT)) { I32(L, OFF_COUNTER) = 0; countDue = true; }
 	}
+	bool lineDue = false;
+	int line = -1;
 	if (mask & MASK_LINE) {
 		line = LineOf(L, pc);
-		std::lock_guard<std::mutex> g(g_mu);
-		HookState& st = g_states[L];
-		if (depth >= 0 && depth < 4096) {
-			if (st.lines.size() <= static_cast<size_t>(depth)) st.lines.resize(static_cast<size_t>(depth) + 1, -1);
-			int& prev = st.lines[static_cast<size_t>(depth)];
-			if (line != prev) { lineDue = true; prev = line; }
-		}
+		int& prev = st->lines[slot];
+		// PUC Lua: a line event when the line changes or the pc jumps backwards (a loop iteration on the same line)
+		if (line != prev || (last && !grew && pc <= last)) { lineDue = true; prev = line; }
 	}
 	if (!(callDue || lineDue || countDue || retDue)) return 0;
 	if (line < 0 && (retDue || callDue || countDue)) line = LineOf(L, pc);
