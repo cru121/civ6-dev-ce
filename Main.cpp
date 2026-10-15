@@ -27,6 +27,7 @@
 #include "GameProcessor.h"
 #include "NationalParks.h"
 #include "DevBridge.h"
+#include "LuaHooks.h"
 #include "AudioPlayer.h"
 
 HANDLE mainThread;
@@ -61,6 +62,7 @@ void PushSharedGlobals(hks::lua_State* L) {
     MemoryManipulation::LuaExport::PushFieldTypes(L);
     DevBridge::RegisterGlobals(L);
     AudioPlayer::RegisterGlobals(L);
+    LuaHooks::RegisterGlobals(L);
 }
 
 void __cdecl Hook_RegisterScriptData(hks::lua_State* L) {
