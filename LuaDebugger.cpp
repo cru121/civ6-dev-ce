@@ -14,6 +14,9 @@
 #include <cstring>
 #include <deque>
 #include <mutex>
+#include <set>
+#include <vector>
+#include <algorithm>
 #include <string>
 #include <thread>
 #pragma comment(lib, "ws2_32.lib")
@@ -37,9 +40,20 @@ std::mutex g_mu;                               // protects the stop state below
 std::condition_variable g_cv;
 std::deque<Request> g_reqs;
 bool g_paused = false, g_resume = false;
-int g_stepMode = 0;                            // 1 = stop at the next line event of the same state
+int g_resumeMode = 0;                          // set by continue / step / next / out while stopped: 0 run, 1 step in, 2 step over, 3 step out
 lua_State* g_pausedL = nullptr;
 std::string g_pausedReason;
+
+// stepping / breakpoints (read by the hook on any game thread, written under the stop or by the server thread)
+struct Bp { std::string file; int line; };            // file: lower case, '/' separators; matches as a path suffix
+std::mutex g_bpMu;
+std::vector<Bp> g_bps;
+std::atomic<bool> g_hasBps{ false };
+std::atomic<bool> g_pauseReq{ false };
+std::atomic<int> g_stepMode{ 0 };                     // 0 none, 1 in, 2 over, 3 out
+std::atomic<lua_State*> g_stepL{ nullptr };
+std::atomic<long long> g_stepDepth{ 0 };
+std::atomic<int> g_armed{ 0 };                         // states that armed themselves (diagnostics)
 
 std::atomic<SOCKET> g_client{ INVALID_SOCKET };
 std::mutex g_sendMu;
@@ -105,6 +119,40 @@ void Reply(int id, bool ok, const std::string& members) {
 	Send("{\"id\":" + std::to_string(id) + ",\"ok\":" + (ok ? "true" : "false") + (members.empty() ? "" : "," + members) + "}");
 }
 
+void __cdecl DbgHook(lua_State* L, void* ar);
+
+long long CallDepth(lua_State* L) {                    // callinfo entries (24 bytes): current - base, same rule as LuaHooks
+	const uint8_t* b = reinterpret_cast<const uint8_t*>(L);
+	return (*reinterpret_cast<const long long*>(b + 0x28) - *reinterpret_cast<const long long*>(b + 0x18)) / 24;
+}
+
+std::string NormPath(const char* p, size_t n) {
+	std::string o(p, n);
+	for (char& c : o) { if (c == '\\') c = '/'; else c = static_cast<char>(std::tolower(static_cast<unsigned char>(c))); }
+	return o;
+}
+
+bool BpMatches(const std::string& src, const Bp& b) {
+	if (src.size() < b.file.size()) return false;
+	if (src.compare(src.size() - b.file.size(), b.file.size(), b.file) != 0) return false;
+	return src.size() == b.file.size() || b.file[0] == '/' || src[src.size() - b.file.size() - 1] == '/';
+}
+
+// Arm mode: while breakpoints, a pause request or a step exist, every state that runs Lua gets the line hook ON ITS OWN THREAD (LuaHooks arm handler). The
+// server thread never touches another thread's lua_State. Idle hooks remove themselves at their next line event (DbgHook).
+void UpdateArm() { LuaHooks::SetArmFlag(g_hasBps.load() || g_pauseReq.load() || g_stepMode.load() != 0); }
+
+void __cdecl ArmSelf(lua_State* L) {
+	LuaHooks::SetNativeHook(L, DbgHook, LuaHooks::HOOK_LINE, 0, false);
+	g_armed++;
+}
+
+void ResetSession() {                                  // client gone: no breakpoints, no stepping; armed hooks remove themselves
+	{ std::lock_guard<std::mutex> g(g_bpMu); g_bps.clear(); }
+	g_hasBps = false; g_pauseReq = false; g_stepMode = 0; g_stepL = nullptr;
+	UpdateArm();
+}
+
 // ---- requests that run on the stopped thread --------------------------------------------------------------------------------------------------------------
 std::string DumpStack(lua_State* L, const Api* A) {
 	std::string o = "\"frames\":[";
@@ -165,8 +213,18 @@ void StopHere(lua_State* L, const char* reason) {
 	if (g_client.load() == INVALID_SOCKET) return;
 	std::unique_lock<std::mutex> lk(g_mu);
 	if (g_paused) return;                                                    // D0: one stop at a time, a second state just continues
-	g_paused = true; g_resume = false; g_stepMode = 0; g_pausedL = L; g_pausedReason = reason; g_reqs.clear();
+	g_paused = true; g_resume = false; g_resumeMode = 0; g_pausedL = L; g_pausedReason = reason; g_reqs.clear();
 	lk.unlock();
+	long long stopDepth = CallDepth(L);                                      // step baseline: the innermost Lua frame (a stop inside a C function such as c_breakpoint counts its caller)
+	{
+		const Api* A = LuaHooks::GetApi();
+		alignas(16) uint8_t ar[AR_SIZE];
+		std::memset(ar, 0, sizeof(ar));
+		if (A && A->getstack(L, 0, ar)) {
+			A->getinfo(L, "S", ar);
+			if (std::strncmp(reinterpret_cast<const char*>(ar + AR_SHORTSRC), "[C]", 3) == 0) stopDepth -= 1;
+		}
+	}
 	char st[40]; std::snprintf(st, sizeof(st), "%p", static_cast<void*>(L));
 	Send(std::string("{\"event\":\"stopped\",\"reason\":\"") + reason + "\",\"state\":\"" + st + "\"}");
 	lk.lock();
@@ -184,17 +242,43 @@ void StopHere(lua_State* L, const char* reason) {
 		}
 		if (std::chrono::steady_clock::now() - last > std::chrono::seconds(IDLE_RESUME_SECONDS)) { DevBridge::Log("[LuaDebugger] no request for %d s: resuming the game thread", IDLE_RESUME_SECONDS); break; }
 	}
-	const int step = g_stepMode;
+	const int mode = g_client.load() == INVALID_SOCKET ? 0 : g_resumeMode;
 	g_paused = false; g_pausedL = nullptr;
 	lk.unlock();
 	g_cv.notify_all();
-	if (step == 1) LuaHooks::SetNativeHook(L, DbgHook, LuaHooks::HOOK_LINE, 0);
+	g_stepDepth = stopDepth; g_stepL = mode ? L : nullptr; g_stepMode = mode;
+	if (mode || g_hasBps.load() || g_pauseReq.load()) LuaHooks::SetNativeHook(L, DbgHook, LuaHooks::HOOK_LINE, 0, false); else LuaHooks::SetNativeHook(L, nullptr, 0, 0, false);
+	UpdateArm();
 }
 
 void __cdecl DbgHook(lua_State* L, void* ar) {
 	if (*reinterpret_cast<int*>(static_cast<uint8_t*>(ar) + AR_EVENT) != EV_LINE) return;
-	LuaHooks::SetNativeHook(L, nullptr, 0, 0);                              // one-shot; `step` re-arms it
-	StopHere(L, "step");
+	const bool pause = g_pauseReq.load();
+	const int sm = g_stepMode.load();
+	const bool stepping = sm != 0 && g_stepL.load() == L;
+	const bool bps = g_hasBps.load();
+	if (!pause && !stepping && !bps) { LuaHooks::SetNativeHook(L, nullptr, 0, 0); return; }   // stale hook (inherited by a coroutine, or nothing to do any more)
+	if (pause && g_pauseReq.exchange(false)) { StopHere(L, "pause"); return; }
+	if (stepping) {
+		const long long d = CallDepth(L), base = g_stepDepth.load();
+		if (sm == 1 || (sm == 2 && d <= base) || (sm == 3 && d < base)) { StopHere(L, "step"); return; }
+	}
+	if (bps) {
+		const Api* A = LuaHooks::GetApi();
+		if (!A) return;
+		A->getinfo(L, "S", ar);
+		const char* src = reinterpret_cast<const char*>(static_cast<uint8_t*>(ar) + AR_SHORTSRC);
+		const int line = *reinterpret_cast<int*>(static_cast<uint8_t*>(ar) + AR_CURRENTLINE);
+		bool hit = false;
+		{
+			std::lock_guard<std::mutex> g(g_bpMu);
+			if (!g_bps.empty()) {
+				const std::string ns = NormPath(src, strnlen(src, 0x200));
+				for (const Bp& b : g_bps) if (b.line == line && BpMatches(ns, b)) { hit = true; break; }
+			}
+		}
+		if (hit) StopHere(L, "breakpoint");
+	}
 }
 
 // ---- server thread ------------------------------------------------------------------------------------------------------------------------------------------
@@ -204,11 +288,34 @@ void HandleLine(const std::string& line) {
 	if (cmd == "status") {
 		std::lock_guard<std::mutex> g(g_mu);
 		char st[40]; std::snprintf(st, sizeof(st), "%p", static_cast<void*>(g_pausedL));
-		Reply(id, true, std::string("\"paused\":") + (g_paused ? "true" : "false") + ",\"state\":\"" + (g_paused ? st : "") + "\",\"reason\":\"" + Esc(g_pausedReason) + "\"");
-	} else if (cmd == "continue" || cmd == "step") {
+		Reply(id, true, std::string("\"paused\":") + (g_paused ? "true" : "false") + ",\"state\":\"" + (g_paused ? st : "") + "\",\"reason\":\"" + Esc(g_pausedReason) + "\",\"armedStates\":" + std::to_string(g_armed.load()));
+	} else if (cmd == "break" || cmd == "clear" || cmd == "breaks") {
+		std::string file; int ln = 0; GetStr(line, "file", file); GetInt(line, "line", ln);
+		{
+			std::lock_guard<std::mutex> g(g_bpMu);
+			if (cmd == "break") {
+				if (file.empty() || ln <= 0) { Reply(id, false, "\"error\":\"break needs file and line\""); return; }
+				const std::string nf = NormPath(file.data(), file.size());
+				bool dup = false; for (const Bp& b : g_bps) if (b.line == ln && b.file == nf) dup = true;
+				if (!dup) g_bps.push_back({ nf, ln });
+			} else if (cmd == "clear") {
+				if (file.empty()) g_bps.clear();
+				else { const std::string nf = NormPath(file.data(), file.size()); g_bps.erase(std::remove_if(g_bps.begin(), g_bps.end(), [&](const Bp& b) { return b.file == nf && (ln <= 0 || b.line == ln); }), g_bps.end()); }
+			}
+			g_hasBps = !g_bps.empty();
+			std::string list = "\"breakpoints\":[";
+			for (size_t i = 0; i < g_bps.size(); i++) list += (i ? "," : "") + std::string("{\"file\":\"") + Esc(g_bps[i].file) + "\",\"line\":" + std::to_string(g_bps[i].line) + "}";
+			Reply(id, true, list + "]");
+		}
+		if (cmd != "breaks") UpdateArm();
+	} else if (cmd == "pause") {
+		g_pauseReq = true;
+		UpdateArm();
+		Reply(id, true, "");
+	} else if (cmd == "continue" || cmd == "step" || cmd == "next" || cmd == "out") {
 		std::lock_guard<std::mutex> g(g_mu);
 		if (!g_paused) { Reply(id, false, "\"error\":\"not paused\""); return; }
-		g_stepMode = cmd == "step" ? 1 : 0;
+		g_resumeMode = cmd == "step" ? 1 : cmd == "next" ? 2 : cmd == "out" ? 3 : 0;
 		g_resume = true;
 		g_cv.notify_all();
 		Reply(id, true, "");
@@ -219,7 +326,7 @@ void HandleLine(const std::string& line) {
 		GetStr(line, "expr", r.arg);
 		g_reqs.push_back(std::move(r));
 		g_cv.notify_all();
-	} else Reply(id, false, "\"error\":\"unknown command (status, stack, eval, continue, step)\"");
+	} else Reply(id, false, "\"error\":\"unknown command (status, stack, eval, break, clear, breaks, pause, continue, step, next, out)\"");
 }
 
 void ServerMain() {
@@ -252,6 +359,7 @@ void ServerMain() {
 		}
 		g_client = INVALID_SOCKET;
 		closesocket(c);
+		ResetSession();
 		g_cv.notify_all();                                                    // releases a stopped game thread
 		DevBridge::Log("[LuaDebugger] client disconnected");
 	}
@@ -260,6 +368,7 @@ void ServerMain() {
 void Start(int port) {
 	if (g_started.exchange(true)) return;
 	g_port = port;
+	LuaHooks::SetArmHandler(ArmSelf);
 	std::thread(ServerMain).detach();
 }
 

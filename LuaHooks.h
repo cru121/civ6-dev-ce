@@ -38,7 +38,14 @@ namespace LuaHooks {
 	// Native hook for one state (used by the debugger): fn(L, lua_Debug*) runs on the thread that executes L, inside the VM loop. fn == nullptr or mask == 0 removes it.
 	// Installs the VM patch on first use. Does not touch the Lua-level hook table of debug.sethook (do not mix both on one state).
 	typedef void(__cdecl* NativeHook)(hks::lua_State*, void* luaDebug);
-	bool SetNativeHook(hks::lua_State* L, NativeHook fn, int mask, int count);
+	// clearCaches = false is for arming a fresh state from the arm handler (the pc -> line cache stays valid).
+	bool SetNativeHook(hks::lua_State* L, NativeHook fn, int mask, int count, bool clearCaches = true);
+
+	// Arm mode (debugger): while the flag is set, every VM instruction of a state that has no hook calls the handler on the thread running that state, so the handler can
+	// give it a native hook without touching states of other threads. SetArmFlag(true) installs the VM patch; the flag is checked in the stub's fast path.
+	typedef void(__cdecl* ArmHandler)(hks::lua_State*);
+	void SetArmHandler(ArmHandler fn);
+	bool SetArmFlag(bool on);
 
 	// Adds debug.sethook / debug.gethook to the global `debug` table of this state (creating the table with HavokScript's own luaopen_debug if it is missing).
 	void RegisterGlobals(hks::lua_State* L);

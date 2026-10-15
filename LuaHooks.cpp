@@ -144,6 +144,8 @@ thread_local int t_inHook = 0;                // no hooks while a hook runs on t
 thread_local lua_State* t_cacheL = nullptr;
 thread_local HookState* t_cacheSt = nullptr;
 thread_local uint32_t t_cacheGen = 0;
+ArmHandler g_armFn = nullptr;                // see SetArmFlag
+volatile uint8_t* g_armFlag = nullptr;       // byte in the stub block, read by the stub's fast path
 
 // pc -> line cache, lock-free: entry = ((pc >> 2) << 19) | (line + 1) with line in [-1, 524286]
 constexpr size_t LINE_CACHE_SIZE = 1u << 16;
@@ -260,7 +262,10 @@ void __cdecl OnCRet(lua_State* L) { if (!t_inHook && (I32(L, OFF_MASK) & MASK_RE
 int __cdecl OnFetch(lua_State* L, const uint32_t* pc) {
 	if (t_inHook) return 0;
 	const int mask = I32(L, OFF_MASK);
-	if (!mask || !*reinterpret_cast<void**>(LB(L) + OFF_HOOKFN)) return 0;
+	if (!mask || !*reinterpret_cast<void**>(LB(L) + OFF_HOOKFN)) {
+		if (g_armFlag && *g_armFlag && g_armFn) g_armFn(L);                      // armed mode: let the debugger hook this state (we are on its own thread)
+		return 0;
+	}
 	const uint32_t op = *pc >> 25;
 	const int64_t depth = (I64(L, OFF_CI_CUR) - I64(L, OFF_CI_BASE)) / 24;
 	const int slot = depth < 0 ? 0 : (depth >= MAX_DEPTH ? MAX_DEPTH - 1 : static_cast<int>(depth));
@@ -409,6 +414,7 @@ bool Install() {
 	*reinterpret_cast<void**>(blk + 0x08) = reinterpret_cast<void*>(&OnFetch);
 	*reinterpret_cast<void**>(blk + 0x10) = site + SITE_DISPLACED_LEN;
 	const uintptr_t slotFetch = reinterpret_cast<uintptr_t>(blk) + 0x08;
+	const uintptr_t slotFlag = reinterpret_cast<uintptr_t>(blk) + 0x28;          // arm flag byte (zero-initialised by VirtualAlloc)
 	const uintptr_t codeBase = reinterpret_cast<uintptr_t>(blk) + 0x40;
 
 	Asm a;
@@ -417,11 +423,14 @@ bool Install() {
 	// entry: fast path when the state has no hook
 	a.bytes({ 0x83, 0xBF, 0xD0, 0x00, 0x00, 0x00, 0x00 });                   // cmp dword ptr [rdi+0xd0], 0
 	a.bytes({ 0x0F, 0x85 }); const size_t jneFix = a.pos(); a.u32(0);        // jne slow
+	a.bytes({ 0x80, 0x3D }); { const size_t at = a.pos(); a.u32(ripRel(slotFlag, at + 4 + 1)); } a.bytes({ 0x00 });   // cmp byte ptr [arm flag], 0
+	a.bytes({ 0x0F, 0x85 }); const size_t jneFix2 = a.pos(); a.u32(0);       // jne slow
 	a.bytes({ 0x48, 0x89, 0x47, 0x30 });                                     // mov [rdi+0x30], rax   (displaced)
 	a.bytes({ 0x48, 0x8B, 0xF0 });                                           // mov rsi, rax          (displaced)
 	a.bytes({ 0xE9 }); a.u32(jmpRel(a.pos() + 4));                           // jmp site+7
 	const size_t slow = a.pos();
 	{ const int32_t rel = static_cast<int32_t>(slow - (jneFix + 4)); std::memcpy(&a.b[jneFix], &rel, 4); }
+	{ const int32_t rel = static_cast<int32_t>(slow - (jneFix2 + 4)); std::memcpy(&a.b[jneFix2], &rel, 4); }
 	a.bytes({ 0x9C, 0x50, 0x51, 0x52, 0x53, 0x56, 0x57 });                   // pushfq; push rax, rcx, rdx, rbx, rsi, rdi
 	a.bytes({ 0x41, 0x50, 0x41, 0x51, 0x41, 0x52, 0x41, 0x53 });             // push r8, r9, r10, r11
 	a.bytes({ 0x48, 0x89, 0xE3 });                                           // mov rbx, rsp  (rbx+0 r11, +8 r10, +16 r9, +24 r8, +32 rdi, +40 rsi, +48 rbx, +56 rdx, +64 rcx, +72 rax, +80 flags)
@@ -489,6 +498,7 @@ bool Install() {
 		g_cEvents = true;
 	} else DevBridge::Log("[LuaHooks] C-call site bytes differ: call/return events for C functions disabled");
 	if (!WithThreadsFrozen(ranges.data(), static_cast<int>(ranges.size()), &DoPatch, &pa)) return fail("could not freeze the other threads outside the patched bytes");
+	g_armFlag = reinterpret_cast<volatile uint8_t*>(slotFlag);
 	g_installed = true;
 	DevBridge::Log("[LuaHooks] fetch site patched (HavokScript+0x%llx -> stub at %p), C call/return events %s", (unsigned long long)SITE_RVA, (void*)(blk + 0x40), g_cEvents ? "on" : "off");
 	return true;
@@ -592,16 +602,24 @@ bool IsInstalled() { return g_installed.load(); }
 
 const Api* GetApi() { return InitApi() ? &g_api : nullptr; }
 
-bool SetNativeHook(lua_State* L, NativeHook fn, int mask, int count) {
+bool SetNativeHook(lua_State* L, NativeHook fn, int mask, int count, bool clearCaches) {
 	if (!InitApi()) return false;
 	if (fn && mask) {
 		if (!Install()) return false;
-		ClearCaches();
+		if (clearCaches) ClearCaches();
 		g_api.sethook(L, reinterpret_cast<HookFn>(fn), mask, count);
 	} else {
 		g_api.sethook(L, nullptr, 0, 0);
-		ClearCaches();
+		if (clearCaches) ClearCaches();
 	}
+	return true;
+}
+
+void SetArmHandler(ArmHandler fn) { g_armFn = fn; }
+
+bool SetArmFlag(bool on) {
+	if (on && !Install()) return false;
+	if (g_armFlag) *g_armFlag = on ? 1 : 0;
 	return true;
 }
 
