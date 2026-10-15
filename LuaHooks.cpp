@@ -51,7 +51,7 @@ struct Api {
 	int(__cdecl* sethook)(lua_State*, HookFn, int, int) = nullptr;
 	void(__cdecl* checkstack)(lua_State*, int, const char*) = nullptr;
 	int(__cdecl* type)(lua_State*, int) = nullptr;
-	lua_State*(__cdecl* tothread)(lua_State*, int) = nullptr;
+	const void*(__cdecl* topointer)(lua_State*, int) = nullptr;
 	const char* (__cdecl* typenameOf)(lua_State*, int) = nullptr;
 	void(__cdecl* settop)(lua_State*, int) = nullptr;
 	int(__cdecl* gettop)(lua_State*) = nullptr;
@@ -113,10 +113,21 @@ bool IsNoneOrNil(lua_State* L, int idx) {
 	const char* n = g_api.typenameOf(L, g_api.type(L, idx));
 	return !n || std::strcmp(n, "nil") == 0 || std::strcmp(n, "no value") == 0;
 }
-bool IsThread(lua_State* L, int idx) {
-	const char* n = g_api.typenameOf(L, g_api.type(L, idx));
-	return n && std::strcmp(n, "thread") == 0;
+
+// Pointer of the coroutine at stack index idx (lua_tothread / lua_topointer both crash on thread values in this VM, so read the 16-byte stack slot:
+// one qword is the type tag, the other the lua_State pointer). Returns nullptr when neither word looks like a readable lua_State.
+lua_State* ThreadAt(lua_State* L, int idx) {
+	const int64_t* slot = reinterpret_cast<const int64_t*>(I64(L, OFF_BASE) + static_cast<int64_t>(idx - 1) * 16);
+	const int64_t q0 = slot[0], q1 = slot[1];
+	for (int64_t q : { q1, q0 }) {
+		if (q < 0x10000) continue;
+		MEMORY_BASIC_INFORMATION mbi;
+		if (VirtualQuery(reinterpret_cast<void*>(q), &mbi, sizeof(mbi)) && mbi.State == MEM_COMMIT && reinterpret_cast<uintptr_t>(mbi.BaseAddress) + mbi.RegionSize > static_cast<uintptr_t>(q) + 0x100)
+			return reinterpret_cast<lua_State*>(q);
+	}
+	return nullptr;
 }
+bool IsThread(lua_State* L, int idx) { return g_api.type(L, idx) == 8; }   // Havok type code of a coroutine (lua_typename on it is not used: it crashed in the first test)
 bool IsNumber(lua_State* L, int idx) {
 	const char* n = g_api.typenameOf(L, g_api.type(L, idx));
 	return n && std::strcmp(n, "number") == 0;
@@ -394,7 +405,7 @@ bool Install() {
 
 	PatchArg pa; pa.site = site;
 	const int64_t rel = static_cast<int64_t>(codeBase) - static_cast<int64_t>(reinterpret_cast<uintptr_t>(site) + SITE_PATCH_LEN);
-	if (rel > INT32_MAX || rel < INT32_MIN) return fail("stub out of jmp range");
+	if (rel > INT32_MAX || rel < INT32_MIN) { DevBridge::Log("[LuaHooks] site=%p stub=%p rel=%lld", (void*)site, (void*)codeBase, (long long)rel); return fail("stub out of jmp range"); }
 	pa.bytes[0] = 0xE9;
 	const int32_t rel32 = static_cast<int32_t>(rel);
 	std::memcpy(pa.bytes + 1, &rel32, 4);
@@ -411,7 +422,8 @@ int __cdecl l_sethook(lua_State* L) {
 	if (!InitApi()) { hks::error(L, "debug.sethook: HavokScript API not available"); return 0; }
 	int arg = 0;
 	lua_State* L1 = L;
-	if (IsThread(L, 1)) { arg = 1; L1 = g_api.tothread(L, 1); if (!L1) { hks::error(L, "debug.sethook: bad thread"); return 0; } }
+	const bool isThr = IsThread(L, 1);
+	if (isThr) { arg = 1; L1 = ThreadAt(L, 1); if (!L1) { hks::error(L, "debug.sethook: bad thread"); return 0; } }
 	if (IsNoneOrNil(L, arg + 1)) {                                             // remove the hook
 		g_api.sethook(L1, nullptr, 0, 0);
 		hks::getfield(L, hks::LUA_REGISTRYINDEX, HOOKKEY);
@@ -459,7 +471,7 @@ int __cdecl l_gethook(lua_State* L) {
 	// debug.gethook([thread]) -> hook function (or nil), mask string, count  (PUC Lua 5.1 db_gethook)
 	if (!InitApi()) { hks::error(L, "debug.gethook: HavokScript API not available"); return 0; }
 	lua_State* L1 = L;
-	if (IsThread(L, 1)) { L1 = g_api.tothread(L, 1); if (!L1) { hks::error(L, "debug.gethook: bad thread"); return 0; } }
+	if (IsThread(L, 1)) { L1 = ThreadAt(L, 1); if (!L1) { hks::error(L, "debug.gethook: bad thread"); return 0; } }
 	const int mask = I32(L1, OFF_MASK), count = I32(L1, OFF_COUNT);
 	HookFn hook = *reinterpret_cast<HookFn*>(LB(L1) + OFF_HOOKFN);
 	if (!hook) g_api.pushnil(L);

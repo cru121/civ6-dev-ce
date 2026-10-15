@@ -138,15 +138,20 @@ local function runTests()
     check("coroutine with an inherited hook mask", ok and val == 5050, tostring(ok) .. "," .. tostring(val))
 
     -- (k) debug.sethook(thread, ...) / debug.gethook(thread): hook a suspended coroutine from outside; the main thread must see no events
-    local mainEv, coEv = 0, 0
+    -- (steps are logged first: a crash here would otherwise leave no trace)
+    local coEv = 0
     local co2 = coroutine.create(function() local z = 0 for i = 1, 20 do z = z + i end coroutine.yield(z) return z end)
+    log("STEP k1 sethook(co2)")
     debug.sethook(co2, function() coEv = coEv + 1 end, "l")
+    log("STEP k2 gethook(co2)")
     local gh2, gm2 = debug.gethook(co2)
     local mh = debug.gethook()
+    check("thread argument: gethook(thread) sees the hook, the running state does not", type(gh2) == "function" and gm2 == "l" and mh == nil, tostring(gm2))
+    log("STEP k3 resume")
     local ok2, v2 = coroutine.resume(co2)
+    log("STEP k4 remove")
     debug.sethook(co2)
     local gh3 = debug.gethook(co2)
-    check("thread argument: gethook(thread) sees the hook, the running state does not", type(gh2) == "function" and gm2 == "l" and mh == nil, tostring(gm2))
     check("thread argument: coroutine hooked from outside produced line events", ok2 and v2 == 210 and coEv >= 3, tostring(v2) .. "," .. coEv)
     check("thread argument: hook removed with sethook(thread)", gh3 == nil)
 
