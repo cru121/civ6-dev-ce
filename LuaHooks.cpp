@@ -57,25 +57,7 @@ constexpr int MASK_CALL = 1, MASK_RET = 2, MASK_LINE = 4, MASK_COUNT = 8;
 constexpr uint32_t OP_RETURN = 9;                                              // instruction word >> 25 (measured: always lowers the call depth)
 const char* const HOOKKEY = "_DEVCE_HOOKS";
 
-struct Api {
-	int(__cdecl* getstack)(lua_State*, int, void*) = nullptr;
-	int(__cdecl* getinfo)(lua_State*, const char*, void*) = nullptr;
-	int(__cdecl* sethook)(lua_State*, HookFn, int, int) = nullptr;
-	void(__cdecl* checkstack)(lua_State*, int, const char*) = nullptr;
-	int(__cdecl* type)(lua_State*, int) = nullptr;
-	const void*(__cdecl* topointer)(lua_State*, int) = nullptr;
-	const char* (__cdecl* typenameOf)(lua_State*, int) = nullptr;
-	void(__cdecl* settop)(lua_State*, int) = nullptr;
-	int(__cdecl* gettop)(lua_State*) = nullptr;
-	void(__cdecl* pushnil)(lua_State*) = nullptr;
-	void(__cdecl* rawget)(lua_State*, int) = nullptr;
-	void(__cdecl* rawset)(lua_State*, int) = nullptr;
-	const char* (__cdecl* tolstring)(lua_State*, int, size_t*) = nullptr;
-	double(__cdecl* tonumber)(lua_State*, int) = nullptr;
-	int(__cdecl* luaopen_debug)(lua_State*) = nullptr;
-	bool ok = false;
-};
-Api g_api;
+Api g_api;   // struct Api: LuaHooks.h
 HMODULE g_hks = nullptr;
 std::once_flag g_apiOnce;
 
@@ -104,6 +86,7 @@ bool InitApi() {
 		ok &= Resolve(g_api.tolstring, "?hksi_lua_tolstring@@YAPEBDPEAUlua_State@@HPEA_K@Z");
 		ok &= Resolve(g_api.tonumber, "?hksi_lua_tonumber@@YANPEAUlua_State@@H@Z");
 		ok &= Resolve(g_api.luaopen_debug, "?luaopen_debug@@YAHPEAUlua_State@@@Z");
+			ok &= Resolve(g_api.loadstring, "?hksi_luaL_loadstring@@YAHPEAUlua_State@@PEBD@Z");
 		g_api.ok = ok;
 	});
 	return g_api.ok;
@@ -606,5 +589,20 @@ void RegisterGlobals(lua_State* L) {
 }
 
 bool IsInstalled() { return g_installed.load(); }
+
+const Api* GetApi() { return InitApi() ? &g_api : nullptr; }
+
+bool SetNativeHook(lua_State* L, NativeHook fn, int mask, int count) {
+	if (!InitApi()) return false;
+	if (fn && mask) {
+		if (!Install()) return false;
+		ClearCaches();
+		g_api.sethook(L, reinterpret_cast<HookFn>(fn), mask, count);
+	} else {
+		g_api.sethook(L, nullptr, 0, 0);
+		ClearCaches();
+	}
+	return true;
+}
 
 } // namespace LuaHooks

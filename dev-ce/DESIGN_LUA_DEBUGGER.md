@@ -53,3 +53,10 @@ Everything gated by the same byte-pattern checks as the hooks; failures disable 
 
 ## Not in scope
 Exception breakpoints (no hook in the retail VM's error path: `hks::error` could be wrapped later), hooks for C code calling C code, tail-return events, variants A / C of the interpreter, remote (non-loopback) debugging, a custom editor extension.
+
+
+## D0 RESULTS (2026-10-15)  VERIFIED in game (branch feature/lua-debugger, off feature/lua-hooks)
+- Built: `LuaDebugger.cpp/.h` (server thread on 127.0.0.1, default port 4320; request loop on the stopped thread), `LuaHooks::GetApi()` / `SetNativeHook()` (native hook per state, used for stepping), `debug.c_breakpoint` re-registered natively (stops when a client is connected, otherwise a no-op), Lua globals `DevCE_DebugListen(port)`, `DevCE_DebugWait(seconds)`, `DevCE_DebugActive()`, client `dev-ce/tools/devce_dbg.py`, demo target `DevCE_DebugDemo.lua` (gameplay script of DevCE_Test; does nothing unless the server runs).
+- Enable: marker file `DevCE_Debug.txt` next to the DLL (first line = port) or `DevCE_DebugListen()`. Remove the marker to switch the demo off (with the marker the demo waits up to 60 s for a client while the game loads).
+- Proven in the real game: client connected while the game was loading; `c_breakpoint` stopped the gameplay thread; `stack` showed `[C]`, inner (line 7), outer (12), main chunk (17), `[C]`; `eval` of globals and expressions, Lua errors returned with the traceback; `status`; `step` stopped on the next line (8, then 9) through the native line hook; `continue` ran the script to the end (result 85 as expected); disconnect resumes the game thread. No crash, no hang.
+- Known D0 limits: eval sees globals only (locals / upvalues are D2); one stop at a time (a second state that hits a stop meanwhile just continues); step = step into only (over / out and line breakpoints are D1); `[C]` frames carry no function name; error text of eval contains the full traceback.
