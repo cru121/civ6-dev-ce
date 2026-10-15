@@ -290,6 +290,11 @@
     <ClCompile Include="Unit.cpp" />
     <ClCompile Include="UnitManager.cpp" />
     <ClCompile Include="DevBridge.cpp" />
+    <ClCompile Include="AudioPlayer.cpp" />
+    <ClCompile Include="LuaHooks.cpp" />
+    <ClCompile Include="LuaDebugger.cpp" />
+    <ClCompile Include="MiniaudioImpl.cpp" />
+    <ClCompile Include="stb_vorbis.c" />
     <ClCompile Include="DevNativeTable.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -393,6 +398,8 @@
     <ClInclude Include="Unit.h" />
     <ClInclude Include="UnitManager.h" />
     <ClInclude Include="DevBridge.h" />
+    <ClInclude Include="LuaHooks.h" />
+    <ClInclude Include="LuaDebugger.h" />
     <ClInclude Include="Data.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

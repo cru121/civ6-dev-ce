@@ -1,0 +1,640 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// Part of Dev CE, a fork of the Civilization VI Community Extension by Wild-W (https://github.com/Wild-W/CivilizationVI_CommunityExtension).
+// Copyright (C) 2026 cru121. Licensed under the GNU Affero General Public License v3.0 (see LICENSE.txt). Not endorsed by Wild-W, Firaxis or 2K.
+#include "LuaHooks.h"
+#include "DevBridge.h"
+#include <Windows.h>
+#include <TlHelp32.h>
+#include <atomic>
+#include <cstdint>
+#include <cstring>
+#include <mutex>
+#include <unordered_map>
+#include <vector>
+
+// How this works (details and measurements: dev-ce/DESIGN_LUA_HOOKS.md):
+//  * lua_sethook (exported) stores hook function / mask / count in the lua_State (+0xc8 / +0xd0 / +0xd4) but the retail interpreter never reads them.
+//  * Every VM instruction goes through the fetch site at HavokScript_FinalRelease.dll+0x696aa (`mov [L+0x30], pc ; mov rsi, rax`, L = rdi, pc = rax,
+//    frame base = rcx with a spill slot at [rbp+0x498]). Only this site ran in all our measurements (UI, gameplay and worker threads).
+//  * On the first debug.sethook we put a 5-byte jmp there to a small generated stub. Fast path: `cmp dword [rdi+0xd0], 0` (hook mask of the state) and,
+//    when zero, the two displaced instructions and a jump back: a few cycles per VM instruction. Slow path: save registers, call OnFetch(L, pc), reload the
+//    frame base from [L+0x50] into rcx and its spill slot if a hook ran (a hook that calls Lua can reallocate the Lua stack), restore, continue.
+//  * OnFetch implements the PUC-Lua hook events: count (+0xd8 counter vs +0xd4), line (new line or backward jump), call (call depth grew),
+//    return (instruction word >> 25 == 9). The Lua-level hook function is kept in registry[_DEVCE_HOOKS][lightuserdata(L)] like PUC Lua.
+// The DLL is pinned in DllMain (never unloaded), so the stub may call straight into it.
+namespace LuaHooks {
+namespace {
+
+using hks::lua_State;
+typedef void(__cdecl* HookFn)(lua_State*, void*);
+
+constexpr uintptr_t SITE_RVA = 0x696aa;
+constexpr uintptr_t CHECK_RVA = 0x696a0;                                       // 20 bytes of context used for the build check
+const uint8_t CHECK_BYTES[20] = { 0x48, 0x8b, 0x85, 0x88, 0x04, 0x00, 0x00, 0x4d, 0x8b, 0xde, 0x48, 0x89, 0x47, 0x30, 0x48, 0x8b, 0xf0, 0x4c, 0x8b, 0xc8 };
+constexpr size_t SITE_OFFSET_IN_CHECK = 10;                                    // 0x696aa - 0x696a0
+constexpr size_t SITE_PATCH_LEN = 5;                                           // jmp rel32
+constexpr size_t SITE_DISPLACED_LEN = 7;                                       // mov [rdi+0x30],rax (4) + mov rsi,rax (3): the stub re-executes them
+
+// C-function calls: the interpreter's CALL handler runs `inc dword [L+0x98]` (C call depth) right before `call rbx` (the C function) and, after it returns,
+// `dec dword [L+0x98]; test eax,eax; js error_path`. Call hook = the `inc` (6 bytes -> jmp rel32 + nop); return hook = `test eax,eax; js` (8 bytes, re-encoded in the stub).
+// Not patched: the `call rbx` and the `dec` after it. Their address is the C function's return address, and the Windows x64 unwinder treats a `jmp` at a return
+// address as an epilogue (first attempt: error() inside a hook died with STATUS_BAD_STACK). No stub frame exists while the C function runs, either.
+// Calls made from C code (lua_call, pcall, metamethods) do not pass here.
+constexpr uintptr_t CPRE_RVA = 0x6b8c6, CPOST_RVA = 0x6b8f8, CCHECK_RVA = 0x6b8c2;
+constexpr size_t CCHECK_LEN = 62;
+const uint8_t CCHECK_BYTES[CCHECK_LEN] = {
+	0x48,0x8b,0x5b,0x10, 0xff,0x87,0x98,0x00,0x00,0x00, 0x81,0xbf,0x98,0x00,0x00,0x00,0x80,0x00,0x00,0x00, 0x7e,0x15, 0x41,0xb8,0x80,0x00,0x00,0x00,
+	0x48,0x8d,0x15,0xcb,0x74,0x00,0x00, 0x48,0x8b,0xcf, 0xe8,0x33,0x79,0xfc,0xff, 0x48,0x8b,0xcf, 0xff,0xd3, 0xff,0x8f,0x98,0x00,0x00,0x00, 0x85,0xc0, 0x0f,0x88,0xb8,0x1e,0x00,0x00 };
+constexpr size_t CPRE_LEN = 6, CPOST_LEN = 8;
+
+// lua_State field offsets (HavokScript_FinalRelease.dll 15038592 / 15296837; confirmed with Frida, see DESIGN_LUA_HOOKS.md)
+constexpr int OFF_CI_BASE = 0x18, OFF_CI_CUR = 0x28, OFF_PC = 0x30, OFF_TOP = 0x48, OFF_BASE = 0x50;
+constexpr int OFF_HOOKPC = 0x38, OFF_HOOKIDX = 0x40;   // read by the frame-pc lookup (0x28180): frame index == [L+0x40] -> pc = [L+0x38]
+constexpr int OFF_HOOKFN = 0xc8, OFF_MASK = 0xd0, OFF_COUNT = 0xd4, OFF_COUNTER = 0xd8;
+constexpr int AR_EVENT = 0x00, AR_CURRENTLINE = 0x28, AR_SIZE = 0x300;         // lua_Debug: event int @0, currentline int @0x28 (name/short_src further on)
+constexpr int EV_CALL = 0, EV_RET = 1, EV_LINE = 2, EV_COUNT = 3;
+constexpr int MASK_CALL = 1, MASK_RET = 2, MASK_LINE = 4, MASK_COUNT = 8;
+constexpr uint32_t OP_RETURN = 9;                                              // instruction word >> 25 (measured: always lowers the call depth)
+const char* const HOOKKEY = "_DEVCE_HOOKS";
+
+Api g_api;   // struct Api: LuaHooks.h
+HMODULE g_hks = nullptr;
+std::once_flag g_apiOnce;
+
+template <typename T> bool Resolve(T& out, const char* name) {
+	out = reinterpret_cast<T>(GetProcAddress(g_hks, name));
+	if (!out) DevBridge::Log("[LuaHooks] missing export %s", name);
+	return out != nullptr;
+}
+
+bool InitApi() {
+	std::call_once(g_apiOnce, [] {
+		g_hks = GetModuleHandleA("HavokScript_FinalRelease.dll");
+		if (!g_hks) { DevBridge::Log("[LuaHooks] HavokScript_FinalRelease.dll not loaded"); return; }
+		bool ok = true;
+		ok &= Resolve(g_api.getstack, "?hksi_lua_getstack@@YAHPEAUlua_State@@HPEAUlua_Debug@@@Z");
+		ok &= Resolve(g_api.getinfo, "?hksi_lua_getinfo@@YAHPEAUlua_State@@PEBDPEAUlua_Debug@@@Z");
+		ok &= Resolve(g_api.sethook, "?hksi_lua_sethook@@YAHPEAUlua_State@@P6AX0PEAUlua_Debug@@@ZHH@Z");
+		ok &= Resolve(g_api.checkstack, "?luaL_checkstack@@YAXPEAUlua_State@@HPEBD@Z");
+		ok &= Resolve(g_api.type, "?hksi_lua_type@@YAHPEAUlua_State@@H@Z");
+		ok &= Resolve(g_api.typenameOf, "?hksi_lua_typename@@YAPEBDPEAUlua_State@@H@Z");
+		ok &= Resolve(g_api.settop, "?hksi_lua_settop@@YAXPEAUlua_State@@H@Z");
+		ok &= Resolve(g_api.gettop, "?hksi_lua_gettop@@YAHPEAUlua_State@@@Z");
+		ok &= Resolve(g_api.pushnil, "?hksi_lua_pushnil@@YAXPEAUlua_State@@@Z");
+		ok &= Resolve(g_api.rawget, "?hksi_lua_rawget@@YAXPEAUlua_State@@H@Z");
+		ok &= Resolve(g_api.rawset, "?hksi_lua_rawset@@YAXPEAUlua_State@@H@Z");
+		ok &= Resolve(g_api.tolstring, "?hksi_lua_tolstring@@YAPEBDPEAUlua_State@@HPEA_K@Z");
+		ok &= Resolve(g_api.tonumber, "?hksi_lua_tonumber@@YANPEAUlua_State@@H@Z");
+		ok &= Resolve(g_api.luaopen_debug, "?luaopen_debug@@YAHPEAUlua_State@@@Z");
+			ok &= Resolve(g_api.loadstring, "?hksi_luaL_loadstring@@YAHPEAUlua_State@@PEBD@Z");
+			ok &= Resolve(g_api.getlocal, "?hksi_lua_getlocal@@YAPEBDPEAUlua_State@@PEAUlua_Debug@@H@Z");
+			ok &= Resolve(g_api.getupvalue, "?hksi_lua_getupvalue@@YAPEBDPEAUlua_State@@HH@Z");
+		g_api.ok = ok;
+	});
+	return g_api.ok;
+}
+
+inline uint8_t* LB(lua_State* L) { return reinterpret_cast<uint8_t*>(L); }
+inline int64_t& I64(lua_State* L, int off) { return *reinterpret_cast<int64_t*>(LB(L) + off); }
+inline int& I32(lua_State* L, int off) { return *reinterpret_cast<int*>(LB(L) + off); }
+
+bool IsFunction(lua_State* L, int idx) {
+	const char* n = g_api.typenameOf(L, g_api.type(L, idx));
+	return n && std::strcmp(n, "function") == 0;
+}
+bool IsTable(lua_State* L, int idx) {
+	const char* n = g_api.typenameOf(L, g_api.type(L, idx));
+	return n && std::strcmp(n, "table") == 0;
+}
+bool IsNoneOrNil(lua_State* L, int idx) {
+	const char* n = g_api.typenameOf(L, g_api.type(L, idx));
+	return !n || std::strcmp(n, "nil") == 0 || std::strcmp(n, "no value") == 0;
+}
+
+// Pointer of the coroutine at stack index idx (lua_tothread / lua_topointer both crash on thread values in this VM, so read the 16-byte stack slot:
+// one qword is the type tag, the other the lua_State pointer). Returns nullptr when neither word looks like a readable lua_State.
+lua_State* ThreadAt(lua_State* L, int idx) {
+	const int64_t* slot = reinterpret_cast<const int64_t*>(I64(L, OFF_BASE) + static_cast<int64_t>(idx - 1) * 16);
+	const int64_t q0 = slot[0], q1 = slot[1];
+	for (int64_t q : { q1, q0 }) {
+		if (q < 0x10000) continue;
+		MEMORY_BASIC_INFORMATION mbi;
+		if (VirtualQuery(reinterpret_cast<void*>(q), &mbi, sizeof(mbi)) && mbi.State == MEM_COMMIT && reinterpret_cast<uintptr_t>(mbi.BaseAddress) + mbi.RegionSize > static_cast<uintptr_t>(q) + 0x100)
+			return reinterpret_cast<lua_State*>(q);
+	}
+	return nullptr;
+}
+bool IsThread(lua_State* L, int idx) { return g_api.type(L, idx) == 8; }   // Havok type code of a coroutine (lua_typename on it is not used: it crashed in the first test)
+bool IsNumber(lua_State* L, int idx) {
+	const char* n = g_api.typenameOf(L, g_api.type(L, idx));
+	return n && std::strcmp(n, "number") == 0;
+}
+
+// ---- per-state bookkeeping (only states with a hook ever get an entry; entries are never freed so threads may cache the pointer) -------------------------
+constexpr int MAX_DEPTH = 256;
+struct HookState {
+	uint32_t gen = 0;                           // reset when the global generation changes (sethook / hook removal)
+	int64_t depth = -1;                         // call depth at the previous fetch of this state
+	const uint32_t* lastPc = nullptr;
+	int lines[MAX_DEPTH];                       // last reported line per call depth
+	HookState() { std::memset(lines, 0xff, sizeof(lines)); }
+};
+std::mutex g_mu;
+std::unordered_map<lua_State*, HookState*> g_states;
+std::atomic<uint32_t> g_gen{ 1 };
+thread_local int t_inHook = 0;                // no hooks while a hook runs on this thread (PUC: allowhook = 0)
+thread_local lua_State* t_cacheL = nullptr;
+thread_local HookState* t_cacheSt = nullptr;
+thread_local uint32_t t_cacheGen = 0;
+Stats g_stats = { 0, 0, 0 };
+LineFilter g_filterFn = nullptr;
+void* g_filterHook = nullptr;
+ArmHandler g_armFn = nullptr;                // see SetArmFlag
+volatile uint8_t* g_armFlag = nullptr;       // byte in the stub block, read by the stub's fast path
+
+// pc -> line cache, lock-free: entry = ((pc >> 2) << 19) | (line + 1) with line in [-1, 524286]
+constexpr size_t LINE_CACHE_SIZE = 1u << 16;
+std::atomic<uint64_t> g_lineCache[LINE_CACHE_SIZE];
+
+void ClearCaches() {
+	g_gen.fetch_add(1);
+	for (size_t i = 0; i < LINE_CACHE_SIZE; i++) g_lineCache[i].store(0, std::memory_order_relaxed);
+}
+
+HookState* StateOf(lua_State* L) {
+	const uint32_t gen = g_gen.load(std::memory_order_relaxed);
+	HookState* st;
+	if (t_cacheL == L && t_cacheSt) st = t_cacheSt;
+	else {
+		std::lock_guard<std::mutex> g(g_mu);
+		HookState*& slot = g_states[L];
+		if (!slot) slot = new HookState();
+		st = slot;
+		t_cacheL = L; t_cacheSt = st;
+	}
+	if (st->gen != gen) { st->gen = gen; st->depth = -1; st->lastPc = nullptr; std::memset(st->lines, 0xff, sizeof(st->lines)); }
+	return st;
+}
+
+int LineOf(lua_State* L, const uint32_t* pc) {
+	const uint64_t key = reinterpret_cast<uintptr_t>(pc) >> 2;
+	std::atomic<uint64_t>& slot = g_lineCache[key & (LINE_CACHE_SIZE - 1)];
+	const uint64_t e = slot.load(std::memory_order_relaxed);
+	if (e != 0 && (e >> 19) == key) return static_cast<int>(e & 0x7FFFF) - 1;
+	alignas(16) uint8_t ar[AR_SIZE];
+	std::memset(ar, 0, sizeof(ar));
+	*reinterpret_cast<const void**>(LB(L) + OFF_PC) = pc;                  // the patched instruction (which stores pc) has not run yet
+	int line = -1;
+	if (g_api.getstack(L, 0, ar) != 0) {
+		g_api.getinfo(L, "l", ar);
+		line = *reinterpret_cast<int*>(ar + AR_CURRENTLINE);
+	}
+	const int enc = (line < -1 || line > 524286) ? 0 : line + 1;
+	slot.store((key << 19) | static_cast<uint64_t>(enc), std::memory_order_relaxed);
+	return line;
+}
+
+// ---- the hook function installed with lua_sethook: calls the Lua function registered for this state, protected -----------------------------------------
+void __cdecl HookF(lua_State* L, void* ar) {
+	static const char* const names[] = { "call", "return", "line", "count", "tail return" };
+	const int event = *reinterpret_cast<int*>(static_cast<uint8_t*>(ar) + AR_EVENT);
+	const int line = *reinterpret_cast<int*>(static_cast<uint8_t*>(ar) + AR_CURRENTLINE);
+	const int top0 = g_api.gettop(L);
+	hks::getfield(L, hks::LUA_REGISTRYINDEX, HOOKKEY);
+	if (IsTable(L, -1)) {
+		hks::pushlightuserdata(L, L);
+		g_api.rawget(L, -2);
+		if (IsFunction(L, -1)) {
+			hks::pushfstring(L, "%s", (event >= 0 && event <= 4) ? names[event] : "?");
+			if (line >= 0) hks::pushinteger(L, line); else g_api.pushnil(L);
+			if (hks::pcall(L, 2, 0, 0) != 0) {
+				size_t len = 0;
+				const char* msg = g_api.tolstring(L, -1, &len);
+				DevBridge::Log("[LuaHooks] error in hook function, hook removed: %s", msg ? msg : "(no message)");
+				g_api.sethook(L, nullptr, 0, 0);                               // PUC would propagate the error; we cannot raise from inside the VM loop safely
+			}
+		}
+	}
+	g_api.settop(L, top0);
+}
+
+// Calls the hook of state L like Linux hks::debug_hook_call: reserve stack, getstack(0), fill event and currentline, call L+0xc8, restore the top.
+void CallHook(lua_State* L, int event, int line, const uint32_t* pc) {
+	HookFn hook = *reinterpret_cast<HookFn*>(LB(L) + OFF_HOOKFN);
+	if (!hook) return;
+	++t_inHook;
+	const int64_t topOff = I64(L, OFF_TOP) - I64(L, OFF_BASE);          // as an offset: the Lua stack may be reallocated during the hook
+	*reinterpret_cast<const void**>(LB(L) + OFF_PC) = pc;
+	// like hks::debug_hook_call: tell the frame-pc lookup which frame is being hooked and where it is, so debug.getinfo(2) inside the hook sees the hooked line
+	const void* const prevHookPc = *reinterpret_cast<const void**>(LB(L) + OFF_HOOKPC);
+	const int prevHookIdx = I32(L, OFF_HOOKIDX);
+	*reinterpret_cast<const void**>(LB(L) + OFF_HOOKPC) = pc;
+	I32(L, OFF_HOOKIDX) = static_cast<int>((I64(L, OFF_CI_CUR) - I64(L, OFF_CI_BASE)) / 24);
+	g_api.checkstack(L, 40, "hook");
+	alignas(16) uint8_t ar[AR_SIZE];
+	std::memset(ar, 0, sizeof(ar));
+	g_api.getstack(L, 0, ar);
+	*reinterpret_cast<int*>(ar + AR_EVENT) = event;
+	*reinterpret_cast<int*>(ar + AR_CURRENTLINE) = line;
+	hook(L, ar);
+	*reinterpret_cast<const void**>(LB(L) + OFF_HOOKPC) = prevHookPc;
+	I32(L, OFF_HOOKIDX) = prevHookIdx;
+	I64(L, OFF_TOP) = I64(L, OFF_BASE) + topOff;
+	--t_inHook;
+}
+
+// Call / return hook for a C function (frame already pushed by the interpreter, level 0 = the C function): no pc, no line.
+void CallHookC(lua_State* L, int event) {
+	HookFn hook = *reinterpret_cast<HookFn*>(LB(L) + OFF_HOOKFN);
+	if (!hook) return;
+	++t_inHook;
+	const int64_t topOff = I64(L, OFF_TOP) - I64(L, OFF_BASE);
+	g_api.checkstack(L, 40, "hook");
+	alignas(16) uint8_t ar[AR_SIZE];
+	std::memset(ar, 0, sizeof(ar));
+	g_api.getstack(L, 0, ar);
+	*reinterpret_cast<int*>(ar + AR_EVENT) = event;
+	*reinterpret_cast<int*>(ar + AR_CURRENTLINE) = -1;
+	hook(L, ar);
+	I64(L, OFF_TOP) = I64(L, OFF_BASE) + topOff;
+	--t_inHook;
+}
+// Called by the C-call stubs (the stub saves all volatile registers).
+void __cdecl OnCCall(lua_State* L) { if (!t_inHook && (I32(L, OFF_MASK) & MASK_CALL)) CallHookC(L, EV_CALL); }
+void __cdecl OnCRet(lua_State* L) { if (!t_inHook && (I32(L, OFF_MASK) & MASK_RET)) CallHookC(L, EV_RET); }
+
+// Called by the stub for every VM instruction of a state whose hook mask is non-zero. Returns non-zero when a hook ran (the stub then reloads the frame base).
+int __cdecl OnFetch(lua_State* L, const uint32_t* pc) {
+	if (t_inHook) return 0;
+	++g_stats.fetchSlow;
+	const int mask = I32(L, OFF_MASK);
+	if (!mask || !*reinterpret_cast<void**>(LB(L) + OFF_HOOKFN)) {
+		if (g_armFlag && *g_armFlag && g_armFn) g_armFn(L);                      // armed mode: let the debugger hook this state (we are on its own thread)
+		return 0;
+	}
+	const uint32_t op = *pc >> 25;
+	const int64_t depth = (I64(L, OFF_CI_CUR) - I64(L, OFF_CI_BASE)) / 24;
+	const int slot = depth < 0 ? 0 : (depth >= MAX_DEPTH ? MAX_DEPTH - 1 : static_cast<int>(depth));
+
+	HookState* st = StateOf(L);
+	const bool grew = st->depth >= 0 && depth > st->depth;
+	const bool callDue = grew && (mask & MASK_CALL);
+	if (grew) st->lines[slot] = -1;                                           // entering a new function: its line history starts empty
+	st->depth = depth;
+	const uint32_t* last = st->lastPc;
+	st->lastPc = pc;
+	const bool retDue = (mask & MASK_RET) && op == OP_RETURN;
+	bool countDue = false;
+	if (mask & MASK_COUNT) {
+		int c = ++I32(L, OFF_COUNTER);
+		if (c >= I32(L, OFF_COUNT)) { I32(L, OFF_COUNTER) = 0; countDue = true; }
+	}
+	bool lineDue = false;
+	int line = -1;
+	if (mask & MASK_LINE) {
+		line = LineOf(L, pc);
+		int& prev = st->lines[slot];
+		// PUC Lua: a line event when the line changes or the pc jumps backwards (a loop iteration on the same line)
+		if (line != prev || (last && !grew && pc <= last)) { lineDue = true; prev = line; }
+		if (lineDue && g_filterFn && *reinterpret_cast<void**>(LB(L) + OFF_HOOKFN) == g_filterHook && !g_filterFn(L, line)) { lineDue = false; ++g_stats.lineFiltered; }
+		else if (lineDue) ++g_stats.lineDelivered;
+	}
+	if (!(callDue || lineDue || countDue || retDue)) return 0;
+	if (line < 0 && (retDue || callDue || countDue)) line = LineOf(L, pc);
+	if (callDue) CallHook(L, EV_CALL, line, pc);
+	if (lineDue) CallHook(L, EV_LINE, line, pc);
+	if (countDue) CallHook(L, EV_COUNT, line, pc);
+	if (retDue) CallHook(L, EV_RET, line, pc);
+	return 1;
+}
+
+// ---- the stub and the patch ----------------------------------------------------------------------------------------------------------------------------
+std::mutex g_installMu;
+std::atomic<bool> g_installed{ false };
+std::atomic<bool> g_installFailed{ false };
+bool g_cEvents = false;                      // C call/return patches installed
+
+struct Asm {
+	std::vector<uint8_t> b;
+	void bytes(std::initializer_list<uint8_t> l) { b.insert(b.end(), l.begin(), l.end()); }
+	void u32(uint32_t v) { for (int i = 0; i < 4; i++) b.push_back(static_cast<uint8_t>(v >> (8 * i))); }
+	size_t pos() const { return b.size(); }
+};
+
+void* AllocNear(uintptr_t target, size_t size) {
+	SYSTEM_INFO si; GetSystemInfo(&si);
+	const uintptr_t gran = si.dwAllocationGranularity;
+	const uintptr_t limit = 0x70000000;                                      // stay well inside +-2 GB of the site
+	for (uintptr_t off = gran; off < limit; off += gran) {
+		for (int dir = 0; dir < 2; dir++) {
+			uintptr_t cand = dir == 0 ? (target & ~(gran - 1)) - off : (target & ~(gran - 1)) + off;
+			if (dir == 0 && cand > target) continue;                                // unsigned wrap-around (module loaded low)
+			if (cand < 0x10000) continue;                                           // VirtualAlloc(NULL) would pick ANY address (first failure seen: HavokScript at 0x9F0000, target - off == 0)
+			void* p = VirtualAlloc(reinterpret_cast<void*>(cand), size, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
+			if (!p) continue;
+			const intptr_t dist = static_cast<intptr_t>(reinterpret_cast<uintptr_t>(p)) - static_cast<intptr_t>(target);
+			if (dist > 0x7FF00000 || dist < -0x7FF00000) { VirtualFree(p, 0, MEM_RELEASE); continue; }   // never hand out memory a rel32 jmp cannot reach
+			return p;
+		}
+	}
+	return nullptr;
+}
+
+// Suspends every other thread of the process, checks that none is executing inside one of the ranges, runs `patch`, resumes. Retries a few times.
+struct Range { uintptr_t lo; size_t len; };
+bool WithThreadsFrozen(const Range* ranges, int nr, void (*patch)(void*), void* arg) {
+	for (int attempt = 0; attempt < 20; attempt++) {
+		std::vector<DWORD> ids;
+		const DWORD self = GetCurrentThreadId(), pid = GetCurrentProcessId();
+		HANDLE snap = CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD, 0);
+		if (snap == INVALID_HANDLE_VALUE) return false;
+		THREADENTRY32 te; te.dwSize = sizeof(te);
+		if (Thread32First(snap, &te)) do { if (te.th32OwnerProcessID == pid && te.th32ThreadID != self) ids.push_back(te.th32ThreadID); } while (Thread32Next(snap, &te));
+		CloseHandle(snap);
+		std::vector<HANDLE> hs; hs.reserve(ids.size());
+		bool clash = false;
+		for (DWORD id : ids) {                                               // no allocation from here until the threads are resumed
+			HANDLE h = OpenThread(THREAD_SUSPEND_RESUME | THREAD_GET_CONTEXT, FALSE, id);
+			if (!h) continue;
+			if (SuspendThread(h) == static_cast<DWORD>(-1)) { CloseHandle(h); continue; }
+			hs.push_back(h);
+			CONTEXT ctx; ctx.ContextFlags = CONTEXT_CONTROL;
+			if (GetThreadContext(h, &ctx)) for (int i = 0; i < nr; i++) if (ctx.Rip >= ranges[i].lo && ctx.Rip < ranges[i].lo + ranges[i].len) clash = true;
+		}
+		if (!clash) patch(arg);
+		for (HANDLE h : hs) { ResumeThread(h); CloseHandle(h); }
+		if (!clash) return true;
+		Sleep(1);
+	}
+	return false;
+}
+
+struct PatchItem { uint8_t* site; uint8_t bytes[8]; size_t len; };
+struct PatchArg { PatchItem items[3]; int n = 0; };
+void DoPatch(void* p) {
+	PatchArg* a = static_cast<PatchArg*>(p);
+	for (int i = 0; i < a->n; i++) {
+		PatchItem& it = a->items[i];
+		DWORD old = 0;
+		VirtualProtect(it.site, it.len, PAGE_EXECUTE_READWRITE, &old);
+		std::memcpy(it.site, it.bytes, it.len);
+		FlushInstructionCache(GetCurrentProcess(), it.site, it.len);
+		VirtualProtect(it.site, it.len, old, &old);
+	}
+}
+
+// Stub for a C-call site (jsTarget != 0: the return-hook variant, see CPOST_RVA): when the state's mask has `maskBit`, save everything volatile, call handler(L = rdi), restore; then run the displaced 6-byte instruction and
+// resume. Assumes rsp is 16-byte aligned at the site (the interpreter calls other functions from the same frame without adjusting it) and rdi = L.
+std::vector<uint8_t> BuildCStub(uintptr_t codeBase, uintptr_t slotHandler, uintptr_t resume, const uint8_t* displaced, uint32_t maskBit, uintptr_t jsTarget) {
+	Asm a;
+	auto rel = [&](uintptr_t target, size_t instrEnd) { return static_cast<uint32_t>(static_cast<int32_t>(target - (codeBase + instrEnd))); };
+	if (jsTarget) {                                                          // return-hook stub: replays `test eax,eax; js error_path` first (a negative count skips the hook)
+		a.bytes({ 0x85, 0xC0 });
+		a.bytes({ 0x0F, 0x88 }); a.u32(rel(jsTarget, a.pos() + 4));
+	}
+	a.bytes({ 0xF7, 0x87, 0xD0, 0x00, 0x00, 0x00 }); a.u32(maskBit);          // test dword ptr [rdi+0xd0], maskBit
+	a.bytes({ 0x0F, 0x84 }); const size_t jzFix = a.pos(); a.u32(0);           // jz plain
+	a.bytes({ 0x9C, 0x50, 0x51, 0x52, 0x41, 0x50, 0x41, 0x51, 0x41, 0x52, 0x41, 0x53 });   // pushfq; push rax, rcx, rdx, r8, r9, r10, r11 (8 pushes: alignment kept)
+	a.bytes({ 0x48, 0x81, 0xEC, 0xA0, 0x00, 0x00, 0x00 });                   // sub rsp, 0xa0
+	for (int i = 0; i < 6; i++) a.bytes({ 0xF3, 0x0F, 0x7F, static_cast<uint8_t>(0x44 | (i << 3)), 0x24, static_cast<uint8_t>(0x20 + 0x10 * i) });
+	a.bytes({ 0x48, 0x89, 0xF9 });                                           // mov rcx, rdi
+	a.bytes({ 0xFF, 0x15 }); { const size_t at = a.pos(); a.u32(rel(slotHandler, at + 4)); }   // call [handler]
+	for (int i = 0; i < 6; i++) a.bytes({ 0xF3, 0x0F, 0x6F, static_cast<uint8_t>(0x44 | (i << 3)), 0x24, static_cast<uint8_t>(0x20 + 0x10 * i) });
+	a.bytes({ 0x48, 0x81, 0xC4, 0xA0, 0x00, 0x00, 0x00 });                   // add rsp, 0xa0
+	a.bytes({ 0x41, 0x5B, 0x41, 0x5A, 0x41, 0x59, 0x41, 0x58, 0x5A, 0x59, 0x58, 0x9D });   // pop r11, r10, r9, r8, rdx, rcx, rax; popfq
+	const size_t plain = a.pos();
+	{ const int32_t r = static_cast<int32_t>(plain - (jzFix + 4)); std::memcpy(&a.b[jzFix], &r, 4); }
+	if (!jsTarget) for (size_t i = 0; i < CPRE_LEN; i++) a.b.push_back(displaced[i]);   // displaced `inc dword [rdi+0x98]`
+	a.bytes({ 0xE9 }); a.u32(rel(resume, a.pos() + 4));
+	return a.b;
+}
+
+bool Install() {
+	std::lock_guard<std::mutex> g(g_installMu);
+	if (g_installed) return true;
+	if (g_installFailed) return false;
+	auto fail = [](const char* why) { DevBridge::Log("[LuaHooks] not installed: %s", why); g_installFailed = true; return false; };
+	if (!InitApi()) return fail("HavokScript exports missing");
+	uint8_t* base = reinterpret_cast<uint8_t*>(g_hks);
+	uint8_t* site = base + SITE_RVA;
+	if (std::memcmp(base + CHECK_RVA, CHECK_BYTES, sizeof(CHECK_BYTES)) != 0) return fail("fetch site bytes differ (other HavokScript build, or already patched by a debugger tool)");
+
+	// block: [0x00] magic, [0x08] OnFetch pointer, [0x10] resume address (informational), [0x40...] stub code
+	uint8_t* blk = static_cast<uint8_t*>(AllocNear(reinterpret_cast<uintptr_t>(site), 0x1000));
+	if (!blk) return fail("no executable memory within +-2 GB of the fetch site");
+	std::memcpy(blk, "DEVCEHK1", 8);
+	*reinterpret_cast<void**>(blk + 0x08) = reinterpret_cast<void*>(&OnFetch);
+	*reinterpret_cast<void**>(blk + 0x10) = site + SITE_DISPLACED_LEN;
+	const uintptr_t slotFetch = reinterpret_cast<uintptr_t>(blk) + 0x08;
+	const uintptr_t slotFlag = reinterpret_cast<uintptr_t>(blk) + 0x28;          // arm flag byte (zero-initialised by VirtualAlloc)
+	const uintptr_t codeBase = reinterpret_cast<uintptr_t>(blk) + 0x40;
+
+	Asm a;
+	auto ripRel = [&](uintptr_t slot, size_t instrEndOffset) { return static_cast<uint32_t>(static_cast<int32_t>(slot - (codeBase + instrEndOffset))); };
+	auto jmpRel = [&](size_t instrEndOffset) { return static_cast<uint32_t>(static_cast<int32_t>((reinterpret_cast<uintptr_t>(site) + SITE_DISPLACED_LEN) - (codeBase + instrEndOffset))); };
+	// entry: fast path when the state has no hook
+	a.bytes({ 0x83, 0xBF, 0xD0, 0x00, 0x00, 0x00, 0x00 });                   // cmp dword ptr [rdi+0xd0], 0
+	a.bytes({ 0x0F, 0x85 }); const size_t jneFix = a.pos(); a.u32(0);        // jne slow
+	a.bytes({ 0x80, 0x3D }); { const size_t at = a.pos(); a.u32(ripRel(slotFlag, at + 4 + 1)); } a.bytes({ 0x00 });   // cmp byte ptr [arm flag], 0
+	a.bytes({ 0x0F, 0x85 }); const size_t jneFix2 = a.pos(); a.u32(0);       // jne slow
+	a.bytes({ 0x48, 0x89, 0x47, 0x30 });                                     // mov [rdi+0x30], rax   (displaced)
+	a.bytes({ 0x48, 0x8B, 0xF0 });                                           // mov rsi, rax          (displaced)
+	a.bytes({ 0xE9 }); a.u32(jmpRel(a.pos() + 4));                           // jmp site+7
+	const size_t slow = a.pos();
+	{ const int32_t rel = static_cast<int32_t>(slow - (jneFix + 4)); std::memcpy(&a.b[jneFix], &rel, 4); }
+	{ const int32_t rel = static_cast<int32_t>(slow - (jneFix2 + 4)); std::memcpy(&a.b[jneFix2], &rel, 4); }
+	a.bytes({ 0x9C, 0x50, 0x51, 0x52, 0x53, 0x56, 0x57 });                   // pushfq; push rax, rcx, rdx, rbx, rsi, rdi
+	a.bytes({ 0x41, 0x50, 0x41, 0x51, 0x41, 0x52, 0x41, 0x53 });             // push r8, r9, r10, r11
+	a.bytes({ 0x48, 0x89, 0xE3 });                                           // mov rbx, rsp  (rbx+0 r11, +8 r10, +16 r9, +24 r8, +32 rdi, +40 rsi, +48 rbx, +56 rdx, +64 rcx, +72 rax, +80 flags)
+	a.bytes({ 0x48, 0x83, 0xE4, 0xF0 });                                     // and rsp, -16
+	a.bytes({ 0x48, 0x81, 0xEC, 0xA0, 0x00, 0x00, 0x00 });                   // sub rsp, 0xa0  (shadow space + xmm save area)
+	for (int i = 0; i < 6; i++) a.bytes({ 0xF3, 0x0F, 0x7F, static_cast<uint8_t>(0x44 | (i << 3)), 0x24, static_cast<uint8_t>(0x20 + 0x10 * i) });   // movdqu [rsp+0x20+16i], xmm_i
+	a.bytes({ 0x48, 0x89, 0xF9 });                                           // mov rcx, rdi   (L)
+	a.bytes({ 0x48, 0x89, 0xC2 });                                           // mov rdx, rax   (pc)
+	a.bytes({ 0xFF, 0x15 }); { const size_t at = a.pos(); a.u32(ripRel(slotFetch, at + 4)); }     // call [OnFetch]
+	for (int i = 0; i < 6; i++) a.bytes({ 0xF3, 0x0F, 0x6F, static_cast<uint8_t>(0x44 | (i << 3)), 0x24, static_cast<uint8_t>(0x20 + 0x10 * i) });   // movdqu xmm_i, [rsp+...]
+	a.bytes({ 0x85, 0xC0 });                                                 // test eax, eax
+	a.bytes({ 0x74 }); const size_t jzFix = a.pos(); a.b.push_back(0);       // jz norefix
+	a.bytes({ 0x48, 0x8B, 0x7B, 0x20 });                                     // mov rdi, [rbx+0x20]      (saved L)
+	a.bytes({ 0x48, 0x8B, 0x4F, 0x50 });                                     // mov rcx, [rdi+0x50]      (frame base, may have moved)
+	a.bytes({ 0x48, 0x89, 0x4B, 0x40 });                                     // mov [rbx+0x40], rcx      (saved rcx)
+	a.bytes({ 0x48, 0x89, 0x8D, 0x98, 0x04, 0x00, 0x00 });                   // mov [rbp+0x498], rcx     (spill slot of the frame base)
+	const size_t norefix = a.pos();
+	a.b[jzFix] = static_cast<uint8_t>(norefix - (jzFix + 1));
+	a.bytes({ 0x48, 0x89, 0xDC });                                           // mov rsp, rbx
+	a.bytes({ 0x41, 0x5B, 0x41, 0x5A, 0x41, 0x59, 0x41, 0x58 });             // pop r11, r10, r9, r8
+	a.bytes({ 0x5F, 0x5E, 0x5B, 0x5A, 0x59, 0x58, 0x9D });                   // pop rdi, rsi, rbx, rdx, rcx, rax; popfq
+	a.bytes({ 0x48, 0x89, 0x47, 0x30 });                                     // mov [rdi+0x30], rax   (displaced)
+	a.bytes({ 0x48, 0x8B, 0xF0 });                                           // mov rsi, rax          (displaced)
+	a.bytes({ 0xE9 }); a.u32(jmpRel(a.pos() + 4));                           // jmp site+7
+	if (a.b.size() > 0x1000 - 0x40) return fail("stub too large");
+	std::memcpy(blk + 0x40, a.b.data(), a.b.size());
+	FlushInstructionCache(GetCurrentProcess(), blk, 0x1000);
+
+	PatchArg pa;
+	std::vector<Range> ranges;
+	{
+		const int64_t rel = static_cast<int64_t>(codeBase) - static_cast<int64_t>(reinterpret_cast<uintptr_t>(site) + SITE_PATCH_LEN);
+		if (rel > INT32_MAX || rel < INT32_MIN) { DevBridge::Log("[LuaHooks] site=%p stub=%p rel=%lld", (void*)site, (void*)codeBase, (long long)rel); return fail("stub out of jmp range"); }
+		PatchItem& it = pa.items[pa.n++];
+		it.site = site; it.len = SITE_PATCH_LEN; it.bytes[0] = 0xE9;
+		const int32_t rel32 = static_cast<int32_t>(rel);
+		std::memcpy(it.bytes + 1, &rel32, 4);
+		ranges.push_back({ reinterpret_cast<uintptr_t>(site), SITE_DISPLACED_LEN });
+	}
+	// C-function call / return events: optional, only when the surrounding bytes match
+	if (std::memcmp(base + CCHECK_RVA, CCHECK_BYTES, CCHECK_LEN) == 0) {
+		uint8_t* targets[2] = { base + CPRE_RVA, base + CPOST_RVA };
+		uint8_t* at[2] = { blk + 0x400, blk + 0x600 };
+		const uintptr_t slots[2] = { reinterpret_cast<uintptr_t>(blk) + 0x18, reinterpret_cast<uintptr_t>(blk) + 0x20 };
+		const uint32_t bits[2] = { MASK_CALL, MASK_RET };
+		*reinterpret_cast<void**>(blk + 0x18) = reinterpret_cast<void*>(&OnCCall);
+		*reinterpret_cast<void**>(blk + 0x20) = reinterpret_cast<void*>(&OnCRet);
+		for (int i = 0; i < 2; i++) {
+			const size_t plen = i == 0 ? CPRE_LEN : CPOST_LEN;
+			uintptr_t jsTarget = 0;
+			if (i == 1) { int32_t jr; std::memcpy(&jr, targets[1] + 4, 4); jsTarget = reinterpret_cast<uintptr_t>(targets[1]) + 8 + jr; }   // js rel32 at +2 (0f 88 at +2..+3), disp at +4
+			std::vector<uint8_t> code = BuildCStub(reinterpret_cast<uintptr_t>(at[i]), slots[i], reinterpret_cast<uintptr_t>(targets[i]) + plen, targets[i], bits[i], jsTarget);
+			if (code.size() > 0x1f0) return fail("C stub too large");
+			std::memcpy(at[i], code.data(), code.size());
+			const int64_t r = static_cast<int64_t>(reinterpret_cast<uintptr_t>(at[i])) - static_cast<int64_t>(reinterpret_cast<uintptr_t>(targets[i]) + 5);
+			if (r > INT32_MAX || r < INT32_MIN) return fail("C stub out of jmp range");
+			PatchItem& it = pa.items[pa.n++];
+			it.site = targets[i]; it.len = plen; it.bytes[0] = 0xE9;
+			const int32_t r32 = static_cast<int32_t>(r);
+			std::memcpy(it.bytes + 1, &r32, 4);
+			for (size_t k = 5; k < plen; k++) it.bytes[k] = 0x90;
+			ranges.push_back({ reinterpret_cast<uintptr_t>(targets[i]), plen });
+		}
+		FlushInstructionCache(GetCurrentProcess(), blk, 0x1000);
+		g_cEvents = true;
+	} else DevBridge::Log("[LuaHooks] C-call site bytes differ: call/return events for C functions disabled");
+	if (!WithThreadsFrozen(ranges.data(), static_cast<int>(ranges.size()), &DoPatch, &pa)) return fail("could not freeze the other threads outside the patched bytes");
+	g_armFlag = reinterpret_cast<volatile uint8_t*>(slotFlag);
+	g_installed = true;
+	DevBridge::Log("[LuaHooks] fetch site patched (HavokScript+0x%llx -> stub at %p), C call/return events %s", (unsigned long long)SITE_RVA, (void*)(blk + 0x40), g_cEvents ? "on" : "off");
+	return true;
+}
+
+// ---- Lua API: debug.sethook / debug.gethook (PUC Lua 5.1 semantics for the current thread) -----------------------------------------------------------
+int __cdecl l_sethook(lua_State* L) {
+	// debug.sethook([thread,] [hook, mask [, count]])  - PUC Lua 5.1 semantics; with a thread argument the hook is set on that coroutine
+	// (it is called on the thread that runs the hooked code, so the Lua hook function sees the coroutine as its running state).
+	if (!InitApi()) { hks::error(L, "debug.sethook: HavokScript API not available"); return 0; }
+	int arg = 0;
+	lua_State* L1 = L;
+	const bool isThr = IsThread(L, 1);
+	if (isThr) { arg = 1; L1 = ThreadAt(L, 1); if (!L1) { hks::error(L, "debug.sethook: bad thread"); return 0; } }
+	if (IsNoneOrNil(L, arg + 1)) {                                             // remove the hook
+		g_api.sethook(L1, nullptr, 0, 0);
+		hks::getfield(L, hks::LUA_REGISTRYINDEX, HOOKKEY);
+		if (IsTable(L, -1)) { hks::pushlightuserdata(L, L1); g_api.pushnil(L); g_api.rawset(L, -3); }
+		g_api.settop(L, -2);
+		ClearCaches();
+		return 0;
+	}
+	if (!IsFunction(L, arg + 1)) { hks::error(L, "debug.sethook: bad argument (function expected)"); return 0; }
+	size_t len = 0;
+	const char* smask = g_api.tolstring(L, arg + 2, &len);
+	if (!smask) { hks::error(L, "debug.sethook: bad mask argument (string expected)"); return 0; }
+	int count = IsNumber(L, arg + 3) ? static_cast<int>(g_api.tonumber(L, arg + 3)) : 0;
+	int mask = 0;
+	for (const char* p = smask; *p; ++p) {
+		if (*p == 'c') mask |= MASK_CALL; else if (*p == 'r') mask |= MASK_RET; else if (*p == 'l') mask |= MASK_LINE;
+	}
+	if (count > 0) mask |= MASK_COUNT; else count = 0;
+	if (mask == 0) { g_api.sethook(L1, nullptr, 0, 0); return 0; }
+	if (!Install()) { hks::error(L, "debug.sethook: the VM patch could not be installed (see DevBridge.log)"); return 0; }
+
+	hks::getfield(L, hks::LUA_REGISTRYINDEX, HOOKKEY);                         // registry[HOOKKEY][lightuserdata(L1)] = hook
+	if (!IsTable(L, -1)) {
+		g_api.settop(L, -2);
+		hks::createtable(L, 0, 0);
+		hks::pushvalue(L, -1);
+		hks::setfield(L, hks::LUA_REGISTRYINDEX, HOOKKEY);
+	}
+	hks::pushlightuserdata(L, L1);
+	hks::pushvalue(L, arg + 1);
+	g_api.rawset(L, -3);
+	g_api.settop(L, -2);
+	ClearCaches();
+	g_api.sethook(L1, &HookF, mask, count);
+	return 0;
+}
+
+int __cdecl l_clockms(lua_State* L) {
+	LARGE_INTEGER f, c; QueryPerformanceFrequency(&f); QueryPerformanceCounter(&c);
+	hks::pushnumber(L, 1000.0 * static_cast<double>(c.QuadPart) / static_cast<double>(f.QuadPart));
+	return 1;
+}
+
+int __cdecl l_gethook(lua_State* L) {
+	// debug.gethook([thread]) -> hook function (or nil), mask string, count  (PUC Lua 5.1 db_gethook)
+	if (!InitApi()) { hks::error(L, "debug.gethook: HavokScript API not available"); return 0; }
+	lua_State* L1 = L;
+	if (IsThread(L, 1)) { L1 = ThreadAt(L, 1); if (!L1) { hks::error(L, "debug.gethook: bad thread"); return 0; } }
+	const int mask = I32(L1, OFF_MASK), count = I32(L1, OFF_COUNT);
+	HookFn hook = *reinterpret_cast<HookFn*>(LB(L1) + OFF_HOOKFN);
+	if (!hook) g_api.pushnil(L);
+	else {
+		hks::getfield(L, hks::LUA_REGISTRYINDEX, HOOKKEY);
+		if (IsTable(L, -1)) { hks::pushlightuserdata(L, L1); g_api.rawget(L, -2); }     // the registry table stays below the three results
+		else g_api.pushnil(L);
+	}
+	char buf[4]; int n = 0;
+	if (mask & MASK_CALL) buf[n++] = 'c';
+	if (mask & MASK_RET) buf[n++] = 'r';
+	if (mask & MASK_LINE) buf[n++] = 'l';
+	buf[n] = 0;
+	hks::pushfstring(L, "%s", buf);
+	hks::pushinteger(L, hook ? count : 0);
+	return 3;
+}
+
+} // namespace
+
+void RegisterGlobals(lua_State* L) {
+	if (!InitApi()) return;
+	// make sure a global `debug` table exists (the main/tuner state has one; mod states do not)
+	hks::getfield(L, hks::LUA_GLOBAL, "debug");
+	if (!IsTable(L, -1)) {
+		g_api.settop(L, -2);
+		g_api.luaopen_debug(L);                                                // like luaL_register: creates the global table and leaves it on the stack
+		if (!IsTable(L, -1)) { g_api.settop(L, -2); hks::createtable(L, 0, 0); }
+		hks::pushvalue(L, -1);
+		hks::setfield(L, hks::LUA_GLOBAL, "debug");
+	}
+	PushLuaMethod(L, l_sethook, "l_sethook", -2, "sethook");
+	PushLuaMethod(L, l_gethook, "l_gethook", -2, "gethook");
+	g_api.settop(L, -2);
+	PushLuaMethod(L, l_clockms, "l_clockms", hks::LUA_GLOBAL, "DevCE_ClockMs");   // high-resolution clock in milliseconds (os.clock is far too coarse here)
+}
+
+bool IsInstalled() { return g_installed.load(); }
+
+const Api* GetApi() { return InitApi() ? &g_api : nullptr; }
+
+bool SetNativeHook(lua_State* L, NativeHook fn, int mask, int count, bool clearCaches) {
+	if (!InitApi()) return false;
+	if (fn && mask) {
+		if (!Install()) return false;
+		if (clearCaches) ClearCaches();
+		g_api.sethook(L, reinterpret_cast<HookFn>(fn), mask, count);
+	} else {
+		g_api.sethook(L, nullptr, 0, 0);
+		if (clearCaches) ClearCaches();
+	}
+	return true;
+}
+
+void SetArmHandler(ArmHandler fn) { g_armFn = fn; }
+Stats GetStats() { return g_stats; }
+void SetLineFilter(NativeHook forHook, LineFilter fn) { g_filterHook = reinterpret_cast<void*>(forHook); g_filterFn = fn; }
+
+bool SetArmFlag(bool on) {
+	if (on && !Install()) return false;
+	if (g_armFlag) *g_armFlag = on ? 1 : 0;
+	return true;
+}
+
+} // namespace LuaHooks

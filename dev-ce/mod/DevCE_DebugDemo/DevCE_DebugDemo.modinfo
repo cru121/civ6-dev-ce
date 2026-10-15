@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Mod id="7b3d9e52-1c84-4f0a-b6d7-2e5a9c1f8d64" version="1">
+	<Properties>
+		<Name>Dev CE Debugger Demo</Name>
+		<Teaser>A script to try the Dev CE Lua debugger on (experimental).</Teaser>
+		<Description>EXPERIMENTAL. Needs the Dev CE GameCore mod and the debugger switched on (file DevCE_Debug.txt next to the DLL with the lines 4320 and demo). While the game loads it waits up to 60 seconds for a debugger client, then runs a small call chain with a debug.c_breakpoint(), a function with locals, an upvalue and nested tables, a loop and a busy loop, so you can try breakpoints, stepping, the variable view and pause. Does nothing without the marker file.</Description>
+		<Authors>cru121</Authors>
+		<AffectsSavedGames>0</AffectsSavedGames>
+		<CompatibleVersions>2.0</CompatibleVersions>
+	</Properties>
+
+	<Dependencies>
+		<Mod id="4873eb62-8ccc-4574-b784-dda455e74e68" title="Expansion: Gathering Storm" />
+	</Dependencies>
+
+	<InGameActions>
+		<AddGameplayScripts id="DevCEDebugDemo_Gameplay">
+			<Properties><LoadOrder>200</LoadOrder></Properties>
+			<File>Scripts/DevCE_DebugDemo.lua</File>
+		</AddGameplayScripts>
+	</InGameActions>
+
+	<Files>
+		<File>Scripts/DevCE_DebugDemo.lua</File>
+	</Files>
+</Mod>
