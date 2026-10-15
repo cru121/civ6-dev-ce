@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Mod id="5c1e7a90-3d4b-4f62-9a18-6b0d2e8f7c35" version="1">
+	<Properties>
+		<Name>Dev CE Audio Test</Name>
+		<Teaser>Plays wav files from a mod through the Dev CE Audio API (experimental).</Teaser>
+		<Description>EXPERIMENTAL. Needs the Dev CE GameCore mod. Over your first turns it plays a beep, a chord (wav), a 75 s ogg tune and a 75 s mp3 tune from this mod's own folder, using Audio.Play, with no Wwise bank involved. Results are written to DevBridge.log.</Description>
+		<Authors>cru121</Authors>
+		<AffectsSavedGames>0</AffectsSavedGames>
+		<CompatibleVersions>2.0</CompatibleVersions>
+	</Properties>
+
+	<Dependencies>
+		<Mod id="4873eb62-8ccc-4574-b784-dda455e74e68" title="Expansion: Gathering Storm" />
+	</Dependencies>
+
+	<InGameActions>
+		<AddGameplayScripts id="DevCEAudio_Gameplay">
+			<Properties><LoadOrder>200</LoadOrder></Properties>
+			<File>Scripts/DevCE_AudioTest.lua</File>
+		</AddGameplayScripts>
+	</InGameActions>
+
+	<Files>
+		<File>Scripts/DevCE_AudioTest.lua</File>
+		<File>Audio/beep.wav</File>
+		<File>Audio/chord_stereo.wav</File>
+		<File>Audio/tune_ogg.ogg</File>
+		<File>Audio/tune_mp3.mp3</File>
+	</Files>
+</Mod>

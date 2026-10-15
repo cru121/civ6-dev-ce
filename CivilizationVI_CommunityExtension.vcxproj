@@ -290,6 +290,9 @@
     <ClCompile Include="Unit.cpp" />
     <ClCompile Include="UnitManager.cpp" />
     <ClCompile Include="DevBridge.cpp" />
+    <ClCompile Include="AudioPlayer.cpp" />
+    <ClCompile Include="MiniaudioImpl.cpp" />
+    <ClCompile Include="stb_vorbis.c" />
     <ClCompile Include="DevNativeTable.cpp" />
   </ItemGroup>
   <ItemGroup>

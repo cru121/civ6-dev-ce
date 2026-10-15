@@ -72,8 +72,13 @@ Details and raw logs: [`dev-ce/RESULTS.md`](dev-ce/RESULTS.md). Tested in game o
 ## Extra: `GetIO()`
 The game does not open Lua's `io` library. `GetIO()` returns it: `local io = GetIO(); local f = io.open("test.txt", "w"); f:write("hi"); f:close()`. Relative paths land in the folder of `CivilizationVI.exe`. **It gives any Lua script read and write access to files the game process can reach**, so only enable mods you trust. Tested from gameplay scripts only (not from UI scripts).
 
+## Extra: `Audio` (play your own sound files)
+A global table `Audio` plays `wav`, `mp3`, `flac` and `ogg` files shipped inside a mod, without a Wwise bank: `local id = Audio.Play("MyMod/Audio/click.wav", 0.8)`, then `Audio.Stop(id)`, `Audio.Pause(id)`, `Audio.Resume(id)`, `Audio.SetVolume(id, v)`, `Audio.IsPlaying(id)`, `Audio.StopAll()`; `Audio.Play(path, volume, loop, pan, bus)` takes optional loop, pan (-1..1) and a bus (`sfx`, `music`, `speech`, `ambience`). Volume follows the game's Sound options sliders and the game's mute-when-unfocused setting. It plays on its own audio device (miniaudio), not through the game's Wwise engine.
+Tested in the game 2026-10-15 with the `DevCE_AudioTest` mod in `dev-ce/mod/` (wav, mp3, streamed ogg, looping, pause and resume, volume sliders, alt-tab muting). **Experimental:** not yet part of a release, and `SetVolume`, `AddSearchPath` and the `ambience` and `speech` buses were not run.
+
 ## Credits, licence and provenance
 * **Based on the [Community Extension](https://github.com/Wild-W/CivilizationVI_CommunityExtension) by Wild-W** (see its [wiki](https://github.com/Wild-W/CivilizationVI_CommunityExtension/wiki) for what CE itself adds). Thanks for making it open source.
+* **Audio libraries:** [miniaudio](https://miniaud.io) (public domain / MIT-0) and [stb_vorbis](https://github.com/nothings/stb) (public domain / MIT), both included as source (`miniaudio.h`, `stb_vorbis.c`).
 * **AGPL-3.0**, like the Community Extension this is forked from (`LICENSE.txt`). If you pass on a built DLL, link this repo so people can get the source. The git history shows what changed compared to Wild-W's version.
 * **Where the names and addresses come from:** debug symbols that shipped with an older build of the game (the method from the Community Extension contributor's guide), matched to the current Steam build 15038592 (identical DLL in 15296837) by comparing code bytes and call graphs.
   Struct layouts were cross-checked against the Linux port's debug info. That is why the addresses only work on that build. The mapping is in [civ6-gamecore-reference](https://github.com/cru121/civ6-gamecore-reference) (`data/`).
