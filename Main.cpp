@@ -157,6 +157,13 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
         if (EnableConsole) {
             Runtime::InitConsole();
         }
+        // Pin this DLL for the life of the process. During the pre-game mod switch the game logs "Failed to load GameCore DLL" and unloads us; MainThread may
+        // still be inside LoadLibraryW then, and writing its result into the unloaded module crashed the game (GameCore_XP2_CE_FinalRelease.dl_unloaded, access
+        // violation at the instruction after that LoadLibraryW). Our hooks and the original GameCore we load are never safe to unload anyway.
+        {
+            HMODULE pinned = nullptr;
+            GetModuleHandleExW(GET_MODULE_HANDLE_EX_FLAG_PIN | GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS, (LPCWSTR)&DllMain, &pinned);
+        }
         mainThread = CreateThread(0, 0, &MainThread, NULL, 0, NULL);
         break;
     case DLL_PROCESS_DETACH:
