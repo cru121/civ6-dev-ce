@@ -34,7 +34,7 @@ constexpr int EV_LINE = 2;
 constexpr int DEFAULT_PORT = 4320;
 constexpr int IDLE_RESUME_SECONDS = 120;       // a stopped game thread resumes by itself when the client sends nothing for this long
 
-struct Request { int id; std::string cmd; std::string arg; };
+struct Request { int id; std::string cmd; std::string arg; int level; };
 
 std::mutex g_mu;                               // protects the stop state below
 std::condition_variable g_cv;
@@ -45,7 +45,13 @@ lua_State* g_pausedL = nullptr;
 std::string g_pausedReason;
 
 // stepping / breakpoints (read by the hook on any game thread, written under the stop or by the server thread)
-struct Bp { std::string file; int line; };            // file: lower case, '/' separators; matches as a path suffix
+struct Bp {                                            // file: lower case, '/' separators; matches as a path suffix
+	std::string file; int line;
+	std::string cond;                                  // Lua expression, evaluated in the hooked frame; the breakpoint only counts when it is true
+	std::string log;                                   // Lua expression: when set the breakpoint does not stop but sends an `output` event with the value
+	int hit = 0;                                       // stop only from the hit-th time on (0 = every time)
+	int hits = 0;
+};
 std::mutex g_bpMu;
 std::vector<Bp> g_bps;
 std::atomic<bool> g_hasBps{ false };
@@ -175,35 +181,169 @@ std::string LuaError(lua_State* L, const Api* A) {
 	return m ? std::string(m, len) : std::string("(no message)");
 }
 
-// Evaluates `expr` as an expression (return <expr>), else as a statement, in the stopped state; returns tostring() of the first result.
-std::string Eval(lua_State* L, const Api* A, const std::string& expr, bool& ok) {
+// Lua helper chunk run in the stopped state for eval / vars / children / cond. It receives the frame's locals and upvalues as arrays (names, values, counts) and builds an
+// chunk prefix `local a, b = ...` (upvalues, then locals; globals stay the real globals; assigning to a frame variable changes the copy only).
+// Returns a string: 'O' + text (eval), 'T' / 'F' (cond), 'J' + JSON members (vars, children), 'E' + message.
+const char* const HELPER_SRC = R"LUA(
+local mode, expr, lnames, lvals, unames, uvals, nl, nu = ...
+local function esc(s)
+  s = tostring(s)
+  s = s:gsub('[\\"]', '\\%0')
+  s = s:gsub('[^ -~]', function(c) return string.format('\\u%04x', string.byte(c)) end)
+  return s
+end
+local function short(v)
+  local t = type(v)
+  local s
+  if t == 'string' then s = '"' .. v .. '"' else s = tostring(v) end
+  if #s > 120 then s = s:sub(1, 117) .. '...' end
+  return s
+end
+local function entry(k, v, path)
+  local t = type(v)
+  local e = '{"name":"' .. esc(k) .. '","type":"' .. t .. '","value":"' .. esc(short(v)) .. '"'
+  if t == 'table' then e = e .. ',"expandable":true' end
+  if path then e = e .. ',"path":"' .. esc(path) .. '"' end
+  return e .. '}'
+end
+-- No setfenv in this Lua: the frame's variables become real locals of the compiled chunk (`local a, b = ...`), called with their values. Upvalues first, locals override.
+local map, order = {}, {}
+local function add(n, v)
+  if type(n) == 'string' and n:match('^[%a_][%w_]*$') and #order < 180 then
+    if map[n] == nil and not order[n] then order[#order + 1] = n; order[n] = true end
+    map[n] = v
+  end
+end
+for i = 1, nu do add(unames[i], uvals[i]) end
+for i = 1, nl do add(lnames[i], lvals[i]) end
+local args = {}
+for i = 1, #order do args[i] = map[order[i]] end
+local nargs = #order
+local function compile(code)
+  local pre = ''
+  if nargs > 0 then pre = 'local ' .. table.concat(order, ',') .. ' = ...; ' end
+  return loadstring(pre .. code)
+end
+if mode == 'vars' then
+  local a, b = {}, {}
+  for i = 1, nl do a[#a + 1] = entry(lnames[i], lvals[i], lnames[i]) end
+  for i = 1, nu do b[#b + 1] = entry(unames[i], uvals[i], unames[i]) end
+  return 'J"locals":[' .. table.concat(a, ',') .. '],"upvalues":[' .. table.concat(b, ',') .. ']'
+end
+local f, err = compile('return ' .. expr)
+if not f and mode ~= 'cond' then f, err = compile(expr) end
+if not f then return 'E' .. tostring(err) end
+local ok, v = pcall(f, unpack(args, 1, nargs))
+if not ok then return 'E' .. tostring(v) end
+if mode == 'cond' then return v and 'T' or 'F' end
+if mode == 'eval' then
+  local s = tostring(v)
+  if #s > 4000 then s = s:sub(1, 4000) .. '...' end
+  return 'O' .. s
+end
+if type(v) ~= 'table' then return 'J"children":[],"count":0,"truncated":false' end
+local keys, n, trunc = {}, 0, false
+for k in pairs(v) do
+  n = n + 1
+  if n > 200 then trunc = true break end
+  keys[n] = k
+end
+table.sort(keys, function(x, y)
+  local tx, ty = type(x), type(y)
+  if tx ~= ty then return tx < ty end
+  if tx == 'number' or tx == 'string' then return x < y end
+  return tostring(x) < tostring(y)
+end)
+local parts = {}
+for i = 1, #keys do
+  local k = keys[i]
+  local val = v[k]
+  local path
+  if type(val) == 'table' then
+    if type(k) == 'string' then path = '(' .. expr .. ')[' .. string.format('%q', k) .. ']'
+    elseif type(k) == 'number' then path = '(' .. expr .. ')[' .. tostring(k) .. ']' end
+  end
+  parts[#parts + 1] = entry(type(k) == 'string' and k or ('[' .. tostring(k) .. ']'), val, path)
+end
+local mt = getmetatable(v)
+if type(mt) == 'table' then parts[#parts + 1] = entry('<metatable>', mt, 'getmetatable(' .. expr .. ')') end
+return 'J"children":[' .. table.concat(parts, ',') .. '],"count":' .. n .. ',"truncated":' .. tostring(trunc)
+)LUA";
+
+// Runs the helper for `level` (stack level, as in `stack`; < 0 = no frame variables). Returns the helper's result string (first char = status) or an error message.
+std::string RunHelper(lua_State* L, const Api* A, const char* mode, const std::string& expr, int level) {
 	const int top0 = A->gettop(L);
-	A->checkstack(L, 20, "dbg");
-	std::string res;
-	int rc = A->loadstring(L, ("return " + expr).c_str());
-	if (rc != 0) { A->settop(L, top0); rc = A->loadstring(L, expr.c_str()); }
-	if (rc != 0) { res = LuaError(L, A); ok = false; }
-	else if (hks::pcall(L, 0, 1, 0) != 0) { res = LuaError(L, A); ok = false; }
-	else {
-		hks::getfield(L, hks::LUA_GLOBAL, "tostring");
-		hks::pushvalue(L, -2);
-		if (hks::pcall(L, 1, 1, 0) == 0) res = LuaError(L, A);          // tolstring of the string on top
-		else { res = "<tostring failed: " + LuaError(L, A) + ">"; }
-		ok = true;
+	A->checkstack(L, 60, "dbg");
+	if (A->loadstring(L, HELPER_SRC) != 0) { const std::string m = LuaError(L, A); A->settop(L, top0); return "Ehelper: " + m; }
+	hks::pushfstring(L, "%s", mode);
+	hks::pushfstring(L, "%s", expr.c_str());
+	for (int i = 0; i < 4; i++) hks::createtable(L, 0, 0);
+	const int tLn = top0 + 4, tLv = top0 + 5, tUn = top0 + 6, tUv = top0 + 7;
+	int nl = 0, nu = 0;
+	if (level >= 0) {
+		alignas(16) uint8_t ar[AR_SIZE];
+		std::memset(ar, 0, sizeof(ar));
+		if (A->getstack(L, level, ar)) {
+			for (int i = 1; i < 250; i++) {
+				const char* nm = A->getlocal(L, ar, i);
+				if (!nm) break;
+				if (nm[0] != '(') {
+					++nl;
+					hks::pushinteger(L, nl); hks::pushfstring(L, "%s", nm); A->rawset(L, tLn);
+					hks::pushinteger(L, nl); hks::pushvalue(L, -2); A->rawset(L, tLv);
+				}
+				A->settop(L, -2);                                            // pop the local's value
+			}
+			const int before = A->gettop(L);
+			A->getinfo(L, "f", ar);                                            // pushes the function of the frame
+			if (A->gettop(L) == before + 1) {
+				for (int i = 1; i < 250; i++) {
+					const char* nm = A->getupvalue(L, before + 1, i);
+					if (!nm) break;
+					++nu;
+					hks::pushinteger(L, nu); hks::pushfstring(L, "%s", nm); A->rawset(L, tUn);
+					hks::pushinteger(L, nu); hks::pushvalue(L, -2); A->rawset(L, tUv);
+					A->settop(L, -2);
+				}
+				A->settop(L, before);
+			}
+		}
 	}
+	hks::pushinteger(L, nl);
+	hks::pushinteger(L, nu);
+	if (hks::pcall(L, 8, 1, 0) != 0) { const std::string m = LuaError(L, A); A->settop(L, top0); return "E" + m; }
+	size_t len = 0;
+	const char* r = A->tolstring(L, -1, &len);
+	std::string res = r ? std::string(r, len) : std::string("E(no result)");
 	A->settop(L, top0);
 	return res;
+}
+
+// The first stack level that is a Lua function (a stop inside c_breakpoint has a C function at level 0).
+int FirstLuaLevel(lua_State* L, const Api* A) {
+	for (int lvl = 0; lvl < 64; ++lvl) {
+		alignas(16) uint8_t ar[AR_SIZE];
+		std::memset(ar, 0, sizeof(ar));
+		if (!A->getstack(L, lvl, ar)) break;
+		A->getinfo(L, "S", ar);
+		if (std::strncmp(reinterpret_cast<const char*>(ar + AR_SHORTSRC), "[C]", 3) != 0) return lvl;
+	}
+	return 0;
 }
 
 void HandleStopped(lua_State* L, const Request& r) {
 	const Api* A = LuaHooks::GetApi();
 	if (!A) { Reply(r.id, false, "\"error\":\"HavokScript API not available\""); return; }
-	if (r.cmd == "stack") Reply(r.id, true, DumpStack(L, A));
-	else if (r.cmd == "eval") {
-		bool ok = false;
-		const std::string res = Eval(L, A, r.arg, ok);
-		Reply(r.id, ok, std::string(ok ? "\"result\":\"" : "\"error\":\"") + Esc(res) + "\"");
-	} else Reply(r.id, false, "\"error\":\"unknown command\"");
+	if (r.cmd == "stack") { Reply(r.id, true, DumpStack(L, A)); return; }
+	if (r.cmd != "eval" && r.cmd != "vars") { Reply(r.id, false, "\"error\":\"unknown command\""); return; }
+	const int level = r.level >= 0 ? r.level : FirstLuaLevel(L, A);
+	const bool vars = r.cmd == "vars";
+	const std::string res = RunHelper(L, A, vars ? (r.arg.empty() ? "vars" : "children") : "eval", r.arg, level);
+	const char st = res.empty() ? 'E' : res[0];
+	if (st == (vars ? 'J' : 'O')) {
+		if (vars) Reply(r.id, true, res.substr(1) + ",\"level\":" + std::to_string(level));
+		else Reply(r.id, true, "\"result\":\"" + Esc(res.substr(1)) + "\",\"level\":" + std::to_string(level));
+	} else Reply(r.id, false, "\"error\":\"" + Esc(st == 'E' ? res.substr(1) : res) + "\"");
 }
 
 void __cdecl DbgHook(lua_State* L, void* ar);
@@ -269,15 +409,29 @@ void __cdecl DbgHook(lua_State* L, void* ar) {
 		A->getinfo(L, "S", ar);
 		const char* src = reinterpret_cast<const char*>(static_cast<uint8_t*>(ar) + AR_SHORTSRC);
 		const int line = *reinterpret_cast<int*>(static_cast<uint8_t*>(ar) + AR_CURRENTLINE);
-		bool hit = false;
-		{
-			std::lock_guard<std::mutex> g(g_bpMu);
-			if (!g_bps.empty()) {
-				const std::string ns = NormPath(src, strnlen(src, 0x200));
-				for (const Bp& b : g_bps) if (b.line == line && BpMatches(ns, b)) { hit = true; break; }
+					Bp hitBp; bool hit = false; size_t hitIdx = 0;
+			{
+				std::lock_guard<std::mutex> g(g_bpMu);
+				if (!g_bps.empty()) {
+					const std::string ns = NormPath(src, strnlen(src, 0x200));
+					for (size_t i = 0; i < g_bps.size(); i++) if (g_bps[i].line == line && BpMatches(ns, g_bps[i])) { hit = true; hitBp = g_bps[i]; hitIdx = i; break; }
+				}
 			}
-		}
-		if (hit) StopHere(L, "breakpoint");
+			if (hit && !hitBp.cond.empty()) {                                    // condition: evaluated in the hooked frame (level 0); an error stops, with a message
+				const std::string r = RunHelper(L, A, "cond", hitBp.cond, 0);
+				if (!r.empty() && r[0] == 'E') Send("{\"event\":\"output\",\"text\":\"breakpoint condition error: " + Esc(r.substr(1)) + "\"}");
+				else if (r != "T") hit = false;
+			}
+			if (hit) {                                                           // hit count
+				std::lock_guard<std::mutex> g(g_bpMu);
+				if (hitIdx < g_bps.size() && g_bps[hitIdx].line == line) { const int n = ++g_bps[hitIdx].hits; if (hitBp.hit > 0 && n < hitBp.hit) hit = false; }
+			}
+			if (hit && !hitBp.log.empty()) {                                     // logpoint: report the value, do not stop
+				const std::string r = RunHelper(L, A, "eval", hitBp.log, 0);
+				Send("{\"event\":\"output\",\"text\":\"" + Esc(r.empty() ? std::string() : r.substr(1)) + "\",\"line\":" + std::to_string(line) + "}");
+				hit = false;
+			}
+if (hit) StopHere(L, "breakpoint");
 	}
 }
 
@@ -293,18 +447,21 @@ void HandleLine(const std::string& line) {
 		std::string file; int ln = 0; GetStr(line, "file", file); GetInt(line, "line", ln);
 		{
 			std::lock_guard<std::mutex> g(g_bpMu);
-			if (cmd == "break") {
-				if (file.empty() || ln <= 0) { Reply(id, false, "\"error\":\"break needs file and line\""); return; }
-				const std::string nf = NormPath(file.data(), file.size());
-				bool dup = false; for (const Bp& b : g_bps) if (b.line == ln && b.file == nf) dup = true;
-				if (!dup) g_bps.push_back({ nf, ln });
-			} else if (cmd == "clear") {
+							if (cmd == "break") {
+					if (file.empty() || ln <= 0) { Reply(id, false, "\"error\":\"break needs file and line\""); return; }
+					const std::string nf = NormPath(file.data(), file.size());
+					Bp nb{ nf, ln };
+					GetStr(line, "cond", nb.cond); GetStr(line, "log", nb.log); GetInt(line, "hit", nb.hit);
+					bool replaced = false;
+					for (Bp& b : g_bps) if (b.line == ln && b.file == nf) { b = nb; replaced = true; }
+					if (!replaced) g_bps.push_back(nb);
+} else if (cmd == "clear") {
 				if (file.empty()) g_bps.clear();
 				else { const std::string nf = NormPath(file.data(), file.size()); g_bps.erase(std::remove_if(g_bps.begin(), g_bps.end(), [&](const Bp& b) { return b.file == nf && (ln <= 0 || b.line == ln); }), g_bps.end()); }
 			}
 			g_hasBps = !g_bps.empty();
 			std::string list = "\"breakpoints\":[";
-			for (size_t i = 0; i < g_bps.size(); i++) list += (i ? "," : "") + std::string("{\"file\":\"") + Esc(g_bps[i].file) + "\",\"line\":" + std::to_string(g_bps[i].line) + "}";
+			for (size_t i = 0; i < g_bps.size(); i++) list += (i ? "," : "") + std::string("{\"file\":\"") + Esc(g_bps[i].file) + "\",\"line\":" + std::to_string(g_bps[i].line) + ",\"cond\":\"" + Esc(g_bps[i].cond) + "\",\"log\":\"" + Esc(g_bps[i].log) + "\",\"hit\":" + std::to_string(g_bps[i].hit) + ",\"hits\":" + std::to_string(g_bps[i].hits) + "}";
 			Reply(id, true, list + "]");
 		}
 		if (cmd != "breaks") UpdateArm();
@@ -319,14 +476,15 @@ void HandleLine(const std::string& line) {
 		g_resume = true;
 		g_cv.notify_all();
 		Reply(id, true, "");
-	} else if (cmd == "stack" || cmd == "eval") {
+	} else if (cmd == "stack" || cmd == "eval" || cmd == "vars") {
 		std::lock_guard<std::mutex> g(g_mu);
 		if (!g_paused) { Reply(id, false, "\"error\":\"not paused\""); return; }
-		Request r{ id, cmd, "" };
+		Request r{ id, cmd, "", -1 };
 		GetStr(line, "expr", r.arg);
+		GetInt(line, "level", r.level);
 		g_reqs.push_back(std::move(r));
 		g_cv.notify_all();
-	} else Reply(id, false, "\"error\":\"unknown command (status, stack, eval, break, clear, breaks, pause, continue, step, next, out)\"");
+	} else Reply(id, false, "\"error\":\"unknown command (status, stack, vars, eval, break, clear, breaks, pause, continue, step, next, out)\"");
 }
 
 void ServerMain() {

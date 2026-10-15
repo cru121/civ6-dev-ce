@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Client for the Dev CE Lua debugger (LuaDebugger.cpp, loopback JSON lines). Usage:
-  devce_dbg.py                      interactive: status | stack | eval EXPR | break FILE LINE | clear [FILE [LINE]] | breaks | pause
+  devce_dbg.py                      interactive: status | stack | vars | expand EXPR | eval EXPR | level N | pause
+                                    | break FILE LINE [if COND] [hit N] [log EXPR] | clear [FILE [LINE]] | breaks
                                     | step (s, into) | next (n, over) | out (o) | continue (c) | quit
   devce_dbg.py -x wait -x stack -x "eval 1+2" -x continue     scripted; `wait` blocks until a `stopped` event, `sleep N` pauses
 Options: --port N (default 4320), --retry SECONDS (keep trying to connect while the game starts, default 120)."""
-import argparse, functools, json, socket, sys, threading, time
+import argparse, functools, json, re, socket, sys, threading, time
 print = functools.partial(print, flush=True)
 
 class Client:
@@ -18,7 +19,7 @@ class Client:
                 if time.time() > end: raise SystemExit("cannot connect to 127.0.0.1:%d" % port)
                 time.sleep(0.5)
         self.s.settimeout(None)
-        self.id = 0; self.replies = {}; self.cv = threading.Condition(); self.stops = 0; self.consumed = 0; self.closed = False
+        self.id = 0; self.replies = {}; self.cv = threading.Condition(); self.stops = 0; self.consumed = 0; self.level = -1; self.closed = False
         threading.Thread(target=self.reader, daemon=True).start()
 
     def reader(self):
@@ -37,6 +38,7 @@ class Client:
                 with self.cv:
                     if "id" in m: self.replies[m["id"]] = m
                     elif m.get("event") == "stopped": self.stops += 1; print("** stopped: %s in state %s" % (m.get("reason"), m.get("state")), flush=True)
+                    elif m.get("event") == "output": print("** output: %s" % m.get("text"))
                     else: print("** %s" % json.dumps(m))
                     self.cv.notify_all()
 
@@ -60,13 +62,20 @@ class Client:
             self.consumed = self.stops
         return True
 
+def fmt_var(x):
+    return "  %s = %s  <%s>%s%s" % (x["name"], x["value"], x["type"], " [+]" if x.get("expandable") else "", "  path: " + x["path"] if x.get("path") else "")
+
 def show(r):
     if not r.get("ok"): print("error: " + str(r.get("error"))); return
-    if "states" in r:
-        for x in r["states"]: print("  state %s mask %s hook %s" % (x["state"], x["mask"], x["hook"]))
-        print("  tracking=%s hasBps=%s" % (r.get("tracking"), r.get("hasBps")))
+    if "locals" in r:
+        print("locals (frame %s):" % r.get("level")); [print(fmt_var(x)) for x in r["locals"]]
+        print("upvalues:"); [print(fmt_var(x)) for x in r["upvalues"]]
+    elif "children" in r:
+        print("children (%s%s):" % (r.get("count"), ", truncated" if r.get("truncated") else "")); [print(fmt_var(x)) for x in r["children"]]
     elif "breakpoints" in r:
-        for b in r["breakpoints"]: print("  break %s:%s" % (b["file"], b["line"]))
+        for b in r["breakpoints"]:
+            extra = "".join(" %s=%s" % (k, b[k]) for k in ("cond", "log") if b.get(k)) + (" hit>=%s (hits %s)" % (b["hit"], b["hits"]) if b.get("hit") else "")
+            print("  break %s:%s%s" % (b["file"], b["line"], extra))
         if not r["breakpoints"]: print("  (no breakpoints)")
     elif "frames" in r:
         for f in r["frames"]: print("  #%d %s:%s" % (f["level"], f["src"], f["line"]))
@@ -81,13 +90,26 @@ def run(c, line):
     if cmd == "wait": print("waiting for a stop..."); print("stopped" if c.wait_stop() else "timeout / closed"); return True
     if cmd == "sleep": time.sleep(float(arg or 1)); return True
     cmd = {"s": "step", "c": "continue", "bt": "stack", "n": "next", "o": "out"}.get(cmd, cmd)
+    if cmd == "level": c.level = int(arg or -1); print("frame level for eval / vars: %s" % ("auto" if c.level < 0 else c.level)); return True
     kw = {}
     if cmd == "eval": kw = dict(expr=arg)
+    elif cmd == "vars": kw = dict(expr="")
+    elif cmd == "expand": cmd = "vars"; kw = dict(expr=arg)
     elif cmd in ("break", "clear") and arg:
-        parts = arg.rsplit(None, 1)
-        if cmd == "break" or (len(parts) == 2 and parts[1].isdigit()):
-            kw = dict(file=parts[0], line=int(parts[1]))
-        else: kw = dict(file=arg)
+        if cmd == "break":
+            m = re.match(r"^(\S+)\s+(\d+)(.*)$", arg)
+            if not m: print("usage: break FILE LINE [if COND] [hit N] [log EXPR]"); return True
+            kw = dict(file=m.group(1), line=int(m.group(2)))
+            parts = re.split(r"\s(if|hit|log)\s", " " + m.group(3).strip() + " ")
+            for i in range(1, len(parts) - 1, 2):
+                key, val = parts[i], parts[i + 1].strip()
+                if key == "if": kw["cond"] = val
+                elif key == "log": kw["log"] = val
+                else: kw["hit"] = int(val)
+        else:
+            parts = arg.rsplit(None, 1)
+            kw = dict(file=parts[0], line=int(parts[1])) if len(parts) == 2 and parts[1].isdigit() else dict(file=arg)
+    if cmd in ("eval", "vars") and c.level >= 0: kw["level"] = c.level
     r = c.call(cmd, **kw)
     show(r)
     if cmd in ("step", "next", "out") and r.get("ok"):          # these end with the next `stopped` event: wait for it so the next command sees the new frame

@@ -87,6 +87,8 @@ bool InitApi() {
 		ok &= Resolve(g_api.tonumber, "?hksi_lua_tonumber@@YANPEAUlua_State@@H@Z");
 		ok &= Resolve(g_api.luaopen_debug, "?luaopen_debug@@YAHPEAUlua_State@@@Z");
 			ok &= Resolve(g_api.loadstring, "?hksi_luaL_loadstring@@YAHPEAUlua_State@@PEBD@Z");
+			ok &= Resolve(g_api.getlocal, "?hksi_lua_getlocal@@YAPEBDPEAUlua_State@@PEAUlua_Debug@@H@Z");
+			ok &= Resolve(g_api.getupvalue, "?hksi_lua_getupvalue@@YAPEBDPEAUlua_State@@HH@Z");
 		g_api.ok = ok;
 	});
 	return g_api.ok;

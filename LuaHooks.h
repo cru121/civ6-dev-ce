@@ -29,6 +29,8 @@ namespace LuaHooks {
 		double(__cdecl* tonumber)(hks::lua_State*, int) = nullptr;
 		int(__cdecl* luaopen_debug)(hks::lua_State*) = nullptr;
 		int(__cdecl* loadstring)(hks::lua_State*, const char*) = nullptr;
+		const char*(__cdecl* getlocal)(hks::lua_State*, void*, int) = nullptr;
+		const char*(__cdecl* getupvalue)(hks::lua_State*, int, int) = nullptr;
 		bool ok = false;
 	};
 	const Api* GetApi();
