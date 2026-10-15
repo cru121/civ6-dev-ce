@@ -37,6 +37,7 @@ constexpr size_t SITE_DISPLACED_LEN = 7;                                       /
 
 // lua_State field offsets (HavokScript_FinalRelease.dll 15038592 / 15296837; confirmed with Frida, see DESIGN_LUA_HOOKS.md)
 constexpr int OFF_CI_BASE = 0x18, OFF_CI_CUR = 0x28, OFF_PC = 0x30, OFF_TOP = 0x48, OFF_BASE = 0x50;
+constexpr int OFF_HOOKPC = 0x38, OFF_HOOKIDX = 0x40;   // read by the frame-pc lookup (0x28180): frame index == [L+0x40] -> pc = [L+0x38]
 constexpr int OFF_HOOKFN = 0xc8, OFF_MASK = 0xd0, OFF_COUNT = 0xd4, OFF_COUNTER = 0xd8;
 constexpr int AR_EVENT = 0x00, AR_CURRENTLINE = 0x28, AR_SIZE = 0x300;         // lua_Debug: event int @0, currentline int @0x28 (name/short_src further on)
 constexpr int EV_CALL = 0, EV_RET = 1, EV_LINE = 2, EV_COUNT = 3;
@@ -184,6 +185,11 @@ void CallHook(lua_State* L, int event, int line, const uint32_t* pc) {
 	++t_inHook;
 	const int64_t topOff = I64(L, OFF_TOP) - I64(L, OFF_BASE);          // as an offset: the Lua stack may be reallocated during the hook
 	*reinterpret_cast<const void**>(LB(L) + OFF_PC) = pc;
+	// like hks::debug_hook_call: tell the frame-pc lookup which frame is being hooked and where it is, so debug.getinfo(2) inside the hook sees the hooked line
+	const void* const prevHookPc = *reinterpret_cast<const void**>(LB(L) + OFF_HOOKPC);
+	const int prevHookIdx = I32(L, OFF_HOOKIDX);
+	*reinterpret_cast<const void**>(LB(L) + OFF_HOOKPC) = pc;
+	I32(L, OFF_HOOKIDX) = static_cast<int>((I64(L, OFF_CI_CUR) - I64(L, OFF_CI_BASE)) / 24);
 	g_api.checkstack(L, 40, "hook");
 	alignas(16) uint8_t ar[AR_SIZE];
 	std::memset(ar, 0, sizeof(ar));
@@ -191,6 +197,8 @@ void CallHook(lua_State* L, int event, int line, const uint32_t* pc) {
 	*reinterpret_cast<int*>(ar + AR_EVENT) = event;
 	*reinterpret_cast<int*>(ar + AR_CURRENTLINE) = line;
 	hook(L, ar);
+	*reinterpret_cast<const void**>(LB(L) + OFF_HOOKPC) = prevHookPc;
+	I32(L, OFF_HOOKIDX) = prevHookIdx;
 	I64(L, OFF_TOP) = I64(L, OFF_BASE) + topOff;
 	--t_inHook;
 }
@@ -420,6 +428,12 @@ int __cdecl l_sethook(lua_State* L) {
 	return 0;
 }
 
+int __cdecl l_clockms(lua_State* L) {
+	LARGE_INTEGER f, c; QueryPerformanceFrequency(&f); QueryPerformanceCounter(&c);
+	hks::pushnumber(L, 1000.0 * static_cast<double>(c.QuadPart) / static_cast<double>(f.QuadPart));
+	return 1;
+}
+
 int __cdecl l_gethook(lua_State* L) {
 	// debug.gethook() -> hook function (or nil), mask string, count  (PUC Lua 5.1 db_gethook, for the running state)
 	if (!InitApi()) { hks::error(L, "debug.gethook: HavokScript API not available"); return 0; }
@@ -457,6 +471,7 @@ void RegisterGlobals(lua_State* L) {
 	PushLuaMethod(L, l_sethook, "l_sethook", -2, "sethook");
 	PushLuaMethod(L, l_gethook, "l_gethook", -2, "gethook");
 	g_api.settop(L, -2);
+	PushLuaMethod(L, l_clockms, "l_clockms", hks::LUA_GLOBAL, "DevCE_ClockMs");   // high-resolution clock in milliseconds (os.clock is far too coarse here)
 }
 
 bool IsInstalled() { return g_installed.load(); }

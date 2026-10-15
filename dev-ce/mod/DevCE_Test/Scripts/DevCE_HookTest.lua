@@ -13,11 +13,13 @@ local function check(name, ok, detail)
     log((ok and "PASS " or "FAIL ") .. name .. ((detail ~= nil) and ("  [" .. tostring(detail) .. "]") or ""))
 end
 
-local function timedLoop()
-    local t0 = os.clock()
+local function now() return DevCE_ClockMs and DevCE_ClockMs() or (os.clock() * 1000) end
+
+local function timedLoop(n)
+    local t0 = now()
     local x = 0
-    for i = 1, 3000000 do x = x + i end
-    return os.clock() - t0, x
+    for i = 1, n do x = x + i end
+    return now() - t0, x
 end
 
 local function runTests()
@@ -28,14 +30,14 @@ local function runTests()
     end
 
     -- baseline speed before the VM patch exists (os.clock may have a coarse resolution)
-    local base = timedLoop()
+    local base = timedLoop(3000000)
 
     -- (0) no hook set
     local h, m, c = debug.gethook()
     check("gethook with no hook", h == nil and m == "" and c == 0, tostring(h) .. "," .. tostring(m) .. "," .. tostring(c))
 
     -- (a) line hook: a function of four lines must produce four consecutive line events, and the line passed to the hook must equal currentline of level 2
-    local lines, mismatch = {}, 0
+    local lines, levelHits, events = {}, { [0] = 0, 0, 0, 0 }, 0
     local function target()
         local a = 1
         local b = 2
@@ -44,9 +46,12 @@ local function runTests()
     end
     local function lineHook(ev, line)
         lines[#lines + 1] = line
+        events = events + 1
         if debug.getinfo then
-            local info = debug.getinfo(2, "l")
-            if info and info.currentline ~= line then mismatch = mismatch + 1 end
+            for k = 0, 3 do
+                local info = debug.getinfo(k, "l")
+                if info and info.currentline == line then levelHits[k] = levelHits[k] + 1 end
+            end
         end
     end
     debug.sethook(lineHook, "l")
@@ -58,7 +63,12 @@ local function runTests()
     end
     check("line hook: target() result", r == 3, r)
     check("line hook: four consecutive lines seen", run >= 3, table.concat(lines, ","))
-    check("line hook: line argument equals getinfo(2).currentline", mismatch == 0, mismatch)
+    -- inside the hook, PUC Lua numbers the hooked function as level 2 (1 = the hook function itself); report which level Havok's getinfo agrees with
+    local match = nil
+    for k = 0, 3 do if levelHits[k] == events then match = k end end
+    log(string.format("INFO getinfo level whose currentline equals the line argument for all %d events: %s (hits per level 0..3: %d,%d,%d,%d)",
+        events, tostring(match), levelHits[0], levelHits[1], levelHits[2], levelHits[3]))
+    check("line hook: getinfo(2).currentline equals the line argument (PUC numbering)", levelHits[2] == events, match)
 
     -- (h) gethook after sethook
     local f = function() end
@@ -120,10 +130,19 @@ local function runTests()
     debug.sethook()
     check("coroutine with an inherited hook mask", ok and val == 5050, tostring(ok) .. "," .. tostring(val))
 
-    -- (j) speed with the patch installed and no hook set (informational; os.clock resolution may be 1 s)
-    local after2, xx = timedLoop()
+    -- (j) cost: loop of 3M iterations before the patch existed, with the patch but no hook, with a count hook, with a line hook (informational)
+    local noHook, xx = timedLoop(3000000)
     check("loop result with the patch installed", xx == 4500001500000, xx)
-    log(string.format("INFO 3M-iteration loop: before first sethook %.3f s, patch installed but no hook %.3f s", base, after2))
+    local cnt = 0
+    debug.sethook(function() cnt = cnt + 1 end, "", 1000)
+    local withCount = timedLoop(3000000)
+    debug.sethook()
+    local lcnt = 0
+    debug.sethook(function() lcnt = lcnt + 1 end, "l")
+    local withLine = timedLoop(100000)
+    debug.sethook()
+    log(string.format("INFO 3M-iteration loop in ms: before first sethook %.1f, patch installed no hook %.1f, count hook every 1000 instructions %.1f (%d events), 100k iterations with a line hook %.1f (%d events)",
+        base, noHook, withCount, cnt, withLine, lcnt))
 end
 
 local ok, err = pcall(runTests)
