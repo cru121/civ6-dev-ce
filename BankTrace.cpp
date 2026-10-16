@@ -1,10 +1,13 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-// Part of Dev CE. Diagnostic: logs (once per path) every .bnk / .ini / DevCE file the process opens, so we can see whether the game's audio
-// system tries to load a mod's soundbank. Written to DevBridge.log. Off unless the file "DevCE_BankTrace.on" exists next to the DLL.
+// Part of Dev CE. Diagnostic: logs (once per path) every .bnk / Banks.ini / DevCE file the process opens, so we can see whether the game's audio
+// system tries to load a mod's soundbank. Written to BankTrace.log next to the DLL (own file: DevBridge.log is reset when Dev CE starts).
+// Off unless the file "DevCE_BankTrace.on" exists next to the DLL.
 #include "BankTrace.h"
-#include "DevBridge.h"
 #include "MinHook.h"
 #include <windows.h>
+#include <share.h>
+#include <cstdio>
+#include <cstdarg>
 #include <mutex>
 #include <set>
 #include <string>
@@ -17,6 +20,17 @@ namespace BankTrace {
 		thread_local bool tInHook = false;
 		std::mutex gLock;
 		std::set<std::wstring> gSeen;
+		std::string gLogPath;
+
+		void Log(const char* fmt, ...) {   // caller holds no lock needed beyond gLock
+			FILE* f = _fsopen(gLogPath.c_str(), "a", _SH_DENYNO);
+			if (!f) return;
+			SYSTEMTIME t; GetLocalTime(&t);
+			fprintf(f, "%02d:%02d:%02d.%03d ", t.wHour, t.wMinute, t.wSecond, t.wMilliseconds);
+			va_list ap; va_start(ap, fmt); vfprintf(f, fmt, ap); va_end(ap);
+			fputc('\n', f);
+			fclose(f);
+		}
 
 		bool Interesting(const std::wstring& p) {
 			std::wstring l = p;
@@ -26,20 +40,21 @@ namespace BankTrace {
 
 		HANDLE WINAPI Hook(LPCWSTR name, DWORD access, DWORD share, LPSECURITY_ATTRIBUTES sa, DWORD disp, DWORD flags, HANDLE tmpl) {
 			HANDLE h = gOrig(name, access, share, sa, disp, flags, tmpl);
+			const DWORD err = (h == INVALID_HANDLE_VALUE) ? GetLastError() : 0;
 			if (!tInHook && name) {
 				tInHook = true;
 				std::wstring p(name);
 				if (Interesting(p)) {
-					const DWORD err = (h == INVALID_HANDLE_VALUE) ? GetLastError() : 0;
 					std::lock_guard<std::mutex> g(gLock);
 					if (gSeen.insert(p).second) {
 						char buf[1024];
 						WideCharToMultiByte(CP_UTF8, 0, p.c_str(), -1, buf, sizeof(buf), nullptr, nullptr);
-						DevBridge::Log("[BankTrace] open %s -> %s (err %lu)", buf, h == INVALID_HANDLE_VALUE ? "FAILED" : "ok", err);
+						Log("open %s -> %s (err %lu)", buf, h == INVALID_HANDLE_VALUE ? "FAILED" : "ok", err);
 					}
 				}
 				tInHook = false;
 			}
+			if (h == INVALID_HANDLE_VALUE) SetLastError(err);
 			return h;
 		}
 	}
@@ -47,8 +62,9 @@ namespace BankTrace {
 	void Install(const std::string& dllDir) {
 		const std::string flag = dllDir + "\DevCE_BankTrace.on";
 		if (GetFileAttributesA(flag.c_str()) == INVALID_FILE_ATTRIBUTES) return;
-		if (MH_CreateHook(reinterpret_cast<void*>(&CreateFileW), reinterpret_cast<void*>(&Hook), reinterpret_cast<void**>(&gOrig)) != MH_OK) { DevBridge::Log("[BankTrace] hook failed"); return; }
-		if (MH_EnableHook(reinterpret_cast<void*>(&CreateFileW)) != MH_OK) { DevBridge::Log("[BankTrace] enable failed"); return; }
-		DevBridge::Log("[BankTrace] tracing .bnk / Banks.ini / DevCE file opens");
+		gLogPath = dllDir + "\BankTrace.log";
+		if (MH_CreateHook(reinterpret_cast<void*>(&CreateFileW), reinterpret_cast<void*>(&Hook), reinterpret_cast<void**>(&gOrig)) != MH_OK) { Log("hook failed"); return; }
+		if (MH_EnableHook(reinterpret_cast<void*>(&CreateFileW)) != MH_OK) { Log("enable failed"); return; }
+		Log("tracing .bnk / Banks.ini / DevCE file opens");
 	}
 }
