@@ -20,11 +20,12 @@
 		</UpdateAudio>
 		<AddUserInterfaces id="DevCEBankTest_UI">
 			<Properties><Context>InGame</Context></Properties>
-			<File>UI/DevCE_BankTest.lua</File>
+			<File>UI/DevCE_BankTest.xml</File>
 		</AddUserInterfaces>
 	</InGameActions>
 
 	<Files>
+		<File>UI/DevCE_BankTest.xml</File>
 		<File>UI/DevCE_BankTest.lua</File>
 		<File>Platforms/Windows/Audio/DevCETestBanks.ini</File>
 		<File>Platforms/Windows/Audio/DevCE_Test_Bank.bnk</File>
