@@ -134,8 +134,13 @@ def build_bank(name, voices, align=16):
     wu = bytearray(bytes.fromhex(T_WORKUNIT))
     wu[0:4] = u32(wu_id); wu[-4:] = u32(mixer_id)
     objs = [(7, bytes(wu)), (7, mixer)] + objs
-    hirc = u32(len(objs)) + b''.join(bytes([t]) + u32(len(b)) + b for t, b in objs)
+    return assemble(name, objs, media, align), ids
 
+
+def assemble(name, objs, media, align=16):
+    """objs: [(hirc type, body)], media: [(media id, bytes)] -> bank file bytes."""
+    bank_id = fnv(name)
+    hirc = u32(len(objs)) + b''.join(bytes([t]) + u32(len(b)) + b for t, b in objs)
     data, entries = b'', []
     for mid, wem in media:
         entries.append((mid, len(data), len(wem)))
@@ -148,7 +153,64 @@ def build_bank(name, voices, align=16):
         bkhd += u32(0)
 
     def chunk(tag, body): return tag.encode() + u32(len(body)) + body
-    return chunk('BKHD', bkhd) + chunk('DIDX', didx) + chunk('DATA', data) + chunk('HIRC', hirc), ids
+    return chunk('BKHD', bkhd) + chunk('DIDX', didx) + chunk('DATA', data) + chunk('HIRC', hirc)
+
+
+def node_parent_offset(body):
+    """Offset of the DirectParentID in a sound / actor-mixer body (both start: id, [sound fields], then NodeBaseParams)."""
+    return None
+
+
+def split_children(body):
+    """Actor-mixer body -> (head, [child ids]); the child list is the tail: u32 count + ids."""
+    for k in range(1, 400):
+        pos = len(body) - 4 - 4 * k
+        if pos >= 0 and struct.unpack_from('<I', body, pos)[0] == k: return body[:pos], [struct.unpack_from('<I', body, pos + 4 + 4 * i)[0] for i in range(k)]
+    sys.exit('cannot find the child list')
+
+
+def mixer_parent(body):
+    """DirectParentID of an actor-mixer: id, ovFx, nfx, [bitsBypass + 7 bytes per fx], ovAttach, bus, parent."""
+    q = 4; q += 1; nfx = body[q]; q += 1
+    if nfx: q += 1 + 7 * nfx
+    q += 1 + 4
+    return struct.unpack_from('<I', body, q)[0], q
+
+
+def cmd_extract(a):
+    """Minimal bank holding one official event: event, play action, sound, and the sound's real parent mixers (child lists trimmed), plus its media."""
+    data = open(a.src, 'rb').read()
+    objs = {struct.unpack_from('<I', body, 0)[0]: (t, body) for t, body in read_hirc(data)}
+    didx, dstart = {}, 0
+    for tag, off, size in read_chunks(data):
+        if tag == 'DIDX':
+            for i in range(size // 12):
+                mid, o, sz = struct.unpack_from('<III', data, off + i * 12); didx[mid] = (o, sz)
+        if tag == 'DATA': dstart = off
+    ev = objs[fnv(a.event)][1]
+    act_id = struct.unpack_from('<I', ev, 8)[0]
+    act = objs[act_id][1]
+    sound_id = struct.unpack_from('<I', act, 6)[0]
+    snd = objs[sound_id][1]
+    src = struct.unpack_from('<I', snd, 9)[0]
+    out = [(4, struct.pack('<II', fnv(a.new), 1) + u32(act_id)), (3, act), (2, snd)]
+    child, parent = sound_id, struct.unpack_from('<I', snd, 25)[0]
+    while parent:
+        t, body = objs[parent]
+        head, kids = split_children(body)
+        body = head + u32(1) + u32(child)
+        out.append((t, body))
+        child = parent
+        parent = mixer_parent(body)[0]
+    o, sz = didx[src]
+    blob = assemble(a.bank, out, [(src, data[dstart + o:dstart + o + sz])])
+    os.makedirs(a.outdir, exist_ok=True)
+    open(os.path.join(a.outdir, a.bank + '.bnk'), 'wb').write(blob)
+    ini_path = os.path.join(a.outdir, a.ini)
+    lines = open(ini_path, encoding='utf-8').read().splitlines() if os.path.exists(ini_path) else ['[Global]', '', '[Menu]', '', '[InGame]', '', '[2D]', '', '[3D]', '', '[FMV]']
+    if (a.bank + '.bnk') not in lines: lines.insert(lines.index('[InGame]') + 1, a.bank + '.bnk')
+    open(ini_path, 'w', newline='\r\n').write('\n'.join(lines) + '\n')
+    print('wrote %s.bnk (%d bytes): %d objects, media %d (%d bytes), event %s' % (a.bank, len(blob), len(out), src, sz, a.new))
 
 
 def cmd_make_sfx(a):
@@ -206,6 +268,8 @@ def main():
     s.add_argument('--bank', default='DevCE_Test_Bank'); s.add_argument('--ini', default='DevCETestBanks.ini'); s.set_defaults(f=cmd_make_sfx)
     s = sp.add_parser('clone-bank'); s.add_argument('src'); s.add_argument('outdir'); s.add_argument('--bank', required=True)
     s.add_argument('--rename', action='append', default=[], help='OLD_EVENT=NEW_EVENT (repeatable)'); s.add_argument('--ini', default='DevCETestBanks.ini'); s.set_defaults(f=cmd_clone_bank)
+    s = sp.add_parser('extract'); s.add_argument('src'); s.add_argument('outdir'); s.add_argument('--bank', required=True); s.add_argument('--event', required=True); s.add_argument('--new', required=True)
+    s.add_argument('--ini', default='DevCETestBanks.ini'); s.set_defaults(f=cmd_extract)
     a = p.parse_args(); a.f(a)
 
 

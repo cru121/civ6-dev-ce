@@ -19,6 +19,7 @@ local function Initialize()
 		{ "Sb_Beep",  "Play_DevCE_BankTest_Beep" },
 		{ "Sb_Control", "Play_DevCE_BankTest_Control" },
 		{ "Sb_Clone", "Play_DevCE_BankTest_Clone" },
+		{ "Sb_Extract", "Play_DevCE_BankTest_Extract" },
 		{ "Sb_Alert", "UI_Multi_Turn_Movement_Alert" },
 		{ "Sb_Click", "Play_UI_Click" },
 		{ "Sb_Open",  "UI_Screen_Open" },
