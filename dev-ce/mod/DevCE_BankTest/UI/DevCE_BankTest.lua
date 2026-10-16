@@ -1,29 +1,10 @@
--- Turn start: plays a known game sound and our bank's beep alternately, 3 s apart, so you can tell them apart:
---   t=0 game alert, t=3 BEEP, t=6 BEEP, t=9 game alert, t=12 BEEP. Each step is also printed to Lua.log.
-local steps = {
-	{ 0,  "UI_Multi_Turn_Movement_Alert", "game alert" },
-	{ 3,  "Play_DevCE_BankTest_Beep",     "BEEP (our bank)" },
-	{ 6,  "Play_DevCE_BankTest_Beep",     "BEEP (our bank)" },
-	{ 9,  "UI_Multi_Turn_Movement_Alert", "game alert" },
-	{ 12, "Play_DevCE_BankTest_Beep",     "BEEP (our bank)" },
-}
-local clock, nextStep = nil, 1
-local function OnUpdate(dt)
-	if clock == nil then return end
-	if clock == 0 then print("DevCE_BankTest: update running") end
-	clock = clock + dt
-	while nextStep <= #steps and clock >= steps[nextStep][1] do
-		local s = steps[nextStep]
-		print("DevCE_BankTest: t=" .. s[1] .. " " .. s[3] .. " -> UI.PlaySound(" .. s[2] .. ")")
-		UI.PlaySound(s[2])
-		nextStep = nextStep + 1
-	end
-	if nextStep > #steps then clock = nil end
+-- When the game view finishes loading: plays a known game sound (UI_Multi_Turn_Movement_Alert), so you know sound works.
+-- At the start of every turn after that: plays the BEEP from our hand-built bank (Play_DevCE_BankTest_Beep).
+-- (A per-frame timer did not run in this context, so there is no sequencing.) Every call is printed to Lua.log.
+local function Play(evt, what)
+	print("DevCE_BankTest: " .. what .. " -> UI.PlaySound(" .. evt .. ")")
+	UI.PlaySound(evt)
 end
-local function OnTurnBegin()
-	clock, nextStep = 0, 1
-end
-ContextPtr:SetUpdate(OnUpdate)
-Events.LocalPlayerTurnBegin.Add(OnTurnBegin)
-Events.LoadGameViewStateDone.Add(function() print("DevCE_BankTest: view loaded, starting sequence") OnTurnBegin() end)
+Events.LoadGameViewStateDone.Add(function() Play("UI_Multi_Turn_Movement_Alert", "game alert") end)
+Events.LocalPlayerTurnBegin.Add(function() Play("Play_DevCE_BankTest_Beep", "BEEP (our bank)") end)
 print("DevCE_BankTest: registered")
