@@ -1,17 +1,23 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: AGPL-3.0-only
-"""bnktool: read and build Wwise soundbanks (version 113) as used by Civilization VI.
+"""bnktool: read and build Wwise soundbanks (version 113) as used by Civilization VI. No Wwise installation needed.
 
-  bnktool.py hash NAME                 FNV-1 32-bit id Wwise uses for NAME (case-insensitive)
-  bnktool.py dump BANK.bnk             chunks and HIRC object list
-  bnktool.py make-sfx OUTDIR --wav FILE --event NAME [--bank NAME] [--control-from OFFICIAL.bnk]
-                                       builds a small bank (+ Banks.ini) whose event NAME plays FILE (16-bit PCM wav).
-                                       --control-from also copies a known-good in-bank sound from an official bank under a second event,
-                                       to tell "our bank structure is wrong" from "our PCM audio is wrong".
+  bnktool.py hash NAME                  FNV-1 32-bit id Wwise uses for NAME (case-insensitive): event, bank and object ids
+  bnktool.py dump BANK.bnk              chunks and HIRC object list
+  bnktool.py make-sfx OUTDIR --wav FILE --event NAME --control-from OFFICIAL.bnk --control-source EVENT --chain-from OFFICIAL.bnk
+                                        builds a bank (+ Banks.ini entry) in which event NAME plays FILE (16-bit PCM wav). The sounds hang under a copy of
+                                        the parent mixer chain of an official event (--chain-from, --chain-event); --control-from adds a second event that
+                                        plays a known-good official sound from our bank
+  bnktool.py clone-bank SRC.bnk OUTDIR --bank NAME --rename OLD=NEW
+                                        byte copy of an official bank under a new bank id with renamed events (bisecting aid)
+  bnktool.py extract SRC.bnk OUTDIR --bank NAME --event OLD --new NEW
+                                        minimal bank holding one official event with its sound, parent mixers and media
 
-make-sfx works by assembling objects from byte templates taken from the game's own banks
-(sound, actor-mixer, event, play action; layouts verified against Cinematic_Tutorials_MusicSFX.bnk),
-so no Wwise installation is needed. Experimental.
+--section chooses the Banks.ini section (InGame loads at game start; FMV loads on UI.LoadSoundBankGroup(5), handy for reloading without a restart).
+
+Rules a hand-built bank must follow (found by bisecting against official banks, see docs topic 61): the DATA payload starts at a file offset that is a
+multiple of 16 (BKHD is padded), the DIDX media index is sorted by id, HIRC objects are written children first (sounds, mixers bottom to top, actions,
+events), sounds sit under real actor-mixers that route to a real bus. Experimental.
 """
 import argparse, os, struct, sys, wave
 
@@ -202,11 +208,6 @@ def assemble(name, objs, media, align=16):
 
     def chunk(tag, body): return tag.encode() + u32(len(body)) + body
     return chunk('BKHD', bkhd) + chunk('DIDX', didx) + chunk('DATA', data) + chunk('HIRC', hirc)
-
-
-def node_parent_offset(body):
-    """Offset of the DirectParentID in a sound / actor-mixer body (both start: id, [sound fields], then NodeBaseParams)."""
-    return None
 
 
 def split_children(body):
