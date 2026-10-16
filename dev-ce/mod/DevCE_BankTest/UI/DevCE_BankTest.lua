@@ -10,6 +10,7 @@ local steps = {
 local clock, nextStep = nil, 1
 local function OnUpdate(dt)
 	if clock == nil then return end
+	if clock == 0 then print("DevCE_BankTest: update running") end
 	clock = clock + dt
 	while nextStep <= #steps and clock >= steps[nextStep][1] do
 		local s = steps[nextStep]
@@ -24,4 +25,5 @@ local function OnTurnBegin()
 end
 ContextPtr:SetUpdate(OnUpdate)
 Events.LocalPlayerTurnBegin.Add(OnTurnBegin)
+Events.LoadGameViewStateDone.Add(function() print("DevCE_BankTest: view loaded, starting sequence") OnTurnBegin() end)
 print("DevCE_BankTest: registered")
