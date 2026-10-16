@@ -109,10 +109,26 @@ def official_sound(bank_path, sound_id=None, min_media=0):
     return best[0], best[1]
 
 
-def build_bank(name, voices, align=16):
-    """voices: list of dicts {event, wem, body (optional: official sound body to clone)}. One work unit > one mixer > the sounds."""
+def official_chain(bank_path, event):
+    """Bodies of the actor-mixers above the sound that an official event plays (bottom to top), to be reused as the parent chain of our own sounds."""
+    data = open(bank_path, 'rb').read()
+    objs = {struct.unpack_from('<I', body, 0)[0]: (t, body) for t, body in read_hirc(data)}
+    ev = objs[fnv(event)][1]
+    act = objs[struct.unpack_from('<I', ev, 8)[0]][1]
+    snd = objs[struct.unpack_from('<I', act, 6)[0]][1]
+    chain, parent = [], struct.unpack_from('<I', snd, 25)[0]
+    while parent:
+        body = objs[parent][1]
+        chain.append(body)
+        parent = mixer_parent(body)[0]
+    return chain
+
+
+def build_bank(name, voices, align=16, chain=None):
+    """voices: list of dicts {event, wem, body (optional: official sound body to clone)}.
+    Parent objects: our own simple work unit > mixer, or (chain=official_chain(...)) a copy of an official parent chain with new ids."""
     bank_id = fnv(name)
-    mixer_id = fnv(name + '/mixer')
+    mixer_id = fnv(name + ('/chain0' if chain else '/mixer'))
     wu_id = fnv(name + '/workunit')
     objs, media, sound_ids, ids = [], [], [], {'bank': bank_id, 'events': {}}
     for i, v in enumerate(voices):
@@ -121,6 +137,7 @@ def build_bank(name, voices, align=16):
         if v.get('body'):
             sb = bytearray(v['body'])
             sb[0:4] = u32(sound_id); sb[9:13] = u32(media_id); sb[25:29] = u32(mixer_id)
+            if 'plugin' in v: sb[4:8] = u32(v['plugin']); sb[13:17] = u32(len(wem))   # same sound object, other codec (e.g. PCM)
             sound = bytes(sb)
         else:
             sound = u32(sound_id) + u32(0x00010001) + Z + u32(media_id) + u32(len(wem)) + Z + bytes(3) + u32(0) + u32(mixer_id) + SOUND_TAIL
@@ -128,12 +145,25 @@ def build_bank(name, voices, align=16):
         evt = u32(fnv(v['event'])) + u32(1) + u32(action_id)
         objs += [(2, sound), (3, action), (4, evt)]
         media.append((media_id, wem)); sound_ids.append(sound_id); ids['events'][v['event']] = fnv(v['event'])
-    mixer = bytearray(bytes.fromhex(T_MIXER)[:-8])
-    mixer[0:4] = u32(mixer_id); mixer[11:15] = u32(wu_id); mixer[18:22] = struct.pack('<f', 0.0)
-    mixer = bytes(mixer) + u32(len(sound_ids)) + b''.join(u32(x) for x in sound_ids)
-    wu = bytearray(bytes.fromhex(T_WORKUNIT))
-    wu[0:4] = u32(wu_id); wu[-4:] = u32(mixer_id)
-    objs = [(7, bytes(wu)), (7, mixer)] + objs
+    if chain:
+        cids = [fnv('%s/chain%d' % (name, i)) for i in range(len(chain))]
+        parents = []
+        for i, body in enumerate(chain):
+            head, _ = split_children(body)
+            h = bytearray(head)
+            h[0:4] = u32(cids[i])
+            orig_parent, pq = mixer_parent(body)
+            h[pq:pq + 4] = u32(cids[i + 1] if i + 1 < len(cids) else orig_parent)
+            kids = sound_ids if i == 0 else [cids[i - 1]]
+            parents.append((7, bytes(h) + u32(len(kids)) + b''.join(u32(x) for x in kids)))
+        objs = parents + objs
+    else:
+        mixer = bytearray(bytes.fromhex(T_MIXER)[:-8])
+        mixer[0:4] = u32(mixer_id); mixer[11:15] = u32(wu_id); mixer[18:22] = struct.pack('<f', 0.0)
+        mixer = bytes(mixer) + u32(len(sound_ids)) + b''.join(u32(x) for x in sound_ids)
+        wu = bytearray(bytes.fromhex(T_WORKUNIT))
+        wu[0:4] = u32(wu_id); wu[-4:] = u32(mixer_id)
+        objs = [(7, bytes(wu)), (7, mixer)] + objs
     return assemble(name, objs, media, align), ids
 
 
@@ -217,12 +247,16 @@ def cmd_make_sfx(a):
     voices = [dict(event=a.event, wem=pcm_wem(a.wav))]
     if a.control_from:
         body, wem = official_sound(a.control_from, min_media=a.control_min)
+        if a.chain_from: voices = [dict(event=a.event, wem=pcm_wem(a.wav), body=body, plugin=0x00010001)]   # our PCM sound on an official sound object
         voices.append(dict(event=a.control_event, wem=wem, body=body))
-    blob, ids = build_bank(a.bank, voices)
+    chain = official_chain(a.chain_from, a.chain_event) if a.chain_from else None
+    blob, ids = build_bank(a.bank, voices, chain=chain)
     os.makedirs(a.outdir, exist_ok=True)
     open(os.path.join(a.outdir, a.bank + '.bnk'), 'wb').write(blob)
-    ini = '; Banks.ini written by bnktool\n[Global]\n\n[Menu]\n\n[InGame]\n%s.bnk\n\n[2D]\n\n[3D]\n\n[FMV]\n' % a.bank
-    open(os.path.join(a.outdir, a.ini), 'w', newline='\r\n').write(ini)
+    ini_path = os.path.join(a.outdir, a.ini)
+    lines = open(ini_path, encoding='utf-8').read().splitlines() if os.path.exists(ini_path) else ['[Global]', '', '[Menu]', '', '[InGame]', '', '[2D]', '', '[3D]', '', '[FMV]']
+    if (a.bank + '.bnk') not in lines: lines.insert(lines.index('[InGame]') + 1, a.bank + '.bnk')
+    open(ini_path, 'w', newline='\r\n').write('\n'.join(lines) + '\n')
     print('wrote %s.bnk (%d bytes), %s' % (a.bank, len(blob), a.ini))
     print('bank id %d' % ids['bank'])
     for e, i in ids['events'].items(): print('event "%s" id %d' % (e, i))
@@ -265,6 +299,8 @@ def main():
     s.add_argument('--control-from', help='official .bnk to copy a known-good sound from (adds a second event)')
     s.add_argument('--control-event', default='Play_DevCE_BankTest_Control')
     s.add_argument('--control-min', type=int, default=0, help='minimum media size in bytes')
+    s.add_argument('--chain-from', help='official .bnk whose parent mixer chain (above --chain-event) is copied as the parent of our sounds')
+    s.add_argument('--chain-event', default='Alert_Positive')
     s.add_argument('--bank', default='DevCE_Test_Bank'); s.add_argument('--ini', default='DevCETestBanks.ini'); s.set_defaults(f=cmd_make_sfx)
     s = sp.add_parser('clone-bank'); s.add_argument('src'); s.add_argument('outdir'); s.add_argument('--bank', required=True)
     s.add_argument('--rename', action='append', default=[], help='OLD_EVENT=NEW_EVENT (repeatable)'); s.add_argument('--ini', default='DevCETestBanks.ini'); s.set_defaults(f=cmd_clone_bank)
