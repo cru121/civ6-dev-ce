@@ -136,11 +136,16 @@ def build_bank(name, voices, align=16):
     objs = [(7, bytes(wu)), (7, mixer)] + objs
     hirc = u32(len(objs)) + b''.join(bytes([t]) + u32(len(b)) + b for t, b in objs)
 
-    data, didx = b'', b''
+    data, entries = b'', []
     for mid, wem in media:
-        didx += u32(mid) + u32(len(data)) + u32(len(wem))
+        entries.append((mid, len(data), len(wem)))
         data += wem + bytes((-len(wem)) % align)
-    bkhd = u32(VERSION) + u32(bank_id) + u32(0) + u32(0) + u32(4) + u32(0)
+    # the media index is sorted by id in official banks (Wwise looks media up by binary search)
+    didx = b''.join(u32(m) + u32(o) + u32(s) for m, o, s in sorted(entries))
+    bkhd = u32(VERSION) + u32(bank_id) + u32(0) + u32(0) + u32(4)
+    # Official banks start the DATA payload at a file offset that is a multiple of 16: Wwise pads the BKHD tail to get there.
+    while (8 + len(bkhd) + 8 + len(didx) + 8) % align:
+        bkhd += u32(0)
 
     def chunk(tag, body): return tag.encode() + u32(len(body)) + body
     return chunk('BKHD', bkhd) + chunk('DIDX', didx) + chunk('DATA', data) + chunk('HIRC', hirc), ids
