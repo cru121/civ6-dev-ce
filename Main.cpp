@@ -30,6 +30,7 @@
 #include "LuaHooks.h"
 #include "LuaDebugger.h"
 #include "AudioPlayer.h"
+#include "BankTrace.h"
 
 HANDLE mainThread;
 
@@ -192,6 +193,15 @@ extern "C" {
             std::cerr << "WaitForSingleObject failed: " << GetLastError() << '\n';
         }
         Runtime::InitMinHook();
+        {
+            HMODULE self = nullptr;
+            char dllPath[MAX_PATH] = { 0 };
+            GetModuleHandleExA(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, (LPCSTR)&DllCreateGameContext, &self);
+            GetModuleFileNameA(self, dllPath, MAX_PATH);
+            char* slash = strrchr(dllPath, '\\');
+            if (slash) *slash = 0;
+            BankTrace::Install(dllPath);
+        }
         hks::InitHavokScript();
         InitHooks();
         return base_DllCreateGameContext();
