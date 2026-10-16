@@ -1,5 +1,6 @@
 -- Dev CE soundboard (UI context). Buttons call UI.PlaySound(<Wwise event name>); every call is also printed to Lua.log.
--- "BEEP" plays the event of the hand-built bank (Platforms/Windows/Audio/DevCE_Test_Bank.bnk); the other buttons are the game's own events for comparison.
+-- BEEP / CONTROL: events of the hand-built bank (Platforms/Windows/Audio/DevCE_Test_Bank.bnk).
+-- CLONE / EXTRACT: events of two banks derived from an official bank (known to work); UI_Screen_Open is a game event for comparison.
 print("DevCE_BankTest: loading soundboard...")
 
 local function Play(evt)
@@ -16,17 +17,11 @@ end
 
 local function Initialize()
 	local presets = {
-		{ "Sb_Beep",  "Play_DevCE_BankTest_Beep" },
+		{ "Sb_Beep",    "Play_DevCE_BankTest_Beep" },
 		{ "Sb_Control", "Play_DevCE_BankTest_Control" },
-		{ "Sb_Clone", "Play_DevCE_BankTest_Clone" },
+		{ "Sb_Clone",   "Play_DevCE_BankTest_Clone" },
 		{ "Sb_Extract", "Play_DevCE_BankTest_Extract" },
-		{ "Sb_Alert", "UI_Multi_Turn_Movement_Alert" },
-		{ "Sb_Click", "Play_UI_Click" },
-		{ "Sb_Open",  "UI_Screen_Open" },
-		{ "Sb_Lens",  "UI_Lens_Overlay_On" },
-		{ "Sb_Tray",  "Tech_Tray_Slide_Open" },
-		{ "Sb_Music", "Play_Music_Japan" },
-		{ "Sb_Stop",  "Stop_All" },
+		{ "Sb_Open",    "UI_Screen_Open" },
 	}
 	for _, p in ipairs(presets) do
 		local id, evt = p[1], p[2]

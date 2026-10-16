@@ -109,6 +109,23 @@ def official_sound(bank_path, sound_id=None, min_media=0):
     return best[0], best[1]
 
 
+def official_sound_of_event(bank_path, event):
+    """(sound body, media bytes) of the sound that an official event plays (the event must have one play action targeting an in-bank sound)."""
+    data = open(bank_path, 'rb').read()
+    objs = {struct.unpack_from('<I', body, 0)[0]: (t, body) for t, body in read_hirc(data)}
+    ev = objs[fnv(event)][1]
+    act = objs[struct.unpack_from('<I', ev, 8)[0]][1]
+    snd = objs[struct.unpack_from('<I', act, 6)[0]][1]
+    src = struct.unpack_from('<I', snd, 9)[0]
+    for tag, off, size in read_chunks(data):
+        if tag == 'DIDX':
+            for i in range(size // 12):
+                mid, o, sz = struct.unpack_from('<III', data, off + i * 12)
+                if mid == src: didx = (o, sz)
+        if tag == 'DATA': dstart = off
+    return snd, data[dstart + didx[0]:dstart + didx[0] + didx[1]]
+
+
 def official_chain(bank_path, event):
     """Bodies of the actor-mixers above the sound that an official event plays (bottom to top), to be reused as the parent chain of our own sounds."""
     data = open(bank_path, 'rb').read()
@@ -246,7 +263,7 @@ def cmd_extract(a):
 def cmd_make_sfx(a):
     voices = [dict(event=a.event, wem=pcm_wem(a.wav))]
     if a.control_from:
-        body, wem = official_sound(a.control_from, min_media=a.control_min)
+        body, wem = official_sound_of_event(a.control_from, a.control_source) if a.control_source else official_sound(a.control_from, min_media=a.control_min)
         if a.chain_from: voices = [dict(event=a.event, wem=pcm_wem(a.wav), body=body, plugin=0x00010001)]   # our PCM sound on an official sound object
         voices.append(dict(event=a.control_event, wem=wem, body=body))
     chain = official_chain(a.chain_from, a.chain_event) if a.chain_from else None
@@ -299,6 +316,7 @@ def main():
     s.add_argument('--control-from', help='official .bnk to copy a known-good sound from (adds a second event)')
     s.add_argument('--control-event', default='Play_DevCE_BankTest_Control')
     s.add_argument('--control-min', type=int, default=0, help='minimum media size in bytes')
+    s.add_argument('--control-source', help='use the sound of this official event of --control-from (instead of the smallest in-bank sound)')
     s.add_argument('--chain-from', help='official .bnk whose parent mixer chain (above --chain-event) is copied as the parent of our sounds')
     s.add_argument('--chain-event', default='Alert_Positive')
     s.add_argument('--bank', default='DevCE_Test_Bank'); s.add_argument('--ini', default='DevCETestBanks.ini'); s.set_defaults(f=cmd_make_sfx)
