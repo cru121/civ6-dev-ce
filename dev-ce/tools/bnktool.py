@@ -4,16 +4,19 @@
 
   bnktool.py hash NAME                 FNV-1 32-bit id Wwise uses for NAME (case-insensitive)
   bnktool.py dump BANK.bnk             chunks and HIRC object list
-  bnktool.py make-sfx OUTDIR --wav FILE --event NAME [--bank NAME]
-                                       builds a one-sound bank (+ Banks.ini) whose event NAME plays FILE (16-bit PCM wav)
+  bnktool.py make-sfx OUTDIR --wav FILE --event NAME [--bank NAME] [--control-from OFFICIAL.bnk]
+                                       builds a small bank (+ Banks.ini) whose event NAME plays FILE (16-bit PCM wav).
+                                       --control-from also copies a known-good in-bank sound from an official bank under a second event,
+                                       to tell "our bank structure is wrong" from "our PCM audio is wrong".
 
 make-sfx works by assembling objects from byte templates taken from the game's own banks
 (sound, actor-mixer, event, play action; layouts verified against Cinematic_Tutorials_MusicSFX.bnk),
-so no Wwise installation is needed. Experimental: whether the game accepts such a bank is what it is for.
+so no Wwise installation is needed. Experimental.
 """
 import argparse, os, struct, sys, wave
 
 VERSION = 113
+Z = b'\x00'
 
 
 def fnv(name):
@@ -79,53 +82,83 @@ def pcm_wem(wav_path):
 
 # Byte templates from Cinematic_Tutorials_MusicSFX.bnk. Ids/links are patched in by build_bank().
 SOUND_TAIL = bytes.fromhex('000000c000040101000000000000000000')   # after the parent id
-WORK_BUS = 0xE2B7BC37   # bus the game's cinematic work unit routes to (exists in Init.bnk)
-
-
 # exact template bodies (hex) from the game
 T_MIXER = '04c6312300000000000000a87723210001000000104100c000000100000000000000000000010000002c261d01'
 T_WORKUNIT = '5f4c193500000037bcb7e2000000000001000000803f00c30000010000000000000000000001000000a8772321'
 
 
-def build_bank(name, event, wem, align=16):
+def official_sound(bank_path, sound_id=None, min_media=0):
+    """Pick the smallest in-bank (stream type 0) sound of an official bank: returns (body, media bytes). Used as a control."""
+    data = open(bank_path, 'rb').read()
+    didx, dstart = {}, 0
+    for tag, off, size in read_chunks(data):
+        if tag == 'DIDX':
+            for i in range(size // 12):
+                mid, o, sz = struct.unpack_from('<III', data, off + i * 12); didx[mid] = (o, sz)
+        if tag == 'DATA': dstart = off
+    best = None
+    for t, body in read_hirc(data):
+        if t != 2 or len(body) != 46: continue
+        oid, plugin, stream, src, msz = struct.unpack_from('<IIBII', body, 0)
+        if stream != 0 or src not in didx or body[18:21] != bytes(3): continue
+        o, sz = didx[src]
+        if sound_id is not None and oid != sound_id: continue
+        if sz < min_media: continue
+        if best is None or sz < best[2]: best = (body, data[dstart + o:dstart + o + sz], sz)
+    if best is None: sys.exit('no suitable sound found in ' + bank_path)
+    return best[0], best[1]
+
+
+def build_bank(name, voices, align=16):
+    """voices: list of dicts {event, wem, body (optional: official sound body to clone)}. One work unit > one mixer > the sounds."""
     bank_id = fnv(name)
-    media_id = fnv(name + '/media')
-    sound_id = fnv(name + '/sound')
     mixer_id = fnv(name + '/mixer')
     wu_id = fnv(name + '/workunit')
-    action_id = fnv(name + '/play')
-    event_id = fnv(event)
-
-    sound = (u32(sound_id) + u32(0x00010001) + b'\x00' + u32(media_id) + u32(len(wem)) + b'\x00' + b'\x00\x00\x00' + u32(0) + u32(mixer_id) + SOUND_TAIL)
-    mixer = bytearray(bytes.fromhex(T_MIXER))
-    mixer[0:4] = u32(mixer_id); mixer[11:15] = u32(wu_id); mixer[18:22] = struct.pack('<f', 0.0); mixer[-4:] = u32(sound_id)
+    objs, media, sound_ids, ids = [], [], [], {'bank': bank_id, 'events': {}}
+    for i, v in enumerate(voices):
+        media_id = fnv('%s/media%d' % (name, i)); sound_id = fnv('%s/sound%d' % (name, i)); action_id = fnv('%s/play%d' % (name, i))
+        wem = v['wem']
+        if v.get('body'):
+            sb = bytearray(v['body'])
+            sb[0:4] = u32(sound_id); sb[9:13] = u32(media_id); sb[25:29] = u32(mixer_id)
+            sound = bytes(sb)
+        else:
+            sound = u32(sound_id) + u32(0x00010001) + Z + u32(media_id) + u32(len(wem)) + Z + bytes(3) + u32(0) + u32(mixer_id) + SOUND_TAIL
+        action = u32(action_id) + b'\x03\x04' + u32(sound_id) + bytes(3) + b'\x04' + u32(bank_id)
+        evt = u32(fnv(v['event'])) + u32(1) + u32(action_id)
+        objs += [(2, sound), (3, action), (4, evt)]
+        media.append((media_id, wem)); sound_ids.append(sound_id); ids['events'][v['event']] = fnv(v['event'])
+    mixer = bytearray(bytes.fromhex(T_MIXER)[:-8])
+    mixer[0:4] = u32(mixer_id); mixer[11:15] = u32(wu_id); mixer[18:22] = struct.pack('<f', 0.0)
+    mixer = bytes(mixer) + u32(len(sound_ids)) + b''.join(u32(x) for x in sound_ids)
     wu = bytearray(bytes.fromhex(T_WORKUNIT))
     wu[0:4] = u32(wu_id); wu[-4:] = u32(mixer_id)
-    action = u32(action_id) + b'\x03\x04' + u32(sound_id) + b'\x00\x00\x00\x04' + u32(bank_id)
-    evt = u32(event_id) + u32(1) + u32(action_id)
-
-    objs = [(7, bytes(wu)), (7, bytes(mixer)), (2, sound), (3, action), (4, evt)]
+    objs = [(7, bytes(wu)), (7, mixer)] + objs
     hirc = u32(len(objs)) + b''.join(bytes([t]) + u32(len(b)) + b for t, b in objs)
 
-    pad = (-len(wem)) % align
-    data = wem + bytes(pad)
-    didx = u32(media_id) + u32(0) + u32(len(wem))
+    data, didx = b'', b''
+    for mid, wem in media:
+        didx += u32(mid) + u32(len(data)) + u32(len(wem))
+        data += wem + bytes((-len(wem)) % align)
     bkhd = u32(VERSION) + u32(bank_id) + u32(0) + u32(0) + u32(4) + u32(0)
 
     def chunk(tag, body): return tag.encode() + u32(len(body)) + body
-    return chunk('BKHD', bkhd) + chunk('DIDX', didx) + chunk('DATA', data) + chunk('HIRC', hirc), dict(bank=bank_id, event=event_id, media=media_id)
+    return chunk('BKHD', bkhd) + chunk('DIDX', didx) + chunk('DATA', data) + chunk('HIRC', hirc), ids
 
 
 def cmd_make_sfx(a):
-    bank = a.bank
-    wem = pcm_wem(a.wav)
-    blob, ids = build_bank(bank, a.event, wem)
+    voices = [dict(event=a.event, wem=pcm_wem(a.wav))]
+    if a.control_from:
+        body, wem = official_sound(a.control_from, min_media=a.control_min)
+        voices.append(dict(event=a.control_event, wem=wem, body=body))
+    blob, ids = build_bank(a.bank, voices)
     os.makedirs(a.outdir, exist_ok=True)
-    open(os.path.join(a.outdir, bank + '.bnk'), 'wb').write(blob)
-    ini = '; Banks.ini written by bnktool\n[Global]\n\n[Menu]\n\n[InGame]\n%s.bnk\n\n[2D]\n\n[3D]\n\n[FMV]\n' % bank
+    open(os.path.join(a.outdir, a.bank + '.bnk'), 'wb').write(blob)
+    ini = '; Banks.ini written by bnktool\n[Global]\n\n[Menu]\n\n[InGame]\n%s.bnk\n\n[2D]\n\n[3D]\n\n[FMV]\n' % a.bank
     open(os.path.join(a.outdir, a.ini), 'w', newline='\r\n').write(ini)
-    print('wrote %s.bnk (%d bytes), %s' % (bank, len(blob), a.ini))
-    print('bank id %d, event "%s" id %d, media id %d' % (ids['bank'], a.event, ids['event'], ids['media']))
+    print('wrote %s.bnk (%d bytes), %s' % (a.bank, len(blob), a.ini))
+    print('bank id %d' % ids['bank'])
+    for e, i in ids['events'].items(): print('event "%s" id %d' % (e, i))
 
 
 def main():
@@ -134,6 +167,9 @@ def main():
     s = sp.add_parser('hash'); s.add_argument('name'); s.set_defaults(f=lambda a: print(fnv(a.name)))
     s = sp.add_parser('dump'); s.add_argument('bank'); s.set_defaults(f=cmd_dump)
     s = sp.add_parser('make-sfx'); s.add_argument('outdir'); s.add_argument('--wav', required=True); s.add_argument('--event', required=True)
+    s.add_argument('--control-from', help='official .bnk to copy a known-good sound from (adds a second event)')
+    s.add_argument('--control-event', default='Play_DevCE_BankTest_Control')
+    s.add_argument('--control-min', type=int, default=0, help='minimum media size in bytes')
     s.add_argument('--bank', default='DevCE_Test_Bank'); s.add_argument('--ini', default='DevCETestBanks.ini'); s.set_defaults(f=cmd_make_sfx)
     a = p.parse_args(); a.f(a)
 

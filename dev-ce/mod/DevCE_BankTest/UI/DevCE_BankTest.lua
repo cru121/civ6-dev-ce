@@ -17,6 +17,7 @@ end
 local function Initialize()
 	local presets = {
 		{ "Sb_Beep",  "Play_DevCE_BankTest_Beep" },
+		{ "Sb_Control", "Play_DevCE_BankTest_Control" },
 		{ "Sb_Alert", "UI_Multi_Turn_Movement_Alert" },
 		{ "Sb_Click", "Play_UI_Click" },
 		{ "Sb_Open",  "UI_Screen_Open" },

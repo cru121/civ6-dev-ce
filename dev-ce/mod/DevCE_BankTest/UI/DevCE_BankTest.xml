@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Dev CE Bank Test soundboard: always-visible panel (same pattern as the Dev CE Playground: visible Grid with the SubContainerSmall2 style). -->
 <Context>
-	<Grid ID="Sb_Frame" Anchor="L,B" Offset="0,60" Size="250,470" Hidden="0" Style="SubContainerSmall2">
+	<Grid ID="Sb_Frame" Anchor="L,B" Offset="0,60" Size="250,505" Hidden="0" Style="SubContainerSmall2">
 		<Stack ID="Sb_Outer" Anchor="C,T" Offset="0,10" StackGrowth="Bottom" StackPadding="4">
 			<Label Anchor="C,T" Style="FontNormal14" Color="255,236,150,255" String="Dev CE Soundboard"/>
 			<Label ID="Sb_Status" Anchor="C,T" Style="FontNormal12" Color="150,220,255,255" WrapWidth="226" String="Pick a sound or type an event name."/>
 
 			<Label Anchor="C,T" Style="FontNormal12" Color="200,200,200,255" String="Our hand-built bank"/>
 			<GridButton ID="Sb_Beep" Size="226,28" Style="MainButtonSmall" String="BEEP (Play_DevCE_BankTest_Beep)"/>
+			<GridButton ID="Sb_Control" Size="226,28" Style="MainButtonSmall" String="CONTROL (game sound in our bank)"/>
 
 			<Label Anchor="C,T" Style="FontNormal12" Color="200,200,200,255" String="Game sounds (to compare)"/>
 			<GridButton ID="Sb_Alert" Size="226,28" Style="MainButtonSmall" String="Game alert"/>
