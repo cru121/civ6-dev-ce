@@ -10,6 +10,17 @@ local function Play(evt)
 	Controls.Sb_Status:SetText((ok and "Played: " or "ERROR: ") .. evt .. (ok and "" or (" " .. tostring(err))))
 end
 
+-- Our banks are listed in the [FMV] section of DevCETestBanks.ini: the game loads that group only on request (group 5 = BANKS_FMV, as the game's own scripts use it).
+-- Load / Unload re-reads the bank files from disk, so a rebuilt bank can be tried without restarting the game.
+local BANKS_FMV = 5
+local function BankGroup(load)
+	local ok, err = pcall(function()
+		if load then UI.LoadSoundBankGroup(BANKS_FMV) else UI.UnloadSoundBankGroup(BANKS_FMV) end
+	end)
+	print("DevCE_BankTest: " .. (load and "LoadSoundBankGroup" or "UnloadSoundBankGroup") .. "(5) ok=" .. tostring(ok) .. (ok and "" or (" " .. tostring(err))))
+	Controls.Sb_Status:SetText((load and "Load" or "Unload") .. " banks: " .. (ok and "called" or ("ERROR " .. tostring(err))))
+end
+
 local function OnUpdate()
 	-- the game creates additional contexts hidden; keep this one shown
 	if ContextPtr:IsHidden() then ContextPtr:SetHide(false) end
@@ -27,6 +38,8 @@ local function Initialize()
 		local id, evt = p[1], p[2]
 		Controls[id]:RegisterCallback(Mouse.eLClick, function() Play(evt) end)
 	end
+	Controls.Sb_Load:RegisterCallback(Mouse.eLClick, function() BankGroup(true) end)
+	Controls.Sb_Unload:RegisterCallback(Mouse.eLClick, function() BankGroup(false) end)
 	Controls.Sb_PlayTyped:RegisterCallback(Mouse.eLClick, function() Play(Controls.Sb_Edit:GetText()) end)
 	Controls.Sb_Edit:RegisterCommitCallback(function() Play(Controls.Sb_Edit:GetText()) end)
 	ContextPtr:SetHide(false)

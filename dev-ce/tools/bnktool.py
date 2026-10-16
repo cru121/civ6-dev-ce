@@ -255,7 +255,7 @@ def cmd_extract(a):
     open(os.path.join(a.outdir, a.bank + '.bnk'), 'wb').write(blob)
     ini_path = os.path.join(a.outdir, a.ini)
     lines = open(ini_path, encoding='utf-8').read().splitlines() if os.path.exists(ini_path) else ['[Global]', '', '[Menu]', '', '[InGame]', '', '[2D]', '', '[3D]', '', '[FMV]']
-    if (a.bank + '.bnk') not in lines: lines.insert(lines.index('[InGame]') + 1, a.bank + '.bnk')
+    if (a.bank + '.bnk') not in lines: lines.insert(lines.index('[%s]' % a.section) + 1, a.bank + '.bnk')
     open(ini_path, 'w', newline='\r\n').write('\n'.join(lines) + '\n')
     print('wrote %s.bnk (%d bytes): %d objects, media %d (%d bytes), event %s' % (a.bank, len(blob), len(out), src, sz, a.new))
 
@@ -272,7 +272,7 @@ def cmd_make_sfx(a):
     open(os.path.join(a.outdir, a.bank + '.bnk'), 'wb').write(blob)
     ini_path = os.path.join(a.outdir, a.ini)
     lines = open(ini_path, encoding='utf-8').read().splitlines() if os.path.exists(ini_path) else ['[Global]', '', '[Menu]', '', '[InGame]', '', '[2D]', '', '[3D]', '', '[FMV]']
-    if (a.bank + '.bnk') not in lines: lines.insert(lines.index('[InGame]') + 1, a.bank + '.bnk')
+    if (a.bank + '.bnk') not in lines: lines.insert(lines.index('[%s]' % a.section) + 1, a.bank + '.bnk')
     open(ini_path, 'w', newline='\r\n').write('\n'.join(lines) + '\n')
     print('wrote %s.bnk (%d bytes), %s' % (a.bank, len(blob), a.ini))
     print('bank id %d' % ids['bank'])
@@ -302,7 +302,7 @@ def cmd_clone_bank(a):
     ini_path = os.path.join(a.outdir, a.ini)
     lines = open(ini_path, encoding='utf-8').read().splitlines() if os.path.exists(ini_path) else ['[Global]', '', '[Menu]', '', '[InGame]', '', '[2D]', '', '[3D]', '', '[FMV]']
     if (a.bank + '.bnk') not in lines:
-        lines.insert(lines.index('[InGame]') + 1, a.bank + '.bnk')
+        lines.insert(lines.index('[%s]' % a.section) + 1, a.bank + '.bnk')
     open(ini_path, 'w', newline='\r\n').write('\n'.join(lines) + '\n')
     print('wrote %s.bnk (%d bytes) bank id %d, renamed %d event(s)' % (a.bank, len(data), fnv(a.bank), done))
 
@@ -319,11 +319,11 @@ def main():
     s.add_argument('--control-source', help='use the sound of this official event of --control-from (instead of the smallest in-bank sound)')
     s.add_argument('--chain-from', help='official .bnk whose parent mixer chain (above --chain-event) is copied as the parent of our sounds')
     s.add_argument('--chain-event', default='Alert_Positive')
-    s.add_argument('--bank', default='DevCE_Test_Bank'); s.add_argument('--ini', default='DevCETestBanks.ini'); s.set_defaults(f=cmd_make_sfx)
+    s.add_argument('--bank', default='DevCE_Test_Bank'); s.add_argument('--ini', default='DevCETestBanks.ini'); s.add_argument('--section', default='InGame', help='Banks.ini section: Global, Menu, InGame, 2D, 3D or FMV (FMV banks load only on UI.LoadSoundBankGroup(5))'); s.set_defaults(f=cmd_make_sfx)
     s = sp.add_parser('clone-bank'); s.add_argument('src'); s.add_argument('outdir'); s.add_argument('--bank', required=True)
-    s.add_argument('--rename', action='append', default=[], help='OLD_EVENT=NEW_EVENT (repeatable)'); s.add_argument('--ini', default='DevCETestBanks.ini'); s.set_defaults(f=cmd_clone_bank)
+    s.add_argument('--rename', action='append', default=[], help='OLD_EVENT=NEW_EVENT (repeatable)'); s.add_argument('--ini', default='DevCETestBanks.ini'); s.add_argument('--section', default='InGame', help='Banks.ini section: Global, Menu, InGame, 2D, 3D or FMV (FMV banks load only on UI.LoadSoundBankGroup(5))'); s.set_defaults(f=cmd_clone_bank)
     s = sp.add_parser('extract'); s.add_argument('src'); s.add_argument('outdir'); s.add_argument('--bank', required=True); s.add_argument('--event', required=True); s.add_argument('--new', required=True)
-    s.add_argument('--ini', default='DevCETestBanks.ini'); s.set_defaults(f=cmd_extract)
+    s.add_argument('--ini', default='DevCETestBanks.ini'); s.add_argument('--section', default='InGame', help='Banks.ini section: Global, Menu, InGame, 2D, 3D or FMV (FMV banks load only on UI.LoadSoundBankGroup(5))'); s.set_defaults(f=cmd_extract)
     a = p.parse_args(); a.f(a)
 
 
