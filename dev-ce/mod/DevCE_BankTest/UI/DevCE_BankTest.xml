@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Dev CE Bank Test soundboard: always-visible panel (same pattern as the Dev CE Playground: visible Grid with the SubContainerSmall2 style). Kept short so it fits on screen. -->
 <Context>
-	<Grid ID="Sb_Frame" Anchor="L,B" Offset="0,110" Size="250,365" Hidden="0" Style="SubContainerSmall2">
+	<Grid ID="Sb_Frame" Anchor="L,B" Offset="0,110" Size="250,395" Hidden="0" Style="SubContainerSmall2">
 		<Stack ID="Sb_Outer" Anchor="C,T" Offset="0,10" StackGrowth="Bottom" StackPadding="4">
 			<Label Anchor="C,T" Style="FontNormal14" Color="255,236,150,255" String="Dev CE Soundboard"/>
 			<Label ID="Sb_Status" Anchor="C,T" Style="FontNormal12" Color="150,220,255,255" WrapWidth="226" String="Pick a sound or type an event name."/>
@@ -12,9 +12,14 @@
 			</Stack>
 			<GridButton ID="Sb_Beep" Size="226,28" Style="MainButtonSmall" String="BEEP (our PCM sound)"/>
 			<GridButton ID="Sb_Control" Size="226,28" Style="MainButtonSmall" String="CONTROL (game sound, our bank)"/>
-			<GridButton ID="Sb_Clone" Size="226,28" Style="MainButtonSmall" String="CLONE (whole bank copied)"/>
-			<GridButton ID="Sb_Extract" Size="226,28" Style="MainButtonSmall" String="EXTRACT (real objects only)"/>
-			<GridButton ID="Sb_Open" Size="226,28" Style="MainButtonSmall" String="UI_Screen_Open (game)"/>
+
+			<Label Anchor="C,T" Style="FontNormal12" Color="200,200,200,255" String="Leader theme (Ancient era)"/>
+			<Stack Anchor="C,T" StackGrowth="Right" StackPadding="4">
+				<GridButton ID="Sb_LdEgypt" Size="111,28" Style="MainButtonSmall" String="Egypt"/>
+				<GridButton ID="Sb_LdJapan" Size="111,28" Style="MainButtonSmall" String="Japan"/>
+			</Stack>
+			<GridButton ID="Sb_LdNew" Size="226,28" Style="MainButtonSmall" String="DevCE_TestCiv (new civ)"/>
+			<GridButton ID="Sb_LdStop" Size="226,28" Style="MainButtonSmall" String="Stop leader music"/>
 
 			<Label Anchor="C,T" Style="FontNormal12" Color="200,200,200,255" String="Any event name (Enter or Play)"/>
 			<Box Size="226,22" Color="0,0,0,200">

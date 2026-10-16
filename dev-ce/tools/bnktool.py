@@ -202,11 +202,12 @@ def assemble(name, objs, media, align=16):
     # the media index is sorted by id in official banks (Wwise looks media up by binary search)
     didx = b''.join(u32(m) + u32(o) + u32(s) for m, o, s in sorted(entries))
     bkhd = u32(VERSION) + u32(bank_id) + u32(0) + u32(0) + u32(4)
+    def chunk(tag, body): return tag.encode() + u32(len(body)) + body
+    if not media:   # banks without media have no DIDX / DATA chunks
+        return chunk('BKHD', bkhd + u32(0)) + chunk('HIRC', hirc)
     # Official banks start the DATA payload at a file offset that is a multiple of 16: Wwise pads the BKHD tail to get there.
     while (8 + len(bkhd) + 8 + len(didx) + 8) % align:
         bkhd += u32(0)
-
-    def chunk(tag, body): return tag.encode() + u32(len(body)) + body
     return chunk('BKHD', bkhd) + chunk('DIDX', didx) + chunk('DATA', data) + chunk('HIRC', hirc)
 
 
@@ -309,6 +310,66 @@ def cmd_clone_bank(a):
     print('wrote %s.bnk (%d bytes) bank id %d, renamed %d event(s)' % (a.bank, len(data), fnv(a.bank), done))
 
 
+def parse_switch_tree(body, groups=2):
+    """Music switch container body -> (head bytes before the tree size field, mode, [nodes]) for a decision tree of depth 2.
+    Layout (v113): ... u32 depth, u32 group ids[depth], u8 group types[depth], u32 tree size, u8 mode, nodes (12 bytes each: key u32, audio id or
+    (u16 idx, u16 count), u16 weight, u16 probability). The tree is the tail of the object. Nodes are breadth first, siblings sorted by key."""
+    depth = None
+    for pos in range(0, len(body) - 8):
+        if struct.unpack_from('<I', body, pos)[0] == groups and pos + 4 + 4 * groups + groups + 5 < len(body):
+            q = pos + 4 + 4 * groups + groups
+            size = struct.unpack_from('<I', body, q)[0]
+            if size % 12 == 0 and q + 5 + size == len(body) and size >= 12 * (groups + 1): depth = pos; break
+    if depth is None: sys.exit('cannot find the decision tree (only depth-2 music switch containers are supported)')
+    q = depth + 4 + 4 * groups + groups
+    size = struct.unpack_from('<I', body, q)[0]
+    nodes = [list(struct.unpack_from('<IIHH', body, q + 5 + 12 * i)) for i in range(size // 12)]
+    return body[:q], body[q + 4], nodes, [struct.unpack_from('<I', body, depth + 4 + 4 * i)[0] for i in range(groups)]
+
+
+def cmd_add_civ(a):
+    """Add a civilization (switch value) to a music switch container: a copy of the container with one more leaf under every era, mapped to the
+    same music as an existing civilization (--like). Writes a bank that holds only the modified container."""
+    data = open(a.src, 'rb').read()
+    objs = {struct.unpack_from('<I', body, 0)[0]: (t, body) for t, body in read_hirc(data)}
+    t, body = objs[a.container]
+    if t != 12: sys.exit('object %d is not a music switch container' % a.container)
+    head, mode, nodes, groups = parse_switch_tree(body)
+    root = nodes[0]
+    r_idx, r_cnt = root[1] & 0xFFFF, root[1] >> 16
+    eras = nodes[r_idx:r_idx + r_cnt]
+    new_key, like_key = fnv(a.civ), fnv(a.like)
+    blocks = []
+    for era in eras:
+        i, c = era[1] & 0xFFFF, era[1] >> 16
+        kids = [list(k) for k in nodes[i:i + c]]
+        if any(k[0] == new_key for k in kids): sys.exit('%s already exists' % a.civ)
+        like = next((k for k in kids if k[0] == like_key), None)
+        if like is None: sys.exit('%s not found under every era' % a.like)
+        kids.append([new_key, like[1], like[2], like[3]])
+        kids.sort(key=lambda k: k[0])
+        blocks.append(kids)
+    out = [list(root)]
+    out[0][1] = 1 | (len(eras) << 16)
+    nxt = 1 + len(eras)
+    era_nodes = []
+    for era, kids in zip(eras, blocks):
+        era_nodes.append([era[0], nxt | (len(kids) << 16), era[2], era[3]])
+        nxt += len(kids)
+    out += era_nodes
+    for kids in blocks: out += kids
+    tree = b''.join(struct.pack('<IIHH', *n) for n in out)
+    new_body = head + u32(len(tree)) + bytes([mode]) + tree
+    blob = assemble(a.bank, [(12, new_body)], [])
+    os.makedirs(a.outdir, exist_ok=True)
+    open(os.path.join(a.outdir, a.bank + '.bnk'), 'wb').write(blob)
+    ini_path = os.path.join(a.outdir, a.ini)
+    lines = open(ini_path, encoding='utf-8').read().splitlines() if os.path.exists(ini_path) else ['[Global]', '', '[Menu]', '', '[InGame]', '', '[2D]', '', '[3D]', '', '[FMV]']
+    if (a.bank + '.bnk') not in lines: lines.insert(lines.index('[%s]' % a.section) + 1, a.bank + '.bnk')
+    open(ini_path, 'w', newline='\r\n').write('\n'.join(lines) + '\n')
+    print('wrote %s.bnk (%d bytes): container %d now has %d nodes (was %d); civ "%s" (key %d) plays like "%s" under %d eras' % (a.bank, len(blob), a.container, len(out), len(nodes), a.civ, new_key, a.like, len(eras)))
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sp = p.add_subparsers(dest='cmd', required=True)
@@ -326,6 +387,9 @@ def main():
     s.add_argument('--rename', action='append', default=[], help='OLD_EVENT=NEW_EVENT (repeatable)'); s.add_argument('--ini', default='DevCETestBanks.ini'); s.add_argument('--section', default='InGame', help='Banks.ini section: Global, Menu, InGame, 2D, 3D or FMV (FMV banks load only on UI.LoadSoundBankGroup(5))'); s.set_defaults(f=cmd_clone_bank)
     s = sp.add_parser('extract'); s.add_argument('src'); s.add_argument('outdir'); s.add_argument('--bank', required=True); s.add_argument('--event', required=True); s.add_argument('--new', required=True)
     s.add_argument('--ini', default='DevCETestBanks.ini'); s.add_argument('--section', default='InGame', help='Banks.ini section: Global, Menu, InGame, 2D, 3D or FMV (FMV banks load only on UI.LoadSoundBankGroup(5))'); s.set_defaults(f=cmd_extract)
+    s = sp.add_parser('add-civ'); s.add_argument('src'); s.add_argument('outdir'); s.add_argument('--bank', required=True); s.add_argument('--container', type=int, required=True, help='music switch container object id')
+    s.add_argument('--civ', required=True, help='new switch value (civilization name)'); s.add_argument('--like', required=True, help='existing civilization whose music the new one reuses')
+    s.add_argument('--ini', default='DevCETestBanks.ini'); s.add_argument('--section', default='InGame'); s.set_defaults(f=cmd_add_civ)
     a = p.parse_args(); a.f(a)
 
 

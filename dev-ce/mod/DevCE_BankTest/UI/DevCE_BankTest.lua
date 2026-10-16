@@ -1,6 +1,7 @@
 -- Dev CE soundboard (UI context). Buttons call UI.PlaySound(<Wwise event name>); every call is also printed to Lua.log.
 -- BEEP / CONTROL: events of the hand-built bank (Platforms/Windows/Audio/DevCE_Test_Bank.bnk).
--- CLONE / EXTRACT: events of two banks derived from an official bank (known to work); UI_Screen_Open is a game event for comparison.
+-- Leader theme buttons: do what the game's diplomacy screen does for a leader theme: set the switches LEADER_SCREEN_CIVILIZATION and Game_Location,
+-- then post Play_Leader_Music (Stop_Leader_Music to end it). The new-civ button uses a civilization name that only a mod bank can add.
 print("DevCE_BankTest: loading soundboard...")
 
 local function Play(evt)
@@ -21,6 +22,16 @@ local function BankGroup(load)
 	Controls.Sb_Status:SetText((load and "Load" or "Unload") .. " banks: " .. (ok and "called" or ("ERROR " .. tostring(err))))
 end
 
+local function Leader(civ)
+	local ok, err = pcall(function()
+		UI.SetSoundSwitchValue("LEADER_SCREEN_CIVILIZATION", civ)
+		UI.SetSoundSwitchValue("Game_Location", "Ancient_Era")
+		UI.PlaySound("Play_Leader_Music")
+	end)
+	print("DevCE_BankTest: leader music civ=" .. civ .. " ok=" .. tostring(ok) .. (ok and "" or (" " .. tostring(err))))
+	Controls.Sb_Status:SetText("Leader theme " .. civ .. ": " .. (ok and "started" or ("ERROR " .. tostring(err))))
+end
+
 local function OnUpdate()
 	-- the game creates additional contexts hidden; keep this one shown
 	if ContextPtr:IsHidden() then ContextPtr:SetHide(false) end
@@ -30,14 +41,15 @@ local function Initialize()
 	local presets = {
 		{ "Sb_Beep",    "Play_DevCE_BankTest_Beep" },
 		{ "Sb_Control", "Play_DevCE_BankTest_Control" },
-		{ "Sb_Clone",   "Play_DevCE_BankTest_Clone" },
-		{ "Sb_Extract", "Play_DevCE_BankTest_Extract" },
-		{ "Sb_Open",    "UI_Screen_Open" },
+		{ "Sb_LdStop",  "Stop_Leader_Music" },
 	}
 	for _, p in ipairs(presets) do
 		local id, evt = p[1], p[2]
 		Controls[id]:RegisterCallback(Mouse.eLClick, function() Play(evt) end)
 	end
+	Controls.Sb_LdEgypt:RegisterCallback(Mouse.eLClick, function() Leader("Egypt") end)
+	Controls.Sb_LdJapan:RegisterCallback(Mouse.eLClick, function() Leader("Japan") end)
+	Controls.Sb_LdNew:RegisterCallback(Mouse.eLClick, function() Leader("DevCE_TestCiv") end)
 	Controls.Sb_Load:RegisterCallback(Mouse.eLClick, function() BankGroup(true) end)
 	Controls.Sb_Unload:RegisterCallback(Mouse.eLClick, function() BankGroup(false) end)
 	Controls.Sb_PlayTyped:RegisterCallback(Mouse.eLClick, function() Play(Controls.Sb_Edit:GetText()) end)
