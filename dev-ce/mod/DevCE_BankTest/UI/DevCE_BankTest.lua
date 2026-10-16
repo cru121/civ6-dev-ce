@@ -19,6 +19,9 @@ local function Initialize()
 		{ "Sb_Beep",  "Play_DevCE_BankTest_Beep" },
 		{ "Sb_Alert", "UI_Multi_Turn_Movement_Alert" },
 		{ "Sb_Click", "Play_UI_Click" },
+		{ "Sb_Open",  "UI_Screen_Open" },
+		{ "Sb_Lens",  "UI_Lens_Overlay_On" },
+		{ "Sb_Tray",  "Tech_Tray_Slide_Open" },
 		{ "Sb_Music", "Play_Music_Japan" },
 		{ "Sb_Stop",  "Stop_All" },
 	}
