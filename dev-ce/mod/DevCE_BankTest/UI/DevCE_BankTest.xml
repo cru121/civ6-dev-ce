@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Dev CE Bank Test soundboard: always-visible panel (same pattern as the Dev CE Playground: visible Grid with the SubContainerSmall2 style). Kept short so it fits on screen. -->
 <Context>
-	<Grid ID="Sb_Frame" Anchor="L,B" Offset="0,110" Size="250,395" Hidden="0" Style="SubContainerSmall2">
+	<Grid ID="Sb_Frame" Anchor="L,B" Offset="0,110" Size="250,430" Hidden="0" Style="SubContainerSmall2">
 		<Stack ID="Sb_Outer" Anchor="C,T" Offset="0,10" StackGrowth="Bottom" StackPadding="4">
 			<Label Anchor="C,T" Style="FontNormal14" Color="255,236,150,255" String="Dev CE Soundboard"/>
 			<Label ID="Sb_Status" Anchor="C,T" Style="FontNormal12" Color="150,220,255,255" WrapWidth="226" String="Pick a sound or type an event name."/>
@@ -13,13 +13,16 @@
 			<GridButton ID="Sb_Beep" Size="226,28" Style="MainButtonSmall" String="BEEP (our PCM sound)"/>
 			<GridButton ID="Sb_Control" Size="226,28" Style="MainButtonSmall" String="CONTROL (game sound, our bank)"/>
 
-			<Label Anchor="C,T" Style="FontNormal12" Color="200,200,200,255" String="Leader theme (Ancient era)"/>
+			<Label Anchor="C,T" Style="FontNormal12" Color="200,200,200,255" String="Own switch container by era (1/2/3/4 beeps)"/>
 			<Stack Anchor="C,T" StackGrowth="Right" StackPadding="4">
-				<GridButton ID="Sb_LdEgypt" Size="111,28" Style="MainButtonSmall" String="Egypt"/>
-				<GridButton ID="Sb_LdJapan" Size="111,28" Style="MainButtonSmall" String="Japan"/>
+				<GridButton ID="Sb_EraAnc" Size="111,28" Style="MainButtonSmall" String="Ancient"/>
+				<GridButton ID="Sb_EraMed" Size="111,28" Style="MainButtonSmall" String="Medieval"/>
 			</Stack>
-			<GridButton ID="Sb_LdNew" Size="226,28" Style="MainButtonSmall" String="DevCE_TestCiv (new civ)"/>
-			<GridButton ID="Sb_LdStop" Size="226,28" Style="MainButtonSmall" String="Stop leader music"/>
+			<Stack Anchor="C,T" StackGrowth="Right" StackPadding="4">
+				<GridButton ID="Sb_EraInd" Size="111,28" Style="MainButtonSmall" String="Industrial"/>
+				<GridButton ID="Sb_EraMod" Size="111,28" Style="MainButtonSmall" String="Modern"/>
+			</Stack>
+			<GridButton ID="Sb_EraNow" Size="226,28" Style="MainButtonSmall" String="Play with the game's own era"/>
 
 			<Label Anchor="C,T" Style="FontNormal12" Color="200,200,200,255" String="Any event name (Enter or Play)"/>
 			<Box Size="226,22" Color="0,0,0,200">

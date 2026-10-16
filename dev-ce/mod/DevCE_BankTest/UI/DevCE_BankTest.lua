@@ -22,14 +22,14 @@ local function BankGroup(load)
 	Controls.Sb_Status:SetText((load and "Load" or "Unload") .. " banks: " .. (ok and "called" or ("ERROR " .. tostring(err))))
 end
 
-local function Leader(civ)
+-- Era test: our own switch container (Play_DevCE_EraTest) picks a sound by the game's global Game_Location switch (1/2/3/4 beeps = Ancient/Medieval/Industrial/Modern).
+local function Era(value)
 	local ok, err = pcall(function()
-		UI.SetSoundSwitchValue("LEADER_SCREEN_CIVILIZATION", civ)
-		UI.SetSoundSwitchValue("Game_Location", "Ancient_Era")
-		UI.PlaySound("Play_Leader_Music")
+		if value then UI.SetSoundSwitchValue("Game_Location", value) end
+		UI.PlaySound("Play_DevCE_EraTest")
 	end)
-	print("DevCE_BankTest: leader music civ=" .. civ .. " ok=" .. tostring(ok) .. (ok and "" or (" " .. tostring(err))))
-	Controls.Sb_Status:SetText("Leader theme " .. civ .. ": " .. (ok and "started" or ("ERROR " .. tostring(err))))
+	print("DevCE_BankTest: era test value=" .. tostring(value) .. " ok=" .. tostring(ok) .. (ok and "" or (" " .. tostring(err))))
+	Controls.Sb_Status:SetText("Era test " .. (value or "(game's own era)") .. ": " .. (ok and "played" or ("ERROR " .. tostring(err))))
 end
 
 local function OnUpdate()
@@ -41,15 +41,16 @@ local function Initialize()
 	local presets = {
 		{ "Sb_Beep",    "Play_DevCE_BankTest_Beep" },
 		{ "Sb_Control", "Play_DevCE_BankTest_Control" },
-		{ "Sb_LdStop",  "Stop_Leader_Music" },
 	}
 	for _, p in ipairs(presets) do
 		local id, evt = p[1], p[2]
 		Controls[id]:RegisterCallback(Mouse.eLClick, function() Play(evt) end)
 	end
-	Controls.Sb_LdEgypt:RegisterCallback(Mouse.eLClick, function() Leader("Egypt") end)
-	Controls.Sb_LdJapan:RegisterCallback(Mouse.eLClick, function() Leader("Japan") end)
-	Controls.Sb_LdNew:RegisterCallback(Mouse.eLClick, function() Leader("DevCE_TestCiv") end)
+	Controls.Sb_EraAnc:RegisterCallback(Mouse.eLClick, function() Era("Ancient_Era") end)
+	Controls.Sb_EraMed:RegisterCallback(Mouse.eLClick, function() Era("Medieval_Era") end)
+	Controls.Sb_EraInd:RegisterCallback(Mouse.eLClick, function() Era("Industrial_Era") end)
+	Controls.Sb_EraMod:RegisterCallback(Mouse.eLClick, function() Era("Modern_Era") end)
+	Controls.Sb_EraNow:RegisterCallback(Mouse.eLClick, function() Era(nil) end)
 	Controls.Sb_Load:RegisterCallback(Mouse.eLClick, function() BankGroup(true) end)
 	Controls.Sb_Unload:RegisterCallback(Mouse.eLClick, function() BankGroup(false) end)
 	Controls.Sb_PlayTyped:RegisterCallback(Mouse.eLClick, function() Play(Controls.Sb_Edit:GetText()) end)

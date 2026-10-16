@@ -374,6 +374,68 @@ def cmd_add_civ(a):
     print('wrote %s.bnk (%d bytes): container %d now has %d nodes (was %d); civ "%s" (key %s) plays like "%s" under %d eras; remaps %s' % (a.bank, len(blob), a.container, len(out), len(nodes), a.civ, new_key, a.like, len(eras), a.remap))
 
 
+# Switch container (HIRC type 6) template: Unit_Bank_3D.bnk object 30990b2f (Game_Location, four era switch values, one child).
+# Layout (v113): id, NodeBaseParams (parent at offset 11), u8 group type, u32 group id, u32 default switch, u8 continuous validation,
+# u32 child count + ids, u32 switch count (per switch: u32 switch id, u32 item count + node ids), u32 param count (per node: u32 id, u8, u8, i32 fade out, i32 fade in).
+T_SWITCH = ('30990b2f000000000000006ed80f1f0001000000c0c200c0000001000000000000000000000097df40167c02792a00010000006e6d2b32040000007c02792a010000006e6d2b32'
+            'db89329e010000006e6d2b32d7f21f82010000006e6d2b328f70a83a010000006e6d2b32020000006e6d2b32000100000000000000009b6f903500010000000000000000')
+
+
+def switch_container(container_id, parent_id, group, values, children):
+    """values: [(switch value name, [child node ids])]; children: all child ids. Built from T_SWITCH by replacing its group, switch and child lists."""
+    t = bytes.fromhex(T_SWITCH)
+    gpos = t.find(u32(fnv('Game_Location')))
+    head = bytearray(t[:gpos - 1])   # id .. NodeBaseParams (the byte before the group id is the group type)
+    head[0:4] = u32(container_id); head[11:15] = u32(parent_id)
+    gtype = t[gpos - 1:gpos]
+    default = u32(fnv(values[0][0]))
+    out = bytes(head) + gtype + u32(fnv(group)) + default + Z + u32(len(children)) + b''.join(u32(c) for c in children)
+    out += u32(len(values))
+    for name, nodes in values: out += u32(fnv(name)) + u32(len(nodes)) + b''.join(u32(n) for n in nodes)
+    out += u32(len(children)) + b''.join(u32(c) + b'\x00\x01' + u32(0) + u32(0) for c in children)
+    return out
+
+
+def cmd_make_switch(a):
+    """A bank with one switch container (new ids) that plays a different sound for each value of a global switch group, e.g. Game_Location (era)."""
+    sound_src, chain_src = a.sounds_from, a.chain_from
+    body, _ = official_sound_of_event(sound_src, a.sound_source)
+    chain = official_chain(chain_src, a.chain_event)
+    name = a.bank
+    bank_id = fnv(name)
+    cont_id = fnv(name + '/switch')
+    cids = [fnv('%s/chain%d' % (name, i)) for i in range(len(chain))]
+    values, objs_s, media, children = [], [], [], []
+    for i, spec in enumerate(a.value):
+        vname, wav = spec.split('=', 1)
+        wem = pcm_wem(wav)
+        sid, mid = fnv('%s/sound%d' % (name, i)), fnv('%s/media%d' % (name, i))
+        sb = bytearray(body)
+        sb[0:4] = u32(sid); sb[9:13] = u32(mid); sb[25:29] = u32(cont_id); sb[4:8] = u32(0x00010001); sb[13:17] = u32(len(wem))
+        objs_s.append((2, bytes(sb))); media.append((mid, wem)); children.append(sid); values.append((vname, [sid]))
+    parents = []
+    for i, cb in enumerate(chain):
+        head, _ = split_children(cb)
+        h = bytearray(head); h[0:4] = u32(cids[i])
+        orig_parent, pq = mixer_parent(cb)
+        h[pq:pq + 4] = u32(cids[i + 1] if i + 1 < len(cids) else orig_parent)
+        kids = [cont_id] if i == 0 else [cids[i - 1]]
+        parents.append((7, bytes(h) + u32(len(kids)) + b''.join(u32(x) for x in kids)))
+    cont = switch_container(cont_id, cids[0], a.group, values, children)
+    action_id = fnv(name + '/play')
+    action = u32(action_id) + b'\x03\x04' + u32(cont_id) + bytes(3) + b'\x04' + u32(bank_id)
+    evt = u32(fnv(a.event)) + u32(1) + u32(action_id)
+    objs = objs_s + [(6, cont)] + parents + [(3, action), (4, evt)]
+    blob = assemble(name, objs, media)
+    os.makedirs(a.outdir, exist_ok=True)
+    open(os.path.join(a.outdir, name + '.bnk'), 'wb').write(blob)
+    ini_path = os.path.join(a.outdir, a.ini)
+    lines = open(ini_path, encoding='utf-8').read().splitlines() if os.path.exists(ini_path) else ['[Global]', '', '[Menu]', '', '[InGame]', '', '[2D]', '', '[3D]', '', '[FMV]']
+    if (name + '.bnk') not in lines: lines.insert(lines.index('[%s]' % a.section) + 1, name + '.bnk')
+    open(ini_path, 'w', newline='\r\n').write('\n'.join(lines) + '\n')
+    print('wrote %s.bnk (%d bytes): event "%s" id %d plays a switch container on %s with %d values' % (name, len(blob), a.event, fnv(a.event), a.group, len(values)))
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sp = p.add_subparsers(dest='cmd', required=True)
@@ -395,6 +457,12 @@ def main():
     s.add_argument('--civ', help='new switch value (civilization name)'); s.add_argument('--like', help='existing civilization whose music the new one reuses')
     s.add_argument('--remap', action='append', default=[], help='EXISTING=OTHER: the leaf of EXISTING plays the music of OTHER (repeatable; an override test)')
     s.add_argument('--ini', default='DevCETestBanks.ini'); s.add_argument('--section', default='InGame'); s.set_defaults(f=cmd_add_civ)
+    s = sp.add_parser('make-switch'); s.add_argument('outdir'); s.add_argument('--bank', required=True); s.add_argument('--event', required=True)
+    s.add_argument('--group', default='Game_Location', help='global switch group (the game sets Game_Location to the current era)')
+    s.add_argument('--value', action='append', required=True, help='SWITCH_VALUE=file.wav (repeatable), e.g. Ancient_Era=a.wav')
+    s.add_argument('--sounds-from', required=True, help='official .bnk with --sound-source: the sound object layout to copy')
+    s.add_argument('--sound-source', default='Alert_Positive'); s.add_argument('--chain-from', required=True); s.add_argument('--chain-event', default='Alert_Positive')
+    s.add_argument('--ini', default='DevCETestBanks.ini'); s.add_argument('--section', default='InGame'); s.set_defaults(f=cmd_make_switch)
     a = p.parse_args(); a.f(a)
 
 
