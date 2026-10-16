@@ -60,11 +60,15 @@ namespace BankTrace {
 	}
 
 	void Install(const std::string& dllDir) {
-		const std::string flag = dllDir + "\DevCE_BankTrace.on";
+		const std::string flag = dllDir + "\\DevCE_BankTrace.on";
 		if (GetFileAttributesA(flag.c_str()) == INVALID_FILE_ATTRIBUTES) return;
-		gLogPath = dllDir + "\BankTrace.log";
-		if (MH_CreateHook(reinterpret_cast<void*>(&CreateFileW), reinterpret_cast<void*>(&Hook), reinterpret_cast<void**>(&gOrig)) != MH_OK) { Log("hook failed"); return; }
-		if (MH_EnableHook(reinterpret_cast<void*>(&CreateFileW)) != MH_OK) { Log("enable failed"); return; }
+		gLogPath = dllDir + "\\BankTrace.log";
+		// hook KernelBase's CreateFileW (kernel32's is only a forwarding stub, and api-ms-win-core-file imports resolve straight to KernelBase)
+		HMODULE kb = GetModuleHandleA("kernelbase.dll");
+		void* target = kb ? reinterpret_cast<void*>(GetProcAddress(kb, "CreateFileW")) : nullptr;
+		if (!target) target = reinterpret_cast<void*>(&CreateFileW);
+		if (MH_CreateHook(target, reinterpret_cast<void*>(&Hook), reinterpret_cast<void**>(&gOrig)) != MH_OK) { Log("hook failed"); return; }
+		if (MH_EnableHook(target) != MH_OK) { Log("enable failed"); return; }
 		Log("tracing .bnk / Banks.ini / DevCE file opens");
 	}
 }
