@@ -17,6 +17,7 @@
 		<UpdateAudio id="DevCEBankTest_Audio">
 			<File>Platforms/Windows/Audio/DevCETestBanks.ini</File>
 			<File>Platforms/Windows/Audio/DevCE_Test_Bank.bnk</File>
+			<File>Platforms/Windows/Audio/DevCE_Clone_Bank.bnk</File>
 		</UpdateAudio>
 		<AddUserInterfaces id="DevCEBankTest_UI">
 			<Properties><Context>InGame</Context></Properties>
@@ -33,5 +34,6 @@
 		<File>UI/DevCE_BankTest.lua</File>
 		<File>Platforms/Windows/Audio/DevCETestBanks.ini</File>
 		<File>Platforms/Windows/Audio/DevCE_Test_Bank.bnk</File>
+		<File>Platforms/Windows/Audio/DevCE_Clone_Bank.bnk</File>
 	</Files>
 </Mod>

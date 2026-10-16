@@ -166,6 +166,34 @@ def cmd_make_sfx(a):
     for e, i in ids['events'].items(): print('event "%s" id %d' % (e, i))
 
 
+def cmd_clone_bank(a):
+    """Copy an official bank under a new bank id and rename events (old name -> new name). A bisecting aid: a byte-exact clone with only ids changed."""
+    data = bytearray(open(a.src, 'rb').read())
+    chunks = read_chunks(bytes(data))
+    for tag, off, size in chunks:
+        if tag == 'BKHD': data[off + 4:off + 8] = u32(fnv(a.bank))
+    renames = {fnv(old): fnv(new) for old, new in (r.split('=') for r in a.rename)}
+    done = 0
+    for tag, off, size in chunks:
+        if tag != 'HIRC': continue
+        n = struct.unpack_from('<I', data, off)[0]; q = off + 4
+        for _ in range(n):
+            t = data[q]; s = struct.unpack_from('<I', data, q + 1)[0]
+            if t == 4:
+                oid = struct.unpack_from('<I', data, q + 5)[0]
+                if oid in renames: data[q + 5:q + 9] = u32(renames[oid]); done += 1
+            q += 5 + s
+    if done != len(renames): sys.exit('only %d of %d events found' % (done, len(renames)))
+    os.makedirs(a.outdir, exist_ok=True)
+    open(os.path.join(a.outdir, a.bank + '.bnk'), 'wb').write(bytes(data))
+    ini_path = os.path.join(a.outdir, a.ini)
+    lines = open(ini_path, encoding='utf-8').read().splitlines() if os.path.exists(ini_path) else ['[Global]', '', '[Menu]', '', '[InGame]', '', '[2D]', '', '[3D]', '', '[FMV]']
+    if (a.bank + '.bnk') not in lines:
+        lines.insert(lines.index('[InGame]') + 1, a.bank + '.bnk')
+    open(ini_path, 'w', newline='\r\n').write('\n'.join(lines) + '\n')
+    print('wrote %s.bnk (%d bytes) bank id %d, renamed %d event(s)' % (a.bank, len(data), fnv(a.bank), done))
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sp = p.add_subparsers(dest='cmd', required=True)
@@ -176,6 +204,8 @@ def main():
     s.add_argument('--control-event', default='Play_DevCE_BankTest_Control')
     s.add_argument('--control-min', type=int, default=0, help='minimum media size in bytes')
     s.add_argument('--bank', default='DevCE_Test_Bank'); s.add_argument('--ini', default='DevCETestBanks.ini'); s.set_defaults(f=cmd_make_sfx)
+    s = sp.add_parser('clone-bank'); s.add_argument('src'); s.add_argument('outdir'); s.add_argument('--bank', required=True)
+    s.add_argument('--rename', action='append', default=[], help='OLD_EVENT=NEW_EVENT (repeatable)'); s.add_argument('--ini', default='DevCETestBanks.ini'); s.set_defaults(f=cmd_clone_bank)
     a = p.parse_args(); a.f(a)
 
 
