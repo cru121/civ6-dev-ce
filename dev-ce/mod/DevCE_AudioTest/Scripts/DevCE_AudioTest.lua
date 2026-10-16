@@ -25,13 +25,15 @@ local function OnTurn(playerID)
 	elseif turns == 3 then
 		musicId = Audio.Play("Audio/tune_ogg.ogg", 0.8, false, 0, "music")
 		log("turn 3 ogg id=" .. tostring(musicId) .. " err=" .. Audio.GetLastError())
+		log("turn 3 durations (no playback): ogg=" .. Audio.GetDuration("Audio/tune_ogg.ogg") .. " mp3=" .. Audio.GetDuration("Audio/tune_mp3.mp3") .. " wav=" .. Audio.GetDuration("Audio/chord_stereo.wav") .. " (expect ~75, ~75, ~1.2)")
+		log("turn 3 length=" .. Audio.GetLength(musicId) .. " position=" .. Audio.GetPosition(musicId))
 	elseif turns == 4 then
-		log("turn 4 ogg still playing=" .. tostring(Audio.IsPlaying(musicId)))
+		log("turn 4 ogg still playing=" .. tostring(Audio.IsPlaying(musicId)) .. " position=" .. Audio.GetPosition(musicId) .. " (expect = time since turn 3)")
 		Audio.Stop(musicId)
 		musicId = Audio.Play("Audio/tune_mp3.mp3", 0.8, false, 0, "music")
 		log("turn 4 mp3 id=" .. tostring(musicId) .. " err=" .. Audio.GetLastError())
 	elseif turns == 5 then
-		log("turn 5 mp3 still playing=" .. tostring(Audio.IsPlaying(musicId)))
+		log("turn 5 mp3 still playing=" .. tostring(Audio.IsPlaying(musicId)) .. " position=" .. Audio.GetPosition(musicId) .. " length=" .. Audio.GetLength(musicId))
 		log("turn 5 missing file -> id=" .. tostring(Audio.Play("nope.ogg")) .. " err=" .. Audio.GetLastError())
 	elseif turns == 6 then
 		Audio.StopAll()

@@ -256,6 +256,29 @@ namespace AudioPlayer {
 			return p.size() >= n && _stricmp(p.c_str() + p.size() - n, ext) == 0;
 		}
 
+		// length of any file without playing it (seconds), or -1
+		double FileDuration(const std::string& full) {
+			if (HasExt(full, ".ogg")) {
+				int err = 0;
+				stb_vorbis* vb = stb_vorbis_open_filename(full.c_str(), &err, nullptr);
+				if (!vb) return -1;
+				const double d = (double)stb_vorbis_stream_length_in_samples(vb) / (double)stb_vorbis_get_info(vb).sample_rate;
+				stb_vorbis_close(vb);
+				return d;
+			}
+			const int wlen = MultiByteToWideChar(CP_ACP, 0, full.c_str(), -1, nullptr, 0);
+			std::vector<wchar_t> w(wlen);
+			MultiByteToWideChar(CP_ACP, 0, full.c_str(), -1, w.data(), wlen);
+			ma_decoder dec;
+			ma_decoder_config dc = ma_decoder_config_init_default();
+			if (ma_decoder_init_file_w(w.data(), &dc, &dec) != MA_SUCCESS) return -1;
+			ma_uint64 frames = 0;
+			double d = -1;
+			if (ma_decoder_get_length_in_pcm_frames(&dec, &frames) == MA_SUCCESS && frames > 0 && dec.outputSampleRate) d = (double)frames / dec.outputSampleRate;
+			ma_decoder_uninit(&dec);
+			return d;
+		}
+
 		int Play(const std::string& path, float volume, bool loop, float pan, int bus) {
 			if (!EnsureEngine()) return 0;
 			Reap();
@@ -387,6 +410,38 @@ namespace AudioPlayer {
 			hks::pushboolean(L, v && ma_sound_is_playing(&v->sound));
 			return 1;
 		}
+		// Audio.GetDuration(path): length in seconds of any sound file (no need to play it); -1 + GetLastError on failure
+		int lGetDuration(hks::lua_State* L) {
+			unsigned __int64 len = 0;
+			const char* p = hks::checklstring(L, 1, &len);
+			std::lock_guard<std::mutex> g(gLock);
+			const std::string full = Resolve(p ? p : "");
+			if (full.empty()) { Fail(std::string("file not found: ") + (p ? p : "")); hks::pushnumber(L, -1); return 1; }
+			const double d = FileDuration(full);
+			if (d < 0) { Fail("cannot read length of " + full); hks::pushnumber(L, -1); return 1; }
+			gLastError.clear();
+			hks::pushnumber(L, d);
+			return 1;
+		}
+		// Audio.GetLength(id) / Audio.GetPosition(id): seconds of a playing (or paused) sound; -1 if the id is not known
+		int lGetLength(hks::lua_State* L) {
+			const int id = hks::checkinteger(L, 1);
+			std::lock_guard<std::mutex> g(gLock);
+			float sec = 0;
+			Voice* v = Find(id);
+			if (!v || ma_sound_get_length_in_seconds(&v->sound, &sec) != MA_SUCCESS) { hks::pushnumber(L, -1); return 1; }
+			hks::pushnumber(L, sec);
+			return 1;
+		}
+		int lGetPosition(hks::lua_State* L) {
+			const int id = hks::checkinteger(L, 1);
+			std::lock_guard<std::mutex> g(gLock);
+			Voice* v = Find(id);
+			if (!v) { hks::pushnumber(L, -1); return 1; }
+			float pos = 0; ma_sound_get_cursor_in_seconds(&v->sound, &pos);
+			hks::pushnumber(L, pos);
+			return 1;
+		}
 		int lAddSearchPath(hks::lua_State* L) {
 			unsigned __int64 len = 0;
 			const char* p = hks::checklstring(L, 1, &len);
@@ -402,7 +457,7 @@ namespace AudioPlayer {
 	}
 
 	void RegisterGlobals(hks::lua_State* L) {
-		hks::createtable(L, 0, 13);
+		hks::createtable(L, 0, 16);
 		PushLuaMethod(L, lPlay, "lAudioPlay", -2, "Play");
 		PushLuaMethod(L, lStop, "lAudioStop", -2, "Stop");
 		PushLuaMethod(L, lStopAll, "lAudioStopAll", -2, "StopAll");
@@ -413,6 +468,9 @@ namespace AudioPlayer {
 		PushLuaMethod(L, lFollowGameVolume, "lAudioFollowGameVolume", -2, "FollowGameVolume");
 		PushLuaMethod(L, lGetMasterVolume, "lAudioGetMasterVolume", -2, "GetMasterVolume");
 		PushLuaMethod(L, lIsPlaying, "lAudioIsPlaying", -2, "IsPlaying");
+		PushLuaMethod(L, lGetDuration, "lAudioGetDuration", -2, "GetDuration");
+		PushLuaMethod(L, lGetLength, "lAudioGetLength", -2, "GetLength");
+		PushLuaMethod(L, lGetPosition, "lAudioGetPosition", -2, "GetPosition");
 		PushLuaMethod(L, lAddSearchPath, "lAudioAddSearchPath", -2, "AddSearchPath");
 		PushLuaMethod(L, lGetLastError, "lAudioGetLastError", -2, "GetLastError");
 		hks::setfield(L, hks::LUA_GLOBAL, "Audio");
