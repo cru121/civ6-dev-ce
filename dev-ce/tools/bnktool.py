@@ -387,6 +387,8 @@ def switch_container(container_id, parent_id, group, values, children):
     gpos = t.find(u32(fnv('Game_Location')))
     head = bytearray(t[:gpos - 1])   # id .. NodeBaseParams (the byte before the group id is the group type)
     head[0:4] = u32(container_id); head[11:15] = u32(parent_id)
+    assert head[16] == 1 and head[17] == 0   # one property, the volume
+    head[18:22] = struct.pack('<f', 0.0)     # the template's own volume is -96 dB (silent)
     gtype = t[gpos - 1:gpos]
     default = u32(fnv(values[0][0]))
     out = bytes(head) + gtype + u32(fnv(group)) + default + Z + u32(len(children)) + b''.join(u32(c) for c in children)
