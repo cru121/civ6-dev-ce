@@ -338,16 +338,20 @@ def cmd_add_civ(a):
     root = nodes[0]
     r_idx, r_cnt = root[1] & 0xFFFF, root[1] >> 16
     eras = nodes[r_idx:r_idx + r_cnt]
-    new_key, like_key = fnv(a.civ), fnv(a.like)
+    new_key, like_key = (fnv(a.civ), fnv(a.like)) if a.civ else (None, None)
+    swap = [(fnv(x), fnv(y)) for x, y in (r.split('=') for r in a.remap)]
     blocks = []
     for era in eras:
         i, c = era[1] & 0xFFFF, era[1] >> 16
         kids = [list(k) for k in nodes[i:i + c]]
-        if any(k[0] == new_key for k in kids): sys.exit('%s already exists' % a.civ)
-        like = next((k for k in kids if k[0] == like_key), None)
-        if like is None: sys.exit('%s not found under every era' % a.like)
-        kids.append([new_key, like[1], like[2], like[3]])
-        kids.sort(key=lambda k: k[0])
+        for dst, src in swap:   # existing civilization takes the music of another one (an override test)
+            d = next(k for k in kids if k[0] == dst); sk = next(k for k in kids if k[0] == src); d[1] = sk[1]
+        if a.civ:
+            if any(k[0] == new_key for k in kids): sys.exit('%s already exists' % a.civ)
+            like = next((k for k in kids if k[0] == like_key), None)
+            if like is None: sys.exit('%s not found under every era' % a.like)
+            kids.append([new_key, like[1], like[2], like[3]])
+            kids.sort(key=lambda k: k[0])
         blocks.append(kids)
     out = [list(root)]
     out[0][1] = 1 | (len(eras) << 16)
@@ -367,7 +371,7 @@ def cmd_add_civ(a):
     lines = open(ini_path, encoding='utf-8').read().splitlines() if os.path.exists(ini_path) else ['[Global]', '', '[Menu]', '', '[InGame]', '', '[2D]', '', '[3D]', '', '[FMV]']
     if (a.bank + '.bnk') not in lines: lines.insert(lines.index('[%s]' % a.section) + 1, a.bank + '.bnk')
     open(ini_path, 'w', newline='\r\n').write('\n'.join(lines) + '\n')
-    print('wrote %s.bnk (%d bytes): container %d now has %d nodes (was %d); civ "%s" (key %d) plays like "%s" under %d eras' % (a.bank, len(blob), a.container, len(out), len(nodes), a.civ, new_key, a.like, len(eras)))
+    print('wrote %s.bnk (%d bytes): container %d now has %d nodes (was %d); civ "%s" (key %s) plays like "%s" under %d eras; remaps %s' % (a.bank, len(blob), a.container, len(out), len(nodes), a.civ, new_key, a.like, len(eras), a.remap))
 
 
 def main():
@@ -388,7 +392,8 @@ def main():
     s = sp.add_parser('extract'); s.add_argument('src'); s.add_argument('outdir'); s.add_argument('--bank', required=True); s.add_argument('--event', required=True); s.add_argument('--new', required=True)
     s.add_argument('--ini', default='DevCETestBanks.ini'); s.add_argument('--section', default='InGame', help='Banks.ini section: Global, Menu, InGame, 2D, 3D or FMV (FMV banks load only on UI.LoadSoundBankGroup(5))'); s.set_defaults(f=cmd_extract)
     s = sp.add_parser('add-civ'); s.add_argument('src'); s.add_argument('outdir'); s.add_argument('--bank', required=True); s.add_argument('--container', type=int, required=True, help='music switch container object id')
-    s.add_argument('--civ', required=True, help='new switch value (civilization name)'); s.add_argument('--like', required=True, help='existing civilization whose music the new one reuses')
+    s.add_argument('--civ', help='new switch value (civilization name)'); s.add_argument('--like', help='existing civilization whose music the new one reuses')
+    s.add_argument('--remap', action='append', default=[], help='EXISTING=OTHER: the leaf of EXISTING plays the music of OTHER (repeatable; an override test)')
     s.add_argument('--ini', default='DevCETestBanks.ini'); s.add_argument('--section', default='InGame'); s.set_defaults(f=cmd_add_civ)
     a = p.parse_args(); a.f(a)
 
