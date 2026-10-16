@@ -148,6 +148,7 @@ def build_bank(name, voices, align=16, chain=None):
     mixer_id = fnv(name + ('/chain0' if chain else '/mixer'))
     wu_id = fnv(name + '/workunit')
     objs, media, sound_ids, ids = [], [], [], {'bank': bank_id, 'events': {}}
+    sounds_l, actions_l, events_l = [], [], []   # official banks list children before their parents: sounds, mixers (bottom to top), actions, events
     for i, v in enumerate(voices):
         media_id = fnv('%s/media%d' % (name, i)); sound_id = fnv('%s/sound%d' % (name, i)); action_id = fnv('%s/play%d' % (name, i))
         wem = v['wem']
@@ -160,7 +161,7 @@ def build_bank(name, voices, align=16, chain=None):
             sound = u32(sound_id) + u32(0x00010001) + Z + u32(media_id) + u32(len(wem)) + Z + bytes(3) + u32(0) + u32(mixer_id) + SOUND_TAIL
         action = u32(action_id) + b'\x03\x04' + u32(sound_id) + bytes(3) + b'\x04' + u32(bank_id)
         evt = u32(fnv(v['event'])) + u32(1) + u32(action_id)
-        objs += [(2, sound), (3, action), (4, evt)]
+        sounds_l.append((2, sound)); actions_l.append((3, action)); events_l.append((4, evt))
         media.append((media_id, wem)); sound_ids.append(sound_id); ids['events'][v['event']] = fnv(v['event'])
     if chain:
         cids = [fnv('%s/chain%d' % (name, i)) for i in range(len(chain))]
@@ -173,14 +174,14 @@ def build_bank(name, voices, align=16, chain=None):
             h[pq:pq + 4] = u32(cids[i + 1] if i + 1 < len(cids) else orig_parent)
             kids = sound_ids if i == 0 else [cids[i - 1]]
             parents.append((7, bytes(h) + u32(len(kids)) + b''.join(u32(x) for x in kids)))
-        objs = parents + objs
+        objs = sounds_l + parents + actions_l + events_l
     else:
         mixer = bytearray(bytes.fromhex(T_MIXER)[:-8])
         mixer[0:4] = u32(mixer_id); mixer[11:15] = u32(wu_id); mixer[18:22] = struct.pack('<f', 0.0)
         mixer = bytes(mixer) + u32(len(sound_ids)) + b''.join(u32(x) for x in sound_ids)
         wu = bytearray(bytes.fromhex(T_WORKUNIT))
         wu[0:4] = u32(wu_id); wu[-4:] = u32(mixer_id)
-        objs = [(7, bytes(wu)), (7, mixer)] + objs
+        objs = sounds_l + [(7, mixer), (7, bytes(wu))] + actions_l + events_l
     return assemble(name, objs, media, align), ids
 
 
