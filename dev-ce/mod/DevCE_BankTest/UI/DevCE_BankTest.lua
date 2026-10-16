@@ -1,10 +1,37 @@
--- When the game view finishes loading: plays a known game sound (UI_Multi_Turn_Movement_Alert), so you know sound works.
--- At the start of every turn after that: plays the BEEP from our hand-built bank (Play_DevCE_BankTest_Beep).
--- (A per-frame timer did not run in this context, so there is no sequencing.) Every call is printed to Lua.log.
-local function Play(evt, what)
-	print("DevCE_BankTest: " .. what .. " -> UI.PlaySound(" .. evt .. ")")
-	UI.PlaySound(evt)
+-- Dev CE soundboard (UI context). Buttons call UI.PlaySound(<Wwise event name>); every call is also printed to Lua.log.
+-- "BEEP" plays the event of the hand-built bank (Platforms/Windows/Audio/DevCE_Test_Bank.bnk); the other buttons are the game's own events for comparison.
+print("DevCE_BankTest: loading soundboard...")
+
+local function Play(evt)
+	if evt == nil or evt == "" then Controls.Sb_Status:SetText("Type an event name first."); return end
+	print("DevCE_BankTest: UI.PlaySound(" .. evt .. ")")
+	local ok, err = pcall(function() UI.PlaySound(evt) end)
+	Controls.Sb_Status:SetText((ok and "Played: " or "ERROR: ") .. evt .. (ok and "" or (" " .. tostring(err))))
 end
-Events.LoadGameViewStateDone.Add(function() Play("UI_Multi_Turn_Movement_Alert", "game alert") end)
-Events.LocalPlayerTurnBegin.Add(function() Play("Play_DevCE_BankTest_Beep", "BEEP (our bank)") end)
-print("DevCE_BankTest: registered")
+
+local function OnUpdate()
+	-- the game creates additional contexts hidden; keep this one shown
+	if ContextPtr:IsHidden() then ContextPtr:SetHide(false) end
+end
+
+local function Initialize()
+	local presets = {
+		{ "Sb_Beep",  "Play_DevCE_BankTest_Beep" },
+		{ "Sb_Alert", "UI_Multi_Turn_Movement_Alert" },
+		{ "Sb_Click", "Play_UI_Click" },
+		{ "Sb_Music", "Play_Music_Japan" },
+		{ "Sb_Stop",  "Stop_All" },
+	}
+	for _, p in ipairs(presets) do
+		local id, evt = p[1], p[2]
+		Controls[id]:RegisterCallback(Mouse.eLClick, function() Play(evt) end)
+	end
+	Controls.Sb_PlayTyped:RegisterCallback(Mouse.eLClick, function() Play(Controls.Sb_Edit:GetText()) end)
+	Controls.Sb_Edit:RegisterCommitCallback(function() Play(Controls.Sb_Edit:GetText()) end)
+	ContextPtr:SetHide(false)
+	ContextPtr:SetUpdate(OnUpdate)
+	if Events.LoadScreenClose ~= nil then Events.LoadScreenClose.Add(function() ContextPtr:SetHide(false) end) end
+	print("DevCE_BankTest: soundboard ready")
+end
+
+Initialize()
