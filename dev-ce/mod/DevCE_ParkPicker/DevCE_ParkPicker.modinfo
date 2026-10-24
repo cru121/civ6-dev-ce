@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Mod id="c2a9d4e1-5b37-4f60-9a18-7e3b6d0f4c52" version="1">
+	<Properties>
+		<Name>Dev CE Custom National Park (experimental)</Name>
+		<Teaser>A second Naturalist button: pick the four tiles of a National Park yourself.</Teaser>
+		<Description>EXPERIMENTAL, SINGLE PLAYER ONLY. Adds a button next to the Naturalist's actions. Click it, the tiles that can be part of a National Park light up green (tiles you already picked are yellow); click four touching tiles of the same city; the park appears with exactly that shape. Right-click undoes the last tile or cancels. The normal "Designate National Park" action and the AI are not changed. Needs the Dev CE GameCore mod (build with NationalParks.DesignateCustom, only one GameCore mod enabled). Without it the button stays hidden.</Description>
+		<Authors>cru121</Authors>
+		<CompatibleVersions>2.0</CompatibleVersions>
+		<AffectsSavedGames>0</AffectsSavedGames>
+	</Properties>
+	<Dependencies>
+		<Mod id="4873eb62-8ccc-4574-b784-dda455e74e68" title="Expansion: Gathering Storm" />
+	</Dependencies>
+	<LocalizedText>
+		<Text id="LOC_DCP_BUTTON_TOOLTIP">
+			<en_US>Designate a custom National Park: pick the four tiles yourself (Dev CE).</en_US>
+		</Text>
+	</LocalizedText>
+	<InGameActions>
+		<AddUserInterfaces id="DCP_UI">
+			<Properties><Context>InGame</Context></Properties>
+			<File>UI/DevCE_ParkPicker.xml</File>
+		</AddUserInterfaces>
+		<AddGameplayScripts id="DCP_GP">
+			<File>Scripts/DevCE_ParkPicker_GP.lua</File>
+		</AddGameplayScripts>
+	</InGameActions>
+	<Files>
+		<File>UI/DevCE_ParkPicker.xml</File>
+		<File>UI/DevCE_ParkPicker.lua</File>
+		<File>Scripts/DevCE_ParkPicker_GP.lua</File>
+	</Files>
+</Mod>

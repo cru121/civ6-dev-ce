@@ -37,6 +37,28 @@ namespace NationalParks {
 	constexpr uintptr_t FIND_PARK_OFFSET = 0x2362c0;
 	extern Types::FindPark FindPark;
 
+	// --- Dev CE additions: custom-shaped parks (see findings/topics/national-park-custom-shape.md) ---
+	namespace Types {
+		typedef void* (*EditMapFn)(void);                                  // Context::Globals::EditMap -> Map::IInstance*
+		typedef void* (*MapEditInstanceFn)(void);                          // Map::EditInstance
+		typedef void* (*EditPlayerVisibilityFn)(void* map);                // Map::Instance::EditPlayerVisibility
+		typedef void* (*VariableEditFn)(void* autoVariable);               // FAutoVariable<VariantMap,Game::Instance>::edit
+		typedef bool (*IsValidParkTileFn)(NationalParks*, void* plot, int playerId);
+		typedef int (*GetDistrictTypeFn)(void* cityAttributes);            // Map::Plot::CityAttributes::GetDistrictType
+		typedef bool (*IsNaturalWonderFn)(void* plot);                     // Map::Plot::Instance::IsNaturalWonder
+	}
+	constexpr uintptr_t EDIT_MAP_OFFSET = 0x44d40;
+	constexpr uintptr_t MAP_EDIT_INSTANCE_OFFSET = 0x526c0;
+	constexpr uintptr_t EDIT_PLAYER_VISIBILITY_OFFSET = 0x52ce0;
+	constexpr uintptr_t VARIABLE_EDIT_OFFSET = 0x72a920;
+	constexpr uintptr_t IS_VALID_PARK_TILE_OFFSET = 0x237860;
+	constexpr uintptr_t GET_DISTRICT_TYPE_OFFSET = 0x5e720;
+	constexpr uintptr_t IS_NATURAL_WONDER_OFFSET = 0x60280;
+
+	// Creates a park on 1..4 arbitrary plots (plot indices). Returns 0 on success, otherwise an error code (see NationalParks.cpp).
+	extern int DesignateCustom(int playerId, const int* plotIds, int count);
+
 	extern int Register(hks::lua_State* L);
+	extern int RegisterUI(hks::lua_State* L);
 	extern void Create();
 }
