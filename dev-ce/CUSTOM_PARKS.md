@@ -14,4 +14,4 @@ the base plot has no owning city; the function only uses city-owned plots as bas
 `mod/DevCE_ParkPicker` is a sample UI mod: a second Naturalist button, pick four touching tiles of one city (green = pickable, yellow = picked,
 right-click = undo). Mountains, tiles next to the Naturalist, world wonders (optional whitelist) and the Preserve district are allowed; see the
 policy block at the top of its scripts. The vanilla action and the AI are untouched. Single player only; not tested with save/load of
-custom parks beyond a quick check, nor with multiplayer.
+custom parks, nor with multiplayer.
