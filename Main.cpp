@@ -92,6 +92,7 @@ void __cdecl Hook_RegisterScriptDataForUI(hks::lua_State* _, hks::lua_State* L) 
     DevBridge::Log("[DevBridge] ui lua_State = %p", (void*)L);
 
     PushSharedGlobals(L);
+    CCallWithErrorHandling(L, NationalParks::RegisterUI, NULL);
 
     base_RegisterScriptDataForUI(_, L);
 }
