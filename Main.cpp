@@ -74,6 +74,7 @@ void __cdecl Hook_RegisterScriptData(hks::lua_State* L) {
     DevBridge::Log("[DevBridge] gameplay lua_State = %p", (void*)L);
 
     PushSharedGlobals(L);
+    NationalParks::ResetRules();    // a new game context: the park rules are pushed again by the gameplay script
     CCallWithErrorHandling(L, CityTradeManager::Register, NULL);
     CCallWithErrorHandling(L, CultureManager::Register, NULL);
     CCallWithErrorHandling(L, EmergencyManager::Register, NULL);

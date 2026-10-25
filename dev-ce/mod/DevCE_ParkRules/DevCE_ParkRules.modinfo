@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Mod id="7d41e0a6-92c3-4b58-8f1e-3a5c60d92b17" version="1">
+	<Properties>
+		<Name>Dev CE National Park Rules (experimental)</Name>
+		<Teaser>Database tables that define which tiles can be part of a National Park (needs Dev CE).</Teaser>
+		<Description>EXPERIMENTAL. Adds the tables NationalParkTypes (min/max tiles, min/max appeal, improvements, mountains, natural wonders) and NationalPark_ValidDistricts (districts that may be part of a park) and pushes the row NATIONAL_PARK_DEFAULT to the Dev CE GameCore at game start. With the shipped defaults nothing changes (the vanilla rule). Other mods insert or delete rows in their own SQL; list this mod as a dependency so the tables exist first. Needs the Dev CE GameCore mod (with NationalParks.SetRules); without it this mod does nothing. Changing the rules changes the vanilla Naturalist action and the AI as well (they share the game's tile rule).</Description>
+		<Authors>cru121</Authors>
+		<CompatibleVersions>2.0</CompatibleVersions>
+		<AffectsSavedGames>0</AffectsSavedGames>
+	</Properties>
+	<Dependencies>
+		<Mod id="4873eb62-8ccc-4574-b784-dda455e74e68" title="Expansion: Gathering Storm" />
+	</Dependencies>
+	<InGameActions>
+		<UpdateDatabase id="DCPR_SQL">
+			<File>Sql/DevCE_ParkRules.sql</File>
+		</UpdateDatabase>
+		<AddGameplayScripts id="DCPR_GP">
+			<File>Scripts/DevCE_ParkRules_GP.lua</File>
+		</AddGameplayScripts>
+	</InGameActions>
+	<Files>
+		<File>Sql/DevCE_ParkRules.sql</File>
+		<File>Scripts/DevCE_ParkRules_GP.lua</File>
+	</Files>
+</Mod>
