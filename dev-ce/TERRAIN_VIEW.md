@@ -14,19 +14,19 @@ With the terrain view enabled, Dev CE patches those buffers when a script change
 
 It is a **view only**: nothing is written into saves. A loaded game builds its terrain from the game data, which is correct. Changing a tile back to its original terrain restores the original buffers exactly.
 
-## Turn it on (opt-in)
-The feature is off until you ask for it, so that people who only want the Lua functions are not exposed to it. Create empty files **next to the DLL** (`Documents/My Games/Sid Meier's Civilization VI/Mods/DevCE/Binaries/Win64/`, or the folder of `DevCE_Test`):
+## Switching it on and off
+The release zip has the feature **switched on**. The switch is a pair of **empty marker files next to the DLL** (`Documents/My Games/Sid Meier's Civilization VI/Mods/DevCE/Binaries/Win64/`): when the DLL starts it looks for them, and without them it does not touch the terrain at all (no hook is installed).
 
 | file | effect |
 |---|---|
-| `TerrainView.patch` | hooks the terrain setter and patches the map (this is the feature) |
-| `TerrainView.objects` | also re-places features, resources and improvements of changed tiles (needs `TerrainView.patch`) |
-| `TerrainView.selftest` | at world start: reads all cells back from the GPU and checks them (read-only, result in `DevBridge.log`) |
-| `TerrainView.patchtest` | at world start: raises and reverts a plot and checks the buffers (**changes the map briefly**, result in `DevBridge.log`) |
+| `TerrainView.patch` | hooks the terrain setter and patches the map (this is the feature; in the zip) |
+| `TerrainView.objects` | also re-places features, resources and improvements of changed tiles (needs `TerrainView.patch`; in the zip) |
+| `TerrainView.selftest` | optional, not in the zip: at world start reads all cells back from the GPU and checks them (read-only, result in `DevBridge.log`) |
+| `TerrainView.patchtest` | optional, not in the zip: at world start raises and reverts a plot and checks the buffers (**changes the map briefly**, result in `DevBridge.log`) |
 
-The folder `TerrainView_enable` in the zip contains the first two files ready to copy. Delete them to turn the feature off. It needs a new game or a restart of the game after you create or delete a file. Without the marker files the DLL does not touch the terrain at all.
+**Delete `TerrainView.patch` to switch the whole feature off** (also when you want to find out whether a problem comes from the terrain view); delete `TerrainView.objects` to keep the map patch but not the re-placing of trees, resources and improvements. The change applies at the next start of the game. If you build the DLL yourself, `dev-ce/mod/DevCE/Binaries/Win64/` in the repository already holds the two files.
 
-To try it: enable **Dev CE (experimental)**, **Dev CE Playground** and **Flatten Hills View**, copy the two marker files, start a single-player game, select a unit and use the *Terrain* and *Tile objects* panels on the left (see the Playground section of the README). Flatten Hills View also refreshes the yield icons of changed tiles (the game fills them once at load).
+To try it: enable **Dev CE (experimental)**, **Dev CE Playground** and **Flatten Hills View**, start a single-player game, select a unit and use the *Terrain* and *Tile objects* panels on the left (see the Playground section of the README). Flatten Hills View also refreshes the yield icons of changed tiles (the game fills them once at load).
 
 ## How it works (for modders)
 * Terrain is drawn from render cells of 256 x 256 texels (22 x 11 cells on a Small map, 53 x 26 on a Huge one); a cell record (944 bytes) names the GPU buffers of its **ID mesh** (materials) and **base mesh** (heights). The buffers are immutable, so a patch builds new buffers from a copy of the original data and swaps the handles in the record, then sets the cell's dirty bit.
