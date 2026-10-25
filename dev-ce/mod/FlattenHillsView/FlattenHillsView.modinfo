@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Mod id="5d2a8f14-6c3b-4e07-9a51-c8e4b7d02f63" version="1">
+	<Properties>
+		<Name>Flatten Hills View</Name>
+		<Teaser>When a script turns a hills tile into flat land, the 3D map flattens the hill too (no save/reload).</Teaser>
+		<Description>Experimental, single player. Scripts that call TerrainBuilder.SetTerrainType change the game data but the 3D map keeps drawing the old terrain until the game is reloaded. This UI-only mod fixes one case: a tile that WAS a hill when the game was loaded and is now flat land (grass, plains, desert, tundra, snow) is flattened on the map, using the engine's own LM_HEX_FLATTEN heightmap edit (the same one the AssetPreview tool uses). If the tile becomes hills again, the real hill comes back. Not handled (still need a reload): flat to hills, mountains, coast and ocean, and the ground texture of the tile keeps the old hills texture. Features, resources and improvements standing on a flattened tile keep their old height. Not saved: after a load the map is rebuilt from the game data, which is correct.</Description>
+		<Authors>cru121</Authors>
+		<AffectsSavedGames>0</AffectsSavedGames>
+		<CompatibleVersions>2.0</CompatibleVersions>
+	</Properties>
+
+	<InGameActions>
+		<AddUserInterfaces id="FlattenHillsView_UI">
+			<Properties><Context>InGame</Context><LoadOrder>200</LoadOrder></Properties>
+			<File>UI/FlattenHillsView.xml</File>
+		</AddUserInterfaces>
+		<ImportFiles id="FlattenHillsView_Files">
+			<File>UI/FlattenHillsView.xml</File>
+			<File>UI/FlattenHillsView.lua</File>
+		</ImportFiles>
+	</InGameActions>
+
+	<Files>
+		<File>UI/FlattenHillsView.xml</File>
+		<File>UI/FlattenHillsView.lua</File>
+	</Files>
+</Mod>

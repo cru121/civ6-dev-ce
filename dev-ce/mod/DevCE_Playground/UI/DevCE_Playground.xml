@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Dev CE Playground: an always-visible button panel (new InGame context, no base file replaced).
-     Root panel: a visible Grid anchored R,C with the SubContainerSmall2 style, the combination that drew on the map HUD in the FreeGP mod. Control IDs map to Controls.<ID> in the Lua file. -->
+     Root panel: a visible Grid anchored R,C with the SubContainerSmall2 style, the combination that drew on the map HUD in the FreeGP mod. Control IDs map to Controls.<ID> in the Lua file.
+     2026-10-18: the Sets B-D block (right panel) and the whole E-H and R41 panel (left) are commented out to make room for the Terrain panel (left). Their handlers still exist in the gameplay scripts. -->
 <Context>
-	<Grid ID="Pg_Frame" Anchor="R,C" Offset="0,0" Size="250,820" Hidden="0" Style="SubContainerSmall2">
+	<Grid ID="Pg_Frame" Anchor="R,C" Offset="0,0" Size="250,520" Hidden="0" Style="SubContainerSmall2">
 		<Stack ID="Pg_Outer" Anchor="C,T" Offset="0,10" StackGrowth="Bottom" StackPadding="4">
 			<GridButton ID="Pg_Toggle" Anchor="C,T" Size="226,28" Style="MainButtonSmall" String="Dev CE Playground  [-]"/>
 
@@ -47,6 +48,7 @@
 					<GridButton ID="Btn_RoutesPlus"  Size="111,28" Style="MainButtonSmall" String="Routes +1"/>
 					<GridButton ID="Btn_RoutesMinus" Size="111,28" Style="MainButtonSmall" String="Routes -1"/>
 				</Stack>
+				<!-- commented out 2026-10-18 (Sets B-D samples, handlers still in the gameplay script):
 				<Label Anchor="C,T" Style="FontNormal12" Color="200,200,200,255" String="Sets B-D samples (Dev CE)"/>
 				<Label Anchor="C,T" Style="FontNormal12" Color="200,200,200,255" String="B: influence"/>
 				<GridButton ID="Btn_BTokensRead" Size="226,28" Style="MainButtonSmall" String="B: tokens readout"/>
@@ -64,41 +66,136 @@
 				<GridButton ID="Btn_DTourists" Size="226,28" Style="MainButtonSmall" String="D: tourists readout"/>
 				<GridButton ID="Btn_DParksMod" Size="226,28" Style="MainButtonSmall" String="D: parks mod readout"/>
 				<GridButton ID="Btn_DCivics" Size="226,28" Style="MainButtonSmall" String="D: civics readout"/>
+				-->
 			</Stack>
 		</Stack>
 	</Grid>
+
+	<!-- Terrain panel (left). Buttons act on the tile of the selected unit (else the first unit). -->
+	<Grid ID="Pg_Frame2" Anchor="L,C" Offset="0,0" Size="250,710" Hidden="0" Style="SubContainerSmall2">
+		<Stack ID="Pg_Outer2" Anchor="C,T" Offset="0,10" StackGrowth="Bottom" StackPadding="4">
+			<GridButton ID="Pg_Toggle2" Anchor="C,T" Size="226,28" Style="MainButtonSmall" String="Terrain  [-]"/>
+
+			<Stack ID="Pg_Body2" Anchor="C,T" StackGrowth="Bottom" StackPadding="4">
+				<Label ID="Pg_TerrCache" Anchor="C,T" Style="FontNormal12" Color="150,220,255,255" WrapWidth="226" String="Tile under unit (UI cache): ?"/>
+				<Label Anchor="C,T" Style="FontNormal12" Color="200,200,200,255" String="Set terrain of the unit's tile"/>
+				<Stack Anchor="C,T" StackGrowth="Right" StackPadding="4">
+					<GridButton ID="Btn_T_Grass"  Size="111,28" Style="MainButtonSmall" String="Grass"/>
+					<GridButton ID="Btn_T_Plains" Size="111,28" Style="MainButtonSmall" String="Plains"/>
+				</Stack>
+				<Stack Anchor="C,T" StackGrowth="Right" StackPadding="4">
+					<GridButton ID="Btn_T_Desert" Size="111,28" Style="MainButtonSmall" String="Desert"/>
+					<GridButton ID="Btn_T_Tundra" Size="111,28" Style="MainButtonSmall" String="Tundra"/>
+				</Stack>
+				<Stack Anchor="C,T" StackGrowth="Right" StackPadding="4">
+					<GridButton ID="Btn_T_Snow"  Size="111,28" Style="MainButtonSmall" String="Snow"/>
+					<GridButton ID="Btn_T_Coast" Size="111,28" Style="MainButtonSmall" String="Coast *"/>
+				</Stack>
+				<Stack Anchor="C,T" StackGrowth="Right" StackPadding="4">
+					<GridButton ID="Btn_T_GrassHills"  Size="111,28" Style="MainButtonSmall" String="Grass hills"/>
+					<GridButton ID="Btn_T_PlainsHills" Size="111,28" Style="MainButtonSmall" String="Plains hills"/>
+				</Stack>
+				<Stack Anchor="C,T" StackGrowth="Right" StackPadding="4">
+					<GridButton ID="Btn_T_DesertHills" Size="111,28" Style="MainButtonSmall" String="Desert hills"/>
+					<GridButton ID="Btn_T_TundraHills" Size="111,28" Style="MainButtonSmall" String="Tundra hills"/>
+				</Stack>
+				<Stack Anchor="C,T" StackGrowth="Right" StackPadding="4">
+					<GridButton ID="Btn_T_SnowHills" Size="111,28" Style="MainButtonSmall" String="Snow hills"/>
+					<GridButton ID="Btn_T_GrassMtn"  Size="111,28" Style="MainButtonSmall" String="Mountain *"/>
+				</Stack>
+				<Stack Anchor="C,T" StackGrowth="Right" StackPadding="4">
+					<GridButton ID="Btn_T_Ocean" Size="111,28" Style="MainButtonSmall" String="Ocean *"/>
+					<GridButton ID="Btn_T_Cycle" Size="111,28" Style="MainButtonSmall" String="Next terrain"/>
+				</Stack>
+
+				<Label Anchor="C,T" Style="FontNormal12" Color="200,200,200,255" String="Around the unit"/>
+				<Stack Anchor="C,T" StackGrowth="Right" StackPadding="4">
+					<GridButton ID="Btn_T_HillSwap"   Size="111,28" Style="MainButtonSmall" String="Hills / flat"/>
+					<GridButton ID="Btn_T_RingPlains" Size="111,28" Style="MainButtonSmall" String="Ring: plains"/>
+				</Stack>
+				<Stack Anchor="C,T" StackGrowth="Right" StackPadding="4">
+					<GridButton ID="Btn_T_RingHills"  Size="111,28" Style="MainButtonSmall" String="Ring: hills"/>
+					<GridButton ID="Btn_T_FieldHills" Size="111,28" Style="MainButtonSmall" String="Field: hills (r2)"/>
+				</Stack>
+				<Stack Anchor="C,T" StackGrowth="Right" StackPadding="4">
+					<GridButton ID="Btn_T_RingFlat"   Size="111,28" Style="MainButtonSmall" String="Flatten (r2)"/>
+					<GridButton ID="Btn_T_Undo"       Size="111,28" Style="MainButtonSmall" String="Undo last"/>
+				</Stack>
+				<Stack Anchor="C,T" StackGrowth="Right" StackPadding="4">
+					<GridButton ID="Btn_T_ForestOn"  Size="111,28" Style="MainButtonSmall" String="Forest ON"/>
+					<GridButton ID="Btn_T_ForestOff" Size="111,28" Style="MainButtonSmall" String="Forest OFF"/>
+				</Stack>
+				<GridButton ID="Btn_T_Readout" Size="226,28" Style="MainButtonSmall" String="Tile readout (gameplay)"/>
+
+				<Label Anchor="C,T" Style="FontNormal12" Color="200,200,200,255" WrapWidth="226" String="3D map: with the Dev CE test build flat and hills changes (and the trees, resources and improvements on them) show at once. Buttons marked * (Coast, Mountain, Ocean) still need a save and load."/>
+				<Stack Anchor="C,T" StackGrowth="Right" StackPadding="4">
+					<GridButton ID="Btn_T_QuickSave" Size="111,28" Style="MainButtonSmall" String="Quick save"/>
+					<GridButton ID="Btn_T_QuickLoad" Size="111,28" Style="MainButtonSmall" String="Quick load"/>
+				</Stack>
+			</Stack>
+		</Stack>
+	</Grid>
+
+
+	<!-- Tile objects panel (next to the Terrain panel): features, resources and improvements on the tile of the selected unit. -->
+	<Grid ID="Pg_Frame3" Anchor="L,C" Offset="254,0" Size="250,500" Hidden="0" Style="SubContainerSmall2">
+		<Stack ID="Pg_Outer3" Anchor="C,T" Offset="0,10" StackGrowth="Bottom" StackPadding="4">
+			<GridButton ID="Pg_Toggle3" Anchor="C,T" Size="226,28" Style="MainButtonSmall" String="Tile objects  [-]"/>
+
+			<Stack ID="Pg_Body3" Anchor="C,T" StackGrowth="Bottom" StackPadding="4">
+				<Label Anchor="C,T" Style="FontNormal12" Color="200,200,200,255" String="Features"/>
+				<Stack Anchor="C,T" StackGrowth="Right" StackPadding="4">
+					<GridButton ID="Btn_O_Jungle" Size="111,28" Style="MainButtonSmall" String="Jungle"/>
+					<GridButton ID="Btn_O_Marsh"  Size="111,28" Style="MainButtonSmall" String="Marsh"/>
+				</Stack>
+				<GridButton ID="Btn_O_FeatOff" Size="226,28" Style="MainButtonSmall" String="Remove feature"/>
+
+				<Label Anchor="C,T" Style="FontNormal12" Color="200,200,200,255" String="Resources"/>
+				<Stack Anchor="C,T" StackGrowth="Right" StackPadding="4">
+					<GridButton ID="Btn_O_R_Wheat"  Size="111,28" Style="MainButtonSmall" String="Wheat"/>
+					<GridButton ID="Btn_O_R_Cattle" Size="111,28" Style="MainButtonSmall" String="Cattle"/>
+				</Stack>
+				<Stack Anchor="C,T" StackGrowth="Right" StackPadding="4">
+					<GridButton ID="Btn_O_R_Horses" Size="111,28" Style="MainButtonSmall" String="Horses"/>
+					<GridButton ID="Btn_O_R_Copper" Size="111,28" Style="MainButtonSmall" String="Copper"/>
+				</Stack>
+				<Stack Anchor="C,T" StackGrowth="Right" StackPadding="4">
+					<GridButton ID="Btn_O_R_Iron"  Size="111,28" Style="MainButtonSmall" String="Iron"/>
+					<GridButton ID="Btn_O_R_Stone" Size="111,28" Style="MainButtonSmall" String="Stone"/>
+				</Stack>
+				<GridButton ID="Btn_O_R_Off" Size="226,28" Style="MainButtonSmall" String="Remove resource"/>
+
+				<Label Anchor="C,T" Style="FontNormal12" Color="200,200,200,255" String="Improvements"/>
+				<Stack Anchor="C,T" StackGrowth="Right" StackPadding="4">
+					<GridButton ID="Btn_O_I_Farm" Size="111,28" Style="MainButtonSmall" String="Farm"/>
+					<GridButton ID="Btn_O_I_Mine" Size="111,28" Style="MainButtonSmall" String="Mine"/>
+				</Stack>
+				<Stack Anchor="C,T" StackGrowth="Right" StackPadding="4">
+					<GridButton ID="Btn_O_I_Quarry"  Size="111,28" Style="MainButtonSmall" String="Quarry"/>
+					<GridButton ID="Btn_O_I_Pasture" Size="111,28" Style="MainButtonSmall" String="Pasture"/>
+				</Stack>
+				<Stack Anchor="C,T" StackGrowth="Right" StackPadding="4">
+					<GridButton ID="Btn_O_I_Camp" Size="111,28" Style="MainButtonSmall" String="Camp"/>
+					<GridButton ID="Btn_O_I_Off"  Size="111,28" Style="MainButtonSmall" String="Remove improv."/>
+				</Stack>
+
+				<Label Anchor="C,T" Style="FontNormal12" Color="200,200,200,255" WrapWidth="226" String="Each button acts on the tile of the selected unit. A refused change (the game says it is not allowed there) shows in the status line of the right panel. Try them on a freshly raised hill."/>
+			</Stack>
+		</Stack>
+	</Grid>
+
+	<!-- commented out 2026-10-18: former left panel (Sets E-H samples and the R41 probe), handlers still in the gameplay scripts.
 	<Grid ID="Pg_Frame2" Anchor="L,C" Offset="0,-70" Size="250,400" Hidden="0" Style="SubContainerSmall2">
 		<Stack ID="Pg_Outer2" Anchor="C,T" Offset="0,10" StackGrowth="Bottom" StackPadding="4">
 			<GridButton ID="Pg_Toggle2" Anchor="C,T" Size="226,28" Style="MainButtonSmall" String="Sets E-H samples  [-]"/>
-
 			<Stack ID="Pg_Body2" Anchor="C,T" StackGrowth="Bottom" StackPadding="4">
-				<Label Anchor="C,T" Style="FontNormal12" Color="200,200,200,255" String="Sets E-H samples (Dev CE)"/>
-				<Label Anchor="C,T" Style="FontNormal12" Color="200,200,200,255" String="E: capital city"/>
-				<GridButton ID="Btn_EBuildProg" Size="226,28" Style="MainButtonSmall" String="E: build progress"/>
-				<Stack Anchor="C,T" StackGrowth="Right" StackPadding="4">
-					<GridButton ID="Btn_EProdPlus"  Size="111,28" Style="MainButtonSmall" String="E: prod +1"/>
-					<GridButton ID="Btn_EProdMinus" Size="111,28" Style="MainButtonSmall" String="E: prod -1"/>
-				</Stack>
-				<Label Anchor="C,T" Style="FontNormal12" Color="200,200,200,255" String="F: treasury (disposable save)"/>
-				<Stack Anchor="C,T" StackGrowth="Right" StackPadding="4">
-					<GridButton ID="Btn_FGoldSet"     Size="111,28" Style="MainButtonSmall" String="F: gold SET+5"/>
-					<GridButton ID="Btn_FGoldRestore" Size="111,28" Style="MainButtonSmall" String="F: gold =0"/>
-				</Stack>
-				<Label Anchor="C,T" Style="FontNormal12" Color="200,200,200,255" String="G: era score"/>
-				<GridButton ID="Btn_GScoreRead" Size="226,28" Style="MainButtonSmall" String="G: score readout"/>
-				<Stack Anchor="C,T" StackGrowth="Right" StackPadding="4">
-					<GridButton ID="Btn_GScorePlus"  Size="111,28" Style="MainButtonSmall" String="G: score +1"/>
-					<GridButton ID="Btn_GScoreMinus" Size="111,28" Style="MainButtonSmall" String="G: score -1"/>
-				</Stack>
-				<Label Anchor="C,T" Style="FontNormal12" Color="200,200,200,255" String="H: selected unit (disposable)"/>
-				<Stack Anchor="C,T" StackGrowth="Right" StackPadding="4">
-					<GridButton ID="Btn_HParkPlus"  Size="111,28" Style="MainButtonSmall" String="H: park +1"/>
-					<GridButton ID="Btn_HParkMinus" Size="111,28" Style="MainButtonSmall" String="H: park -1"/>
-				</Stack>
-				<GridButton ID="Btn_HLevelPlus" Size="226,28" Style="MainButtonSmall" String="H: XP level +1 (one-way)"/>
-				<Label Anchor="C,T" Style="FontNormal12" Color="200,200,200,255" String="R41 manual (mid-turn)"/>
-				<GridButton ID="Btn_R41Deal" Size="226,28" Style="MainButtonSmall" String="R41: deal check (negotiating)"/>
+				E: Btn_EBuildProg, Btn_EProdPlus, Btn_EProdMinus
+				F: Btn_FGoldSet, Btn_FGoldRestore
+				G: Btn_GScoreRead, Btn_GScorePlus, Btn_GScoreMinus
+				H: Btn_HParkPlus, Btn_HParkMinus, Btn_HLevelPlus
+				R41: Btn_R41Deal
 			</Stack>
 		</Stack>
 	</Grid>
+	-->
 </Context>

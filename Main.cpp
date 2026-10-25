@@ -29,6 +29,7 @@
 #include "DevBridge.h"
 #include "LuaHooks.h"
 #include "LuaDebugger.h"
+#include "TerrainView.h"
 #include "AudioPlayer.h"
 #include "BankTrace.h"
 
@@ -147,6 +148,7 @@ static void InitHooks() {
     NationalParks::Create();
     GameProcessor::Create();
     DevBridge::Create();
+    TerrainView::Create();
 
     std::cout << "Hooks initialized!\n";
 }

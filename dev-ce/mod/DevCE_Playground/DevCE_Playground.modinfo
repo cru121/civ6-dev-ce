@@ -3,7 +3,7 @@
 	<Properties>
 		<Name>Dev CE Playground</Name>
 		<Teaser>A button panel for trying the engine functions that Dev CE adds to Lua (experimental).</Teaser>
-		<Description>EXPERIMENTAL, SINGLE PLAYER ONLY. A small always-visible panel with buttons: Golden Age / Dark Age on and off for yourself, spawn the Great Engineer James of St. George in your capital, add or remove action charges on the selected unit (the vanilla Lua call next to the Dev CE one), +/- food in the capital, +/- trade route capacity. Needs the Dev CE GameCore mod (the "Dev CE (experimental)" or "Dev CE test build" mod, only one of them enabled) for the Dev CE buttons; without it only the vanilla buttons work and the panel says so. Buttons change your game directly, do not use this in a game you care about.</Description>
+		<Description>EXPERIMENTAL, SINGLE PLAYER ONLY. A small always-visible panel with buttons: Golden Age / Dark Age on and off for yourself, spawn the Great Engineer James of St. George in your capital, add or remove action charges on the selected unit (the vanilla Lua call next to the Dev CE one), +/- food in the capital, +/- trade route capacity. A second panel on the left has terrain experiments: set the terrain of the selected unit's tile (grass, plains, hills, mountain, coast...), hills/flat swap, a ring of plains or hills, a field of hills (radius 2), flatten, undo, forest on/off, a tile readout and Quick save / Quick load. A third panel (Tile objects) places and removes features (jungle, marsh), resources (wheat, cattle, horses, copper, iron, stone) and improvements (farm, mine, quarry, pasture, camp) on that tile. With the Dev CE TEST BUILD (terrain view patch) the 3D map follows flat to hills changes at once, with trees, resources and improvements standing on the new ground; Coast, Mountain and Ocean (buttons marked *) and plain Dev CE still need a save and load. Needs the Dev CE GameCore mod (the "Dev CE (experimental)" or "Dev CE test build" mod, only one of them enabled) for the Dev CE buttons; without it only the vanilla buttons work and the panel says so. Buttons change your game directly, do not use this in a game you care about.</Description>
 		<Authors>cru121</Authors>
 		<AffectsSavedGames>0</AffectsSavedGames>
 		<CompatibleVersions>2.0</CompatibleVersions>
@@ -19,6 +19,8 @@
 			<Properties><LoadOrder>200</LoadOrder></Properties>
 			<File>Scripts/DevCE_Playground_Gameplay.lua</File>
 			<File>Scripts/DevCE_Reach41_Gameplay.lua</File>
+			<File>Scripts/DevCE_Terrain_Gameplay.lua</File>
+			<File>Scripts/DevCE_TerrainObjects_Gameplay.lua</File>
 		</AddGameplayScripts>
 
 		<!-- UI VM: the panel. -->
@@ -35,6 +37,8 @@
 	<Files>
 		<File>Scripts/DevCE_Playground_Gameplay.lua</File>
 		<File>Scripts/DevCE_Reach41_Gameplay.lua</File>
+		<File>Scripts/DevCE_Terrain_Gameplay.lua</File>
+		<File>Scripts/DevCE_TerrainObjects_Gameplay.lua</File>
 		<File>UI/DevCE_Playground.xml</File>
 		<File>UI/DevCE_Playground.lua</File>
 	</Files>
