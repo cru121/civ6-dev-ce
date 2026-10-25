@@ -55,8 +55,16 @@ namespace NationalParks {
 	constexpr uintptr_t GET_DISTRICT_TYPE_OFFSET = 0x5e720;
 	constexpr uintptr_t IS_NATURAL_WONDER_OFFSET = 0x60280;
 
-	// Creates a park on 1..4 arbitrary plots (plot indices). Returns 0 on success, otherwise an error code (see NationalParks.cpp).
+	// eastl::vector<int-like>::DoInsertValue (the instantiation DesignatePark uses for its plot list; same {begin,end,cap,allocator} layout as ParkData's plot vector)
+	constexpr uintptr_t VECTOR_INT_DO_INSERT_VALUE_OFFSET = 0x34e680;
+
+	// Creates a park on 1..MAX_CUSTOM_PLOTS arbitrary plots (plot indices; the first one decides the owning city). Returns 0 on success, otherwise an error code (see NationalParks.cpp).
+	constexpr int MAX_CUSTOM_PLOTS = 32;       // the exe's ADDED handler reads at most 32 plots
 	extern int DesignateCustom(int playerId, const int* plotIds, int count);
+
+	// Park rules (0.5.0): set from Lua by a gameplay script (see mod DevCE_ParkRules). While active, the game's IsValidParkTile is replaced by these rules
+	// (plus an optional Lua processor). Cleared at every game load.
+	extern void ResetRules();
 
 	extern int Register(hks::lua_State* L);
 	extern int RegisterUI(hks::lua_State* L);

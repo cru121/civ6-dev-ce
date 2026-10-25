@@ -1,55 +1,34 @@
 -- =====================================================================
 --  DevCE_ParkPicker.lua   (UI Lua context)
 --
---  A second action button for the Naturalist: "Designate custom National Park". The player picks 4 tiles one by one
---  (green = can be picked, yellow = already picked); the 4th click sends the choice to the gameplay script, which calls the
---  Dev CE native NationalParks.DesignateCustom. The vanilla "Designate National Park" operation is untouched (and so is the AI).
+--  A second action button for the Naturalist: "Designate custom National Park". The player picks the tiles one by one
+--  (green = can be picked, yellow = already picked); reaching the maximum sends the choice to the gameplay script, which calls the
+--  Dev CE native NationalParks.DesignateCustom. With fewer tiles than the maximum (but at least the minimum), click the last picked
+--  tile again to confirm. The vanilla "Designate National Park" operation is untouched.
 --
 --  Tile rules (in this file and re-checked in Scripts/DevCE_ParkPicker_GP.lua):
---    * every tile must satisfy the game's own park rule (NationalParks.IsValidParkTile: owner, no improvement, no district,
---      mountain / natural wonder / appeal, not already in a park)
---    * all four tiles belong to the same city (as in the vanilla rule)
+--    * every tile must satisfy the park rule: NationalParks.IsValidParkTile, which is the game's rule or, when the mod
+--      DevCE_ParkRules pushed rules, the rules of the NationalParkTypes / NationalPark_ValidDistricts tables (this mod's own SQL
+--      adds world wonders and the Preserve district there)
+--    * the tile count lies between MinTiles and MaxTiles of NationalParks.GetRules()
+--    * all tiles belong to the same city (as in the vanilla rule)
 --    * the first tile is within PICK_RADIUS of the Naturalist, later tiles touch an already picked tile and stay within MAX_RADIUS
 --  Tune the constants below.
 -- =====================================================================
 
 local CMD_NAME    = "DEVCEPARK_DESIGNATE";
-local TILE_COUNT  = 4;
 local PICK_RADIUS = 2;     -- first tile: at most this far from the Naturalist
 local MAX_RADIUS  = 4;     -- every tile: at most this far from the Naturalist
-local BASE        = 4096;  -- plot indices are packed 2 per command parameter (index < 4096)
+local BASE        = 4096;  -- legacy packing (4 tiles, plot index < 4096) sent next to the DCP_N / DCP_T<i> parameters
 
-
--- ---- District policy (KEEP IDENTICAL in UI/DevCE_ParkPicker.lua and Scripts/DevCE_ParkPicker_GP.lua) --------------------------------
--- The game's own park rule rejects every tile with a district. These switches let some districts through; the native
--- NationalParks.IsValidParkTileEx(player, plot, 3) then applies the remaining rules (owner, no improvement, not in a park) and ignores
--- the terrain/appeal requirement for the tiles listed here.
-local ALLOW_WORLD_WONDERS  = true;
-local WONDER_WHITELIST     = nil;   -- nil = every world wonder; or e.g. { BUILDING_STONEHENGE = true, BUILDING_HANGING_GARDENS = true }
-local ALLOW_PRESERVE       = true;
 
 local function ParkTileValid(pid, plotIndex)
-	if NationalParks.IsValidParkTile(pid, plotIndex) then return true; end              -- the vanilla rule
-	if NationalParks.IsValidParkTileEx == nil then return false; end
-	local plot = Map.GetPlotByIndex(plotIndex);
-	if plot == nil then return false; end
-	local districtIndex = plot:GetDistrictType();
-	if districtIndex == nil or districtIndex < 0 then return false; end
-	local district = GameInfo.Districts[districtIndex];
-	if district == nil then return false; end
-	if district.DistrictType == "DISTRICT_WONDER" then
-		if not ALLOW_WORLD_WONDERS then return false; end
-		local wonderIndex = plot:GetWonderType();
-		if wonderIndex == nil or wonderIndex < 0 then return false; end
-		if WONDER_WHITELIST ~= nil then
-			local building = GameInfo.Buildings[wonderIndex];
-			if building == nil or not WONDER_WHITELIST[building.BuildingType] then return false; end
-		end
-		return NationalParks.IsValidParkTileEx(pid, plotIndex, 3);
-	elseif district.DistrictType == "DISTRICT_PRESERVE" and ALLOW_PRESERVE then
-		return NationalParks.IsValidParkTileEx(pid, plotIndex, 3);
-	end
-	return false;
+	return NationalParks.IsValidParkTile(pid, plotIndex);
+end
+
+local function TileLimits()
+	local active, minTiles, maxTiles = NationalParks.GetRules();
+	return minTiles or 4, maxTiles or 4;
 end
 
 local LAYER_CANDIDATES = UILens.CreateLensLayerHash("Hex_Coloring_Movement");
@@ -187,8 +166,12 @@ local function Send(unit)
 	m_waited = 0;
 	local params = {};
 	params[UnitCommandTypes.PARAM_NAME] = CMD_NAME;
-	params[UnitCommandTypes.PARAM_X] = m_picked[1] * BASE + m_picked[2];
-	params[UnitCommandTypes.PARAM_Y] = m_picked[3] * BASE + m_picked[4];
+	params["DCP_N"] = #m_picked;
+	for i, p in ipairs(m_picked) do params["DCP_T" .. i] = p; end
+	if #m_picked == 4 and m_picked[1] < BASE and m_picked[2] < BASE and m_picked[3] < BASE and m_picked[4] < BASE then
+		params[UnitCommandTypes.PARAM_X] = m_picked[1] * BASE + m_picked[2];     -- legacy fallback if custom parameter names are dropped
+		params[UnitCommandTypes.PARAM_Y] = m_picked[3] * BASE + m_picked[4];
+	end
 	local ok = pcall(function() UnitManager.RequestCommand(unit, UnitCommandTypes.EXECUTE_SCRIPT, params); end);
 	print("[DevCEPark][UI] sent " .. table.concat(m_picked, ",") .. " ok=" .. tostring(ok));
 	if not ok then m_sentSeq = nil; Say("Could not send the park request."); end
@@ -210,20 +193,30 @@ local function OnPlotClicked(plotIndex, plotEdge, isDown, isRightButton)
 		return;
 	end
 
+	local minTiles, maxTiles = TileLimits();
+	if #m_picked >= minTiles and plotIndex == m_picked[#m_picked] then      -- click the last picked tile again: confirm
+		Send(unit);
+		Stop(true);
+		return;
+	end
 	local allowed = false;
 	for _, c in ipairs(m_candidates) do if c == plotIndex then allowed = true; break; end end
 	if not allowed then return; end
 
 	table.insert(m_picked, plotIndex);
-	if #m_picked >= TILE_COUNT then
+	if #m_picked >= maxTiles then
 		Send(unit);
 		Stop(true);
 		return;
 	end
 	m_candidates = ComputeCandidates(unit);
-	if #m_candidates == 0 then
+	if #m_candidates == 0 or #m_picked >= minTiles then
 		local x, y = Map.GetPlotLocation(plotIndex);
-		Say("No more tiles can be added here. Right-click to undo the last tile.", x, y);
+		if #m_picked >= minTiles then
+			Say("Click the last tile again to create the park, or pick more tiles.", x, y);
+		else
+			Say("No more tiles can be added here. Right-click to undo the last tile.", x, y);
+		end
 	end
 	Redraw();
 end
