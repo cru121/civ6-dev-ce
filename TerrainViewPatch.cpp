@@ -74,6 +74,7 @@ struct Saved {                                // the record values of a cell bef
 	uint32_t oChunkA[8] = {}, oBoxA[5] = {};  // the base mesh chunk table of the record ((start, count) in triangles for the 4 quadrant chunks) and the max-z floats of its boxes, as the game wrote them
 	uint32_t oChunkB[8] = {}, oBoxB[5] = {};  // the same for the second section       // base mesh index start, triangle count and vertex count of the record before our first patch
 	uint32_t oB[6] = {};                      // the game's second base mesh section (record +0x174..+0x188) as the game wrote it, when the cell has one
+	uint32_t seen[6] = {}; unsigned seenGen = 0; bool hasSeen = false;      // second section fields examined without a patch being needed, and the dome generation then: not examined again until one of them changes
 	std::vector<uint8_t> bVb, bIb;            // the second section's vertices and triangle indices as read when oB was captured (the game rewrites the edit buffers when it bakes a cell, so they are read once)
 	bool hasB = false; uint32_t ourB = 0;     // ourB: handle of the patched copy of that section's vertices (never released: the game may release the record's handle itself)
 };
@@ -104,6 +105,7 @@ std::vector<Change> gQueue;
 std::atomic<bool> gReady{ false };            // the world view exists and is stable: changes are recorded
 std::atomic<bool> gHooked{ false };
 std::atomic<unsigned long> gSeen{ 0 }, gDropped{ 0 };
+std::atomic<unsigned> gOpsGen{ 0 };                  // bumped whenever the set of net plot changes (hence of domes) may have changed
 unsigned long gPatchedPlots = 0, gPatchedCells = 0, gUnsupported = 0, gErrors = 0;
 uint64_t gWorldId = 0;
 
@@ -644,6 +646,7 @@ bool PatchSectionB(int cx, int cy, Saved& S, uint8_t* rec) {
 	uint32_t cur[6]; for (int i = 0; i < 6; i++) cur[i] = ReadU32(rec, kBTri + 4 * i);
 	if (!cur[0] || !(cur[2] & 0xffff) || !cur[3]) return false;           // no second section
 	if (S.hasB && S.ourB && (cur[5] & 0xffff) == S.ourB) return false;     // ours already
+	if (S.hasSeen && S.seenGen == gOpsGen.load() && memcmp(S.seen, cur, sizeof(cur)) == 0) return false;      // already looked at: no dome reaches it
 	const bool firstSight = !S.hasB;
 	memcpy(S.oB, cur, sizeof(cur)); ReadChunkWords(rec, 0xb0, S.oChunkB, S.oBoxB); S.hasB = true; S.ourB = 0;             // written by the game (new or regenerated): its fields are the original
 	{	// read its data once: the generated world's data (snapshot) the first time, afterwards what the game has just baked (live)
@@ -662,7 +665,9 @@ bool PatchSectionB(int cx, int cy, Saved& S, uint8_t* rec) {
 		SetPreferSnapshot(false);
 		if (!ok) { L("section B %d,%d: vertex read failed", cx, cy); S.hasB = firstSight ? false : S.hasB; return false; }
 	}
-	return RepatchB(cx, cy, S, rec);
+	const bool patched = RepatchB(cx, cy, S, rec);
+	if (!patched && !S.ourB) { memcpy(S.seen, cur, sizeof(cur)); S.seenGen = gOpsGen.load(); S.hasSeen = true; }
+	return patched;
 }
 void MaintainSectionB() {
 	std::unique_lock<std::recursive_mutex> g(gMx, std::try_to_lock);
@@ -787,6 +792,7 @@ bool PatchPlotsLocked(const std::vector<Change>& changes, std::vector<CellKey>* 
 	void* mgr = CellMgr();
 	if (!mgr || !Dims(mgr, &gw, &gh) || !PlotGrid(&plotW, &plotH)) { L("patch: no cell manager or plot grid"); return false; }
 	if (plotW != 2 * gw) { L("patch: plot grid width %d does not match the cell grid %d x 2: disabled for safety", plotW, gw); return false; }
+	gOpsGen++;
 	std::vector<uint64_t> recompute; std::unordered_set<uint64_t> inRecompute;
 	const std::vector<PlotOp> opsBefore = gOps;                                   // restored if the baseline cannot be read, so the net state never gets ahead of the buffers
 	const unsigned long patchedBefore = gPatchedPlots;
