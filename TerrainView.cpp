@@ -206,18 +206,101 @@ bool InstallHook(ID3D11Buffer* anyBuffer) {
 	if (!ctx) return false;
 	void** vt = *reinterpret_cast<void***>(ctx);
 	gImmCtx = ctx;                                                // keep the reference for the life of the process
-	MH_STATUS s1 = MH_CreateHook(vt[20], reinterpret_cast<LPVOID>(&Hook_DrawIndexedInstanced), reinterpret_cast<LPVOID*>(&orig_DII));
-	MH_STATUS s2 = MH_CreateHook(vt[21], reinterpret_cast<LPVOID>(&Hook_DrawInstanced), reinterpret_cast<LPVOID*>(&orig_DI));
-	if (s1 != MH_OK || s2 != MH_OK) { L("CreateHook failed: %s / %s", MH_StatusToString(s1), MH_StatusToString(s2)); return false; }
-	if (MH_EnableHook(vt[20]) != MH_OK || MH_EnableHook(vt[21]) != MH_OK) { L("EnableHook failed"); return false; }
+	void* t20 = vt[20]; void* t21 = vt[21];
+	MH_STATUS s1 = MH_CreateHook(t20, reinterpret_cast<LPVOID>(&Hook_DrawIndexedInstanced), reinterpret_cast<LPVOID*>(&orig_DII));
+	MH_STATUS s2 = MH_CreateHook(t21, reinterpret_cast<LPVOID>(&Hook_DrawInstanced), reinterpret_cast<LPVOID*>(&orig_DI));
+	MH_STATUS e1 = MH_UNKNOWN, e2 = MH_UNKNOWN;
+	if (s1 == MH_OK && s2 == MH_OK) { e1 = MH_EnableHook(t20); e2 = MH_EnableHook(t21); }
+	if (s1 == MH_OK && s2 == MH_OK && e1 == MH_OK && e2 == MH_OK) {
+		gHooked.store(true);
+		L("draw hooks installed (inline): immediate context %p, DrawIndexedInstanced %p, DrawInstanced %p", static_cast<void*>(ctx), t20, t21);
+		return true;
+	}
+	L("inline draw hooks failed (create %s / %s, enable %s / %s, targets %p / %p); trying the vtable fallback", MH_StatusToString(s1), MH_StatusToString(s2), MH_StatusToString(e1), MH_StatusToString(e2), t20, t21);
+	if (s1 == MH_OK) { MH_DisableHook(t20); MH_RemoveHook(t20); }                 // start clean, also for the next attempt
+	if (s2 == MH_OK) { MH_DisableHook(t21); MH_RemoveHook(t21); }
+	// fallback: replace the two entries of the context's vtable (works next to overlays that patch the function bodies); the originals are called through
+	orig_DII = reinterpret_cast<DrawIndexedInstancedFn>(t20); orig_DI = reinterpret_cast<DrawInstancedFn>(t21);
+	DWORD oldProt = 0;
+	if (!VirtualProtect(&vt[20], 2 * sizeof(void*), PAGE_READWRITE, &oldProt)) { L("vtable fallback: VirtualProtect failed (error %lu)", GetLastError()); return false; }
+	vt[20] = reinterpret_cast<void*>(&Hook_DrawIndexedInstanced);
+	vt[21] = reinterpret_cast<void*>(&Hook_DrawInstanced);
+	DWORD dummy = 0; VirtualProtect(&vt[20], 2 * sizeof(void*), oldProt, &dummy);
 	gHooked.store(true);
-	L("draw hooks installed: immediate context %p, DrawIndexedInstanced %p, DrawInstanced %p", static_cast<void*>(ctx), vt[20], vt[21]);
+	L("draw hooks installed (vtable): immediate context %p, DrawIndexedInstanced %p, DrawInstanced %p", static_cast<void*>(ctx), t20, t21);
+	return true;
+}
+
+// ---- shadow copies ----------------------------------------------------------------------------------------------------------------------------------------------------
+// The terrain buffers are immutable, but the data they were created from is known at creation: a hook on the game's CreateVB / CreateIB keeps a copy of every Terrain_Cell* buffer
+// (handle -> bytes). Baseline reads are served from it, so no GPU read-back (and no hook on the draw calls) is needed; the GPU path stays as the fallback.
+constexpr uintptr_t kCreateVBx = 0x948cb0, kCreateIBx = 0x944fe0;
+typedef uint16_t(__fastcall* CreateBufFn)(uint32_t, uint32_t, uint32_t, const void*, uint32_t, uint32_t, const char*);
+CreateBufFn orig_CreateVB = nullptr, orig_CreateIB = nullptr;
+std::mutex gShadowMx;
+std::unordered_map<uint32_t, std::vector<uint8_t>> gShadow[2];
+std::atomic<bool> gShadowOn{ false };
+std::atomic<unsigned long> gShadowCaptured{ 0 }, gShadowServed{ 0 }, gGpuServed{ 0 };
+
+bool IsTerrainBufName(const char* name) {
+	char n[13] = { 0 };
+	return name && SafeCopy(n, name, 12) && memcmp(n, "Terrain_Cell", 12) == 0;
+}
+
+void ShadowStore(int kind, uint16_t h, uint32_t count, uint32_t stride, const void* data, const char* name) {
+	std::lock_guard<std::mutex> g(gShadowMx);
+	gShadow[kind].erase(h);                                       // a reused handle never keeps stale bytes
+	if (!h || h >= kMaxHandle || !data || !count || count > 4000000 || !IsTerrainBufName(name)) return;
+	const uint32_t bytes = count * stride;
+	if (BufBytes(PoolBuf(kind, h)) != bytes) return;              // not the layout we expect: leave it to the GPU path
+	std::vector<uint8_t> v(bytes);
+	if (!SafeCopy(v.data(), data, bytes)) return;
+	gShadow[kind][h] = std::move(v);
+	gShadowCaptured++;
+}
+uint16_t __fastcall Hook_CreateVB(uint32_t a, uint32_t b, uint32_t count, const void* data, uint32_t e, uint32_t f, const char* name) {
+	const uint16_t h = orig_CreateVB(a, b, count, data, e, f, name);
+	ShadowStore(0, h, count, 8, data, name);
+	return h;
+}
+uint16_t __fastcall Hook_CreateIB(uint32_t a, uint32_t b, uint32_t count, const void* data, uint32_t e, uint32_t f, const char* name) {
+	const uint16_t h = orig_CreateIB(a, b, count, data, e, f, name);
+	ShadowStore(1, h, count, 2, data, name);
+	return h;
+}
+bool ShadowInstall() {
+	MH_STATUS s1 = MH_CreateHook(reinterpret_cast<LPVOID>(gExe + kCreateVBx), reinterpret_cast<LPVOID>(&Hook_CreateVB), reinterpret_cast<LPVOID*>(&orig_CreateVB));
+	MH_STATUS s2 = MH_CreateHook(reinterpret_cast<LPVOID>(gExe + kCreateIBx), reinterpret_cast<LPVOID>(&Hook_CreateIB), reinterpret_cast<LPVOID*>(&orig_CreateIB));
+	MH_STATUS e1 = MH_UNKNOWN, e2 = MH_UNKNOWN;
+	if (s1 == MH_OK && s2 == MH_OK) { e1 = MH_EnableHook(reinterpret_cast<LPVOID>(gExe + kCreateVBx)); e2 = MH_EnableHook(reinterpret_cast<LPVOID>(gExe + kCreateIBx)); }
+	if (s1 == MH_OK && s2 == MH_OK && e1 == MH_OK && e2 == MH_OK) { gShadowOn.store(true); L("shadow copies: hooked CreateVB / CreateIB, baseline reads need no GPU read-back"); return true; }
+	L("shadow copies unavailable (create %s / %s, enable %s / %s): baseline reads use the GPU path", MH_StatusToString(s1), MH_StatusToString(s2), MH_StatusToString(e1), MH_StatusToString(e2));
+	if (s1 == MH_OK) { MH_DisableHook(reinterpret_cast<LPVOID>(gExe + kCreateVBx)); MH_RemoveHook(reinterpret_cast<LPVOID>(gExe + kCreateVBx)); }
+	if (s2 == MH_OK) { MH_DisableHook(reinterpret_cast<LPVOID>(gExe + kCreateIBx)); MH_RemoveHook(reinterpret_cast<LPVOID>(gExe + kCreateIBx)); }
+	return false;
+}
+void ShadowStats(unsigned long* captured, unsigned long* served, unsigned long* gpu) { *captured = gShadowCaptured; *served = gShadowServed; *gpu = gGpuServed; }
+// all items from the shadow copies? then fills `data` (at assigned) and returns true
+bool ServeFromShadow(std::vector<Range>& items, std::vector<uint8_t>& data) {
+	if (!gShadowOn.load()) return false;
+	std::lock_guard<std::mutex> g(gShadowMx);
+	uint32_t total = 0;
+	for (auto& it : items) {
+		auto f = gShadow[it.kind].find(it.handle);
+		if (f == gShadow[it.kind].end() || static_cast<uint64_t>(it.off) + it.len > f->second.size()) return false;
+		if (BufBytes(PoolBuf(it.kind, it.handle)) != f->second.size()) return false;      // the handle now holds another buffer (created by a path we did not see)
+		it.at = total; total += it.len;
+	}
+	data.assign(total, 0);
+	for (auto& it : items) memcpy(data.data() + it.at, gShadow[it.kind][it.handle].data() + it.off, it.len);
 	return true;
 }
 
 // Blocking: queue the job and wait for the render thread. Assigns `at` and fills `data` (total bytes).
-bool ReadBackItems(std::vector<Range>& items, std::vector<uint8_t>& data, double* msOut, int timeoutMs) {
+bool ReadBackItems(std::vector<Range>& items, std::vector<uint8_t>& data, double* msOut, int timeoutMs, bool forceGpu) {
 	if (items.empty()) { data.clear(); if (msOut) *msOut = 0; return true; }
+	if (!forceGpu && ServeFromShadow(items, data)) { gShadowServed++; if (msOut) *msOut = 0; return true; }
+	gGpuServed++;
 	std::lock_guard<std::mutex> serial(gSerialize);
 	if (!InstallHook(PoolBuf(items[0].kind, items[0].handle))) return false;
 	uint32_t total = 0;
@@ -360,9 +443,10 @@ int SelfTest(int timeoutMs) {
 	}
 	std::vector<uint8_t> fullData; double fullMs = 0;
 	const auto t0 = std::chrono::steady_clock::now();
-	if (!ReadBackItems(full, fullData, &fullMs, timeoutMs)) { L("self-test: full read-back failed"); return -1; }
+	if (!ReadBackItems(full, fullData, &fullMs, timeoutMs, true)) { L("self-test: full read-back failed"); return -1; }      // always the GPU: it is the reference for the shadow copies
 	const double fullWall = std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - t0).count();
 	for (auto& r : full) fullAt[(static_cast<uint64_t>(r.kind) << 32) | r.handle] = r.at;
+	{ size_t sv = 0, si = 0; { std::lock_guard<std::mutex> g(gShadowMx); sv = gShadow[0].size(); si = gShadow[1].size(); } L("self-test: shadow copies %s: %zu vertex + %zu index buffers kept, of %zu buffers read from the GPU", gShadowOn.load() ? "ON" : "OFF", sv, si, full.size()); }
 	L("self-test: grid %dx%d = %d cells; full read-back: %zu buffers, %.1f MiB, render-thread %.1f ms (wall %.1f ms)", gw, gh, ncell, full.size(), fullData.size() / 1048576.0, fullMs, fullWall);
 
 	auto expectedEqual = [&](const CellData& c, const Sig& s) -> bool {
@@ -494,6 +578,7 @@ void Create() {
 	char* slash = strrchr(dllPath, '\\');
 	if (slash) *(slash + 1) = 0;
 	strcpy_s(gDllDir, dllPath);
+	if (!MarkerExists("TerrainView.noshadow") && (MarkerExists("TerrainView.patch") || MarkerExists("TerrainView.selftest"))) ShadowInstall();
 	strcat_s(dllPath, MAX_PATH, "TerrainView.selftest");
 	if (GetFileAttributesA(dllPath) != INVALID_FILE_ATTRIBUTES) {
 		L("self-test enabled (marker file %s): runs once per world view", dllPath);

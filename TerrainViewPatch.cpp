@@ -777,6 +777,8 @@ bool PatchPlotsLocked(const std::vector<Change>& changes, std::vector<CellKey>* 
 	if (!mgr || !Dims(mgr, &gw, &gh) || !PlotGrid(&plotW, &plotH)) { L("patch: no cell manager or plot grid"); return false; }
 	if (plotW != 2 * gw) { L("patch: plot grid width %d does not match the cell grid %d x 2: disabled for safety", plotW, gw); return false; }
 	std::vector<uint64_t> recompute; std::unordered_set<uint64_t> inRecompute;
+	const std::vector<PlotOp> opsBefore = gOps;                                   // restored if the baseline cannot be read, so the net state never gets ahead of the buffers
+	const unsigned long patchedBefore = gPatchedPlots;
 	std::vector<std::pair<int, int>> objFast, objSlow;     // plots whose ground height changes: their features/resources/improvements are re-placed afterwards
 	for (const Change& c : changes) {
 		if (c.x < 0 || c.y < 0 || c.x >= plotW || c.y >= plotH) continue;
@@ -798,7 +800,7 @@ bool PatchPlotsLocked(const std::vector<Change>& changes, std::vector<CellKey>* 
 	if (recompute.empty()) return true;
 	std::vector<CellKey> keys; for (uint64_t k : recompute) keys.push_back({ static_cast<int>(k & 0xffffffffu), static_cast<int>(k >> 32) });
 	std::vector<std::shared_ptr<const CellData>> base;
-	if (!ReadCells(keys, base, 3000)) { L("patch: baseline read failed"); gErrors++; return false; }
+	if (!ReadCells(keys, base, 3000)) { L("patch: baseline read failed, change not applied"); gErrors++; gOps = opsBefore; gPatchedPlots = patchedBefore; return false; }
 	std::vector<uint64_t> toApply; size_t restored = 0;
 	for (size_t i = 0; i < keys.size(); i++) {
 		const CellData& bc = *base[i];
