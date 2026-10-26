@@ -7,6 +7,7 @@
 #include <windows.h>
 #include <d3d11.h>
 #include <algorithm>
+#include <array>
 #include <atomic>
 #include <chrono>
 #include <condition_variable>
@@ -353,7 +354,14 @@ void ShadowStats(unsigned long* captured, unsigned long* served, unsigned long* 
 // (seen as a wildly over-subdivided, corrupted tile). The baseline is the data of the generated world, so a snapshot of the mirrors is taken once the world view is ready.
 std::unordered_map<uint32_t, std::vector<uint8_t>> gEditSnap[2];
 std::atomic<bool> gPreferSnapshot{ false };
+std::unordered_map<uint64_t, std::array<uint32_t, 6>> gSnapB;       // each cell's second-section record fields (+0x174..+0x188) at snapshot time
 void SetPreferSnapshot(bool on) { gPreferSnapshot.store(on); }
+// true if the cell's second section still has the fields it had when the snapshot was taken, i.e. the snapshot holds its data (a re-baked section sits at another range the snapshot never saw)
+bool SectionBUnchangedSinceSnapshot(int cx, int cy, const uint32_t cur[6]) {
+	std::lock_guard<std::mutex> g(gShadowMx);
+	auto f = gSnapB.find(static_cast<uint32_t>(cx) | (static_cast<uint64_t>(cy) << 32));
+	return f != gSnapB.end() && memcmp(f->second.data(), cur, 24) == 0;
+}
 size_t EditSnapshotTake() {
 	std::lock_guard<std::mutex> g(gShadowMx);
 	size_t n = 0, bytes = 0;
@@ -369,6 +377,13 @@ size_t EditSnapshotTake() {
 			std::vector<uint8_t> v(mb);
 			if (!SafeCopy(v.data(), reinterpret_cast<const void*>(m), mb)) continue;
 			bytes += mb; n++; gEditSnap[kind][hd] = std::move(v);
+		}
+	}
+	gSnapB.clear();
+	{	void* mgr = CellMgr(); int gw = 0, gh = 0;
+		if (mgr && Dims(mgr, &gw, &gh)) for (int y = 0; y < gh; y++) for (int x = 0; x < gw; x++) {
+			const uint8_t* rec = Record(mgr, x, y); std::array<uint32_t, 6> w = {};
+			if (rec && SafeCopy(w.data(), rec + 0x174, 24) && w[0] && w[3]) gSnapB[static_cast<uint32_t>(x) | (static_cast<uint64_t>(y) << 32)] = w;
 		}
 	}
 	L("edit-buffer mirrors: snapshot of %zu buffer(s), %.1f KiB (baseline for the second base mesh section)", n, bytes / 1024.0);

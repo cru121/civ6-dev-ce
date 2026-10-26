@@ -53,6 +53,7 @@ bool SigPlausible(const Sig& s);
 // Served from the shadow copies kept at buffer creation when they cover every item, otherwise (or with forceGpu) read from the GPU.
 bool ReadBackItems(std::vector<Range>& items, std::vector<uint8_t>& data, double* msOut, int timeoutMs, bool forceGpu = false);
 void SetPreferSnapshot(bool on);                                  // reads of edit buffers use the snapshot of the generated world (first sight of a cell) instead of the live mirror
+bool SectionBUnchangedSinceSnapshot(int cx, int cy, const uint32_t cur[6]);   // the snapshot holds this cell's second section data
 size_t EditSnapshotTake();                                        // copy the edit-buffer mirrors (before the first terrain change of a world); returns the number of buffers copied
 void EditMirrorCheck(int timeoutMs, const char* when);              // DX11: compare the CPU mirrors of the height-edit buffers with the GPU (diagnostic)
 bool ShadowInstall();                                             // hook CreateVB / CreateIB (must run before the world is built)
