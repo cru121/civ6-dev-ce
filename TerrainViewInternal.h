@@ -39,7 +39,10 @@ bool ReadSig(const uint8_t* r, Sig& s);
 void IbRange(const Sig& s, uint32_t* lo, uint32_t* hi);
 bool SigPlausible(const Sig& s);
 // Blocking read-back of arbitrary ranges (render-thread job); assigns Range::at; `data` receives the bytes in item order.
-bool ReadBackItems(std::vector<Range>& items, std::vector<uint8_t>& data, double* msOut, int timeoutMs);
+// Served from the shadow copies kept at buffer creation when they cover every item, otherwise (or with forceGpu) read from the GPU.
+bool ReadBackItems(std::vector<Range>& items, std::vector<uint8_t>& data, double* msOut, int timeoutMs, bool forceGpu = false);
+bool ShadowInstall();                                             // hook CreateVB / CreateIB (must run before the world is built)
+void ShadowStats(unsigned long* captured, unsigned long* served, unsigned long* gpu);
 // The patcher registers this: for a cell it has patched, the ORIGINAL signature (the live record points at patch buffers).
 void SetOriginalSigProvider(std::function<bool(int, int, Sig&)> fn);
 bool MarkerExists(const char* name);                              // file next to the DLL
