@@ -39,8 +39,6 @@ constexpr uint32_t kGcTimestamp = 0x667c6f5b, kGcImage = 0xc60000;            //
 constexpr uintptr_t kSetTerrainTypeRva = 0x5dd0f0;                            // GameCore: bool Terrain::Builder::_SetTerrainType(Builder*, Plot*, TerrainTypes): every SetTerrainType path ends here
 constexpr uint8_t kSetTerrainTypePrologue[8] = { 0x44, 0x89, 0x44, 0x24, 0x18, 0x48, 0x89, 0x4c };
 constexpr uintptr_t kEditMapRva = 0x44d40;                                    // GameCore: Map::Instance* Context::Globals::EditMap()
-constexpr uintptr_t kCreateVB = 0x948cb0, kCreateIB = 0x944fe0, kRelease = 0x956600, kGetState = 0xc5ff00;      // exe
-constexpr uintptr_t kVbReleasePool = 0x2b91200, kIbReleasePool = 0x2b0a740;                                   // exe: ResourceList objects for kRelease
 constexpr double kKY = 1.1547;                                                // vertical stretch of the hex layout in the distance metric
 constexpr int kOY = 220;                                                      // plot (px, py) centre = (128 px + 64 (py odd), 96 py + 220) in cell texels (220 on a Small and a Huge map)
 constexpr int kMaxCand = 16;
@@ -48,8 +46,6 @@ constexpr int kMaxCand = 16;
 constexpr double kHillAmp = 1300.0;                                           // dome height in u16 base-mesh height units
 constexpr double kR0 = 12.0, kR1 = 76.0;                                      // full height out to R0 texels from the plot centre, smoothstep to 0 at R1
 constexpr float kAlpha = 0.006f;                                              // sampler world units per base-mesh height unit of a dome (tuned by eye: trees stand on it)
-constexpr uintptr_t kSamplerFn = 0xab58c0;                                    // exe: float Terrain::Sampler::GetWorldHeight(sampler, packed float x/y, blockType)
-constexpr uintptr_t kSamplerSx = 0xffa404, kSamplerSy = 0x10732ec;            // exe: float constants of the sampler's grid mapping (1/16 and 0.0541248582)
 constexpr double kRes = 2.0;                                                  // overlay raster cell size in sampler units
 std::atomic<bool> gOverlayOn{ true };                                         // diagnostics (tv overlay on|off): switch the ground-height overlay without removing it
 std::unordered_set<uint64_t> gFrozen;                                         // cells kept at their generated state for an experiment (tv freeze X Y / tv unfreeze)
@@ -78,6 +74,8 @@ struct Saved {                                // the record values of a cell bef
 	uint32_t oChunkA[8] = {}, oBoxA[5] = {};  // the base mesh chunk table of the record ((start, count) in triangles for the 4 quadrant chunks) and the max-z floats of its boxes, as the game wrote them
 	uint32_t oChunkB[8] = {}, oBoxB[5] = {};  // the same for the second section       // base mesh index start, triangle count and vertex count of the record before our first patch
 	uint32_t oB[6] = {};                      // the game's second base mesh section (record +0x174..+0x188) as the game wrote it, when the cell has one
+	uint32_t seen[6] = {}; unsigned seenGen = 0; bool hasSeen = false;      // second section fields examined without a patch being needed, and the dome generation then: not examined again until one of them changes
+	std::vector<uint8_t> bVb, bIb;            // the second section's vertices and triangle indices as read when oB was captured (the game rewrites the edit buffers when it bakes a cell, so they are read once)
 	bool hasB = false; uint32_t ourB = 0;     // ourB: handle of the patched copy of that section's vertices (never released: the game may release the record's handle itself)
 };
 struct Work {                                 // the CPU working copy of a patched cell
@@ -107,6 +105,7 @@ std::vector<Change> gQueue;
 std::atomic<bool> gReady{ false };            // the world view exists and is stable: changes are recorded
 std::atomic<bool> gHooked{ false };
 std::atomic<unsigned long> gSeen{ 0 }, gDropped{ 0 };
+std::atomic<unsigned> gOpsGen{ 0 };                  // bumped whenever the set of net plot changes (hence of domes) may have changed
 unsigned long gPatchedPlots = 0, gPatchedCells = 0, gUnsupported = 0, gErrors = 0;
 uint64_t gWorldId = 0;
 
@@ -146,12 +145,12 @@ uint16_t CallCreate(uintptr_t fn, uint32_t a, uint32_t b, uint32_t count, const 
 }
 void CallRelease(uintptr_t pool, uint32_t h) {
 	typedef int(__fastcall* Fn)(void*, uint16_t);
-	__try { reinterpret_cast<Fn>(ExeBase() + kRelease)(reinterpret_cast<void*>(ExeBase() + pool), static_cast<uint16_t>(h)); }
+	__try { reinterpret_cast<Fn>(ExeBase() + gA->release)(reinterpret_cast<void*>(ExeBase() + pool), static_cast<uint16_t>(h)); }
 	__except (EXCEPTION_EXECUTE_HANDLER) {}
 }
 void MarkDirty(void* mgr, int x, int y) {
 	typedef uint8_t* (__fastcall* Fn)(void*, uint64_t);
-	__try { uint8_t* p = reinterpret_cast<Fn>(ExeBase() + kGetState)(mgr, KeyOf(x, y)); if (p) *p |= 2; }
+	__try { uint8_t* p = reinterpret_cast<Fn>(ExeBase() + gA->getState)(mgr, KeyOf(x, y)); if (p) *p |= 2; }
 	__except (EXCEPTION_EXECUTE_HANDLER) {}
 }
 bool WriteU32(uint8_t* rec, size_t off, uint32_t v) { return SafeCopy(rec + off, &v, 4); }
@@ -272,11 +271,11 @@ float __fastcall Hook_Sampler(void* self, uint64_t xy, uint32_t type) {
 
 bool SamplerGeometry(SamplerGeom& g, void** samplerOut = nullptr) {
 	uintptr_t impl = 0;
-	if (!SafeCopy(&impl, reinterpret_cast<const void*>(ExeBase() + 0x2305e20 + 8), sizeof(impl)) || !impl) return false;
+	if (!SafeCopy(&impl, reinterpret_cast<const void*>(ExeBase() + gA->ctxGlobal + 8), sizeof(impl)) || !impl) return false;
 	uint8_t* sm = reinterpret_cast<uint8_t*>(impl) + 0x180;
 	float a = 0, b = 0;
 	if (!SafeCopy(&a, sm + 0x60, 4) || !SafeCopy(&b, sm + 0x64, 4) || !SafeCopy(&g.gw, sm + 0xc4, 4) || !SafeCopy(&g.gh, sm + 0xc8, 4)) return false;
-	if (!SafeCopy(&g.sx, reinterpret_cast<const void*>(ExeBase() + kSamplerSx), 4) || !SafeCopy(&g.sy, reinterpret_cast<const void*>(ExeBase() + kSamplerSy), 4)) return false;
+	if (!SafeCopy(&g.sx, reinterpret_cast<const void*>(ExeBase() + gA->samplerSx), 4) || !SafeCopy(&g.sy, reinterpret_cast<const void*>(ExeBase() + gA->samplerSy), 4)) return false;
 	g.offx = -a; g.offy = -b;
 	if (g.gw <= 0 || g.gh <= 0 || g.sx <= 0 || g.sy <= 0 || g.gw > 100000 || g.gh > 100000) return false;
 	g.X0 = -g.offx / g.sx - 64; g.Y0 = (-2 - g.offy) / g.sy;
@@ -512,7 +511,7 @@ bool ReadBaseIbOriginal(int cx, int cy, std::vector<uint16_t>& out) {
 	if (it != gSaved.end()) { ccw = it->second.oCC; st = it->second.oC8; cnt = it->second.oC4; }
 	else { ccw = ReadU32(rec, kIbCC); st = ReadU32(rec, kBaseStart); cnt = ReadU32(rec, kBaseTris); }
 	const uint16_t h = static_cast<uint16_t>(ccw & 0xffff);
-	if (!cnt || cnt > 200000 || !h || h >= kMaxHandle || !PoolBuf(1, h)) return false;
+	if (!cnt || cnt > 200000 || !h || h >= kMaxHandle || !HandleLive(1, h)) return false;
 	std::vector<Range> rs{ { 1, h, st * 2u, cnt * 6u, 0 } }; std::vector<uint8_t> b;
 	if (!ReadBackItems(rs, b, nullptr, 3000) || b.size() != cnt * 6u) return false;
 	out.resize(cnt * 3); memcpy(out.data(), b.data(), b.size());
@@ -582,7 +581,7 @@ bool ApplyDomes(std::vector<uint8_t>& bv, int cx, int cy) {
 // ---- apply / undo ------------------------------------------------------------------------------------------------------------------------------------------------------
 bool EnsureBlock(Work& w) {                    // the ORIGINAL index block, read lazily from the original ID index buffer
 	if (!w.block.empty()) return true;
-	const uint32_t bytes = BufBytes(PoolBuf(1, w.orig.idIb));
+	const uint32_t bytes = HandleBytes(1, w.orig.idIb);
 	if (!bytes) return false;
 	std::vector<Range> r{ { 1, w.orig.idIb, 0, bytes, 0 } };
 	std::vector<uint8_t> b;
@@ -603,27 +602,24 @@ void RestoreRecord(uint8_t* rec, const Saved& S, void* mgr, int cx, int cy) {
 	MarkDirty(mgr, cx, cy);
 }
 void ReleasePatchBuffers(const Saved& S) {
-	if (S.newVb) CallRelease(kVbReleasePool, S.newVb);
-	if (S.newIb) CallRelease(kIbReleasePool, S.newIb);
-	if (S.newBase) CallRelease(kVbReleasePool, S.newBase);
-	if (S.newBaseIb) CallRelease(kIbReleasePool, S.newBaseIb);
+	if (S.newVb) CallRelease(gA->vbReleasePool, S.newVb);
+	if (S.newIb) CallRelease(gA->ibReleasePool, S.newIb);
+	if (S.newBase) CallRelease(gA->vbReleasePool, S.newBase);
+	if (S.newBaseIb) CallRelease(gA->ibReleasePool, S.newBaseIb);
 }
 
 // Some cells (coastal ones in practice) carry a SECOND base mesh section that the game draws INSTEAD of the first one, so the dome has to go in there as well. The game writes it when it bakes
 // the cell (also after our MarkDirty), so it is checked again from the worker thread. Its vertices have the same 8-byte format as the first section's.
 bool RepatchB(int cx, int cy, Saved& S, uint8_t* rec) {
-	const uint16_t h = static_cast<uint16_t>(S.oB[5] & 0xffff); const uint32_t first = S.oB[4], cnt = S.oB[3];
-	if (!h || h >= kMaxHandle || !PoolBuf(0, h) || !cnt || cnt > 400000) return false;
-	std::vector<Range> r{ { 0, h, first * 8, cnt * 8, 0 } }; std::vector<uint8_t> b;
-	if (!ReadBackItems(r, b, nullptr, 3000) || b.size() != cnt * 8u) { L("section B %d,%d: vertex read failed", cx, cy); return false; }
+	const uint32_t cnt = S.oB[3];
+	if (!cnt || cnt > 400000) return false;
+	std::vector<uint8_t> b = S.bVb;
+	if (b.size() != cnt * 8u) { L("section B %d,%d: vertex data missing", cx, cy); return false; }
 	std::vector<uint16_t> ib0, ib1; bool refined = false; uint32_t chIn[4], chOut[4] = {};
 	ChunkCountsOf(S.oChunkB, chIn);
 	{	// its own triangles: indices relative to its first vertex
-		const uint32_t tris = S.oB[0], start = S.oB[1]; const uint16_t ih = static_cast<uint16_t>(S.oB[2] & 0xffff);
-		if (tris && tris < 200000 && ih && ih < kMaxHandle && PoolBuf(1, ih)) {
-			std::vector<Range> ri{ { 1, ih, start * 2u, tris * 6u, 0 } }; std::vector<uint8_t> bi;
-			if (ReadBackItems(ri, bi, nullptr, 3000) && bi.size() == tris * 6u) { ib0.resize(tris * 3); memcpy(ib0.data(), bi.data(), bi.size()); refined = RefineDomes(b, ib0, chIn, ib1, chOut, cx, cy); }
-		}
+		const uint32_t tris = S.oB[0];
+		if (tris && tris < 200000 && S.bIb.size() == tris * 6u) { ib0.resize(tris * 3); memcpy(ib0.data(), S.bIb.data(), S.bIb.size()); refined = RefineDomes(b, ib0, chIn, ib1, chOut, cx, cy); }
 	}
 	const bool lifted = ApplyDomes(b, cx, cy);
 	if (!refined && !lifted) {                                              // no dome reaches this section: leave the game's own
@@ -631,12 +627,12 @@ bool RepatchB(int cx, int cy, Saved& S, uint8_t* rec) {
 		S.ourB = 0; return false;
 	}
 	const uint32_t ncnt = static_cast<uint32_t>(b.size() / 8);
-	const uint16_t hb = CallCreate(ExeBase() + kCreateVB, 0, 0x15, ncnt, b.data(), "Terrain_Cell_VB");
-	if (hb == 0 || hb >= kMaxHandle || !PoolBuf(0, hb)) { L("section B %d,%d: CreateVB failed (handle %u)", cx, cy, hb); return false; }
+	const uint16_t hb = CallCreate(ExeBase() + gA->createVB, 0, 0x15, ncnt, b.data(), "Terrain_Cell_VB");
+	if (hb == 0 || hb >= kMaxHandle || !HandleLive(0, hb)) { L("section B %d,%d: CreateVB failed (handle %u)", cx, cy, hb); return false; }
 	uint16_t hbi = 0;
 	if (refined) {
-		hbi = CallCreate(ExeBase() + kCreateIB, 0, 0, static_cast<uint32_t>(ib1.size()), ib1.data(), "Terrain_Cell_IB");
-		if (hbi == 0 || hbi >= kMaxHandle || !PoolBuf(1, hbi)) { L("section B %d,%d: CreateIB failed (handle %u)", cx, cy, hbi); return false; }
+		hbi = CallCreate(ExeBase() + gA->createIB, 0, 0, static_cast<uint32_t>(ib1.size()), ib1.data(), "Terrain_Cell_IB");
+		if (hbi == 0 || hbi >= kMaxHandle || !HandleLive(1, hbi)) { L("section B %d,%d: CreateIB failed (handle %u)", cx, cy, hbi); return false; }
 	}
 	WriteU32(rec, kBVb, (S.oB[5] & 0xffff0000u) | hb); WriteU32(rec, kBFirst, 0); WriteU32(rec, kBCnt, ncnt);
 	if (refined) { WriteU32(rec, kBIb, (S.oB[2] & 0xffff0000u) | hbi); WriteU32(rec, kBTri + 4, 0); WriteU32(rec, kBTri, static_cast<uint32_t>(ib1.size() / 3)); WriteChunkCounts(rec, 0xb0, chOut); }
@@ -650,8 +646,28 @@ bool PatchSectionB(int cx, int cy, Saved& S, uint8_t* rec) {
 	uint32_t cur[6]; for (int i = 0; i < 6; i++) cur[i] = ReadU32(rec, kBTri + 4 * i);
 	if (!cur[0] || !(cur[2] & 0xffff) || !cur[3]) return false;           // no second section
 	if (S.hasB && S.ourB && (cur[5] & 0xffff) == S.ourB) return false;     // ours already
+	if (S.hasSeen && S.seenGen == gOpsGen.load() && memcmp(S.seen, cur, sizeof(cur)) == 0) return false;      // already looked at: no dome reaches it
+	const bool firstSight = !S.hasB;
 	memcpy(S.oB, cur, sizeof(cur)); ReadChunkWords(rec, 0xb0, S.oChunkB, S.oBoxB); S.hasB = true; S.ourB = 0;             // written by the game (new or regenerated): its fields are the original
-	return RepatchB(cx, cy, S, rec);
+	{	// read its data once: the generated world's data (snapshot) the first time, afterwards what the game has just baked (live)
+		const uint16_t h = static_cast<uint16_t>(S.oB[5] & 0xffff); const uint32_t first = S.oB[4], cnt = S.oB[3];
+		S.bVb.clear(); S.bIb.clear();
+		const bool fromSnap = firstSight && SectionBUnchangedSinceSnapshot(cx, cy, cur);
+		L("section B %d,%d: baseline from the %s (%s)", cx, cy, fromSnap ? "snapshot" : "live mirror", firstSight ? (fromSnap ? "generated range unchanged" : "the game has baked the cell again") : "regenerated by the game");
+		SetPreferSnapshot(fromSnap);
+		bool ok = h && h < kMaxHandle && HandleLive(0, h) && cnt && cnt <= 400000;
+		if (ok) { std::vector<Range> r{ { 0, h, first * 8, cnt * 8, 0 } }; ok = ReadBackItems(r, S.bVb, nullptr, 3000) && S.bVb.size() == cnt * 8u; }
+		const uint32_t tris = S.oB[0], start = S.oB[1]; const uint16_t ih = static_cast<uint16_t>(S.oB[2] & 0xffff);
+		if (ok && tris && tris < 200000 && ih && ih < kMaxHandle && HandleLive(1, ih)) {
+			std::vector<Range> ri{ { 1, ih, start * 2u, tris * 6u, 0 } };
+			if (!ReadBackItems(ri, S.bIb, nullptr, 3000) || S.bIb.size() != tris * 6u) S.bIb.clear();
+		}
+		SetPreferSnapshot(false);
+		if (!ok) { L("section B %d,%d: vertex read failed", cx, cy); S.hasB = firstSight ? false : S.hasB; return false; }
+	}
+	const bool patched = RepatchB(cx, cy, S, rec);
+	if (!patched && !S.ourB) { memcpy(S.seen, cur, sizeof(cur)); S.seenGen = gOpsGen.load(); S.hasSeen = true; }
+	return patched;
 }
 void MaintainSectionB() {
 	std::unique_lock<std::recursive_mutex> g(gMx, std::try_to_lock);
@@ -688,26 +704,26 @@ bool ApplyCell(int cx, int cy, Work& w) {
 	if (bCh && !w.refined && S.oD0 * 8u != w.vb.size()) { L("apply %d,%d: base vertex count mismatch (%u vs %zu)", cx, cy, S.oD0, w.vb.size() / 8); return false; }
 	static const char kVbName[] = "Terrain_Cell_Material_VB", kIbName[] = "Terrain_Cell_IB", kBaseName[] = "Terrain_Cell_VB";
 	uint16_t hv = 0, hi = 0, hb = 0, hbi = 0; uint32_t table[64] = {};
-	auto bad = [](uint16_t h, int kind) { return h == 0 || h >= kMaxHandle || !PoolBuf(kind, h); };
+	auto bad = [](uint16_t h, int kind) { return h == 0 || h >= kMaxHandle || !HandleLive(kind, h); };
 	auto dropNew = [&]() {
-		if (hv && !bad(hv, 0)) CallRelease(kVbReleasePool, hv);
-		if (hi && !bad(hi, 1)) CallRelease(kIbReleasePool, hi);
-		if (hb && !bad(hb, 0)) CallRelease(kVbReleasePool, hb);
-		if (hbi && !bad(hbi, 1)) CallRelease(kIbReleasePool, hbi);
+		if (hv && !bad(hv, 0)) CallRelease(gA->vbReleasePool, hv);
+		if (hi && !bad(hi, 1)) CallRelease(gA->ibReleasePool, hi);
+		if (hb && !bad(hb, 0)) CallRelease(gA->vbReleasePool, hb);
+		if (hbi && !bad(hbi, 1)) CallRelease(gA->ibReleasePool, hbi);
 	};
 	if (idCh) {
 		if (!EnsureBlock(w)) { L("apply %d,%d: original index block not readable", cx, cy); return false; }
 		std::vector<uint16_t> ib;
 		BuildBuffers(w, ib, table);
-		hv = CallCreate(ExeBase() + kCreateVB, 0, 0x24, static_cast<uint32_t>(w.idvb.size() / 8), w.idvb.data(), kVbName);
-		hi = CallCreate(ExeBase() + kCreateIB, 0, 0, static_cast<uint32_t>(ib.size()), ib.data(), kIbName);
+		hv = CallCreate(ExeBase() + gA->createVB, 0, 0x24, static_cast<uint32_t>(w.idvb.size() / 8), w.idvb.data(), kVbName);
+		hi = CallCreate(ExeBase() + gA->createIB, 0, 0, static_cast<uint32_t>(ib.size()), ib.data(), kIbName);
 		if (bad(hv, 0) || bad(hi, 1)) { L("apply %d,%d: CreateVB/CreateIB failed (handles %u / %u)", cx, cy, hv, hi); dropNew(); return false; }
 	}
 	if (bCh) {
-		hb = CallCreate(ExeBase() + kCreateVB, 0, 0x15, static_cast<uint32_t>(w.vb.size() / 8), w.vb.data(), kBaseName);
+		hb = CallCreate(ExeBase() + gA->createVB, 0, 0x15, static_cast<uint32_t>(w.vb.size() / 8), w.vb.data(), kBaseName);
 		if (bad(hb, 0)) { L("apply %d,%d: CreateVB(base) failed (handle %u)", cx, cy, hb); dropNew(); return false; }
 		if (w.refined) {
-			hbi = CallCreate(ExeBase() + kCreateIB, 0, 0, static_cast<uint32_t>(w.bib.size()), w.bib.data(), kIbName);
+			hbi = CallCreate(ExeBase() + gA->createIB, 0, 0, static_cast<uint32_t>(w.bib.size()), w.bib.data(), kIbName);
 			if (bad(hbi, 1)) { L("apply %d,%d: CreateIB(base) failed (handle %u)", cx, cy, hbi); dropNew(); return false; }
 		}
 	}
@@ -776,10 +792,11 @@ bool PatchPlotsLocked(const std::vector<Change>& changes, std::vector<CellKey>* 
 	void* mgr = CellMgr();
 	if (!mgr || !Dims(mgr, &gw, &gh) || !PlotGrid(&plotW, &plotH)) { L("patch: no cell manager or plot grid"); return false; }
 	if (plotW != 2 * gw) { L("patch: plot grid width %d does not match the cell grid %d x 2: disabled for safety", plotW, gw); return false; }
+	gOpsGen++;
 	std::vector<uint64_t> recompute; std::unordered_set<uint64_t> inRecompute;
 	const std::vector<PlotOp> opsBefore = gOps;                                   // restored if the baseline cannot be read, so the net state never gets ahead of the buffers
 	const unsigned long patchedBefore = gPatchedPlots;
-	std::vector<std::pair<int, int>> objFast, objSlow;     // plots whose ground height changes: their features/resources/improvements are re-placed afterwards
+	std::vector<std::pair<int, int>> objFast, objSlow;    // plots whose ground height changes: their features/resources/improvements are re-placed afterwards
 	for (const Change& c : changes) {
 		if (c.x < 0 || c.y < 0 || c.x >= plotW || c.y >= plotH) continue;
 		const uint64_t pk = KeyOf(c.x, c.y);
@@ -849,16 +866,19 @@ bool PatchPlotsLocked(const std::vector<Change>& changes, std::vector<CellKey>* 
 	ScheduleObjectRefresh(objFast, 150);
 	ScheduleObjectRefresh(objSlow, 1500);
 	L("patch: %zu cell(s) recomputed, %zu replaced, %zu restored to the generated state, %zu net plot change(s) in force", keys.size(), toApply.size(), restored, gOps.size());
+	if (MarkerExists("TerrainView.selftest")) EditMirrorCheck(3000, "after a patch");
 	return ok;
 }
 
 // ---- hook and worker thread -------------------------------------------------------------------------------------------------------------------------------------------
 typedef bool(__fastcall* SetTerrainFn)(void*, void*, int);
 SetTerrainFn orig_SetTerrain = nullptr;
+std::atomic<bool> gSnapTaken{ false };
 
 bool __fastcall Hook_SetTerrain(void* builder, void* plot, int type) {
 	int16_t pos[2] = { -1, -1 }, oldT = -1;
 	if (plot) { SafeCopy(pos, static_cast<uint8_t*>(plot) + 0x28, 4); SafeCopy(&oldT, static_cast<uint8_t*>(plot) + 0x2c, 2); }
+	if (gReady.load(std::memory_order_relaxed) && !gSnapTaken.load()) { if (EditSnapshotTake() > 0) gSnapTaken.store(true); }     // before the game touches anything: the mirrors still hold the generated world
 	const bool r = orig_SetTerrain(builder, plot, type);
 	if (r && plot) {
 		gSeen++;
@@ -907,7 +927,7 @@ DWORD WINAPI WorkerThread(LPVOID) {
 				L("world view changed: patch state dropped");
 			}
 			{ std::lock_guard<std::mutex> g(gQueueMx); gQueue.clear(); }
-			if (id != 0 && id == last) { gWorldId = id; gReady.store(true); L("world view ready (signature %016llx): terrain changes are patched", static_cast<unsigned long long>(id)); }
+			if (id != 0 && id == last) { gWorldId = id; gSnapTaken.store(false); gReady.store(true); L("world view ready (signature %016llx): terrain changes are patched", static_cast<unsigned long long>(id)); }
 			else gWorldId = (id == 0) ? 0 : gWorldId;
 			last = id;
 			continue;
@@ -1035,7 +1055,7 @@ void PatchCreate() {
 	MH_STATUS s2 = (s1 == MH_OK) ? MH_EnableHook(target) : s1;
 	if (s1 != MH_OK || s2 != MH_OK) { L("patch: hook on _SetTerrainType failed: %s / %s", MH_StatusToString(s1), MH_StatusToString(s2)); return; }
 	{   // the ground-height detour (exe), for the overlay of the domes
-		LPVOID st = reinterpret_cast<LPVOID>(ExeBase() + kSamplerFn);
+		LPVOID st = reinterpret_cast<LPVOID>(ExeBase() + gA->sampler);
 		MH_STATUS a1 = MH_CreateHook(st, reinterpret_cast<LPVOID>(&Hook_Sampler), reinterpret_cast<LPVOID*>(&orig_Sampler));
 		MH_STATUS a2 = (a1 == MH_OK) ? MH_EnableHook(st) : a1;
 		if (a1 != MH_OK || a2 != MH_OK) L("patch: hook on the ground-height sampler failed: %s / %s (domes will have no overlay)", MH_StatusToString(a1), MH_StatusToString(a2));
@@ -1058,7 +1078,7 @@ bool ReadLive(int x, int y, CellData& cd, std::vector<uint16_t>* fullIb) {      
 	if (s.idCount) items.push_back({ 0, s.idVb, s.idFirst * 8u, s.idCount * 8u, 0 });
 	if (s.vbCount) items.push_back({ 0, s.vb, s.vbFirst * 8u, s.vbCount * 8u, 0 });
 	if (hi > lo) items.push_back({ 1, s.idIb, lo * 2u, (hi - lo) * 2u, 0 });
-	if (fullIb) items.push_back({ 1, s.idIb, 0, BufBytes(PoolBuf(1, s.idIb)), 0 });
+	if (fullIb) items.push_back({ 1, s.idIb, 0, HandleBytes(1, s.idIb), 0 });
 	std::vector<uint8_t> data;
 	if (!ReadBackItems(items, data, nullptr, 5000)) return false;
 	cd = CellData(); cd.x = x; cd.y = y; cd.idCount = s.idCount; cd.vbCount = s.vbCount; cd.ibLo = lo; cd.ibHi = hi;
@@ -1089,7 +1109,7 @@ std::string HeightProbeImpl(int px, int py) {
 			uint32_t vbh, first, cnt, ibh, start, tris;
 			if (sec == 0) { vbh = ReadU32(rec, kVbHandle) & 0xffff; first = ReadU32(rec, kVbFirst); cnt = ReadU32(rec, kVbCount); ibh = ReadU32(rec, kIbCC) & 0xffff; start = ReadU32(rec, kBaseStart); tris = ReadU32(rec, kBaseTris); }
 			else { vbh = ReadU32(rec, kBVb) & 0xffff; first = ReadU32(rec, kBFirst); cnt = ReadU32(rec, kBCnt); ibh = ReadU32(rec, kBIb) & 0xffff; start = ReadU32(rec, kBTri + 4); tris = ReadU32(rec, kBTri); }
-			if (!tris || !cnt || !vbh || !ibh || vbh >= kMaxHandle || ibh >= kMaxHandle || !PoolBuf(0, vbh) || !PoolBuf(1, ibh) || tris > 400000 || cnt > 400000) continue;
+			if (!tris || !cnt || !vbh || !ibh || vbh >= kMaxHandle || ibh >= kMaxHandle || !HandleLive(0, vbh) || !HandleLive(1, ibh) || tris > 400000 || cnt > 400000) continue;
 			std::vector<Range> rs{ { 0, vbh, first * 8, cnt * 8, 0 }, { 1, ibh, start * 2, tris * 6, 0 } }; std::vector<uint8_t> data;
 			if (!ReadBackItems(rs, data, nullptr, 3000)) { snprintf(buf, sizeof(buf), "cell %d,%d sec %c: read failed\n", cx, cy, 'A' + sec); out += buf; continue; }
 			const uint8_t* vb = data.data() + rs[0].at; const uint16_t* ib = reinterpret_cast<const uint16_t*>(data.data() + rs[1].at);
@@ -1130,7 +1150,7 @@ std::string HeightProfileImpl(int px, int py, bool holes) {
 			uint32_t vbh, first, cnt, ibh, start, tris;
 			if (sec == 0) { vbh = ReadU32(rec, kVbHandle) & 0xffff; first = ReadU32(rec, kVbFirst); cnt = ReadU32(rec, kVbCount); ibh = ReadU32(rec, kIbCC) & 0xffff; start = ReadU32(rec, kBaseStart); tris = ReadU32(rec, kBaseTris); }
 			else { vbh = ReadU32(rec, kBVb) & 0xffff; first = ReadU32(rec, kBFirst); cnt = ReadU32(rec, kBCnt); ibh = ReadU32(rec, kBIb) & 0xffff; start = ReadU32(rec, kBTri + 4); tris = ReadU32(rec, kBTri); }
-			if (!tris || !cnt || !vbh || !ibh || vbh >= kMaxHandle || ibh >= kMaxHandle || !PoolBuf(0, vbh) || !PoolBuf(1, ibh) || tris > 400000 || cnt > 400000) continue;
+			if (!tris || !cnt || !vbh || !ibh || vbh >= kMaxHandle || ibh >= kMaxHandle || !HandleLive(0, vbh) || !HandleLive(1, ibh) || tris > 400000 || cnt > 400000) continue;
 			std::vector<Range> rs{ { 0, vbh, first * 8, cnt * 8, 0 }, { 1, ibh, start * 2, tris * 6, 0 } }; std::vector<uint8_t> data;
 			if (!ReadBackItems(rs, data, nullptr, 3000)) continue;
 			Sec S; S.cx = cx; S.cy = cy; S.sec = sec; S.cnt = cnt; S.tris = tris;
@@ -1228,7 +1248,7 @@ int DomeSelfTest(int tx, int ty, int tt, const std::vector<CellKey>& cand, const
 	auto sampleAt = [&](double X, double Y) {
 		const float x = static_cast<float>(SamplerX(G, X)), y = static_cast<float>(SamplerY(G, Y));
 		uint32_t lx, ly; memcpy(&lx, &x, 4); memcpy(&ly, &y, 4);
-		return reinterpret_cast<SamplerFn>(ExeBase() + kSamplerFn)(smp, static_cast<uint64_t>(lx) | (static_cast<uint64_t>(ly) << 32), 1);
+		return reinterpret_cast<SamplerFn>(ExeBase() + gA->sampler)(smp, static_cast<uint64_t>(lx) | (static_cast<uint64_t>(ly) << 32), 1);
 	};
 	const float c0 = sampleAt(pcx, pcy), f0 = sampleAt(pcx + 300, pcy);
 	std::vector<CellKey> touched;
@@ -1389,7 +1409,7 @@ int PatchSelfTestImpl() {
 		}
 		check(slotsOk, (std::string(tag) + ": every material slot holds exactly its triangles").c_str());
 		// 3. the original block part of the new index buffer is identical to the original buffer (base triangles survive)
-		std::vector<Range> r{ { 1, b0.idIbHandle, 0, BufBytes(PoolBuf(1, b0.idIbHandle)), 0 } };
+		std::vector<Range> r{ { 1, b0.idIbHandle, 0, HandleBytes(1, b0.idIbHandle), 0 } };
 		std::vector<uint8_t> orig; bool blockOk = ReadBackItems(r, orig, nullptr, 5000) && orig.size() <= liveBlock.size() * 2 && memcmp(orig.data(), liveBlock.data(), orig.size()) == 0;
 		check(blockOk, (std::string(tag) + ": original index block preserved in the new buffer").c_str());
 		// 4. baseline reads of a patched cell still return the ORIGINAL data
