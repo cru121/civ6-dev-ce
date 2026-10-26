@@ -16,6 +16,7 @@
 #include <memory>
 #include <mutex>
 #include <random>
+#include <string>
 #include <unordered_map>
 #include <vector>
 #include "MinHook.h"
@@ -27,14 +28,19 @@
 namespace TerrainView {
 namespace detail {
 
-// ---- fixed addresses of the Windows DX11 exe, build 15038592 (the game is no longer developed, so no signature scan) -----------------------------------------------
-constexpr uint32_t kExeTimestamp = 0x667c6fc6;       // IMAGE_FILE_HEADER.TimeDateStamp of CivilizationVI.exe
-constexpr uint32_t kExeImageSize = 0x3704000;        // IMAGE_OPTIONAL_HEADER.SizeOfImage
-constexpr uintptr_t kCtxGlobal = 0x2305e20;          // TerrainContext global; *(this + 8) = impl; impl + 0x5a0 = Terrain::Cell::Manager
-constexpr uintptr_t kGetRec = 0xc5fee0;              // pointer Cell::Manager::GetRecord(mgr, uint64 key = x | y << 32)
-constexpr uintptr_t kDims = 0xc5ff20;                // Cell::Manager::GetDimensions(mgr, int[2])
-constexpr uintptr_t kVbPool = 0x2b99740;             // ID3D11Buffer* table indexed by vertex buffer handle (8 bytes per entry)
-constexpr uintptr_t kIbPool = 0x2b12c80;             // ... by index buffer handle
+// ---- fixed addresses of the Windows exes, build 15038592 (the game is no longer developed, so no signature scan) -------------------------------------------------------
+// DX11 (CivilizationVI.exe) verified in the game; DX12 (CivilizationVI_DX12.exe) found by matching the functions of the two exes (the cell record and buffer creation functions are the same code in both).
+// ctxGlobal: TerrainContext global; *(this + 8) = impl; impl + 0x5a0 = Terrain::Cell::Manager. getRec: GetRecord(mgr, uint64 key = x | y << 32). dims: GetDimensions(mgr, int[2]).
+const ExeAddrs kDx11 = { "DX11", false, 0x667c6fc6, 0x3704000,
+	0x2305e20, 0xc5fee0, 0xc5ff20, 0xc5ff00, 0x948cb0, 0x944fe0, 0x956600, 0x2b91200, 0x2b0a740, 0xab58c0, 0xffa404, 0x10732ec,
+	0x614120, 0x613fb0,
+	0x2b99740, 0x2b12c80, 0, 0 };
+const ExeAddrs kDx12 = { "DX12", true, 0x667c7363, 0xfe55000,
+	0x233d4a0, 0xc6e8d0, 0xc6e910, 0xc6e8f0, 0x944ee0, 0x943e90, 0x94d670, 0xf2b50c0, 0x6c72040, 0xac3930, 0x1009824, 0x108406c,
+	0x615320, 0x6151b0,
+	0, 0, 0xf2bd4c0, 0x6c7a440 };
+const ExeAddrs* gA = nullptr;
+constexpr uint32_t kExeTimestamp = 0x667c6fc6, kExeImageSize = 0x3704000;   // (DX11 values, kept for the log only)
 
 uintptr_t gExe = 0;
 uintptr_t ExeBase() { return gExe; }
@@ -59,14 +65,14 @@ bool SafeCopy(void* dst, const void* src, size_t n) {
 
 void* CellMgr() {
 	uintptr_t impl = 0;
-	if (!gExe || !SafeCopy(&impl, reinterpret_cast<const void*>(gExe + kCtxGlobal + 8), sizeof(impl)) || !impl) return nullptr;
+	if (!gExe || !SafeCopy(&impl, reinterpret_cast<const void*>(gExe + gA->ctxGlobal + 8), sizeof(impl)) || !impl) return nullptr;
 	return reinterpret_cast<void*>(impl + 0x5a0);
 }
 
 bool Dims(void* mgr, int* w, int* h) {
 	typedef void* (__fastcall* Fn)(void*, int*);
 	int d[2] = { 0, 0 };
-	__try { reinterpret_cast<Fn>(gExe + kDims)(mgr, d); }
+	__try { reinterpret_cast<Fn>(gExe + gA->dims)(mgr, d); }
 	__except (EXCEPTION_EXECUTE_HANDLER) { return false; }
 	*w = d[0]; *h = d[1];
 	return d[0] > 0 && d[1] > 0 && d[0] * d[1] < 100000;
@@ -75,14 +81,14 @@ bool Dims(void* mgr, int* w, int* h) {
 const uint8_t* Record(void* mgr, int x, int y) {
 	typedef void* (__fastcall* Fn)(void*, uint64_t);
 	const uint64_t key = static_cast<uint32_t>(x) | (static_cast<uint64_t>(static_cast<uint32_t>(y)) << 32);
-	__try { return static_cast<const uint8_t*>(reinterpret_cast<Fn>(gExe + kGetRec)(mgr, key)); }
+	__try { return static_cast<const uint8_t*>(reinterpret_cast<Fn>(gExe + gA->getRec)(mgr, key)); }
 	__except (EXCEPTION_EXECUTE_HANDLER) { return nullptr; }
 }
 
 ID3D11Buffer* PoolBuf(int kind, uint32_t h) {
-	if (h == 0 || h >= kMaxHandle) return nullptr;
+	if (h == 0 || h >= kMaxHandle || !gA || gA->dx12) return nullptr;          // DX12 has no buffer object per handle
 	ID3D11Buffer* p = nullptr;
-	if (!SafeCopy(&p, reinterpret_cast<const void*>(gExe + (kind == 0 ? kVbPool : kIbPool) + static_cast<uintptr_t>(h) * 8), sizeof(p))) return nullptr;
+	if (!SafeCopy(&p, reinterpret_cast<const void*>(gExe + (kind == 0 ? gA->vbPool : gA->ibPool) + static_cast<uintptr_t>(h) * 8), sizeof(p))) return nullptr;
 	return p;
 }
 
@@ -92,6 +98,28 @@ uint32_t BufBytes(ID3D11Buffer* b) {
 	__try { b->GetDesc(&d); }
 	__except (EXCEPTION_EXECUTE_HANDLER) { return 0; }
 	return d.ByteWidth;
+}
+
+bool ShadowSize(int kind, uint32_t h, uint32_t* bytes);          // defined with the shadow copies
+bool HandleLive(int kind, uint32_t h) {
+	if (h == 0 || h >= kMaxHandle || !gA) return false;
+	if (!gA->dx12) return PoolBuf(kind, h) != nullptr;
+	uint32_t b = 0;
+	return ShadowSize(kind, h, &b) || HandleBytes(kind, h) != 0;
+}
+uint32_t RecordBytes(int kind, uint32_t h) {                       // DX12: the byte size in the exe's own per-handle record (independent of the kept copies)
+	uint32_t b = 0;
+	if (!gA || !gA->dx12 || h == 0 || h >= kMaxHandle) return 0;
+	if (!SafeCopy(&b, reinterpret_cast<const void*>(gExe + (kind == 0 ? gA->vbRec : gA->ibRec) + static_cast<uintptr_t>(h) * 0x28 + 0x1c), 4)) return 0;
+	return b;
+}
+uint32_t HandleBytes(int kind, uint32_t h) {
+	if (h == 0 || h >= kMaxHandle || !gA) return 0;
+	if (!gA->dx12) return BufBytes(PoolBuf(kind, h));
+	uint32_t b = 0;
+	if (ShadowSize(kind, h, &b)) return b;
+	b = RecordBytes(kind, h);
+	return b < 0x10000000u ? b : 0;                               // the byte size of the allocation (record layout from the exe analysis)
 }
 
 // ---- cell record signature --------------------------------------------------------------------------------------------------------------------------------------------
@@ -234,12 +262,12 @@ bool InstallHook(ID3D11Buffer* anyBuffer) {
 // ---- shadow copies ----------------------------------------------------------------------------------------------------------------------------------------------------
 // The terrain buffers are immutable, but the data they were created from is known at creation: a hook on the game's CreateVB / CreateIB keeps a copy of every Terrain_Cell* buffer
 // (handle -> bytes). Baseline reads are served from it, so no GPU read-back (and no hook on the draw calls) is needed; the GPU path stays as the fallback.
-constexpr uintptr_t kCreateVBx = 0x948cb0, kCreateIBx = 0x944fe0;
 typedef uint16_t(__fastcall* CreateBufFn)(uint32_t, uint32_t, uint32_t, const void*, uint32_t, uint32_t, const char*);
 CreateBufFn orig_CreateVB = nullptr, orig_CreateIB = nullptr;
 std::mutex gShadowMx;
 std::unordered_map<uint32_t, std::vector<uint8_t>> gShadow[2];
 std::atomic<bool> gShadowOn{ false };
+std::atomic<bool> gCompare{ false };
 std::atomic<unsigned long> gShadowCaptured{ 0 }, gShadowServed{ 0 }, gGpuServed{ 0 };
 
 bool IsTerrainBufName(const char* name) {
@@ -249,10 +277,16 @@ bool IsTerrainBufName(const char* name) {
 
 void ShadowStore(int kind, uint16_t h, uint32_t count, uint32_t stride, const void* data, const char* name) {
 	std::lock_guard<std::mutex> g(gShadowMx);
+	if (gCompare.load()) {                                        // diagnostics (marker TerrainView.compare): every distinct buffer name the game creates (first 80), with the handle and size
+		static std::unordered_map<std::string, int> seen;
+		char nm[48] = { 0 }; if (name) SafeCopy(nm, name, 40);
+		std::string key = std::string(kind ? "IB " : "VB ") + nm;
+		if (seen.size() < 80 && seen.emplace(key, 1).second) L("create %s: handle %u, %u elements%s", key.c_str(), h, count, IsTerrainBufName(name) ? " (kept)" : "");
+	}
 	gShadow[kind].erase(h);                                       // a reused handle never keeps stale bytes
 	if (!h || h >= kMaxHandle || !data || !count || count > 4000000 || !IsTerrainBufName(name)) return;
 	const uint32_t bytes = count * stride;
-	if (BufBytes(PoolBuf(kind, h)) != bytes) return;              // not the layout we expect: leave it to the GPU path
+	if (!gA->dx12 && BufBytes(PoolBuf(kind, h)) != bytes) return;  // not the layout we expect: leave it to the GPU path (DX12 has no buffer object to compare with)
 	std::vector<uint8_t> v(bytes);
 	if (!SafeCopy(v.data(), data, bytes)) return;
 	gShadow[kind][h] = std::move(v);
@@ -268,39 +302,148 @@ uint16_t __fastcall Hook_CreateIB(uint32_t a, uint32_t b, uint32_t count, const 
 	ShadowStore(1, h, count, 2, data, name);
 	return h;
 }
+// The height-edit buffers (Terrain_CellEdit_VB / IB: the second base mesh section of edited cells lives there) are created without initial data and filled at run time,
+// but the game keeps a CPU mirror of each (WorldView_TerrainContext_HeightEdit.cpp: a 0x80000-byte block per buffer, entries of 0x38 bytes {elements u32, ?, mirror ptr at +8, handle u16 at +0x10}
+// in a vector {begin, capacity, count}). The creators are hooked only to learn where that vector is.
+typedef int(__fastcall* EditCreateFn)(void*, uint32_t);
+EditCreateFn orig_EditVB = nullptr, orig_EditIB = nullptr;
+std::atomic<uintptr_t> gEditVecVB{ 0 }, gEditVecIB{ 0 };
+int __fastcall Hook_EditVB(void* self, uint32_t a) { const int r = orig_EditVB(self, a); gEditVecVB.store(reinterpret_cast<uintptr_t>(self)); return r; }
+int __fastcall Hook_EditIB(void* self, uint32_t a) { const int r = orig_EditIB(self, a); gEditVecIB.store(reinterpret_cast<uintptr_t>(self) + 0x18); return r; }
+// the mirror pointer of an edit buffer, 0 if there is none; *bytes receives its size
+uintptr_t EditMirror(int kind, uint32_t handle, uint32_t* bytes) {
+	const uintptr_t vec = (kind ? gEditVecIB : gEditVecVB).load();
+	if (!vec) return 0;
+	uintptr_t begin = 0; uint32_t count = 0;
+	if (!SafeCopy(&begin, reinterpret_cast<const void*>(vec), 8) || !SafeCopy(&count, reinterpret_cast<const void*>(vec + 0x10), 4) || !begin || count > 4096) return 0;
+	for (uint32_t i = 0; i < count; i++) {
+		const uintptr_t e = begin + static_cast<uintptr_t>(i) * 0x38;
+		uint32_t elems = 0; uintptr_t mir = 0; uint16_t hd = 0;
+		if (!SafeCopy(&elems, reinterpret_cast<const void*>(e), 4) || !SafeCopy(&mir, reinterpret_cast<const void*>(e + 8), 8) || !SafeCopy(&hd, reinterpret_cast<const void*>(e + 0x10), 2)) continue;
+		if (hd == handle && mir && elems) { *bytes = elems * (kind ? 2u : 8u); return mir; }
+	}
+	return 0;
+}
 bool ShadowInstall() {
-	MH_STATUS s1 = MH_CreateHook(reinterpret_cast<LPVOID>(gExe + kCreateVBx), reinterpret_cast<LPVOID>(&Hook_CreateVB), reinterpret_cast<LPVOID*>(&orig_CreateVB));
-	MH_STATUS s2 = MH_CreateHook(reinterpret_cast<LPVOID>(gExe + kCreateIBx), reinterpret_cast<LPVOID>(&Hook_CreateIB), reinterpret_cast<LPVOID*>(&orig_CreateIB));
+	MH_STATUS s1 = MH_CreateHook(reinterpret_cast<LPVOID>(gExe + gA->createVB), reinterpret_cast<LPVOID>(&Hook_CreateVB), reinterpret_cast<LPVOID*>(&orig_CreateVB));
+	MH_STATUS s2 = MH_CreateHook(reinterpret_cast<LPVOID>(gExe + gA->createIB), reinterpret_cast<LPVOID>(&Hook_CreateIB), reinterpret_cast<LPVOID*>(&orig_CreateIB));
 	MH_STATUS e1 = MH_UNKNOWN, e2 = MH_UNKNOWN;
-	if (s1 == MH_OK && s2 == MH_OK) { e1 = MH_EnableHook(reinterpret_cast<LPVOID>(gExe + kCreateVBx)); e2 = MH_EnableHook(reinterpret_cast<LPVOID>(gExe + kCreateIBx)); }
-	if (s1 == MH_OK && s2 == MH_OK && e1 == MH_OK && e2 == MH_OK) { gShadowOn.store(true); L("shadow copies: hooked CreateVB / CreateIB, baseline reads need no GPU read-back"); return true; }
+	if (s1 == MH_OK && s2 == MH_OK) { e1 = MH_EnableHook(reinterpret_cast<LPVOID>(gExe + gA->createVB)); e2 = MH_EnableHook(reinterpret_cast<LPVOID>(gExe + gA->createIB)); }
+	if (s1 == MH_OK && s2 == MH_OK && e1 == MH_OK && e2 == MH_OK) {
+		gShadowOn.store(true);
+		MH_STATUS m1 = MH_CreateHook(reinterpret_cast<LPVOID>(gExe + gA->editVB), reinterpret_cast<LPVOID>(&Hook_EditVB), reinterpret_cast<LPVOID*>(&orig_EditVB));
+		MH_STATUS m2 = MH_CreateHook(reinterpret_cast<LPVOID>(gExe + gA->editIB), reinterpret_cast<LPVOID>(&Hook_EditIB), reinterpret_cast<LPVOID*>(&orig_EditIB));
+		if (m1 == MH_OK && m2 == MH_OK) { m1 = MH_EnableHook(reinterpret_cast<LPVOID>(gExe + gA->editVB)); m2 = MH_EnableHook(reinterpret_cast<LPVOID>(gExe + gA->editIB)); }
+		L("shadow copies: hooked CreateVB / CreateIB, baseline reads need no GPU read-back; edit-buffer mirrors: %s / %s", MH_StatusToString(m1), MH_StatusToString(m2));
+		return true;
+	}
 	L("shadow copies unavailable (create %s / %s, enable %s / %s): baseline reads use the GPU path", MH_StatusToString(s1), MH_StatusToString(s2), MH_StatusToString(e1), MH_StatusToString(e2));
-	if (s1 == MH_OK) { MH_DisableHook(reinterpret_cast<LPVOID>(gExe + kCreateVBx)); MH_RemoveHook(reinterpret_cast<LPVOID>(gExe + kCreateVBx)); }
-	if (s2 == MH_OK) { MH_DisableHook(reinterpret_cast<LPVOID>(gExe + kCreateIBx)); MH_RemoveHook(reinterpret_cast<LPVOID>(gExe + kCreateIBx)); }
+	if (s1 == MH_OK) { MH_DisableHook(reinterpret_cast<LPVOID>(gExe + gA->createVB)); MH_RemoveHook(reinterpret_cast<LPVOID>(gExe + gA->createVB)); }
+	if (s2 == MH_OK) { MH_DisableHook(reinterpret_cast<LPVOID>(gExe + gA->createIB)); MH_RemoveHook(reinterpret_cast<LPVOID>(gExe + gA->createIB)); }
 	return false;
 }
+bool ShadowSize(int kind, uint32_t h, uint32_t* bytes) {
+	std::lock_guard<std::mutex> g(gShadowMx);
+	auto f = gShadow[kind].find(h);
+	if (f == gShadow[kind].end()) return false;
+	*bytes = static_cast<uint32_t>(f->second.size()); return true;
+}
 void ShadowStats(unsigned long* captured, unsigned long* served, unsigned long* gpu) { *captured = gShadowCaptured; *served = gShadowServed; *gpu = gGpuServed; }
+// The mirror is written by the game the moment a terrain change makes it re-bake a cell, while the GPU copy follows later: a baseline read from the live mirror can return the NEW data
+// (seen as a wildly over-subdivided, corrupted tile). The baseline is the data of the generated world, so a snapshot of the mirrors is taken once the world view is ready.
+std::unordered_map<uint32_t, std::vector<uint8_t>> gEditSnap[2];
+std::atomic<bool> gPreferSnapshot{ false };
+void SetPreferSnapshot(bool on) { gPreferSnapshot.store(on); }
+size_t EditSnapshotTake() {
+	std::lock_guard<std::mutex> g(gShadowMx);
+	size_t n = 0, bytes = 0;
+	for (int kind = 0; kind < 2; kind++) {
+		gEditSnap[kind].clear();
+		const uintptr_t vec = (kind ? gEditVecIB : gEditVecVB).load();
+		uintptr_t begin = 0; uint32_t count = 0;
+		if (!vec || !SafeCopy(&begin, reinterpret_cast<const void*>(vec), 8) || !SafeCopy(&count, reinterpret_cast<const void*>(vec + 0x10), 4) || !begin || count > 4096) continue;
+		for (uint32_t i = 0; i < count; i++) {
+			uint16_t hd = 0; SafeCopy(&hd, reinterpret_cast<const void*>(begin + static_cast<uintptr_t>(i) * 0x38 + 0x10), 2);
+			uint32_t mb = 0; const uintptr_t m = EditMirror(kind, hd, &mb);
+			if (!m || !mb) continue;
+			std::vector<uint8_t> v(mb);
+			if (!SafeCopy(v.data(), reinterpret_cast<const void*>(m), mb)) continue;
+			bytes += mb; n++; gEditSnap[kind][hd] = std::move(v);
+		}
+	}
+	L("edit-buffer mirrors: snapshot of %zu buffer(s), %.1f KiB (baseline for the second base mesh section)", n, bytes / 1024.0);
+	return n;
+}
+void EditMirrorCheck(int timeoutMs, const char* when) {              // DX11 only: the CPU mirrors of the height-edit buffers against the GPU (a real GPU read)
+	if (!gA || gA->dx12) return;
+	for (int kind = 0; kind < 2; kind++) {
+		const uintptr_t vec = (kind ? gEditVecIB : gEditVecVB).load();
+		uintptr_t begin = 0; uint32_t count = 0;
+		if (!vec || !SafeCopy(&begin, reinterpret_cast<const void*>(vec), 8) || !SafeCopy(&count, reinterpret_cast<const void*>(vec + 0x10), 4)) { L("edit mirror check (%s): no height-edit %s vector known", when, kind ? "index" : "vertex"); continue; }
+		for (uint32_t i = 0; i < count && i < 8; i++) {
+			uint16_t hd = 0; SafeCopy(&hd, reinterpret_cast<const void*>(begin + static_cast<uintptr_t>(i) * 0x38 + 0x10), 2);
+			uint32_t mb = 0; const uintptr_t m = EditMirror(kind, hd, &mb);
+			std::vector<Range> one{ { kind, hd, 0, mb, 0 } }; std::vector<uint8_t> gpu; double ms2 = 0;
+			if (!m || !mb || !ReadBackItems(one, gpu, &ms2, timeoutMs, true)) { L("edit mirror check (%s): %s buffer %u: mirror %p, GPU read failed", when, kind ? "index" : "vertex", hd, reinterpret_cast<void*>(m)); continue; }
+			size_t diff = 0, nz = 0; std::vector<uint8_t> mir(mb); SafeCopy(mir.data(), reinterpret_cast<const void*>(m), mb);
+			for (size_t b = 0; b < mb; b++) { if (mir[b] != gpu[b]) diff++; if (gpu[b]) nz++; }
+			L("edit mirror check (%s): %s buffer %u: CPU mirror vs GPU: %zu of %u bytes differ (%zu non-zero bytes on the GPU)", when, kind ? "index" : "vertex", hd, diff, mb, nz);
+		}
+	}
+}
+
 // all items from the shadow copies? then fills `data` (at assigned) and returns true
 bool ServeFromShadow(std::vector<Range>& items, std::vector<uint8_t>& data) {
 	if (!gShadowOn.load()) return false;
 	std::lock_guard<std::mutex> g(gShadowMx);
 	uint32_t total = 0;
-	for (auto& it : items) {
+	std::vector<uintptr_t> mirror(items.size(), 0);                  // != 0: this item comes from the CPU mirror of an edit buffer
+	for (size_t k = 0; k < items.size(); k++) {
+		Range& it = items[k];
 		auto f = gShadow[it.kind].find(it.handle);
-		if (f == gShadow[it.kind].end() || static_cast<uint64_t>(it.off) + it.len > f->second.size()) return false;
-		if (BufBytes(PoolBuf(it.kind, it.handle)) != f->second.size()) return false;      // the handle now holds another buffer (created by a path we did not see)
+		bool ok = f != gShadow[it.kind].end() && static_cast<uint64_t>(it.off) + it.len <= f->second.size();
+		if (ok && !gA->dx12 && BufBytes(PoolBuf(it.kind, it.handle)) != f->second.size()) ok = false;      // the handle now holds another buffer (created by a path we did not see)
+		if (!ok) {
+			uint32_t mb = 0; const uintptr_t m = EditMirror(it.kind, it.handle, &mb);
+			auto sn = gEditSnap[it.kind].find(it.handle);
+			if (gPreferSnapshot.load() && sn != gEditSnap[it.kind].end() && static_cast<uint64_t>(it.off) + it.len <= sn->second.size()) mirror[k] = reinterpret_cast<uintptr_t>(sn->second.data());      // snapshot taken when the world view was ready
+			else if (m && static_cast<uint64_t>(it.off) + it.len <= mb) mirror[k] = m;
+			else {
+				static int said = 0;
+				if (said++ < 12) L("no kept copy for %s handle %u (range %u + %u): %s, exe record says %u bytes", it.kind ? "index" : "vertex", it.handle, it.off, it.len, f == gShadow[it.kind].end() ? "none kept, no edit mirror" : "copy too small", RecordBytes(it.kind, it.handle));
+				return false;
+			}
+		}
 		it.at = total; total += it.len;
 	}
 	data.assign(total, 0);
-	for (auto& it : items) memcpy(data.data() + it.at, gShadow[it.kind][it.handle].data() + it.off, it.len);
+	for (size_t k = 0; k < items.size(); k++) {
+		const Range& it = items[k];
+		if (mirror[k]) { if (!SafeCopy(data.data() + it.at, reinterpret_cast<const void*>(mirror[k] + it.off), it.len)) return false; }
+		else memcpy(data.data() + it.at, gShadow[it.kind][it.handle].data() + it.off, it.len);
+	}
 	return true;
 }
 
 // Blocking: queue the job and wait for the render thread. Assigns `at` and fills `data` (total bytes).
 bool ReadBackItems(std::vector<Range>& items, std::vector<uint8_t>& data, double* msOut, int timeoutMs, bool forceGpu) {
 	if (items.empty()) { data.clear(); if (msOut) *msOut = 0; return true; }
-	if (!forceGpu && ServeFromShadow(items, data)) { gShadowServed++; if (msOut) *msOut = 0; return true; }
+	if (!forceGpu && ServeFromShadow(items, data)) {
+		gShadowServed++; if (msOut) *msOut = 0;
+		if (!gA->dx12 && gCompare.load()) {                          // diagnostic (marker TerrainView.compare, DX11): the same ranges from the GPU
+			std::vector<Range> it2 = items; std::vector<uint8_t> gpu;
+			if (ReadBackItems(it2, gpu, nullptr, timeoutMs, true)) {
+				for (size_t k = 0; k < items.size(); k++) {
+					size_t diff = 0, first = 0;
+					for (uint32_t b = 0; b < items[k].len; b++) if (data[items[k].at + b] != gpu[it2[k].at + b]) { if (!diff) first = b; diff++; }
+					if (diff) L("COMPARE: %s handle %u range %u + %u: kept copy differs from the GPU in %zu bytes (first at +%zu), edit mirror %s", items[k].kind ? "index" : "vertex", items[k].handle, items[k].off, items[k].len, diff, first, gShadow[items[k].kind].count(items[k].handle) ? "not used" : "used");
+				}
+			}
+		}
+		return true;
+	}
 	gGpuServed++;
+	if (gA->dx12) { static bool said = false; if (!said) { said = true; L("no kept copy for a terrain buffer and the GPU read-back is not available on DX12: the change is not applied"); } return false; }
 	std::lock_guard<std::mutex> serial(gSerialize);
 	if (!InstallHook(PoolBuf(items[0].kind, items[0].handle))) return false;
 	uint32_t total = 0;
@@ -436,15 +579,20 @@ int SelfTest(int timeoutMs) {
 			if (b.h == 0 || b.h >= kMaxHandle) continue;
 			const uint64_t k = (static_cast<uint64_t>(b.kind) << 32) | b.h;
 			if (fullAt.count(k)) continue;
-			const uint32_t bytes = BufBytes(PoolBuf(b.kind, b.h));
+			const uint32_t bytes = HandleBytes(b.kind, b.h);
 			if (!bytes) continue;
 			fullAt[k] = 0; full.push_back({ b.kind, b.h, 0, bytes, 0 });
 		}
 	}
 	std::vector<uint8_t> fullData; double fullMs = 0;
 	const auto t0 = std::chrono::steady_clock::now();
-	if (!ReadBackItems(full, fullData, &fullMs, timeoutMs, true)) { L("self-test: full read-back failed"); return -1; }      // always the GPU: it is the reference for the shadow copies
+	if (!ReadBackItems(full, fullData, &fullMs, timeoutMs, !gA->dx12)) { L("self-test: full read-back failed"); return -1; }      // always the GPU: it is the reference for the shadow copies
 	const double fullWall = std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - t0).count();
+	EditMirrorCheck(timeoutMs, "start");
+	if (gA->dx12) {                                                      // no GPU reference on DX12: check the kept copies against the exe's own size records
+		int bad = 0; for (auto& r : full) { const uint32_t rb = RecordBytes(r.kind, r.handle); if (rb != r.len) { bad++; if (bad <= 5) L("self-test: handle %u (kind %d): kept copy %u bytes, exe record %u bytes", r.handle, r.kind, r.len, rb); } }
+		L("self-test (DX12): %zu buffers, kept-copy size equals the exe's size record: %zu of %zu", full.size(), full.size() - bad, full.size());
+	}
 	for (auto& r : full) fullAt[(static_cast<uint64_t>(r.kind) << 32) | r.handle] = r.at;
 	{ size_t sv = 0, si = 0; { std::lock_guard<std::mutex> g(gShadowMx); sv = gShadow[0].size(); si = gShadow[1].size(); } L("self-test: shadow copies %s: %zu vertex + %zu index buffers kept, of %zu buffers read from the GPU", gShadowOn.load() ? "ON" : "OFF", sv, si, full.size()); }
 	L("self-test: grid %dx%d = %d cells; full read-back: %zu buffers, %.1f MiB, render-thread %.1f ms (wall %.1f ms)", gw, gh, ncell, full.size(), fullData.size() / 1048576.0, fullMs, fullWall);
@@ -565,10 +713,13 @@ void Create() {
 	const IMAGE_NT_HEADERS* nt = reinterpret_cast<const IMAGE_NT_HEADERS*>(gExe + dos->e_lfanew);
 	char exeName[MAX_PATH] = { 0 };
 	GetModuleFileNameA(nullptr, exeName, MAX_PATH);
-	const bool dx11 = strstr(exeName, "CivilizationVI.exe") != nullptr && strstr(exeName, "DX12") == nullptr;
-	gBuildOk = dx11 && nt->FileHeader.TimeDateStamp == kExeTimestamp && nt->OptionalHeader.SizeOfImage == kExeImageSize;
+	const bool isDx12Name = strstr(exeName, "CivilizationVI_DX12.exe") != nullptr;
+	const bool isDx11Name = !isDx12Name && strstr(exeName, "CivilizationVI.exe") != nullptr;
+	const ExeAddrs* want = isDx12Name ? &kDx12 : isDx11Name ? &kDx11 : nullptr;
+	gBuildOk = want && nt->FileHeader.TimeDateStamp == want->timestamp && nt->OptionalHeader.SizeOfImage == want->imageSize;
+	if (gBuildOk) gA = want;
 	L("build check: %s (exe %s, timestamp 0x%08x, image 0x%x)%s", gBuildOk ? "OK" : "FAILED: terrain view disabled", exeName, nt->FileHeader.TimeDateStamp, nt->OptionalHeader.SizeOfImage,
-		dx11 ? "" : " (not the DX11 exe)");
+		want ? (gBuildOk ? (want->dx12 ? " (DX12 exe)" : " (DX11 exe)") : " (not the build this was made for)") : " (not a Civilization VI exe)");
 	if (!gBuildOk) return;
 	// self-test: only when the marker file TerrainView.selftest exists next to this DLL
 	HMODULE self = nullptr;
@@ -578,6 +729,7 @@ void Create() {
 	char* slash = strrchr(dllPath, '\\');
 	if (slash) *(slash + 1) = 0;
 	strcpy_s(gDllDir, dllPath);
+	gCompare.store(MarkerExists("TerrainView.compare"));
 	if (!MarkerExists("TerrainView.noshadow") && (MarkerExists("TerrainView.patch") || MarkerExists("TerrainView.selftest"))) ShadowInstall();
 	strcat_s(dllPath, MAX_PATH, "TerrainView.selftest");
 	if (GetFileAttributesA(dllPath) != INVALID_FILE_ATTRIBUTES) {
