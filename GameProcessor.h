@@ -24,4 +24,10 @@ namespace GameProcessor {
 
 	// True when the calling thread holds the GameCore lock (IEngineUtility::HasGameCoreLock).
 	extern bool HasGameCoreLock();
+	// Polls the game's own test dispatcher (GameCore::Lua::Utility::CallTestAll): runs GameEvents[name].TestAll(<int args>) on the script-system Lua state.
+	// Returns true when a handler ran; `result` is then the combined answer (false as soon as one handler returned false). Same rule the game uses for
+	// GameEvents.CanStartOperation: veto only when the return value is true AND result is false. Safe to call from any thread the game's own dispatch is called from
+	// (the game's wrapper releases and re-takes the GameCore lock itself). Returns false without touching `result` before Create() or when the script system is not up yet.
+	extern bool TestAll(const char* name, const int* args, int count, bool& result);
+
 }

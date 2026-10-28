@@ -274,6 +274,7 @@
     <ClCompile Include="EmergencyManager.cpp" />
     <ClCompile Include="EventSystems.cpp" />
     <ClCompile Include="GameProcessor.cpp" />
+    <ClCompile Include="VetoEvents.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameDiplomacy.cpp" />
     <ClCompile Include="GovernorManager.cpp" />
@@ -385,6 +386,7 @@
     <ClInclude Include="EmergencyManager.h" />
     <ClInclude Include="EventSystems.h" />
     <ClInclude Include="GameProcessor.h" />
+    <ClInclude Include="VetoEvents.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameDiplomacy.h" />
     <ClInclude Include="Governor.h" />
