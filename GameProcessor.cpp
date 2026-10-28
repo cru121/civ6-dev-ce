@@ -23,6 +23,7 @@ namespace GameProcessor {
 	constexpr uintptr_t DEFAULT_TYPED_MANAGER_OFFSET = 0xb90770;  // Data::ms_DefaultTypedManager
 	// Functions.
 	constexpr uintptr_t CALL_PROCESSOR_OFFSET = 0x24530;          // GameCore::Lua::Utility::CallProcessor(IScriptSystem1*, const char*, IScriptSystemArgs1*, TypedVariantMap&)
+	constexpr uintptr_t CALL_TEST_ALL_OFFSET = 0x245c0;           // GameCore::Lua::Utility::CallTestAll(IScriptSystem1*, const char*, IScriptSystemArgs1*, bool& result) -> bool called
 	constexpr uintptr_t ARGS_HANDLE_CTOR_OFFSET = 0x5eda60;       // GameCore::Lua::Args::Handle::Handle()
 	constexpr uintptr_t ARGS_HANDLE_DTOR_OFFSET = 0x5eda90;       // GameCore::Lua::Args::Handle::~Handle()
 	constexpr uintptr_t VARIANT_MAP_CTOR_OFFSET = 0x99e450;       // Data::TypedVariantMap::TypedVariantMap(TypedVariantManager*)
@@ -33,6 +34,8 @@ namespace GameProcessor {
 
 	namespace Types {
 		typedef bool(__cdecl* CallProcessor)(void* scriptSystem, const char* name, void* args, void* variantMap);
+		typedef bool(__cdecl* CallTestAll)(void* scriptSystem, const char* name, void* args, bool* result);
+		typedef void(__fastcall* ArgsPushInt)(void* args, int value);
 		typedef void* (__fastcall* ArgsHandleCtor)(void* handle);
 		typedef void(__fastcall* ArgsHandleDtor)(void* handle);
 		typedef void* (__fastcall* VariantMapCtor)(void* map, void* manager);
@@ -61,6 +64,7 @@ namespace GameProcessor {
 	constexpr uint16_t TYPE_BOOL = 1, TYPE_INT32 = 2, TYPE_UINT32 = 3, TYPE_FLOAT = 4, TYPE_INT64 = 20, TYPE_UINT64 = 21;
 
 	static Types::CallProcessor CallProcessor;
+	static Types::CallTestAll CallTestAll;
 	static Types::ArgsHandleCtor ArgsHandleCtor;
 	static Types::ArgsHandleDtor ArgsHandleDtor;
 	static Types::VariantMapCtor VariantMapCtor;
@@ -73,6 +77,7 @@ namespace GameProcessor {
 	void Create() {
 		using namespace Runtime;
 		CallProcessor = GetGameCoreGlobalAt<Types::CallProcessor>(CALL_PROCESSOR_OFFSET);
+		CallTestAll = GetGameCoreGlobalAt<Types::CallTestAll>(CALL_TEST_ALL_OFFSET);
 		ArgsHandleCtor = GetGameCoreGlobalAt<Types::ArgsHandleCtor>(ARGS_HANDLE_CTOR_OFFSET);
 		ArgsHandleDtor = GetGameCoreGlobalAt<Types::ArgsHandleDtor>(ARGS_HANDLE_DTOR_OFFSET);
 		VariantMapCtor = GetGameCoreGlobalAt<Types::VariantMapCtor>(VARIANT_MAP_CTOR_OFFSET);
@@ -163,4 +168,27 @@ namespace GameProcessor {
 		VariantMapDtor(map);
 		return handled;
 	}
+	bool TestAll(const char* name, const int* args, int count, bool& result) {
+		if (!created) return false;
+		void* scriptSystem = *Runtime::GetGameCoreGlobalAt<void**>(SCRIPT_SYSTEM_OFFSET);
+		if (scriptSystem == nullptr) return false;
+
+		alignas(16) unsigned char handle[16];   // Lua::Args::Handle holds one IScriptSystemArgs1*
+		std::memset(handle, 0, sizeof(handle));
+		ArgsHandleCtor(handle);
+		void* argsObject = *reinterpret_cast<void**>(handle);
+		bool called = false;
+		if (argsObject != nullptr) {
+			// IScriptSystemArgs1 vtable +0x28 pushes one 32-bit integer (same call the game makes before CallTestAll("CanStartOperation")).
+			void** vtable = *reinterpret_cast<void***>(argsObject);
+			Types::ArgsPushInt push = reinterpret_cast<Types::ArgsPushInt>(vtable[0x28 / sizeof(void*)]);
+			for (int i = 0; i < count; i++) push(argsObject, args[i]);
+			bool answer = false;
+			called = CallTestAll(scriptSystem, name, argsObject, &answer);
+			if (called) result = answer;
+		}
+		ArgsHandleDtor(handle);
+		return called;
+	}
+
 }

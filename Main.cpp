@@ -25,6 +25,7 @@
 #include "AI.h"
 #include "EventSystems.h"
 #include "GameProcessor.h"
+#include "VetoEvents.h"
 #include "NationalParks.h"
 #include "DevBridge.h"
 #include "LuaHooks.h"
@@ -147,6 +148,7 @@ static void InitHooks() {
     AI::Espionage::Create();
     NationalParks::Create();
     GameProcessor::Create();
+    VetoEvents::Create();
     DevBridge::Create();
     TerrainView::Create();
 
