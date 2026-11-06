@@ -6,7 +6,7 @@ with the right arguments and returned values, and 115 mutators were executed for
 Names and signatures come from debug symbols of another platform. If you want to help, test the effect of functions that interest you (single player, disposable game) and report what you see.
 
 ## What you need
-* Windows, Steam Civilization VI with Gathering Storm (build 15038592 or 15296837, same GameCore DLL; the bridge checks this at startup and switches itself off on anything else).
+* Windows, Steam Civilization VI with Gathering Storm (build 15038592, 15296837 or 26407122, same GameCore code; the bridge checks this at startup and switches itself off on anything else).
 * Visual Studio 2022 Build Tools (x64, C++), plus the capstone and MinHook libraries on the linker path as for the upstream
   [Community Extension](https://github.com/Wild-W/CivilizationVI_CommunityExtension) (its wiki describes the build). The generated table `DevNativeTable.cpp` is committed, so you do **not** need the Python tools or any analysis data to build.
 * Build the project, x64 Release, `CL=/DCAPSTONE_STATIC`; the output is `GameCore_XP2_CE_FinalRelease.dll`.
