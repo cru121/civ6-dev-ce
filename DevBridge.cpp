@@ -4,6 +4,7 @@
 #include "DevBridge.h"
 #include "Runtime.h"
 #include <iostream>
+#include <string>
 #include <cstring>
 #include <cstdarg>
 #include <cstdio>
@@ -23,7 +24,7 @@ namespace DevBridge {
 	typedef void* (__fastcall* PlayerFn)(int);
 	static PlayerFn gEditPlayer = nullptr;   // FAutoVariable::edit, null when its address check failed
 
-	static const char* kVersion = "0.8.0-experimental";
+	static const char* kVersion = "0.8.1-experimental";
 	static volatile bool gTrace = false;   // log every bridge call BEFORE it runs (flushed): after a hang or crash the last [trace] line names the call
 
 	static void DllPath(char* path, const char* file) {
@@ -87,18 +88,43 @@ namespace DevBridge {
 		return 0;
 	}
 
-	// GetIO(): returns Lua's standard io table (io.open, io.lines, ...), which the game does not open. Calls the Havok Script library opener on first use per state.
-	// local io = GetIO(); local f = io.open("test.txt", "w"); f:write("hi"); f:close()
-	static int lGetIO(hks::lua_State* L) {
-		if (!hks::luaopen_io) {
-			hks::error(L, "GetIO: luaopen_io is not exported by this HavokScript build");
-			return 0;
-		}
-		// Lua 5.1 style opener: leaves the library table on the stack (and may also set the global 'io'). Calling it again just builds another table.
-		const int n = hks::luaopen_io(L);
-		Log("[DevBridge] GetIO: luaopen_io returned %d", n);
-		return n > 0 ? 1 : 0;
+#ifdef DEVCE_FILE_IO
+	// OPTIONAL, UNTESTED, NOT BUILT BY DEFAULT (define DEVCE_FILE_IO to compile it in; the project does not).
+	// The game's Lua io library was removed by the 2026-11-06 security patch (build 26407122). Re-adding file
+	// access from a native mod works around a deliberate protection of the game, so Dev CE ships without it. The code is kept for anyone who wants to build such a mod.
+	// Native file access for gameplay scripts:
+	//   DevCE_ReadFile(path)               -> whole file as a string, or nothing (nil) when it cannot be opened
+	//   DevCE_WriteFile(path, text, append) -> true/false
+	// Relative paths resolve against the game's working directory (same as the old io.open).  io.open-style wrapper: DevCE_IO_shim.lua.
+	static int lReadFile(hks::lua_State* L) {
+		unsigned __int64 len = 0;
+		const char* path = hks::checklstring(L, 1, &len);
+		FILE* f = nullptr;
+		if (!path || fopen_s(&f, path, "rb") != 0 || !f) return 0;
+		std::string data;
+		char buf[4096];
+		size_t n;
+		while ((n = fread(buf, 1, sizeof(buf), f)) > 0) data.append(buf, n);
+		fclose(f);
+		hks::pushfstring(L, "%s", data.c_str());
+		return 1;
 	}
+
+	static int lWriteFile(hks::lua_State* L) {
+		unsigned __int64 len = 0, tlen = 0;
+		const char* path = hks::checklstring(L, 1, &len);
+		const char* text = hks::checklstring(L, 2, &tlen);
+		const bool append = hks::gettop(L) >= 3 && hks::toboolean(L, 3) != 0;
+		FILE* f = nullptr;
+		bool ok = false;
+		if (path && text && fopen_s(&f, path, append ? "ab" : "wb") == 0 && f) {
+			ok = fwrite(text, 1, (size_t)tlen, f) == (size_t)tlen;
+			fclose(f);
+		}
+		hks::pushboolean(L, ok);
+		return 1;
+	}
+#endif  // DEVCE_FILE_IO
 
 	static int lIsArmed(hks::lua_State* L) {
 		hks::pushinteger(L, (int)DevBridgeArmed);   // 0 off, 1 armed by the tool, 2 handshake done (stubs are recording), 3 finished
@@ -112,8 +138,12 @@ namespace DevBridge {
 		hks::setfield(L, hks::LUA_GLOBAL, "DevCE_IsArmed");
 		hks::pushnamedcclosure(L, lLog, 0, "lDevCE_Log", 0);
 		hks::setfield(L, hks::LUA_GLOBAL, "DevCE_Log");
-		hks::pushnamedcclosure(L, lGetIO, 0, "lGetIO", 0);
-		hks::setfield(L, hks::LUA_GLOBAL, "GetIO");
+#ifdef DEVCE_FILE_IO
+		hks::pushnamedcclosure(L, lReadFile, 0, "lDevCE_ReadFile", 0);
+		hks::setfield(L, hks::LUA_GLOBAL, "DevCE_ReadFile");
+		hks::pushnamedcclosure(L, lWriteFile, 0, "lDevCE_WriteFile", 0);
+		hks::setfield(L, hks::LUA_GLOBAL, "DevCE_WriteFile");
+#endif
 		hks::pushnamedcclosure(L, lTrace, 0, "lDevCE_Trace", 0);
 		hks::setfield(L, hks::LUA_GLOBAL, "DevCE_Trace");
 	}
@@ -225,7 +255,9 @@ namespace DevBridge {
 
 	// The address table is only valid for one GameCore build (Steam build 15038592). Checked against the PE header of the loaded module, in addition to the
 	// per-function prologue check (8 bytes can match a wrong function in another build).
+	// 0x667c6f5b = build 15038592 / Steam 15296837, 0x6ae8e9d4 = Steam 26407122 (2026-11-06 security patch: the GameCore code is byte-identical, only build-path hash strings differ)
 	static const uint32_t kBuildTimeDateStamp = 0x667c6f5b;
+	static const uint32_t kBuildTimeDateStamp2 = 0x6ae8e9d4;
 	static const uint32_t kBuildSizeOfImage = 0x00c60000;
 
 	static bool BuildMatches() {
@@ -235,7 +267,7 @@ namespace DevBridge {
 		const IMAGE_NT_HEADERS64* nt = (const IMAGE_NT_HEADERS64*)(base + dos->e_lfanew);
 		if (nt->Signature != IMAGE_NT_SIGNATURE) return false;
 		Log("[DevBridge] GameCore PE timestamp 0x%08x, image size 0x%08x", (unsigned)nt->FileHeader.TimeDateStamp, (unsigned)nt->OptionalHeader.SizeOfImage);
-		return nt->FileHeader.TimeDateStamp == kBuildTimeDateStamp && nt->OptionalHeader.SizeOfImage == kBuildSizeOfImage;
+		return (nt->FileHeader.TimeDateStamp == kBuildTimeDateStamp || nt->FileHeader.TimeDateStamp == kBuildTimeDateStamp2) && nt->OptionalHeader.SizeOfImage == kBuildSizeOfImage;
 	}
 
 	void Create() {

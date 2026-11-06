@@ -87,6 +87,7 @@ local function Run()
     end
     Log(string.format("SELFTEST level 1: %d methods present, %d missing, %d not reached", present, missing, unreached))
     local okio, errio = pcall(function()
+        if GetIO == nil then Log("GETIO test SKIPPED (no file IO in this build)"); return end
         local io = GetIO()
         local f = assert(io.open("devce_io_test.txt", "w"))
         f:write("Hello from Dev CE")

@@ -35,7 +35,7 @@ namespace detail {
 namespace {
 
 // ---- fixed addresses (Windows DX11 build 15038592) ----------------------------------------------------------------------------------------------------------------
-constexpr uint32_t kGcTimestamp = 0x667c6f5b, kGcImage = 0xc60000;            // GameCore_XP2_FinalRelease.dll
+constexpr uint32_t kGcTimestamp = 0x667c6f5b, kGcTimestamp2 = 0x6ae8e9d4, kGcImage = 0xc60000;   // 2 = build 26407122, identical code            // GameCore_XP2_FinalRelease.dll
 constexpr uintptr_t kSetTerrainTypeRva = 0x5dd0f0;                            // GameCore: bool Terrain::Builder::_SetTerrainType(Builder*, Plot*, TerrainTypes): every SetTerrainType path ends here
 constexpr uint8_t kSetTerrainTypePrologue[8] = { 0x44, 0x89, 0x44, 0x24, 0x18, 0x48, 0x89, 0x4c };
 constexpr uintptr_t kEditMapRva = 0x44d40;                                    // GameCore: Map::Instance* Context::Globals::EditMap()
@@ -1042,7 +1042,7 @@ void PatchCreate() {
 	if (!gc) { L("patch: GameCore module not found"); return; }
 	const IMAGE_DOS_HEADER* dos = reinterpret_cast<const IMAGE_DOS_HEADER*>(gc);
 	const IMAGE_NT_HEADERS* nt = reinterpret_cast<const IMAGE_NT_HEADERS*>(gc + dos->e_lfanew);
-	if (nt->FileHeader.TimeDateStamp != kGcTimestamp || nt->OptionalHeader.SizeOfImage != kGcImage) { L("patch: GameCore build check FAILED (timestamp 0x%08x): disabled", nt->FileHeader.TimeDateStamp); return; }
+	if ((nt->FileHeader.TimeDateStamp != kGcTimestamp && nt->FileHeader.TimeDateStamp != kGcTimestamp2) || nt->OptionalHeader.SizeOfImage != kGcImage) { L("patch: GameCore build check FAILED (timestamp 0x%08x): disabled", nt->FileHeader.TimeDateStamp); return; }
 	if (memcmp(reinterpret_cast<const void*>(gc + kSetTerrainTypeRva), kSetTerrainTypePrologue, 8) != 0) { L("patch: _SetTerrainType prologue mismatch: disabled"); return; }
 	SetOriginalSigProvider([](int x, int y, Sig& s) {
 		std::lock_guard<std::mutex> g(gSigMx);
