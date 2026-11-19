@@ -50,6 +50,15 @@ const ExeAddrs kDx12New = { "DX12", true, 0x6ae8de31, 0xfe5d000,
 	0x233e4a0, 0xc6e8f0, 0xc6e930, 0xc6e910, 0x9457e0, 0x944790, 0x94df70, 0xf2b60c0, 0x6c73040, 0xac3690, 0x100a7f4, 0x1084fbc,
 	0x615c80, 0x615b10,
 	0, 0, 0xf2be4c0, 0x6c7b440 };
+// Steam build 26595377 (2026-11-19): exe relinked again. Derived from the 15296837 exes by tools/gc_map_new.py + gc_data_map.py + remap_exe_table.py (masked function hash matching, data via rip references); code addresses byte-checked, NOT yet run in game.
+const ExeAddrs kDx11New2 = { "DX11", false, 0x6af3bd12, 0x370c000,
+	0x2306e20, 0xc60200, 0xc60240, 0xc60220, 0x948c40, 0x944f70, 0x956590, 0x2b92200, 0x2b0b740, 0xab5ad0, 0xffb3b4, 0x107426c,
+	0x6144f0, 0x614380,
+	0x2b9a740, 0x2b13c80, 0, 0 };
+const ExeAddrs kDx12New2 = { "DX12", true, 0x6af3d91d, 0xfe5d000,
+	0x233e4a0, 0xc6e6d0, 0xc6e710, 0xc6e6f0, 0x945cf0, 0x944ca0, 0x94e480, 0xf2b60c0, 0x6c73040, 0xac3fe0, 0x100a884, 0x108506c,
+	0x616050, 0x615ee0,
+	0, 0, 0xf2be4c0, 0x6c7b440 };
 const ExeAddrs* gA = nullptr;
 constexpr uint32_t kExeTimestamp = 0x667c6fc6, kExeImageSize = 0x3704000;   // (DX11 values, kept for the log only)
 
@@ -741,9 +750,9 @@ void Create() {
 	const bool isDx12Name = strstr(exeName, "CivilizationVI_DX12.exe") != nullptr;
 	const bool isDx11Name = !isDx12Name && strstr(exeName, "CivilizationVI.exe") != nullptr;
 	const ExeAddrs* want = nullptr;
-	for (const ExeAddrs* c : { &kDx11, &kDx12, &kDx11New, &kDx12New })
+	for (const ExeAddrs* c : { &kDx11, &kDx12, &kDx11New, &kDx12New, &kDx11New2, &kDx12New2 })
 		if ((c->dx12 ? isDx12Name : isDx11Name) && nt->FileHeader.TimeDateStamp == c->timestamp && nt->OptionalHeader.SizeOfImage == c->imageSize) want = c;
-	if (!want) want = isDx12Name ? &kDx12New : isDx11Name ? &kDx11New : nullptr;   // only for the log message below
+	if (!want) want = isDx12Name ? &kDx12New2 : isDx11Name ? &kDx11New2 : nullptr;   // only for the log message below
 	gBuildOk = want && nt->FileHeader.TimeDateStamp == want->timestamp && nt->OptionalHeader.SizeOfImage == want->imageSize;
 	if (gBuildOk) gA = want;
 	L("build check: %s (exe %s, timestamp 0x%08x, image 0x%x)%s", gBuildOk ? "OK" : "FAILED: terrain view disabled", exeName, nt->FileHeader.TimeDateStamp, nt->OptionalHeader.SizeOfImage,

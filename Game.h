@@ -8,7 +8,7 @@ namespace Game {
 
 	extern Types::FAutoVariable_edit FAutoVariable_edit;
 
-	constexpr uintptr_t F_AUTO_VARIABLE_EDIT_OFFSET = 0x72a920;
+	constexpr uintptr_t F_AUTO_VARIABLE_EDIT_OFFSET = 0x72a960;
 
 	extern void Create();
 }
