@@ -24,7 +24,7 @@ namespace DevBridge {
 	typedef void* (__fastcall* PlayerFn)(int);
 	static PlayerFn gEditPlayer = nullptr;   // FAutoVariable::edit, null when its address check failed
 
-	static const char* kVersion = "0.8.2-experimental";
+	static const char* kVersion = "0.8.3-experimental";
 	static volatile bool gTrace = false;   // log every bridge call BEFORE it runs (flushed): after a hang or crash the last [trace] line names the call
 
 	static void DllPath(char* path, const char* file) {
@@ -253,11 +253,11 @@ namespace DevBridge {
 		}
 	}
 
-	// The address table is only valid for one GameCore build (Steam build 15038592). Checked against the PE header of the loaded module, in addition to the
+	// The address table is only valid for one GameCore build (Steam build 26595377, 2026-11-19; releases up to 0.8.1 have the tables of the earlier builds). Checked against the PE header of the loaded module, in addition to the
 	// per-function prologue check (8 bytes can match a wrong function in another build).
 	// 0x667c6f5b = build 15038592 / Steam 15296837, 0x6ae8e9d4 = Steam 26407122 (2026-11-06 security patch: the GameCore code is byte-identical, only build-path hash strings differ)
-	static const uint32_t kBuildTimeDateStamp = 0x667c6f5b;
-	static const uint32_t kBuildTimeDateStamp2 = 0x6ae8e9d4;
+	// Older timestamps (0x667c6f5b = build 15038592 / 15296837, 0x6ae8e9d4 = 26407122) are NOT accepted any more: build 26595377 has the same code at different addresses and the tables
+	// hold only the new addresses (0.8.2 still accepted the old timestamps by mistake; use 0.8.1 or older on those builds).
 	static const uint32_t kBuildTimeDateStamp3 = 0x6af3bcb5;   // Steam 26595377 (2026-11-19): same code, relocated; the address tables were remapped
 	static const uint32_t kBuildSizeOfImage = 0x00c60000;
 
@@ -268,7 +268,7 @@ namespace DevBridge {
 		const IMAGE_NT_HEADERS64* nt = (const IMAGE_NT_HEADERS64*)(base + dos->e_lfanew);
 		if (nt->Signature != IMAGE_NT_SIGNATURE) return false;
 		Log("[DevBridge] GameCore PE timestamp 0x%08x, image size 0x%08x", (unsigned)nt->FileHeader.TimeDateStamp, (unsigned)nt->OptionalHeader.SizeOfImage);
-		return (nt->FileHeader.TimeDateStamp == kBuildTimeDateStamp || nt->FileHeader.TimeDateStamp == kBuildTimeDateStamp2 || nt->FileHeader.TimeDateStamp == kBuildTimeDateStamp3) && nt->OptionalHeader.SizeOfImage == kBuildSizeOfImage;
+		return nt->FileHeader.TimeDateStamp == kBuildTimeDateStamp3 && nt->OptionalHeader.SizeOfImage == kBuildSizeOfImage;
 	}
 
 	void Create() {
@@ -280,7 +280,7 @@ namespace DevBridge {
 			if (GetFileAttributesA(path) != INVALID_FILE_ATTRIBUTES) { gTrace = true; Log("[DevBridge] DevBridge.trace found: call tracing ON"); }
 		}
 		if (!BuildMatches()) {
-			Log("[DevBridge] this GameCore is not the build the address table was made for (Steam 15038592): ALL Dev CE native functions are disabled");
+			Log("[DevBridge] this GameCore is not the build the address table was made for (Steam 26595377): ALL Dev CE native functions are disabled");
 			return;
 		}
 		int ok = 0, bad = 0;
