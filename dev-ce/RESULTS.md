@@ -195,3 +195,12 @@ The first player mod (no scripts, no InGameActions) did NOT load its GameCore: t
 * GameCore DLL code byte-identical to 15038592/15296837 (only the PE timestamp 0x6ae8e9d4 and embedded build-path hash strings differ); the build check now accepts both timestamps.
 * The game's Lua lost the `io` library and several `os` functions, `loadstring` rejects bytecode: `GetIO()` removed (selftest: GETIO test SKIPPED).
 * DX12 exe, new disposable game, only the Dev CE test build enabled: DevBridge.log 1033 ready / 0 disabled; level 1 993 present / 0 missing (40 not reached); oracle 33 match / 0 mismatch / 0 error; `[TerrainView] build check: OK (DX12 exe)`, hooks installed (CreateVB/CreateIB, ground-height sampler, game tick, _SetTerrainType), world view ready; no errors. Terrain patching, the DX11 exe, level 2/3 and the Lua debugger were not re-tested on this build.
+
+### 2026-11-19 Steam build 26595377, Dev CE 0.8.2 candidate (tested with the working-tree build, not the release DLL)
+* Same GameCore code as before but a new layout: most function addresses changed (about 26,000 of 45,000 in the base DLL). All address tables were remapped by function matching (masked hashes) and the prologue bytes regenerated; the GameCore PE timestamp is 0x6af3bcb5 (image size unchanged), exe timestamps 0x6af3bd12 (DX11) and 0x6af3d91d (DX12).
+* DX12 exe, new disposable games, only the Dev CE test build enabled. First run: the registration-function table had been missed and all 39 hooks reported "unexpected bytes"; fixed, then 0 such lines.
+* DevBridge.log: 1033 ready / 0 disabled. Level 1: 993 present / 0 missing; oracle 33 match / 0 mismatch / 0 error.
+* Level 2 (Frida stubs, 5 chunks of 173): 173 + 144 + 162 + 173 + 172 = **824 PASS, 0 FAIL**, 41 not run (Deal, DealItem, District, FreeCities, Fallout: no instance in a fresh game); the Player root and the Game/Map singletons are not stub-tested by design.
+* Level 3: 115 of 115 `Change*` functions executed for real (+1 then -1), all restored, 0 call errors, 7 with a visible effect on vanilla getters.
+* Terrain view (DX12): build check OK, hooks installed, reader self-test PASS (703 of 703 cells identical to the full read-back), patch self-test PASS, dome self-test PASS.
+* Not tested: DX11 terrain view, debugger and hooks, veto events, Audio API, custom parks, demo mods, object re-placement beyond hooking.

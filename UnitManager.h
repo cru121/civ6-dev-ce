@@ -15,16 +15,16 @@ namespace UnitManager {
 	extern int lChangeBuildCharges(hks::lua_State* L);
 
 	// GameCore::Unit::Instance::ChangeBuildCharges(int delta) - installed build 15038592
-	constexpr uintptr_t CHANGE_BUILD_CHARGES_OFFSET = 0x3a2980;
+	constexpr uintptr_t CHANGE_BUILD_CHARGES_OFFSET = 0x3a2240;
 	extern Types::ChangeBuildCharges ChangeBuildCharges;
 
-	constexpr uintptr_t CHANGE_OWNER_OFFSET = 0x64f420;
+	constexpr uintptr_t CHANGE_OWNER_OFFSET = 0x64f450;
 	extern Types::ChangeOwner ChangeOwner;
 
-	constexpr uintptr_t GET_OFFSET = 0x64fff0;
+	constexpr uintptr_t GET_OFFSET = 0x650020;
 	extern Types::Get Get;
 
-	constexpr uintptr_t REGISTER_MEMBERS_OFFSET = 0x700980;
+	constexpr uintptr_t REGISTER_MEMBERS_OFFSET = 0x7009c0;
 	extern void RegisterMembers(hks::lua_State* L);
 
 	extern void Create();

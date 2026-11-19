@@ -33,12 +33,12 @@ namespace {
 // ---- GameCore addresses (installed build 15038592) ------------------------------------------------------------------------------------------------------------------------
 constexpr uintptr_t kTickRva = 0x42780;                        // static void Game::Autoplay::Manager::Update(void)
 constexpr uintptr_t kEditMapRva = 0x44d40;                     // Map::Instance* Context::Globals::EditMap()
-constexpr uintptr_t kGetTerrainBuilder = 0x53010, kGetResourceBuilder = 0x52f90, kGetImprovementBuilder = 0x52c30;     // Builder* Map::Instance::GetXBuilder()
+constexpr uintptr_t kGetTerrainBuilder = 0x53020, kGetResourceBuilder = 0x52fa0, kGetImprovementBuilder = 0x52c40;     // Builder* Map::Instance::GetXBuilder()
 constexpr uintptr_t kIsNaturalWonder = 0x60280;                // bool Plot::Instance::IsNaturalWonder() const
-constexpr uintptr_t kSetFeatureType = 0x5dbfb0;                // bool Terrain::Builder::SetFeatureType(Plot*, FeatureParam = { int type, int direction } in one 64-bit register)
-constexpr uintptr_t kSetResourceType = 0x5d2b20;               // bool Resource::Builder::SetResourceType(Plot*, ResourceTypes, int count)
-constexpr uintptr_t kSetImprovementType = 0x25d430;            // void Improvement::Builder::SetImprovementType(Plot*, ImprovementTypes, PlayerTypes owner, DirectionTypes, bool)
-constexpr uintptr_t kSetImprovementPillaged = 0x25cfa0;        // void Improvement::Builder::SetImprovementPillaged(Plot*, bool, PlayerTypes pillager)
+constexpr uintptr_t kSetFeatureType = 0x5dbff0;                // bool Terrain::Builder::SetFeatureType(Plot*, FeatureParam = { int type, int direction } in one 64-bit register)
+constexpr uintptr_t kSetResourceType = 0x5d2b60;               // bool Resource::Builder::SetResourceType(Plot*, ResourceTypes, int count)
+constexpr uintptr_t kSetImprovementType = 0x25d410;            // void Improvement::Builder::SetImprovementType(Plot*, ImprovementTypes, PlayerTypes owner, DirectionTypes, bool)
+constexpr uintptr_t kSetImprovementPillaged = 0x25cf80;        // void Improvement::Builder::SetImprovementPillaged(Plot*, bool, PlayerTypes pillager)
 // plot object fields (symbol-build decompile; x/y/terrain/resource/improvement checked against Lua on the installed build)
 constexpr size_t kFeat = 0x3c, kRes = 0x40, kCnt = 0x42, kImp = 0x44, kOwner = 0x46, kFlags = 0x4d;
 

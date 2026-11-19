@@ -24,13 +24,13 @@ namespace GameProcessor {
 	// Functions.
 	constexpr uintptr_t CALL_PROCESSOR_OFFSET = 0x24530;          // GameCore::Lua::Utility::CallProcessor(IScriptSystem1*, const char*, IScriptSystemArgs1*, TypedVariantMap&)
 	constexpr uintptr_t CALL_TEST_ALL_OFFSET = 0x245c0;           // GameCore::Lua::Utility::CallTestAll(IScriptSystem1*, const char*, IScriptSystemArgs1*, bool& result) -> bool called
-	constexpr uintptr_t ARGS_HANDLE_CTOR_OFFSET = 0x5eda60;       // GameCore::Lua::Args::Handle::Handle()
-	constexpr uintptr_t ARGS_HANDLE_DTOR_OFFSET = 0x5eda90;       // GameCore::Lua::Args::Handle::~Handle()
-	constexpr uintptr_t VARIANT_MAP_CTOR_OFFSET = 0x99e450;       // Data::TypedVariantMap::TypedVariantMap(TypedVariantManager*)
-	constexpr uintptr_t VARIANT_MAP_DTOR_OFFSET = 0x99e5d0;       // Data::TypedVariantMap::~TypedVariantMap()
-	constexpr uintptr_t VARIANT_MAP_SET_OFFSET = 0x99fc60;        // Data::TypedVariantMap::SetVariant(uint key, TypedVariant&& value)
-	constexpr uintptr_t VARIANT_MAP_FIND_OFFSET = 0x99f570;       // Data::TypedVariantMap::FindVariant(uint key) -> TypedVariant* or null
-	constexpr uintptr_t REGISTER_KEY_OFFSET = 0x9a3f10;           // Data::VariantManager::RegisterKey(const char* name) -> uint key (CRC of the name)
+	constexpr uintptr_t ARGS_HANDLE_CTOR_OFFSET = 0x5eda90;       // GameCore::Lua::Args::Handle::Handle()
+	constexpr uintptr_t ARGS_HANDLE_DTOR_OFFSET = 0x5edac0;       // GameCore::Lua::Args::Handle::~Handle()
+	constexpr uintptr_t VARIANT_MAP_CTOR_OFFSET = 0x99e4b0;       // Data::TypedVariantMap::TypedVariantMap(TypedVariantManager*)
+	constexpr uintptr_t VARIANT_MAP_DTOR_OFFSET = 0x99e630;       // Data::TypedVariantMap::~TypedVariantMap()
+	constexpr uintptr_t VARIANT_MAP_SET_OFFSET = 0x99fcc0;        // Data::TypedVariantMap::SetVariant(uint key, TypedVariant&& value)
+	constexpr uintptr_t VARIANT_MAP_FIND_OFFSET = 0x99f5d0;       // Data::TypedVariantMap::FindVariant(uint key) -> TypedVariant* or null
+	constexpr uintptr_t REGISTER_KEY_OFFSET = 0x9a3f70;           // Data::VariantManager::RegisterKey(const char* name) -> uint key (CRC of the name)
 
 	namespace Types {
 		typedef bool(__cdecl* CallProcessor)(void* scriptSystem, const char* name, void* args, void* variantMap);

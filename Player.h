@@ -16,7 +16,7 @@ namespace Player {
 		constexpr uintptr_t GET_PLAYER_OFFSET = 0x7af30;
 		extern Cache::Types::GetPlayer GetPlayer;
 
-		constexpr uintptr_t GET_PLAYER_INSTANCE_OFFSET = 0x6a4090;
+		constexpr uintptr_t GET_PLAYER_INSTANCE_OFFSET = 0x6a40d0;
 		extern Cache::Types::GetPlayerInstance GetPlayerInstance;
 	}
 
@@ -24,7 +24,7 @@ namespace Player {
 		typedef Instance* (__cdecl* GetPlayerInstance)(hks::lua_State* L);
 	}
 
-	constexpr uintptr_t GET_PLAYER_INSTANCE_OFFSET = 0x6e8120;
+	constexpr uintptr_t GET_PLAYER_INSTANCE_OFFSET = 0x6e8160;
 	extern Types::GetPlayerInstance GetPlayerInstance;
 
 	extern void Create();
