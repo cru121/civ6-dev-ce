@@ -276,6 +276,8 @@
     <ClCompile Include="GameProcessor.cpp" />
     <ClCompile Include="VetoEvents.cpp" />
     <ClCompile Include="TechGates.cpp" />
+    <ClCompile Include="DistrictCitizens.cpp" />
+    <ClCompile Include="CitySpecialists.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameDiplomacy.cpp" />
     <ClCompile Include="GovernorManager.cpp" />
@@ -394,6 +396,8 @@
     <ClInclude Include="GameProcessor.h" />
     <ClInclude Include="VetoEvents.h" />
     <ClInclude Include="TechGates.h" />
+    <ClInclude Include="DistrictCitizens.h" />
+    <ClInclude Include="CitySpecialists.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameDiplomacy.h" />
     <ClInclude Include="Governor.h" />

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Mod id="e4d6ff63-a90b-4bd8-b70a-c3c4d1f2d6c0" version="1">
+	<Properties>
+		<Name>Dev CE District Citizens Test</Name>
+		<Teaser>Test of the Dev CE district citizen properties: Campus +1 citizen slot, +1 Science and +1 Gold per citizen.</Teaser>
+		<Description>With the policy God King, every Campus takes 1 more citizen, and each citizen working a Campus gives +1 Science and +1 Gold. For testing the Dev CE district properties DEVCE_CITIZEN_SLOTS and DEVCE_CITIZEN_&lt;YieldType&gt; (needs the Dev CE GameCore mod).</Description>
+		<Authors>slothoth</Authors>
+		<CompatibleVersions>2.0</CompatibleVersions>
+		<AffectsSavedGames>1</AffectsSavedGames>
+	</Properties>
+	<Dependencies>
+		<Mod id="4873eb62-8ccc-4574-b784-dda455e74e68" title="Expansion: Gathering Storm" />
+	</Dependencies>
+	<InGameActions>
+		<UpdateDatabase id="DCDCT_SQL">
+			<Properties><LoadOrder>500</LoadOrder></Properties>
+			<File>Sql/DevCE_DistrictCitizensTest.sql</File>
+		</UpdateDatabase>
+	</InGameActions>
+	<Files>
+		<File>Sql/DevCE_DistrictCitizensTest.sql</File>
+	</Files>
+</Mod>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Dev CE city specialists: one small (32x32) citizen button per specialist type at the city centre, in the citizen management lens,
+     tinted per type, with a padlock when the player locked citizens there. Slot counts are in the tooltip. Containers have their real
+     size: a click only reaches a control inside every parent's bounds. -->
+<Context Layer="WorldAnchor">
+	<WorldAnchor ID="Anchor" Size="2,2" Hidden="1">
+		<!-- top edge = top of the city centre's citizen button (PlotInfo: Anchor C,T Offset 0,-50); 400 wide, centred on the anchor -->
+		<Container ID="SlotContainer" Anchor="C,T" Offset="0,0" Size="400,220" />
+	</WorldAnchor>
+
+	<Instance Name="SlotInstance">
+		<Container ID="Root" Size="32,32">
+			<Button ID="Button" Anchor="L,T" Size="32,32" NoStateChange="1">
+				<!-- the game's citizen button at half size, split in two (Textures/): the inside in grey, tinted per type, and the rim on top -->
+				<Image ID="Face" Size="32,32" Texture="DevCE_CitizenButton_Face_32.dds" />
+				<Image ID="Rim" Size="32,32" Texture="DevCE_CitizenButton_Rim_32.dds" />
+				<Image ID="Lock" Anchor="R,B" Offset="-3,-3" Size="16,16" Texture="DevCE_Padlock_16.dds" Hidden="1" />
+			</Button>
+		</Container>
+	</Instance>
+</Context>

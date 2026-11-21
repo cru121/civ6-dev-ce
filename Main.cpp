@@ -27,6 +27,8 @@
 #include "GameProcessor.h"
 #include "VetoEvents.h"
 #include "TechGates.h"
+#include "DistrictCitizens.h"
+#include "CitySpecialists.h"
 #include "NationalParks.h"
 #include "DevBridge.h"
 #include "LuaHooks.h"
@@ -91,6 +93,7 @@ void __cdecl Hook_RegisterScriptData(hks::lua_State* L) {
     CCallWithErrorHandling(L, AI::CongressSupport::RegisterOutcomeTypes, NULL);
     CCallWithErrorHandling(L, AI::Espionage::RegisterAIEspionageManager, NULL);
     CCallWithErrorHandling(L, NationalParks::Register, NULL);
+    CCallWithErrorHandling(L, CitySpecialists::Register, NULL);
 
     base_RegisterScriptData(L);
 }
@@ -156,6 +159,8 @@ static void InitHooks() {
     GameProcessor::Create();
     VetoEvents::Create();
     TechGates::Create();
+    DistrictCitizens::Create();
+    CitySpecialists::Create();
     DevBridge::Create();
     TerrainView::Create();
     BuildingGates::Create();

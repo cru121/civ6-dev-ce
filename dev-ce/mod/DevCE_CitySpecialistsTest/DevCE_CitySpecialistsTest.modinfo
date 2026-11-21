@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Mod id="422298bb-588b-444e-92a3-99a3756b8329" version="1">
+	<Properties>
+		<Name>Dev CE City Specialists Test</Name>
+		<Teaser>Test of the city-centre specialists: every city gets 1 Scientist slot (+2 Science) and 1 Engineer slot (+2 Production).</Teaser>
+		<Description>Switches DEVCE_CITY_CENTER_SPECIALISTS on and gives every major civilization's cities 1 Scientist slot (+2 Science per citizen) and 1 Engineer slot (+2 Production per citizen). For testing the Dev CE city specialists (needs the Dev CE GameCore mod).</Description>
+		<Authors>slothoth</Authors>
+		<CompatibleVersions>2.0</CompatibleVersions>
+		<AffectsSavedGames>1</AffectsSavedGames>
+	</Properties>
+	<Dependencies>
+		<Mod id="4873eb62-8ccc-4574-b784-dda455e74e68" title="Expansion: Gathering Storm" />
+		<Mod id="b6670422-e81e-41e3-a10f-ecafdc73127d" title="Dev CE City Specialists (experimental)" />
+	</Dependencies>
+	<InGameActions>
+		<UpdateDatabase id="DCCST_SQL">
+			<Properties><LoadOrder>500</LoadOrder></Properties>
+			<File>Sql/DevCE_CitySpecialistsTest.sql</File>
+		</UpdateDatabase>
+	</InGameActions>
+	<Files>
+		<File>Sql/DevCE_CitySpecialistsTest.sql</File>
+	</Files>
+</Mod>
