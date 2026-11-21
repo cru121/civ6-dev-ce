@@ -1,0 +1,19 @@
+-- Dev CE building gates: test data. Monument, Pyramids and Oracle need the city property DEVCE_TEST_GOD_KING,
+-- which every city of the player has while the God King policy is slotted.
+
+INSERT INTO DevCE_BuildingGates (BuildingType, Property, Description) VALUES
+	('BUILDING_MONUMENT', 'DEVCE_TEST_GOD_KING', 'LOC_DEVCE_TEST_NEEDS_GOD_KING'),
+	('BUILDING_PYRAMIDS', 'DEVCE_TEST_GOD_KING', 'LOC_DEVCE_TEST_NEEDS_GOD_KING'),
+	('BUILDING_ORACLE', 'DEVCE_TEST_GOD_KING', NULL);
+
+INSERT INTO Types (Type, Kind) VALUES ('MODIFIER_DEVCE_GATE_TEST_PLAYER_CITIES_ADJUST_PROPERTY', 'KIND_MODIFIER');
+INSERT INTO DynamicModifiers (ModifierType, CollectionType, EffectType) VALUES
+	('MODIFIER_DEVCE_GATE_TEST_PLAYER_CITIES_ADJUST_PROPERTY', 'COLLECTION_PLAYER_CITIES', 'EFFECT_ADJUST_CITY_PROPERTY');
+
+INSERT INTO Modifiers (ModifierId, ModifierType) VALUES
+	('DEVCE_TEST_GOD_KING_GATE', 'MODIFIER_DEVCE_GATE_TEST_PLAYER_CITIES_ADJUST_PROPERTY');
+INSERT INTO ModifierArguments (ModifierId, Name, Value) VALUES
+	('DEVCE_TEST_GOD_KING_GATE', 'Key', 'DEVCE_TEST_GOD_KING'),
+	('DEVCE_TEST_GOD_KING_GATE', 'Amount', 1);
+
+INSERT INTO PolicyModifiers (PolicyType, ModifierId) VALUES ('POLICY_GOD_KING', 'DEVCE_TEST_GOD_KING_GATE');

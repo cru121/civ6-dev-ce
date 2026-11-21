@@ -239,6 +239,8 @@
     </ClCompile>
     <ClCompile Include="TechGates.cpp">
       <Filter>Source Files\GameCore</Filter>
+    <ClCompile Include="BuildingGates.cpp">
+      <Filter>Source Files\GameCore</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -537,6 +539,8 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TechGates.h">
+      <Filter>Header Files</Filter>
+    <ClInclude Include="BuildingGates.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="EAVector.h">

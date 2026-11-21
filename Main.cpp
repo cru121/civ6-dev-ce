@@ -34,6 +34,7 @@
 #include "TerrainView.h"
 #include "AudioPlayer.h"
 #include "BankTrace.h"
+#include "BuildingGates.h"
 
 HANDLE mainThread;
 
@@ -153,6 +154,7 @@ static void InitHooks() {
     TechGates::Create();
     DevBridge::Create();
     TerrainView::Create();
+    BuildingGates::Create();
 
     std::cout << "Hooks initialized!\n";
 }

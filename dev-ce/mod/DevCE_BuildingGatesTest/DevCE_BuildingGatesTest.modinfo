@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Mod id="1362274a-979d-4838-91e3-47239f322e4d" version="1">
+	<Properties>
+		<Name>Dev CE Building Gates Test (experimental)</Name>
+		<Teaser>Test: Monument, Pyramids and Oracle can only be built while God King is slotted.</Teaser>
+		<Description>TEST MOD for the Dev CE building gates. Monument, Pyramids and Oracle are gated on the city property DEVCE_TEST_GOD_KING, which every city of a player has while the God King policy is slotted. Start one, unslot God King: it leaves the queue but keeps its progress; slot it again and continue. Needs the Dev CE GameCore mod and Dev CE Building Gates.</Description>
+		<Authors>Dev CE</Authors>
+		<CompatibleVersions>2.0</CompatibleVersions>
+		<AffectsSavedGames>1</AffectsSavedGames>
+	</Properties>
+	<Dependencies>
+		<Mod id="4873eb62-8ccc-4574-b784-dda455e74e68" title="Expansion: Gathering Storm" />
+		<Mod id="f3a99534-1fa3-46cc-83fe-790b25523903" title="Dev CE Building Gates (experimental)" />
+	</Dependencies>
+	<InGameActions>
+		<UpdateDatabase id="DCBGT_SQL">
+			<File>Sql/DevCE_BuildingGatesTest.sql</File>
+		</UpdateDatabase>
+		<UpdateText id="DCBGT_Text">
+			<File>Text/DevCE_BuildingGatesTest_Text.sql</File>
+		</UpdateText>
+	</InGameActions>
+	<Files>
+		<File>Sql/DevCE_BuildingGatesTest.sql</File>
+		<File>Text/DevCE_BuildingGatesTest_Text.sql</File>
+	</Files>
+</Mod>
