@@ -28,40 +28,40 @@
 namespace UnitCommandActions {
 	// Addresses in GameCore_XP2_FinalRelease.dll, Steam build 15038592 (same DLL in 15296837).
 	constexpr uintptr_t MANAGER_GET_OFFSET = 0x3e6a0;                // Unit::Commands::Manager::Get()
-	constexpr uintptr_t HANDLER_GET_TYPE_HASH_OFFSET = 0x6832d0;     // shared body: return [this+0xc]           (handler vtable slot 1)
-	constexpr uintptr_t HANDLER_RETURN_FALSE_OFFSET = 0x3fa120;      // shared body: return false                  (slot 3)
+	constexpr uintptr_t HANDLER_GET_TYPE_HASH_OFFSET = 0x683310;     // shared body: return [this+0xc]           (handler vtable slot 1)
+	constexpr uintptr_t HANDLER_RETURN_FALSE_OFFSET = 0x3fa100;      // shared body: return false                  (slot 3)
 	constexpr uintptr_t BASE_MAKE_REQUEST_OFFSET = 0x3e330;          // Unit::Commands::BaseHandler::MakeRequest   (slot 5)
 	constexpr uintptr_t DEFAULT_MAKE_PARAMETERS_OFFSET = 0x13230;    // shared body: empty parameters              (slot 6)
 	constexpr uintptr_t BASE_GET_COMMAND_HELP_TEXT_OFFSET = 0x3e2b0; // Unit::Commands::BaseHandler::GetCommandHelpText (slot 7)
-	constexpr uintptr_t HANDLER_SET_INDEX_OFFSET = 0x3d0a10;         // shared body: [this+8] = index              (slot 8)
-	constexpr uintptr_t GP_CAN_ACTIVATE_OFFSET = 0x397ee0;           // static Unit::GreatPerson::CanActivate(const GreatPersonIndividual**, PlayerTypes, bool, const PlotCoord*, Requirements::Results*)
+	constexpr uintptr_t HANDLER_SET_INDEX_OFFSET = 0x3d02d0;         // shared body: [this+8] = index              (slot 8)
+	constexpr uintptr_t GP_CAN_ACTIVATE_OFFSET = 0x3977a0;           // static Unit::GreatPerson::CanActivate(const GreatPersonIndividual**, PlayerTypes, bool, const PlotCoord*, Requirements::Results*)
 	constexpr uintptr_t UNIT_GET_PLOT_OFFSET = 0x67a40;              // Unit::IInstance::GetPlot()
-	constexpr uintptr_t UNIT_FINISH_MOVES_OFFSET = 0x3a3120;         // Unit::Instance::FinishMoves()
-	constexpr uintptr_t ATTACH_ACTION_EFFECTS_OFFSET = 0x966fb0;     // GameEffects::GameEventHandler::OnGreatPersonActivated_AttachGameEffects(Unit*, GreatPersonIndividualTypes)
-	constexpr uintptr_t PLAYER_IS_HUMAN_OFFSET = 0x2f9820;           // Player::Instance::IsHuman()
-	constexpr uintptr_t PLAYER_IS_BARBARIAN_OFFSET = 0x2f9790;       // Player::Instance::IsBarbarian()
-	constexpr uintptr_t HOMELAND_DO_TURN_ACTIVATE_OFFSET = 0x4baff0; // AI::Homeland::DoTurnActivate(PlayerTypes, bool) (hooked: AI use)
-	constexpr uintptr_t UNIT_HAS_ABILITY_OFFSET = 0x3a3d60;          // Unit::Instance::HasAbility(hash): checked only, its layout is read directly (UNIT_ABILITY_*)
-	constexpr uintptr_t EXPERIENCE_HAS_PROMOTION_OFFSET = 0x397170;  // Unit::Experience::HasPromotion(UnitPromotionTypes): byte array at +0x30, NO bounds check
+	constexpr uintptr_t UNIT_FINISH_MOVES_OFFSET = 0x3a29e0;         // Unit::Instance::FinishMoves()
+	constexpr uintptr_t ATTACH_ACTION_EFFECTS_OFFSET = 0x966ff0;     // GameEffects::GameEventHandler::OnGreatPersonActivated_AttachGameEffects(Unit*, GreatPersonIndividualTypes)
+	constexpr uintptr_t PLAYER_IS_HUMAN_OFFSET = 0x2f9830;           // Player::Instance::IsHuman()
+	constexpr uintptr_t PLAYER_IS_BARBARIAN_OFFSET = 0x2f97a0;       // Player::Instance::IsBarbarian()
+	constexpr uintptr_t HOMELAND_DO_TURN_ACTIVATE_OFFSET = 0x4bafe0; // AI::Homeland::DoTurnActivate(PlayerTypes, bool) (hooked: AI use)
+	constexpr uintptr_t UNIT_HAS_ABILITY_OFFSET = 0x3a3620;          // Unit::Instance::HasAbility(hash): checked only, its layout is read directly (UNIT_ABILITY_*)
+	constexpr uintptr_t EXPERIENCE_HAS_PROMOTION_OFFSET = 0x396a30;  // Unit::Experience::HasPromotion(UnitPromotionTypes): byte array at +0x30, NO bounds check
 	constexpr uintptr_t EDIT_MAP_OFFSET = 0x44d40;                   // Context::Globals::EditMap() (= *ms_pkCurrentGame + 0x248)
 	constexpr uintptr_t GET_PLAYER_VISIBILITY_OFFSET = 0x44f10;      // Context::Globals::GetPlayerVisibility(PlayerTypes)
 	constexpr uintptr_t MAP_GET_PLOT_DISTANCE_OFFSET = 0x15ec0;      // Map::IInstance::GetPlotDistance(x1, y1, x2, y2) (wraps)
-	constexpr uintptr_t UNIT_SET_PROCESSED_TURN_OFFSET = 0x3a5ee0;   // Unit::Instance::SetProcessedTurn(bool): the AI's "handled this turn" mark
+	constexpr uintptr_t UNIT_SET_PROCESSED_TURN_OFFSET = 0x3a57a0;   // Unit::Instance::SetProcessedTurn(bool): the AI's "handled this turn" mark
 	constexpr uintptr_t OPERATIONS_MANAGER_GET_OFFSET = 0x408f0;     // Unit::Operations::Manager::Get()
-	constexpr uintptr_t MOVE_TO_MAKE_REQUEST_OFFSET = 0x66cd90;      // static Unit::Operations::MoveTo::MakeRequest(int x, int y, int flags) -> Request (hidden return)
+	constexpr uintptr_t MOVE_TO_MAKE_REQUEST_OFFSET = 0x66cdd0;      // static Unit::Operations::MoveTo::MakeRequest(int x, int y, int flags) -> Request (hidden return)
 	// Unit panel reports, filled as Unit::Commands::ActivateGreatPerson::CanStart (0x6549c0) does
-	constexpr uintptr_t REPORTING_ADD_STRING_OFFSET = 0x5fd5a0;      // Reporting::AddString(results, hash, const Localization::String&)
-	constexpr uintptr_t GREAT_PEOPLE_GET_OFFSET = 0x20a920;          // Game::GreatPeople::Get()
-	constexpr uintptr_t GP_ACTION_NAME_TEXT_OFFSET = 0x20af10;       // Game::GreatPeople::GetActionNameText(individual, String* out, 0)
-	constexpr uintptr_t GP_ACTION_EFFECT_TEXT_OFFSET = 0x20ab50;     // Game::GreatPeople::GetActionEffectText(individual, String* out, 0): override, else the action modifiers' text
-	constexpr uintptr_t STRING_EMPTY_OFFSET = 0x993b30;              // String::Details::GetUniversalEmptyBasicString() (a String is one char*)
-	constexpr uintptr_t STRING_DTOR_OFFSET = 0x993590;               // String::BasicT<...>::~BasicT
-	constexpr uintptr_t GP_GET_ACTIVATION_PLOTS_OFFSET = 0x3990c0;   // static Unit::GreatPerson::GetActivationPlots(individual, PlayerTypes, Vector<int>& plotIndices)
-	constexpr uintptr_t GET_DISTRICT_DEFINITIONS_OFFSET = 0x7d08e0;  // Definitions::Get...Definitions() (collections; Find = index lookup)
-	constexpr uintptr_t GET_BUILDING_DEFINITIONS_OFFSET = 0x7d04a0;
-	constexpr uintptr_t GET_FEATURE_DEFINITIONS_OFFSET = 0x7d0aa0;
-	constexpr uintptr_t GET_GREAT_WORK_OBJECT_DEFINITIONS_OFFSET = 0x7d0da0;
-	constexpr uintptr_t DEFINITION_FIND_OFFSET = 0x2209a0;           // DefinitionCollectionWithTypeIndex<T>::Find(index) (same body for every T)
+	constexpr uintptr_t REPORTING_ADD_STRING_OFFSET = 0x5fd5d0;      // Reporting::AddString(results, hash, const Localization::String&)
+	constexpr uintptr_t GREAT_PEOPLE_GET_OFFSET = 0x20b020;          // Game::GreatPeople::Get()
+	constexpr uintptr_t GP_ACTION_NAME_TEXT_OFFSET = 0x20b610;       // Game::GreatPeople::GetActionNameText(individual, String* out, 0)
+	constexpr uintptr_t GP_ACTION_EFFECT_TEXT_OFFSET = 0x20b250;     // Game::GreatPeople::GetActionEffectText(individual, String* out, 0): override, else the action modifiers' text
+	constexpr uintptr_t STRING_EMPTY_OFFSET = 0x993b90;              // String::Details::GetUniversalEmptyBasicString() (a String is one char*)
+	constexpr uintptr_t STRING_DTOR_OFFSET = 0x9935f0;               // String::BasicT<...>::~BasicT
+	constexpr uintptr_t GP_GET_ACTIVATION_PLOTS_OFFSET = 0x398980;   // static Unit::GreatPerson::GetActivationPlots(individual, PlayerTypes, Vector<int>& plotIndices)
+	constexpr uintptr_t GET_DISTRICT_DEFINITIONS_OFFSET = 0x7d0920;  // Definitions::Get...Definitions() (collections; Find = index lookup)
+	constexpr uintptr_t GET_BUILDING_DEFINITIONS_OFFSET = 0x7d04e0;
+	constexpr uintptr_t GET_FEATURE_DEFINITIONS_OFFSET = 0x7d0ae0;
+	constexpr uintptr_t GET_GREAT_WORK_OBJECT_DEFINITIONS_OFFSET = 0x7d0de0;
+	constexpr uintptr_t DEFINITION_FIND_OFFSET = 0x2210a0;           // DefinitionCollectionWithTypeIndex<T>::Find(index) (same body for every T)
 	constexpr uint32_t RESULT_ACTION_NAME = 0x1f6eef50;              // UnitOperationResults.ACTION_NAME (set with results vtable +0x108)
 	constexpr uint32_t RESULT_ADDITIONAL_DESCRIPTION = 0xa3540d8d;   // UnitOperationResults.ADDITIONAL_DESCRIPTION (Reporting::AddString)
 	constexpr uint32_t RESULT_FAILURE_REASONS = 0x87150719;          // UnitOperationResults.FAILURE_REASONS (Reporting::AddString)

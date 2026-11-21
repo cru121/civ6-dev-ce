@@ -23,13 +23,13 @@
 //                                                         goes through in a city where it is unlocked (CanStart above).
 // The production panel lists them through the DevCE_GoldPurchase mod (wraps ProductionPanel GetData).
 namespace GoldPurchase {
-	constexpr uintptr_t PURCHASE_CAN_START_OFFSET = 0x6803c0;         // City::Commands::Purchase::CanStart(handler, city, district, const Command&, bool, results)
-	constexpr uintptr_t XP1_PURCHASE_CAN_START_OFFSET = 0x71be20;     // City::Commands::XP1::Purchase::CanStart (same signature)
-	constexpr uintptr_t XP2_PURCHASE_CAN_START_OFFSET = 0x74ef40;     // City::Commands::XP2::Purchase::CanStart (same signature)
-	constexpr uintptr_t AI_VALIDATE_GOLD_OFFSET = 0x3fb0c0;           // AI::Control::UnitRequestContract::Validate(contract, AI::Economic&) (vtable +0x80)
-	constexpr uintptr_t GET_UNIT_DEFINITIONS_OFFSET = 0x7d1b00;       // Definitions::GetUnitDefinitions() -> vector<const Unit*>
-	constexpr uintptr_t GET_BUILDING_DEFINITIONS_OFFSET = 0x7d04a0;   // Definitions::GetBuildingDefinitions() -> vector<const Building*>
-	constexpr uintptr_t MAKE_HASH_OFFSET = 0x606270;
+	constexpr uintptr_t PURCHASE_CAN_START_OFFSET = 0x680310;         // City::Commands::Purchase::CanStart(handler, city, district, const Command&, bool, results)
+	constexpr uintptr_t XP1_PURCHASE_CAN_START_OFFSET = 0x71be60;     // City::Commands::XP1::Purchase::CanStart (same signature)
+	constexpr uintptr_t XP2_PURCHASE_CAN_START_OFFSET = 0x74ef80;     // City::Commands::XP2::Purchase::CanStart (same signature)
+	constexpr uintptr_t AI_VALIDATE_GOLD_OFFSET = 0x3fb0a0;           // AI::Control::UnitRequestContract::Validate(contract, AI::Economic&) (vtable +0x80)
+	constexpr uintptr_t GET_UNIT_DEFINITIONS_OFFSET = 0x7d1b40;       // Definitions::GetUnitDefinitions() -> vector<const Unit*>
+	constexpr uintptr_t GET_BUILDING_DEFINITIONS_OFFSET = 0x7d04e0;   // Definitions::GetBuildingDefinitions() -> vector<const Building*>
+	constexpr uintptr_t MAKE_HASH_OFFSET = 0x6062a0;
 	constexpr uintptr_t YIELD_GOLD_GLOBAL = 0xb8f650;                 // int GameCore::YIELD_GOLD (YieldTypes value, set when the database loads)
 
 	// Purchase command parameters (handler vtable +0x40 maps Command +8 to them)

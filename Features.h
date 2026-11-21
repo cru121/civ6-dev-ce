@@ -32,5 +32,5 @@ namespace Features {
 
 	constexpr uintptr_t CAPABILITIES_GET_OFFSET = 0x48230;       // Capabilities::Manager* Capabilities::Get()
 	constexpr uintptr_t HAS_CAPABILITY_OFFSET = 0x484e0;         // bool Capabilities::Manager::HasCapability(unsigned hash)
-	constexpr uintptr_t MAKE_HASH_OFFSET = 0x606270;             // uint32 Utilities::MakeHash(const char*)
+	constexpr uintptr_t MAKE_HASH_OFFSET = 0x6062a0;             // uint32 Utilities::MakeHash(const char*)
 }

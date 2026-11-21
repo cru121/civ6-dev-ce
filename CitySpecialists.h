@@ -28,28 +28,28 @@ namespace hks { struct lua_State; }
 // at once (returns the working count, or -1); CitySpecialists.IsEnabled(). UI scripts read the city properties and send a request
 // through UI.RequestPlayerOperation(EXECUTE_SCRIPT) to a gameplay script that calls SetLocked.
 namespace CitySpecialists {
-	constexpr uintptr_t GLOBAL_PARAMETERS_INITIALIZE_OFFSET = 0x1f02a0;   // GlobalParameters::Initialize(params, IDatabaseConnection1*)
+	constexpr uintptr_t GLOBAL_PARAMETERS_INITIALIZE_OFFSET = 0x1f0960;   // GlobalParameters::Initialize(params, IDatabaseConnection1*)
 	constexpr uintptr_t REMOVE_ALL_WORKERS_OFFSET = 0x110760;             // City::Citizens::RemoveAllCitizenWorkers(citizens, bool send)
 	constexpr uintptr_t TRY_ASSIGN_WORKERS_OFFSET = 0x110ba0;             // City::Citizens::TryAssignAllWorkers(citizens, bool send)
 	constexpr uintptr_t KNAPSACK_OFFSET = 0x10f050;                       // bounded_knapsack<SimpleScoring>(begin, end, capacity, foodNeeded, bool)
 	constexpr uintptr_t KNAPSACK_PATCH = 0x110f9a;                        //   mov rcx,rsi; call knapsack (8 bytes); r15 = citizens
 	constexpr uintptr_t KNAPSACK_RESUME = 0x110fa2;                       //   mov r13,rax
 	constexpr uintptr_t GET_YIELD_FROM_TILES_OFFSET = 0x133780;           // City::Instance::GetYieldFromTiles(city, FixedPoint* out, YieldTypes) -> out
-	constexpr uintptr_t MAKE_HASH_OFFSET = 0x606270;
-	constexpr uintptr_t NAME_TO_YIELD_TYPE_OFFSET = 0x7d8d70;
+	constexpr uintptr_t MAKE_HASH_OFFSET = 0x6062a0;
+	constexpr uintptr_t NAME_TO_YIELD_TYPE_OFFSET = 0x7d8db0;
 	constexpr uintptr_t GET_CITY_OFFSET = 0x42e40;                        // City::Instance* GetCity(const CityID*)
 	constexpr uintptr_t REALLOCATE_CITIZENS_OFFSET = 0x110650;            // City::Citizens::ReallocateCitizens(citizens)
-	constexpr uintptr_t REPORT_EVENT_SEND_OFFSET = 0x5fb890;              // Reporting::Event::Send(type, const ComponentID*, int key): updates the UI cache
+	constexpr uintptr_t REPORT_EVENT_SEND_OFFSET = 0x5fb8c0;              // Reporting::Event::Send(type, const ComponentID*, int key): updates the UI cache
 	constexpr uint32_t CITY_PROPERTY_CHANGED_EVENT = 0x30fbf8d2;          //   the type Lua City:SetProperty sends after a change
-	constexpr uintptr_t REPORT_EVENT_SEND_PLOT_OFFSET = 0x5fb110;         // Reporting::Event::Send(type, const ComponentID*, const PlotCoord*)
+	constexpr uintptr_t REPORT_EVENT_SEND_PLOT_OFFSET = 0x5fb140;         // Reporting::Event::Send(type, const ComponentID*, const PlotCoord*)
 	constexpr uint64_t CITY_CITIZENS_CHANGED_EVENT = 0x15d11e18c2f385c0ull;  //   what City::Commands::ManageCitizen::Start sends after a citizen change:
 	                                                                      //   the UI then raises Events.CityWorkerChanged (PlotInfo, city panel redraw)
-	constexpr uintptr_t ADJUST_CITY_PROPERTY_APPLY_OFFSET = 0x8b41d0;     // GameEffects::Effects::AdjustCityProperty::Apply(effect, City*) (vtable slot 12)
-	constexpr uintptr_t ADJUST_CITY_PROPERTY_REMOVE_OFFSET = 0x8b4a30;    //   ::Remove (slot 13); effect +8 = key hash, +0xc = amount
-	constexpr uintptr_t GPP_PATCH = 0x2e2a81;                             // Player::GreatPeoplePoints::CalculatePointsPerTurn, per city after the buildings:
+	constexpr uintptr_t ADJUST_CITY_PROPERTY_APPLY_OFFSET = 0x8b4220;     // GameEffects::Effects::AdjustCityProperty::Apply(effect, City*) (vtable slot 12)
+	constexpr uintptr_t ADJUST_CITY_PROPERTY_REMOVE_OFFSET = 0x8b4a80;    //   ::Remove (slot 13); effect +8 = key hash, +0xc = amount
+	constexpr uintptr_t GPP_PATCH = 0x2e23f1;                             // Player::GreatPeoplePoints::CalculatePointsPerTurn, per city after the buildings:
 	                                                                      //   mov eax,[r13+0x1500] (7 bytes); r13 = city, ebp = its points (FixedPoint<8>), r15d = class
-	constexpr uintptr_t GPP_RESUME = 0x2e2a88;                            //   test ebp,ebp
-	constexpr uintptr_t PROPERTY_EDIT_OFFSET = 0x72a920;                  // FAutoVariable<VariantMap>::edit(object) -> map
+	constexpr uintptr_t GPP_RESUME = 0x2e23f8;                            //   test ebp,ebp
+	constexpr uintptr_t PROPERTY_EDIT_OFFSET = 0x72a960;                  // FAutoVariable<VariantMap>::edit(object) -> map
 	constexpr uintptr_t YIELD_FOOD_INDEX = 0xb8f648;                      // yield index globals (set when the database loads)
 	constexpr uintptr_t YIELD_GOLD_INDEX = 0xb8f650;
 

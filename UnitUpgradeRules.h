@@ -20,14 +20,14 @@
 // CanUpgrade), and those three to know the unit. Other callers (build queue, start state) keep the game's walk.
 namespace UnitUpgradeRules {
 	// Addresses in GameCore_XP2_FinalRelease.dll, Steam build 15038592 (same DLL in 15296837).
-	constexpr uintptr_t GET_AVAILABLE_UPGRADE_OFFSET = 0x37dbe0;        // Rules::Units::Instance::GetAvailableUpgrade(rules, const Unit** def, player) -> unit or -1 (hooked)
-	constexpr uintptr_t GET_NEXT_UPGRADE_OFFSET = 0x37dca0;             // Rules::Units::GetNextUpgrade(const Unit** def, player) -> first UnitUpgrades unit, player's version
-	constexpr uintptr_t HAS_PREREQUISITES_OFFSET = 0x37e230;            // Rules::Units::Instance::HasPrerequisites(rules, const Unit** def, player)
-	constexpr uintptr_t CHECK_UPGRADE_CYCLE_OFFSET = 0x37d920;          // Rules::Units::CheckForUnitUpgradeCycle(const Unit** def, player)
-	constexpr uintptr_t GET_UNIT_DEFINITIONS_OFFSET = 0x7d1b00;         // Definitions::GetUnitDefinitions() -> vector<Unit*>
-	constexpr uintptr_t GET_UPGRADE_UNIT_TYPE_OFFSET = 0x3b8010;        // Unit::Upgrade::Manager::GetUpgradeUnitType(manager, unit) (hooked)
-	constexpr uintptr_t GET_UPGRADE_RESOURCE_COST_OFFSET = 0x3b7e10;    // Unit::Upgrade::Manager::GetUpgradeResourceCost(manager, unit) (hooked)
-	constexpr uintptr_t CAN_UPGRADE_OFFSET = 0x3b7870;                  // Unit::Upgrade::Manager::CanUpgrade(manager, unit, testVisible, results) (hooked)
+	constexpr uintptr_t GET_AVAILABLE_UPGRADE_OFFSET = 0x37d4a0;        // Rules::Units::Instance::GetAvailableUpgrade(rules, const Unit** def, player) -> unit or -1 (hooked)
+	constexpr uintptr_t GET_NEXT_UPGRADE_OFFSET = 0x37d560;             // Rules::Units::GetNextUpgrade(const Unit** def, player) -> first UnitUpgrades unit, player's version
+	constexpr uintptr_t HAS_PREREQUISITES_OFFSET = 0x37daf0;            // Rules::Units::Instance::HasPrerequisites(rules, const Unit** def, player)
+	constexpr uintptr_t CHECK_UPGRADE_CYCLE_OFFSET = 0x37d1e0;          // Rules::Units::CheckForUnitUpgradeCycle(const Unit** def, player)
+	constexpr uintptr_t GET_UNIT_DEFINITIONS_OFFSET = 0x7d1b40;         // Definitions::GetUnitDefinitions() -> vector<Unit*>
+	constexpr uintptr_t GET_UPGRADE_UNIT_TYPE_OFFSET = 0x3b78d0;        // Unit::Upgrade::Manager::GetUpgradeUnitType(manager, unit) (hooked)
+	constexpr uintptr_t GET_UPGRADE_RESOURCE_COST_OFFSET = 0x3b76d0;    // Unit::Upgrade::Manager::GetUpgradeResourceCost(manager, unit) (hooked)
+	constexpr uintptr_t CAN_UPGRADE_OFFSET = 0x3b7130;                  // Unit::Upgrade::Manager::CanUpgrade(manager, unit, testVisible, results) (hooked)
 
 	// Layout (same build)
 	constexpr uintptr_t UNIT_DEF_INDEX = 0x14;              // Definition::Unit: its UnitType index
@@ -52,16 +52,16 @@ namespace UnitUpgradeRules {
 	// Alternative upgrades (DevCE_UnitAltUpgrades): extra first steps besides the UnitUpgrades row. The chosen first step travels
 	// in the UPGRADE command's generic request int (parameter PARAM_CHOICE, Request +0x18) as unit index + 1; the AI picks the
 	// allowed option with the best AI::UnitProduction::GetUnitEfficiency (the score its UpgradeUnits already compares).
-	constexpr uintptr_t UPGRADE_COMMAND_CAN_START_OFFSET = 0x663220;   // Unit::Commands::Upgrade::CanStart(handler, unit, const Request&, testOnly, results) (hooked)
-	constexpr uintptr_t UPGRADE_COMMAND_START_OFFSET = 0x663460;       // Unit::Commands::Upgrade::Start(handler, unit, const Request&) (vtable +0x20, hooked)
-	constexpr uintptr_t UPGRADE_COMMAND_VTABLE = 0xa28038;             // Unit::Commands::Upgrade vtable (+0x10 CanStart, +0x20 Start)
+	constexpr uintptr_t UPGRADE_COMMAND_CAN_START_OFFSET = 0x663260;   // Unit::Commands::Upgrade::CanStart(handler, unit, const Request&, testOnly, results) (hooked)
+	constexpr uintptr_t UPGRADE_COMMAND_START_OFFSET = 0x6634a0;       // Unit::Commands::Upgrade::Start(handler, unit, const Request&) (vtable +0x20, hooked)
+	constexpr uintptr_t UPGRADE_COMMAND_VTABLE = 0xa28098;             // Unit::Commands::Upgrade vtable (+0x10 CanStart, +0x20 Start)
 	// Gathering Storm registers its own Upgrade command (XP2): same CanStart, its own Start (a copy of the base one). It is the one
 	// the game uses with the expansion; both Starts are hooked.
-	constexpr uintptr_t XP2_UPGRADE_COMMAND_START_OFFSET = 0x746680;   // XP2 Upgrade command Start(handler, unit, const Request&) (hooked)
-	constexpr uintptr_t XP2_UPGRADE_COMMAND_VTABLE = 0xa432d0;         // its vtable (+0x10 = the shared CanStart, +0x20 = this Start)
-	constexpr uintptr_t GET_UPGRADE_MANAGER_OFFSET = 0x3b7cf0;         // Unit::Upgrade::Manager* (game component lookup, no arguments)
-	constexpr uintptr_t GET_UPGRADE_COST_OFFSET = 0x3b7d50;            // Unit::Upgrade::Manager::GetUpgradeCost(manager, unit) -> gold
-	constexpr uintptr_t GET_UNIT_EFFICIENCY_OFFSET = 0x524e30;         // AI::UnitProduction::GetUnitEfficiency(production, FixedPoint<8>* out, UnitTypes) -> out
+	constexpr uintptr_t XP2_UPGRADE_COMMAND_START_OFFSET = 0x7466c0;   // XP2 Upgrade command Start(handler, unit, const Request&) (hooked)
+	constexpr uintptr_t XP2_UPGRADE_COMMAND_VTABLE = 0xa43330;         // its vtable (+0x10 = the shared CanStart, +0x20 = this Start)
+	constexpr uintptr_t GET_UPGRADE_MANAGER_OFFSET = 0x3b75b0;         // Unit::Upgrade::Manager* (game component lookup, no arguments)
+	constexpr uintptr_t GET_UPGRADE_COST_OFFSET = 0x3b7610;            // Unit::Upgrade::Manager::GetUpgradeCost(manager, unit) -> gold
+	constexpr uintptr_t GET_UNIT_EFFICIENCY_OFFSET = 0x524e10;         // AI::UnitProduction::GetUnitEfficiency(production, FixedPoint<8>* out, UnitTypes) -> out
 	constexpr uintptr_t REQUEST_CHOICE = 0x18;              // Unit::Commands::Request: int copied from parameter PARAM_CHOICE (BaseHandler::MakeRequest)
 	constexpr uint32_t PARAM_CHOICE = 0xc65a8ea6;           // command parameter that BaseHandler::MakeRequest copies to Request +0x18
 	constexpr uintptr_t PLAYER_UNITS_VERSION = 0x128;       // Player::Units: int[unit type] -> the player's version (-1: itself)
@@ -77,14 +77,14 @@ namespace UnitUpgradeRules {
 	// properties are in the save, so it survives save and load like the game's own effects. CanUpgrade's territory check
 	// (its one call of Rules::Movement::GetDiplomaticTerritory) is redirected at that call site only: a unit with the property > 0
 	// counts as in its own territory.
-	constexpr uintptr_t EFFECT_REGISTRY_GET_TYPES_OFFSET = 0x95b0c0;  // Registry<IModifierEffectFactory>::GetTypes() -> std::vector<IModifierEffectFactory*>&
-	constexpr uintptr_t UNIT_PROPERTY_FACTORY_VTABLE = 0xa92560;      // EffectFactory<AdjustUnitProperty> vtable (7 slots; 5 = Create)
-	constexpr uintptr_t UNIT_PROPERTY_FACTORY_CREATE_OFFSET = 0x8a3850;  // its Create(factory, shared_ptr<IEffect>* out, definition) -> out
-	constexpr uintptr_t UNIT_PROPERTY_EFFECT_VTABLE = 0xa9e440;       // AdjustUnitProperty vtable (0 = Initialize, 12 = Apply(unit), 13 = Remove(unit))
+	constexpr uintptr_t EFFECT_REGISTRY_GET_TYPES_OFFSET = 0x95b100;  // Registry<IModifierEffectFactory>::GetTypes() -> std::vector<IModifierEffectFactory*>&
+	constexpr uintptr_t UNIT_PROPERTY_FACTORY_VTABLE = 0xa926b0;      // EffectFactory<AdjustUnitProperty> vtable (7 slots; 5 = Create)
+	constexpr uintptr_t UNIT_PROPERTY_FACTORY_CREATE_OFFSET = 0x8a3890;  // its Create(factory, shared_ptr<IEffect>* out, definition) -> out
+	constexpr uintptr_t UNIT_PROPERTY_EFFECT_VTABLE = 0xa9e4d0;       // AdjustUnitProperty vtable (0 = Initialize, 12 = Apply(unit), 13 = Remove(unit))
 	constexpr uintptr_t EFFECT_KEY = 0x8;                   // AdjustUnitProperty: MakeHash(Key argument)
 	constexpr uintptr_t EFFECT_AMOUNT = 0xc;                // AdjustUnitProperty: Amount argument
-	constexpr uintptr_t GET_DIPLOMATIC_TERRITORY_OFFSET = 0x378410;   // Rules::Movement::Instance::GetDiplomaticTerritory(rules, player, plot) -> TerritoryTypes (1 = own)
-	constexpr uintptr_t CAN_UPGRADE_TERRITORY_CALL = 0x3b79ca;        // CanUpgrade: call GetDiplomaticTerritory (rewritten to call Dev CE)
+	constexpr uintptr_t GET_DIPLOMATIC_TERRITORY_OFFSET = 0x377cd0;   // Rules::Movement::Instance::GetDiplomaticTerritory(rules, player, plot) -> TerritoryTypes (1 = own)
+	constexpr uintptr_t CAN_UPGRADE_TERRITORY_CALL = 0x3b728a;        // CanUpgrade: call GetDiplomaticTerritory (rewritten to call Dev CE)
 	constexpr uintptr_t UNIT_PROPERTIES = 0x1f0;            // Unit::Instance: Data::VariantMap (vtable +0x60 = get(key) -> Variant*)
 	constexpr const char* OUTSIDE_TERRITORY_EFFECT = "EFFECT_DEVCE_UNIT_UPGRADE_OUTSIDE_TERRITORY";
 	constexpr const char* OUTSIDE_TERRITORY_PROPERTY = "DEVCE_UPGRADE_OUTSIDE_TERRITORY";

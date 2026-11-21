@@ -14,8 +14,8 @@
 // the upgrade is, the second answers "not major" (= keep the unit) when CanTrain says the city cannot train the upgrade.
 namespace UnitUpgradeFallback {
 	constexpr uintptr_t CAN_TRAIN_OFFSET = 0xf86d0;                    // City::BuildQueue::CanTrain(this, unit, testVisible, results, formation, ignoreRequirements, p6) (hooked)
-	constexpr uintptr_t HAS_REPLACEMENT_OFFSET = 0x37e110;             // Rules::Units::Instance::HasAvailableReplacementForUnit(rules, unit, player) -> unit or -1 (hooked)
-	constexpr uintptr_t IS_MAJOR_OFFSET = 0x2f9860;                    // Player::Instance::IsMajor(player) (hooked)
+	constexpr uintptr_t HAS_REPLACEMENT_OFFSET = 0x37d9d0;             // Rules::Units::Instance::HasAvailableReplacementForUnit(rules, unit, player) -> unit or -1 (hooked)
+	constexpr uintptr_t IS_MAJOR_OFFSET = 0x2f9870;                    // Player::Instance::IsMajor(player) (hooked)
 	constexpr uintptr_t CAN_TRAIN_REPLACEMENT_RETURN = 0xf88d7;        // return address of CanTrain's call to HasAvailableReplacementForUnit (upgrade loop)
 	constexpr uintptr_t CAN_TRAIN_IS_MAJOR_RETURN = 0xf898a;           // return address of CanTrain's call to IsMajor (upgrade loop: upgrade unlocked)
 

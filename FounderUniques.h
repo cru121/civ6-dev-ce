@@ -25,7 +25,7 @@ namespace FounderUniques {
 	constexpr uintptr_t CAN_CONSTRUCT_PASS = 0xf62c6;
 	constexpr uintptr_t CAN_CONSTRUCT_FAIL = 0xf70e5;
 	constexpr uintptr_t EDIT_PLAYER_OFFSET = 0x44f00;            // Player::Instance* Context::Globals::EditPlayer(PlayerTypes)
-	constexpr uintptr_t MAKE_HASH_OFFSET = 0x606270;
+	constexpr uintptr_t MAKE_HASH_OFFSET = 0x6062a0;
 
 	constexpr uintptr_t QUEUE_CITY = 0x1e8;          // City::BuildQueue -> City::Instance*
 	constexpr uintptr_t CITY_OWNER = 0xd8;

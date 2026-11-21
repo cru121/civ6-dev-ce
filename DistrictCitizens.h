@@ -11,14 +11,14 @@
 //   - City::Citizens::GetPlotWorkerCapacity: Districts.CitizenSlots + property (then the buildings' CitizenSlots)
 //      Each is one jump written into the function at that point
 namespace DistrictCitizens {
-	constexpr uintptr_t MAKE_HASH_OFFSET = 0x606270;                      // Utilities::MakeHash(const char*)
-	constexpr uintptr_t NAME_TO_YIELD_TYPE_OFFSET = 0x7d8d70;             // Definition::Utility::NameToYieldType(MakeHash(name)) -> index or -1 (indices set at DB load)
-	constexpr uintptr_t DISTRICT_PROPERTY_APPLY_OFFSET = 0x8dbb70;        // AdjustDistrictProperty::Apply (checked: where the properties live, the number test)
+	constexpr uintptr_t MAKE_HASH_OFFSET = 0x6062a0;                      // Utilities::MakeHash(const char*)
+	constexpr uintptr_t NAME_TO_YIELD_TYPE_OFFSET = 0x7d8db0;             // Definition::Utility::NameToYieldType(MakeHash(name)) -> index or -1 (indices set at DB load)
+	constexpr uintptr_t DISTRICT_PROPERTY_APPLY_OFFSET = 0x8dbb80;        // AdjustDistrictProperty::Apply (checked: where the properties live, the number test)
 	constexpr uintptr_t GET_CITY_OFFSET = 0x42e40;                        // City::Instance* GetCity(const CityID*)
 	constexpr uintptr_t GET_DISTRICT_AT_OFFSET = 0x11e520;                // City::Districts::GetDistrictAt(districts, const PlotCoord*)
-	constexpr uintptr_t GET_YIELD_OFFSET = 0x37ec60;                      // Rules::Yields::Instance::GetYield(rules, plot, yield, player, bool)
-	constexpr uintptr_t GET_YIELD_PATCH = 0x37ee04;                       //   after the District_CitizenYieldChanges loop (esi = sum, r12d = yield, r14 = plot)
-	constexpr uintptr_t GET_YIELD_RESUME = 0x37ee0a;
+	constexpr uintptr_t GET_YIELD_OFFSET = 0x37e520;                      // Rules::Yields::Instance::GetYield(rules, plot, yield, player, bool)
+	constexpr uintptr_t GET_YIELD_PATCH = 0x37e6c4;                       //   after the District_CitizenYieldChanges loop (esi = sum, r12d = yield, r14 = plot)
+	constexpr uintptr_t GET_YIELD_RESUME = 0x37e6ca;
 	constexpr uintptr_t WORKER_CAPACITY_OFFSET = 0x10fff0;                // City::Citizens::GetPlotWorkerCapacity(citizens, plot)
 	constexpr uintptr_t WORKER_CAPACITY_PATCH = 0x110238;                 //   after ebp = Districts.CitizenSlots (rsi = plot, r15 = citizens)
 	constexpr uintptr_t WORKER_CAPACITY_RESUME = 0x11023e;

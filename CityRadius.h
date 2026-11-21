@@ -33,9 +33,9 @@ namespace CityRadius {
 	constexpr uintptr_t REMOVE_WORKERS_OFFSET = 0x110760;        // void Citizens::RemoveAllCitizenWorkers(bool)
 	constexpr uintptr_t CAPABILITIES_GET_OFFSET = 0x48230;       // Capabilities::Manager* Capabilities::Get()
 	constexpr uintptr_t HAS_CAPABILITY_OFFSET = 0x484e0;         // bool Capabilities::Manager::HasCapability(unsigned hash)
-	constexpr uintptr_t GET_MAP_OFFSET = 0x526c0;                // const Map::Instance* Globals::GetMap()
+	constexpr uintptr_t GET_MAP_OFFSET = 0x526d0;                // const Map::Instance* Globals::GetMap()
 	constexpr uintptr_t EDIT_MAP_OFFSET = 0x44d40;               // Map::Instance* Globals::EditMap()
-	constexpr uintptr_t MAKE_HASH_OFFSET = 0x606270;
+	constexpr uintptr_t MAKE_HASH_OFFSET = 0x6062a0;
 	constexpr uintptr_t GAME_DQ_TABLE = 0xb60df0;                // the game's index -> offset tables (61 entries, rings 0..4)
 	constexpr uintptr_t GAME_DR_TABLE = 0xb60ef0;
 	constexpr uintptr_t GAME_INDEX_TABLE = 0xb60ff0;             // offset -> index, 9 x 9

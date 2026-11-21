@@ -22,9 +22,9 @@ namespace FoodProduction {
 	constexpr uintptr_t GROWTH_MODIFIER_OFFSET = 0x1247c0;         // FixedPoint* City::Growth::GetOverallGrowthModifier(growth, FixedPoint* out)
 	constexpr uintptr_t CURRENT_KIND_OFFSET = 0xfd0e0;             // TypeHash City::BuildQueue::GetCurrentProductionKind(queue)
 	constexpr uintptr_t ADD_STEP_OFFSET = 0x12fce0;                // void TrackedValue::AddStep(tracked, const FixedPoint* amount, const char* locKey)
-	constexpr uintptr_t ECONOMIC_GET_OFFSET = 0x370f30;            // Rules::Economic::Instance* Rules::Economic::Get()
-	constexpr uintptr_t FOOD_CONSUMPTION_OFFSET = 0x371060;        // int Rules::Economic::Instance::GetFoodConsumption(rules, population)
-	constexpr uintptr_t MAKE_HASH_OFFSET = 0x606270;
+	constexpr uintptr_t ECONOMIC_GET_OFFSET = 0x3707f0;            // Rules::Economic::Instance* Rules::Economic::Get()
+	constexpr uintptr_t FOOD_CONSUMPTION_OFFSET = 0x370920;        // int Rules::Economic::Instance::GetFoodConsumption(rules, population)
+	constexpr uintptr_t MAKE_HASH_OFFSET = 0x6062a0;
 	constexpr uintptr_t YIELD_FOOD_GLOBAL = 0xb8f648;              // int GameCore::YIELD_FOOD
 	constexpr uintptr_t YIELD_PRODUCTION_GLOBAL = 0xb8f64c;        // int GameCore::YIELD_PRODUCTION
 	constexpr uint32_t KIND_UNIT = 0x15d11e18;                     // GetCurrentProductionKind: a unit

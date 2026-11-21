@@ -14,12 +14,12 @@
 // Background and addresses: dev-ce/GREAT_PERSON_ASSIGN.md.
 namespace GreatPersonAssign {
 	// Addresses in GameCore_XP2_FinalRelease.dll, Steam build 15038592 (same DLL in 15296837).
-	constexpr uintptr_t GET_INDIVIDUAL_DEFINITIONS_OFFSET = 0x7d0d60;   // Definitions::GetGreatPersonIndividualDefinitions()
-	constexpr uintptr_t GREAT_PERSON_SET_OFFSET = 0x399650;            // Unit::GreatPerson::Set(GreatPersonIndividualTypes, GreatPersonClassTypes, int)
-	constexpr uintptr_t CREATED_SIGNAL_DISPATCH_OFFSET = 0x27cfc0;     // ProtoSignal<void(Unit::Instance*, GreatPersonIndividualTypes, YieldTypes, int)>::Dispatch
-	constexpr uintptr_t GET_INSTANCE_OFFSET = 0x7005b0;                // Lua::ScopedInstance<Lua::IUnitGreatPerson, Unit::GreatPerson>::GetInstance
+	constexpr uintptr_t GET_INDIVIDUAL_DEFINITIONS_OFFSET = 0x7d0da0;   // Definitions::GetGreatPersonIndividualDefinitions()
+	constexpr uintptr_t GREAT_PERSON_SET_OFFSET = 0x398f10;            // Unit::GreatPerson::Set(GreatPersonIndividualTypes, GreatPersonClassTypes, int)
+	constexpr uintptr_t CREATED_SIGNAL_DISPATCH_OFFSET = 0x27d690;     // ProtoSignal<void(Unit::Instance*, GreatPersonIndividualTypes, YieldTypes, int)>::Dispatch
+	constexpr uintptr_t GET_INSTANCE_OFFSET = 0x7005f0;                // Lua::ScopedInstance<Lua::IUnitGreatPerson, Unit::GreatPerson>::GetInstance
 	constexpr uintptr_t CURRENT_GAME_OFFSET = 0xb8aa68;                // Context::Globals::ms_pkCurrentGame (data)
-	constexpr uintptr_t CURRENT_GAME_READ_SITE = 0x65570f;             // `mov rcx, [rip+0x535352]` = a read of ms_pkCurrentGame in ActivateGreatPerson::Start
+	constexpr uintptr_t CURRENT_GAME_READ_SITE = 0x65574f;             // `mov rcx, [rip+0x535352]` = a read of ms_pkCurrentGame in ActivateGreatPerson::Start
 
 	// Layout (same build)
 	constexpr uintptr_t UNIT_GREAT_PERSON_VAR = 0x9c0;    // Unit::Instance: FAutoVariable<Unit::GreatPerson>; edit() returns the GreatPerson at unit + 0x9d0

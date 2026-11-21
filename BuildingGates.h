@@ -19,13 +19,13 @@
 //                                        passes, the full test fails with the Description as failure reason
 //   BuildQueue::CanConstruct (inner: per-turn check, new front item, AI)        gate shut: false (except when the outer one asks)
 namespace BuildingGates {
-	constexpr uintptr_t BUILD_CONDITIONS_OFFSET = 0x755480;     // DefinitionCollectionBuilder::BuildCollection<BuildingCondition>(builder, collection); builder +0 = IDatabaseConnection1*
+	constexpr uintptr_t BUILD_CONDITIONS_OFFSET = 0x7554c0;     // DefinitionCollectionBuilder::BuildCollection<BuildingCondition>(builder, collection); builder +0 = IDatabaseConnection1*
 	constexpr uintptr_t CAN_CONSTRUCT_OFFSET = 0xf7100;         // bool BuildQueue::CanConstruct(queue, BuildingTypes, bool exclusionTest, PlotCoord*, TypedVariantMap* results, bool x5)
 	constexpr uintptr_t CAN_CONSTRUCT_INNER_OFFSET = 0xf61c0;   // bool BuildQueue::CanConstruct(queue, BuildingTypes, Results*, bool x5)
 	constexpr uintptr_t OUTER_CALLS_INNER_RETURN = 0xf7277;     // return address of the outer CanConstruct's call of the inner one
-	constexpr uintptr_t ADD_STRING_OFFSET = 0x5fd5a0;           // Reporting::AddString(TypedVariantMap*, key, const Localization::String&)
+	constexpr uintptr_t ADD_STRING_OFFSET = 0x5fd5d0;           // Reporting::AddString(TypedVariantMap*, key, const Localization::String&)
 	constexpr uint32_t FAILURE_REASONS = 0x87150719;            // results key of the failure reason strings (CityCommandResults.FAILURE_REASONS)
-	constexpr uintptr_t MAKE_HASH_OFFSET = 0x606270;
+	constexpr uintptr_t MAKE_HASH_OFFSET = 0x6062a0;
 
 	constexpr uintptr_t QUEUE_CITY = 0x1e8;          // City::BuildQueue -> City::Instance*
 	constexpr uintptr_t CITY_PROPERTIES = 0x1a0;     // Data::VariantMap (vtable +0x60 = get(key) -> Variant*)
