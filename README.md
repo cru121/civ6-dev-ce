@@ -128,7 +128,7 @@ Tested in game on build 15038592 (2026-10-15): the hook self-test (24 checks: li
 * Unofficial fan project, not affiliated with or endorsed by Firaxis, 2K or Take-Two, and not endorsed by the Community Extension's author. Please don't use it to cheat in multiplayer.
 
 ## For contributors
-Build: Visual Studio 2022 Build Tools, x64 Release, project `CivilizationVI_CommunityExtension.vcxproj`, capstone and MinHook on the linker path (`CL=/DCAPSTONE_STATIC`); output name `GameCore_XP2_CE_FinalRelease.dll`.
+Build: Visual Studio 2022 Build Tools, x64 Release, project `CivilizationVI_CommunityExtension/CivilizationVI_CommunityExtension.vcxproj` (sources live in that folder; the solution is at the repo root), capstone and MinHook on the linker path (`CL=/DCAPSTONE_STATIC`); output name `GameCore_XP2_CE_FinalRelease.dll`.
 (`asmjit/x86` is un-ignored in `.gitignore`: the original ignore rule `x86/` drops it from a clone.)
 Tools are in `dev-ce/tools`: `gen_bridge.py` (table generator; `--scope gap --include <set>` builds the themed function sets in `dev-ce/data/sets`), `make_sets.py` (splits the candidates into sets), `gen_selftest.py` (test mod generator), `l2chunk.py` (level-2 test chunks), `hang_dump.py`, `pdb_sym.py` and `civ_watchdog.ps1` (dump a hung game, resolve DLL addresses with the PDB).
 The Frida test drivers there need a live-channel tool that isn't published here.
