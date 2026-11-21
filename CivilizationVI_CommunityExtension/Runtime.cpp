@@ -8,12 +8,34 @@ namespace Runtime {
 	HMODULE GameCore;
 	uintptr_t GameCoreAddress;
 	asmjit::JitRuntime Jit;
+	HMODULE CivVIModHandle;
+	Log::Logger* MainLogger;
+
+	typedef size_t(__fastcall* EXP_GetLogPath_t)(wchar_t* pszOutBuffer, const wchar_t* pszSubPath);
 
 	// Should only be called once
 	void Create() {
+		CivVIModHandle = GetModuleHandle(NULL);
+
+		// Log directory: <game log dir>/CE/ (the exe resolves it); fall back to the working directory
+		std::filesystem::path logPath = ".";
+		auto getLogPath = reinterpret_cast<EXP_GetLogPath_t>(GetProcAddress(CivVIModHandle, "EXP_GetLogPath"));
+		if (getLogPath) {
+			std::wstring buffer(MAX_PATH, L'\0');
+			size_t charsWritten = getLogPath(buffer.data(), L"CE/");
+			if (charsWritten > 0 && charsWritten <= buffer.size()) {
+				buffer.resize(charsWritten);
+				logPath = buffer;
+			}
+		}
+		std::error_code ec;
+		std::filesystem::create_directories(logPath, ec);
+		Log::Init(logPath);
+		MainLogger = new Log::Logger("CE", "Community_Extension.log");
+
 		GameCore = LoadLibrary(TEXT("../../../DLC/Expansion2/Binaries/Win64/GameCore_XP2_FinalRelease.dll"));
 		if (!GameCore) {
-			std::cout << "Original GameCore failed to load!\n";
+			MainLogger->Error("Original GameCore failed to load!");
 			return;
 		}
 		GameCoreAddress = reinterpret_cast<uintptr_t>(GameCore);
@@ -21,9 +43,10 @@ namespace Runtime {
 
 	void InitMinHook() {
 		if (MH_Initialize() != MH_OK) {
-			std::cout << "MH failed to init\n";
+			MainLogger->Error("MH failed to init");
+			return;
 		}
-		std::cout << "MH initialized successfully.\n";
+		MainLogger->Info("MH initialized successfully.");
 	}
 
 	// Call on dll exit

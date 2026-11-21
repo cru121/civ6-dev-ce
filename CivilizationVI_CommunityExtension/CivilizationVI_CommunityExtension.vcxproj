@@ -410,6 +410,7 @@
     <ClInclude Include="Governor.h" />
     <ClInclude Include="GovernorManager.h" />
     <ClInclude Include="HavokScript.h" />
+    <ClInclude Include="Log.h" />
     <ClInclude Include="MemoryManipulation.h" />
     <ClInclude Include="NationalParks.h" />
     <ClInclude Include="BuildingGates.h" />

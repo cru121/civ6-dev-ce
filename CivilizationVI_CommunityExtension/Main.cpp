@@ -3,6 +3,7 @@
 #include "HavokScript.h"
 #include <set>
 #include <cstring>
+#include <mutex>
 #include "Runtime.h"
 #include "MemoryManipulation.h"
 #include "ProxyTypes.h"
@@ -48,9 +49,12 @@
 #include "GoldPurchase.h"
 #include "FoodProduction.h"
 
-HANDLE mainThread;
+static std::once_flag g_initFlag;
+static bool g_consoleAllocated = false;
+static bool g_initOk = false;
 
 ProxyTypes::DllCreateGameContext base_DllCreateGameContext;
+ProxyTypes::DllDestroyGameContext base_DllDestroyGameContext;
 
 ProxyTypes::SetMaxTurns SetMaxTurns;
 
@@ -191,10 +195,33 @@ static void InitHooks() {
     std::cout << "Hooks initialized!\n";
 }
 
-DWORD WINAPI MainThread(LPVOID lpParam) {
+// Runs once, on the first DllCreateGameContext call (never from DllMain: LoadLibrary is not allowed under the loader lock).
+// Loads the original GameCore, resolves its create/destroy entry points, installs the hooks.
+static void InitializeProxy() {
     Runtime::Create();
+    if (!Runtime::GameCore) {
+        return;
+    }
     base_DllCreateGameContext = (ProxyTypes::DllCreateGameContext)GetProcAddress(Runtime::GameCore, "DllCreateGameContext");
-    return TRUE;
+    base_DllDestroyGameContext = (ProxyTypes::DllDestroyGameContext)GetProcAddress(Runtime::GameCore, "DllDestroyGameContext");
+    if (!base_DllCreateGameContext || !base_DllDestroyGameContext) {
+        Runtime::MainLogger->Error("Could not find DllCreateGameContext / DllDestroyGameContext in the original GameCore!");
+        return;
+    }
+
+    Runtime::InitMinHook();
+    {
+        HMODULE self = nullptr;
+        char dllPath[MAX_PATH] = { 0 };
+        GetModuleHandleExA(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, (LPCSTR)&InitializeProxy, &self);
+        GetModuleFileNameA(self, dllPath, MAX_PATH);
+        char* slash = strrchr(dllPath, '\\');
+        if (slash) *slash = 0;
+        BankTrace::Install(dllPath);
+    }
+    hks::InitHavokScript();
+    InitHooks();
+    g_initOk = true;
 }
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved) {
@@ -203,6 +230,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
     case DLL_PROCESS_ATTACH:
         if (EnableConsole) {
             Runtime::InitConsole();
+            g_consoleAllocated = true;
         }
         // Pin this DLL for the life of the process. During the pre-game mod switch the game logs "Failed to load GameCore DLL" and unloads us; MainThread may
         // still be inside LoadLibraryW then, and writing its result into the unloaded module crashed the game (GameCore_XP2_CE_FinalRelease.dl_unloaded, access
@@ -211,11 +239,9 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
             HMODULE pinned = nullptr;
             GetModuleHandleExW(GET_MODULE_HANDLE_EX_FLAG_PIN | GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS, (LPCWSTR)&DllMain, &pinned);
         }
-        mainThread = CreateThread(0, 0, &MainThread, NULL, 0, NULL);
         break;
     case DLL_PROCESS_DETACH:
-        CloseHandle(mainThread);
-        if (EnableConsole) {
+        if (g_consoleAllocated) {
             Runtime::CloseConsole();
         }
         Runtime::Destroy();
@@ -226,27 +252,20 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
 
 extern "C" {
     __declspec(dllexport) void* __cdecl DllCreateGameContext(void) {
-        std::cout << "Waiting for main thread ...\n";
-        DWORD result = WaitForSingleObject(mainThread, INFINITE);
-        if (result == WAIT_OBJECT_0) {
-            std::cout << "Main thread completed successfully!\n";
+        std::call_once(g_initFlag, InitializeProxy);
+        if (!g_initOk) {
+            return nullptr;
         }
-        else {
-            std::cerr << "WaitForSingleObject failed: " << GetLastError() << '\n';
-        }
-        Runtime::InitMinHook();
-        {
-            HMODULE self = nullptr;
-            char dllPath[MAX_PATH] = { 0 };
-            GetModuleHandleExA(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, (LPCSTR)&DllCreateGameContext, &self);
-            GetModuleFileNameA(self, dllPath, MAX_PATH);
-            char* slash = strrchr(dllPath, '\\');
-            if (slash) *slash = 0;
-            BankTrace::Install(dllPath);
-        }
-        hks::InitHavokScript();
-        InitHooks();
         return base_DllCreateGameContext();
+    }
+
+    // A real export instead of a forwarder (WildW, 2026-11-03): a forwarded export is resolved by the loader when the game looks the
+    // name up, which can happen before the original GameCore is loaded (error 127). Our old workaround, loading GameCore on a thread
+    // started in DllMain, raced with that lookup. This function always exists; GameCore is loaded on the first DllCreateGameContext.
+    __declspec(dllexport) void __cdecl DllDestroyGameContext(void* context) {
+        if (base_DllDestroyGameContext) {
+            base_DllDestroyGameContext(context);
+        }
     }
 }
 
@@ -406,6 +425,6 @@ extern "C" {
 #pragma comment(linker,"/export:?setGlobalMemoization@HksCompilerSettings@@QEAAXH@Z=GameCore_XP2_FinalRelease.?setGlobalMemoization@HksCompilerSettings@@QEAAXH@Z,@153")
 #pragma comment(linker,"/export:?setIntLiteralsEnabled@HksCompilerSettings@@QEAAXW4IntLiteralOptions@1@@Z=GameCore_XP2_FinalRelease.?setIntLiteralsEnabled@HksCompilerSettings@@QEAAXW4IntLiteralOptions@1@@Z,@154")
 // #pragma comment(linker,"/export:DllCreateGameContext=GameCore_XP2_FinalRelease.DllCreateGameContext,@155")
-#pragma comment(linker,"/export:DllDestroyGameContext=GameCore_XP2_FinalRelease.DllDestroyGameContext,@156")
+// DllDestroyGameContext is a real function above (not a forwarder).
 #pragma comment(linker,"/export:EXP_GetTelemetrySessionHash=GameCore_XP2_FinalRelease.EXP_GetTelemetrySessionHash,@157")
 #pragma endregion
