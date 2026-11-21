@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Licensed under the GNU Affero General Public License v3.0 (see LICENSE.txt).
 #include "CitySpecialists.h"
+#include "CitizenWorkersHook.h"
 #include "Runtime.h"
 #include "DevBridge.h"
 #include "HavokScript.h"
@@ -115,7 +116,7 @@ namespace CitySpecialists {
 		{ "ManageCitizen::Start: -> Send(plot)", 0x67fddf, { 0xe8, 0x5c, 0xb3, 0xf7, 0xff }, 5 },
 		{ "FAutoVariable<VariantMap>::edit", PROPERTY_EDIT_OFFSET, { 0x40, 0x53, 0x48, 0x83, 0xec, 0x30, 0x48, 0x8b, 0x41, 0x08, 0x48, 0x8b, 0xd9, 0x48, 0x85, 0xc0 }, 16 },
 		// citizens
-		{ "RemoveAllCitizenWorkers", REMOVE_ALL_WORKERS_OFFSET, { 0x40, 0x53, 0x57, 0x41, 0x54, 0x41, 0x55, 0x48, 0x83, 0xec, 0x28, 0x48, 0x8b, 0x01, 0x48, 0x8b }, 16 },
+		// RemoveAllCitizenWorkers is hooked through CitizenWorkersHook (shared with the city radius), which checks it
 		{ "RemoveAllCitizenWorkers: free = population", 0x11077e, { 0x8b, 0x88, 0x68, 0x02, 0x00, 0x00, 0x89, 0x4b, 0x68 }, 9 },
 		{ "TryAssignAllWorkers", TRY_ASSIGN_WORKERS_OFFSET, { 0x48, 0x8b, 0xc4, 0x88, 0x50, 0x10, 0x55, 0x53, 0x56, 0x57, 0x41, 0x54, 0x41, 0x55, 0x41, 0x56 }, 16 },
 		{ "TryAssignAllWorkers: food index", 0x110d4a, { 0x3b, 0x35, 0xf8, 0xe8, 0xa7, 0x00 }, 6 },
@@ -621,7 +622,8 @@ namespace CitySpecialists {
 		Knapsack = (KnapsackFn)(b + KNAPSACK_OFFSET);
 		gOk = true;
 		const bool ok = Hook(GLOBAL_PARAMETERS_INITIALIZE_OFFSET, (void*)&Hook_GlobalParametersInitialize, &orig_GlobalParametersInitialize)
-			&& Hook(REMOVE_ALL_WORKERS_OFFSET, (void*)&Hook_RemoveAll, &orig_RemoveAll)
+			&& CitizenWorkersHook::Ensure()
+			&& (CitizenWorkersHook::SetAround(&Hook_RemoveAll), orig_RemoveAll = CitizenWorkersHook::Base(), true)
 			&& Hook(TRY_ASSIGN_WORKERS_OFFSET, (void*)&Hook_TryAssign, &orig_TryAssign)
 			&& Hook(GET_YIELD_FROM_TILES_OFFSET, (void*)&Hook_GetYieldFromTiles, &orig_GetYieldFromTiles)
 			&& Hook(ADJUST_CITY_PROPERTY_APPLY_OFFSET, (void*)&Hook_PropertyApply, &orig_PropertyApply)

@@ -294,8 +294,9 @@ namespace DevBridge {
 			s.fn = (void*)(Runtime::GameCoreAddress + d.rva);
 			s.getInstance = (GetInstanceFn)(Runtime::GameCoreAddress + d.getInstanceRva);
 			s.calls = 0;
-			const bool fnOk = memcmp(s.fn, d.prologue, 8) == 0;
-			const bool giOk = d.ownerKind == 2 || memcmp((void*)s.getInstance, d.giPrologue, 8) == 0;
+			// a function another Dev CE feature already hooked starts with MinHook's jump (E9 rel32): the address was checked by that feature
+			const bool fnOk = memcmp(s.fn, d.prologue, 8) == 0 || *(const uint8_t*)s.fn == 0xE9;
+			const bool giOk = d.ownerKind == 2 || memcmp((void*)s.getInstance, d.giPrologue, 8) == 0 || *(const uint8_t*)s.getInstance == 0xE9;
 			const bool navOk = (d.navMode != 1 || gEdit != nullptr) && (d.ownerKind != 1 || gEditPlayer != nullptr) && (d.navMode != 4 && d.ownerKind != 2 || memcmp((void*)(Runtime::GameCoreAddress + (uintptr_t)d.navOff), d.navPrologue, 8) == 0);
 			s.ok = fnOk && giOk && navOk;
 			if (s.ok) ok++; else {

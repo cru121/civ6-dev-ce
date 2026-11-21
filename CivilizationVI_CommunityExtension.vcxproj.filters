@@ -237,37 +237,6 @@
     <ClCompile Include="NationalParks.cpp">
       <Filter>Source Files\GameCore</Filter>
     </ClCompile>
-    <ClCompile Include="TechGates.cpp">
-      <Filter>Source Files\GameCore</Filter>
-    <ClCompile Include="Features.cpp">
-      <Filter>Source Files\GameCore</Filter>
-    </ClCompile>
-    <ClCompile Include="BuildingGates.cpp">
-    <ClCompile Include="FounderUniques.cpp">
-    <ClCompile Include="CityRadius.cpp">
-    <ClCompile Include="GoldPurchase.cpp">
-      <Filter>Source Files\GameCore</Filter>
-    </ClCompile>
-    <ClCompile Include="FoodProduction.cpp">
-    <ClCompile Include="DistrictCitizens.cpp">
-      <Filter>Source Files\GameCore</Filter>
-    </ClCompile>
-    <ClCompile Include="CitySpecialists.cpp">
-    <ClCompile Include="GreatPersonAssign.cpp">
-      <Filter>Source Files\GameCore</Filter>
-    </ClCompile>
-    <ClCompile Include="UnitCommandActions.cpp">
-      <Filter>Source Files\GameCore</Filter>
-    </ClCompile>
-    <ClCompile Include="UnitPropertyRequirement.cpp">
-      <Filter>Source Files\GameCore</Filter>
-    </ClCompile>
-    <ClCompile Include="UnitUpgradeFallback.cpp">
-      <Filter>Source Files\GameCore</Filter>
-    </ClCompile>
-    <ClCompile Include="UnitUpgradeRules.cpp">
-      <Filter>Source Files\GameCore</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HavokScript.h">
@@ -564,23 +533,143 @@
     <ClInclude Include="NationalParks.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TechGates.h">
+    <ClInclude Include="EAVector.h">
       <Filter>Header Files</Filter>
-    <ClInclude Include="Features.h">
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AudioPlayer.cpp">
+      <Filter>Source Files\GameCore</Filter>
+    </ClCompile>
+    <ClCompile Include="BankTrace.cpp">
+      <Filter>Source Files\GameCore</Filter>
+    </ClCompile>
+    <ClCompile Include="BuildingGates.cpp">
+      <Filter>Source Files\GameCore</Filter>
+    </ClCompile>
+    <ClCompile Include="CityRadius.cpp">
+      <Filter>Source Files\GameCore</Filter>
+    </ClCompile>
+    <ClCompile Include="CitySpecialists.cpp">
+      <Filter>Source Files\GameCore</Filter>
+    </ClCompile>
+    <ClCompile Include="DevBridge.cpp">
+      <Filter>Source Files\GameCore</Filter>
+    </ClCompile>
+    <ClCompile Include="DevNativeTable.cpp">
+      <Filter>Source Files\GameCore</Filter>
+    </ClCompile>
+    <ClCompile Include="DistrictCitizens.cpp">
+      <Filter>Source Files\GameCore</Filter>
+    </ClCompile>
+    <ClCompile Include="Features.cpp">
+      <Filter>Source Files\GameCore</Filter>
+    </ClCompile>
+    <ClCompile Include="FoodProduction.cpp">
+      <Filter>Source Files\GameCore</Filter>
+    </ClCompile>
+    <ClCompile Include="FounderUniques.cpp">
+      <Filter>Source Files\GameCore</Filter>
+    </ClCompile>
+    <ClCompile Include="GameProcessor.cpp">
+      <Filter>Source Files\GameCore</Filter>
+    </ClCompile>
+    <ClCompile Include="GoldPurchase.cpp">
+      <Filter>Source Files\GameCore</Filter>
+    </ClCompile>
+    <ClCompile Include="GreatPersonAssign.cpp">
+      <Filter>Source Files\GameCore</Filter>
+    </ClCompile>
+    <ClCompile Include="LuaDebugger.cpp">
+      <Filter>Source Files\GameCore</Filter>
+    </ClCompile>
+    <ClCompile Include="LuaHooks.cpp">
+      <Filter>Source Files\GameCore</Filter>
+    </ClCompile>
+    <ClCompile Include="MiniaudioImpl.cpp">
+      <Filter>Source Files\GameCore</Filter>
+    </ClCompile>
+    <ClCompile Include="TechGates.cpp">
+      <Filter>Source Files\GameCore</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrainView.cpp">
+      <Filter>Source Files\GameCore</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrainViewObjects.cpp">
+      <Filter>Source Files\GameCore</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrainViewPatch.cpp">
+      <Filter>Source Files\GameCore</Filter>
+    </ClCompile>
+    <ClCompile Include="UnitCommandActions.cpp">
+      <Filter>Source Files\GameCore</Filter>
+    </ClCompile>
+    <ClCompile Include="UnitPropertyRequirement.cpp">
+      <Filter>Source Files\GameCore</Filter>
+    </ClCompile>
+    <ClCompile Include="UnitUpgradeFallback.cpp">
+      <Filter>Source Files\GameCore</Filter>
+    </ClCompile>
+    <ClCompile Include="UnitUpgradeRules.cpp">
+      <Filter>Source Files\GameCore</Filter>
+    </ClCompile>
+    <ClCompile Include="VetoEvents.cpp">
+      <Filter>Source Files\GameCore</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AudioPlayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BankTrace.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="BuildingGates.h">
-    <ClInclude Include="FounderUniques.h">
-    <ClInclude Include="CityRadius.h">
-    <ClInclude Include="GoldPurchase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FoodProduction.h">
-    <ClInclude Include="DistrictCitizens.h">
+    <ClInclude Include="CityRadius.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CitySpecialists.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DevBridge.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DistrictCitizens.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Features.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FoodProduction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FounderUniques.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameProcessor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GoldPurchase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="GreatPersonAssign.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LuaDebugger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LuaHooks.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TechGates.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrainView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrainViewInternal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="UnitCommandActions.h">
@@ -595,7 +684,13 @@
     <ClInclude Include="UnitUpgradeRules.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="EAVector.h">
+    <ClInclude Include="VetoEvents.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="miniaudio.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

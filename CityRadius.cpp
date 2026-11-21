@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include "CityRadius.h"
 #include "Features.h"
+#include "CitizenWorkersHook.h"
 #include "Runtime.h"
 #include "DevBridge.h"
 #include <Windows.h>
@@ -45,7 +46,7 @@ namespace CityRadius {
 		{ "GetCityIndexFromPlot (core)", INDEX_CORE_OFFSET, { 0x48, 0x89, 0x5c, 0x24, 0x08, 0x44, 0x8b, 0x1a, 0x41, 0x8b, 0xd8, 0x44, 0x8b, 0x11, 0x45, 0x2b }, 16 },
 		{ "GetCityIndexFromPlot (city, plot)", INDEX_CITY_PLOT_OFFSET, { 0x48, 0x89, 0x5c, 0x24, 0x08, 0x57, 0x48, 0x83, 0xec, 0x50, 0x48, 0x8b, 0xda, 0x48, 0x8b, 0xf9 }, 16 },
 		{ "GetCityIndexFromPlot (city, coord)", INDEX_CITY_COORD_OFFSET, { 0x48, 0x89, 0x5c, 0x24, 0x08, 0x57, 0x48, 0x83, 0xec, 0x50, 0x48, 0x8b, 0xda, 0x48, 0x8b, 0xf9 }, 16 },
-		{ "Citizens::RemoveAllCitizenWorkers", REMOVE_WORKERS_OFFSET, { 0x40, 0x53, 0x57, 0x41, 0x54, 0x41, 0x55, 0x48, 0x83, 0xec, 0x28, 0x48, 0x8b, 0x01, 0x48, 0x8b }, 16 },
+		// RemoveAllCitizenWorkers is hooked through CitizenWorkersHook (shared with the city-centre specialists), which checks it
 		{ "Capabilities::Get", CAPABILITIES_GET_OFFSET, { 0x48, 0x83, 0xec, 0x28, 0x48, 0x8b, 0x0d }, 7 },
 		{ "Capabilities::Manager::HasCapability", HAS_CAPABILITY_OFFSET, { 0x89, 0x54, 0x24, 0x10, 0x48, 0x83, 0xec, 0x48, 0x4c, 0x8b, 0x41, 0x08 }, 12 },
 		{ "Globals::GetMap -> EditMap", GET_MAP_OFFSET, { 0xe9, 0x6b, 0x26, 0xff, 0xff }, 5 },
@@ -168,7 +169,7 @@ namespace CityRadius {
 	// ---- citizens --------------------------------------------------------------------------------------------------------
 	// The game recounts unassigned citizens from the locked ones right after this; locked workers on tiles beyond the radius
 	// (the lookups return no plot there) would otherwise stay locked for good.
-	static void __fastcall Hook_RemoveWorkers(void* citizens, bool send) {
+	static void __fastcall Pre_RemoveWorkers(void* citizens) {
 		if (citizens != nullptr && Enabled()) {
 			void* city = *(void**)citizens;
 			int* forced = *(int**)((char*)citizens + CITIZENS_FORCED);
@@ -179,7 +180,6 @@ namespace CityRadius {
 					if (gRing[i] > radius && forced[i] > 0) forced[i] = 0;
 			}
 		}
-		orig_RemoveWorkers(citizens, send);
 	}
 
 	// ---- distance tests --------------------------------------------------------------------------------------------------
@@ -348,7 +348,8 @@ namespace CityRadius {
 			&& Hook(INDEX_CORE_OFFSET, (void*)&Hook_IndexCore, &orig_IndexCore)
 			&& Hook(INDEX_CITY_PLOT_OFFSET, (void*)&Hook_IndexCityPlot, &orig_IndexCityPlot)
 			&& Hook(INDEX_CITY_COORD_OFFSET, (void*)&Hook_IndexCityCoord, &orig_IndexCityCoord)
-			&& Hook(REMOVE_WORKERS_OFFSET, (void*)&Hook_RemoveWorkers, &orig_RemoveWorkers);
+			&& CitizenWorkersHook::Ensure();
+		if (hooks) CitizenWorkersHook::AddPre(&Pre_RemoveWorkers);
 		const bool patches = hooks
 			&& Redirect(b + BUY_JG, (uintptr_t)mem)
 			&& Redirect(b + SWAP_JG, (uintptr_t)(mem + 0x80))
