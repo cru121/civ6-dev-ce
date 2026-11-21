@@ -1,3 +1,7 @@
+-- Switches the Dev CE feature on for this game (game capability, read when the game starts; INSERT OR IGNORE so several mods can add it).
+INSERT OR IGNORE INTO Types (Type, Kind) VALUES ('CAPABILITY_DEVCE_UPGRADE_RULES', 'KIND_CAPABILITY');
+INSERT OR IGNORE INTO GameCapabilities (GameCapability) VALUES ('CAPABILITY_DEVCE_UPGRADE_RULES');
+
 -- Dev CE unit upgrade rules: a minimum experience level for one upgrade step.
 --
 -- One row per step, as in UnitUpgrades (Unit -> UpgradeUnit). The unit needs at least experience level MinLevel to upgrade

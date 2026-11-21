@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include "CityRadius.h"
+#include "Features.h"
 #include "Runtime.h"
 #include "DevBridge.h"
 #include <Windows.h>
@@ -66,8 +67,7 @@ namespace CityRadius {
 
 	// ---- the rule --------------------------------------------------------------------------------------------------------
 	static bool Enabled() {
-		void* manager = CapabilitiesGet();
-		return manager != nullptr && HasCapability(manager, gCapability);
+		return Features::On(Features::CityRadius);   // read once per game (was a capability lookup on every call)
 	}
 
 	static int CityProperty(void* city, uint32_t key) {

@@ -1,3 +1,7 @@
+-- Switches the Dev CE feature on for this game (game capability, read when the game starts; INSERT OR IGNORE so several mods can add it).
+INSERT OR IGNORE INTO Types (Type, Kind) VALUES ('CAPABILITY_DEVCE_DISTRICT_CITIZENS', 'KIND_CAPABILITY');
+INSERT OR IGNORE INTO GameCapabilities (GameCapability) VALUES ('CAPABILITY_DEVCE_DISTRICT_CITIZENS');
+
 -- Test: a policy, God King, makes Campus takes 1 more citizen, and each citizen there gives +1 Science and +1 Gold.
 -- (A Campus has no CitizenSlots of its own: before a Library it normally takes no citizens.)
 --

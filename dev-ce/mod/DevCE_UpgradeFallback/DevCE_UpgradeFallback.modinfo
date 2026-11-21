@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Mod id="8f5353b0-0cb5-4671-a0b1-caba8e8ff9e2" version="1">
+	<Properties>
+		<Name>Dev CE Upgrade Fallback (experimental)</Name>
+		<Teaser>A unit stays buildable while its city cannot train the unit it upgrades to.</Teaser>
+		<Description>Turns on the Dev CE upgrade fallback (game capability CAPABILITY_DEVCE_UPGRADE_FALLBACK). Normally a unit can no longer be built once the unit it upgrades to is unlocked. With this mod the unit stays buildable in a city that cannot train that upgrade (the upgrade is build-disabled, or needs a building the city lacks). Start a new game: a capability only takes effect for games started with it. Needs the Dev CE GameCore mod.</Description>
+		<Authors>Dev CE</Authors>
+		<CompatibleVersions>2.0</CompatibleVersions>
+		<AffectsSavedGames>1</AffectsSavedGames>
+	</Properties>
+	<Dependencies>
+		<Mod id="4873eb62-8ccc-4574-b784-dda455e74e68" title="Expansion: Gathering Storm" />
+	</Dependencies>
+	<InGameActions>
+		<UpdateDatabase id="DCUF_SQL">
+			<File>Sql/DevCE_UpgradeFallback.sql</File>
+		</UpdateDatabase>
+	</InGameActions>
+	<Files>
+		<File>Sql/DevCE_UpgradeFallback.sql</File>
+	</Files>
+</Mod>

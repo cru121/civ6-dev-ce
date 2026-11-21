@@ -6,12 +6,15 @@
 		<Description>EXPERIMENTAL, SINGLE PLAYER ONLY. With the Dev CE GameCore mod, a unit or building without a PurchaseYield (build only; wonders excluded) can be bought with gold in a city whose property DEVCE_GOLD_PURCHASE_&lt;UnitType / PromotionClass / BuildingType / PrereqDistrict&gt;, DEVCE_GOLD_PURCHASE_ALL_UNITS or DEVCE_GOLD_PURCHASE_ALL_BUILDINGS is 1 or more (MODIFIER_SINGLE_CITY_ADJUST_PROPERTY, or EFFECT_ADJUST_CITY_PROPERTY with COLLECTION_PLAYER_CITIES). The engine rule and the AI come with the Dev CE GameCore mod; this mod adds those items to the gold purchase list of the production panel. It replaces ProductionPanel (it includes the base panel and only wraps GetData), so it does not work together with other ProductionPanel replacements (CQUI, BBG, Babylon Heroes mode); copy its GetData wrapper into those instead.</Description>
 		<Authors>Dev CE</Authors>
 		<CompatibleVersions>2.0</CompatibleVersions>
-		<AffectsSavedGames>0</AffectsSavedGames>
+		<AffectsSavedGames>1</AffectsSavedGames>
 	</Properties>
 	<Dependencies>
 		<Mod id="4873eb62-8ccc-4574-b784-dda455e74e68" title="Expansion: Gathering Storm" />
 	</Dependencies>
 	<InGameActions>
+		<UpdateDatabase id="DCGP_SQL">
+			<File>Sql/DevCE_GoldPurchase.sql</File>
+		</UpdateDatabase>
 		<ReplaceUIScript id="DCGP_ProductionPanel">
 			<Properties>
 				<LuaContext>ProductionPanel</LuaContext>
@@ -20,6 +23,7 @@
 		</ReplaceUIScript>
 	</InGameActions>
 	<Files>
+		<File>Sql/DevCE_GoldPurchase.sql</File>
 		<File>UI/ProductionPanel_DevCE_GoldPurchase.lua</File>
 	</Files>
 </Mod>

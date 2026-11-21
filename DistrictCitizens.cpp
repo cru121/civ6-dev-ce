@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Licensed under the GNU Affero General Public License v3.0 (see LICENSE.txt). Not endorsed by Wild-W, Firaxis or 2K.
 #include "DistrictCitizens.h"
+#include "Features.h"
 #include "Runtime.h"
 #include "DevBridge.h"
 #include <Windows.h>
@@ -119,6 +120,7 @@ namespace DistrictCitizens {
 
 	// Called from GetYield's district branch with the District_CitizenYieldChanges sum; returns the new sum.
 	static int __fastcall CitizenYield(void* plot, int yield, int sum) {
+		if (!Features::On(Features::DistrictCitizens)) return sum;   // hot path: GetYield runs for every yield read
 		if (yield < 0 || yield >= NUM_YIELDS || !YieldKeysReady()) return sum;
 		__try {
 			const char* attrs = (const char*)((PlotCityAttributesFn)(*(void***)plot)[0x30 / 8])(plot);
@@ -131,6 +133,7 @@ namespace DistrictCitizens {
 
 	// Called from GetPlotWorkerCapacity with Districts.CitizenSlots; returns the new count (never below 0).
 	static int __fastcall CitizenSlots(void* citizens, void* plot, int slots) {
+		if (!Features::On(Features::DistrictCitizens)) return slots;
 		__try {
 			const int total = slots + DistrictProperty(DistrictAtPlot(*(void**)citizens, plot), gSlotsKey);
 			return total < 0 ? 0 : total;

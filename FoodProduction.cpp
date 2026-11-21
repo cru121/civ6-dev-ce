@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include "FoodProduction.h"
+#include "Features.h"
 #include "Runtime.h"
 #include "DevBridge.h"
 #include <cstring>
@@ -74,7 +75,7 @@ namespace FoodProduction {
 	}
 
 	static bool Enabled(void* city) {
-		return city != nullptr && CityProperty(city, gKey) >= 1;
+		return city != nullptr && Features::On(Features::FoodProduction) && CityProperty(city, gKey) >= 1;
 	}
 
 	// TrackedValue: value clamped by its optional min / max (as GameAttribute::Value reads it)

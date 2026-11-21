@@ -239,6 +239,9 @@
     </ClCompile>
     <ClCompile Include="TechGates.cpp">
       <Filter>Source Files\GameCore</Filter>
+    <ClCompile Include="Features.cpp">
+      <Filter>Source Files\GameCore</Filter>
+    </ClCompile>
     <ClCompile Include="BuildingGates.cpp">
     <ClCompile Include="FounderUniques.cpp">
     <ClCompile Include="CityRadius.cpp">
@@ -563,6 +566,9 @@
     </ClInclude>
     <ClInclude Include="TechGates.h">
       <Filter>Header Files</Filter>
+    <ClInclude Include="Features.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="BuildingGates.h">
     <ClInclude Include="FounderUniques.h">
     <ClInclude Include="CityRadius.h">

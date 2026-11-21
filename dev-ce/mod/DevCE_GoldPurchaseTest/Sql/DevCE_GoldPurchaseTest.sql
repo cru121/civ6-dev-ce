@@ -1,3 +1,7 @@
+-- Switches the Dev CE feature on for this game (game capability, read when the game starts; INSERT OR IGNORE so several mods can add it).
+INSERT OR IGNORE INTO Types (Type, Kind) VALUES ('CAPABILITY_DEVCE_GOLD_PURCHASE', 'KIND_CAPABILITY');
+INSERT OR IGNORE INTO GameCapabilities (GameCapability) VALUES ('CAPABILITY_DEVCE_GOLD_PURCHASE');
+
 -- Dev CE gold purchase unlocks: test data.
 -- Every city: build-only city-centre buildings (Walls, Castle, ...). The capital (has the Palace): also the Spy.
 

@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include "UnitUpgradeFallback.h"
+#include "Features.h"
 #include "Runtime.h"
 #include "DevBridge.h"
 #include <intrin.h>
@@ -35,7 +36,7 @@ namespace UnitUpgradeFallback {
 	static thread_local int tDepth = 0;
 
 	static bool __fastcall Hook_CanTrain(void* queue, int unit, bool testVisible, void* results, int formation, bool ignoreRequirements, bool p6) {
-		if (tDepth >= MAX_DEPTH) return base_CanTrain(queue, unit, testVisible, results, formation, ignoreRequirements, p6);
+		if (tDepth >= MAX_DEPTH || !Features::On(Features::UpgradeFallback)) return base_CanTrain(queue, unit, testVisible, results, formation, ignoreRequirements, p6);
 		tFrames[tDepth] = { queue, unit, p6, -1 };
 		++tDepth;
 		const bool r = base_CanTrain(queue, unit, testVisible, results, formation, ignoreRequirements, p6);

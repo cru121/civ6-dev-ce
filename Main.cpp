@@ -41,6 +41,7 @@
 #include "TerrainView.h"
 #include "AudioPlayer.h"
 #include "BankTrace.h"
+#include "Features.h"
 #include "BuildingGates.h"
 #include "FounderUniques.h"
 #include "CityRadius.h"
@@ -99,6 +100,7 @@ void __cdecl Hook_RegisterScriptData(hks::lua_State* L) {
     CCallWithErrorHandling(L, AI::Espionage::RegisterAIEspionageManager, NULL);
     CCallWithErrorHandling(L, NationalParks::Register, NULL);
     CCallWithErrorHandling(L, CitySpecialists::Register, NULL);
+    Features::NewGame();    // a new game context: read the feature capabilities again
     UnitCommandActions::ResetForNewGame();    // a new game context: the command definitions are pushed again by the gameplay script
     CCallWithErrorHandling(L, UnitCommandActions::Register, NULL);
     UnitUpgradeRules::ResetForNewGame();    // a new game context: the upgrade rules are pushed again by the gameplay script
@@ -151,6 +153,7 @@ static void InitHooks() {
     orig_RegisterScriptDataForUI = GetGameCoreGlobalAt<ProxyTypes::RegisterScriptDataForUI>(REGISTER_SCRIPT_DATA_FOR_UI_OFFSET);
     CreateHook(orig_RegisterScriptDataForUI, &Hook_RegisterScriptDataForUI, &base_RegisterScriptDataForUI);
 
+    Features::Init(Runtime::GameCoreAddress);    // before every feature that is switched by a game capability
     EconomicManager::Create();
     Plot::Create();
     PlayerGovernors::Create();

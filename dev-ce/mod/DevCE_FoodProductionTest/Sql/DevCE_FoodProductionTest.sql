@@ -1,3 +1,7 @@
+-- Switches the Dev CE feature on for this game (game capability, read when the game starts; INSERT OR IGNORE so several mods can add it).
+INSERT OR IGNORE INTO Types (Type, Kind) VALUES ('CAPABILITY_DEVCE_FOOD_PRODUCTION', 'KIND_CAPABILITY');
+INSERT OR IGNORE INTO GameCapabilities (GameCapability) VALUES ('CAPABILITY_DEVCE_FOOD_PRODUCTION');
+
 -- Dev CE food to production: test data. Every major civ's cities turn excess food into unit production.
 
 INSERT INTO Types (Type, Kind) VALUES ('MODIFIER_DEVCE_FOOD_TEST_PLAYER_CITIES_ADJUST_PROPERTY', 'KIND_MODIFIER');

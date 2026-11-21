@@ -2,6 +2,7 @@
 // Part of Dev CE, a fork of the Civilization VI Community Extension by Wild-W (https://github.com/Wild-W/CivilizationVI_CommunityExtension).
 // Licensed under the GNU Affero General Public License v3.0 (see LICENSE.txt). Not endorsed by Wild-W, Firaxis or 2K.
 #include "UnitUpgradeRules.h"
+#include "Features.h"
 #include "UnitCommandActions.h"
 #include "UnitPropertyRequirement.h"
 #include "Runtime.h"
@@ -311,7 +312,8 @@ namespace UnitUpgradeRules {
 
 	static int __fastcall Hook_GetAvailableUpgrade(void* rules, void** def, void* player) {
 		void* unit = tUnit;
-		if (unit == nullptr || def == nullptr) return base_GetAvailableUpgrade(rules, def, player);
+		// Without CAPABILITY_DEVCE_UPGRADE_RULES the game's own walk decides (no build-disabled check, no extra rules)
+		if (unit == nullptr || def == nullptr || !Features::On(Features::UpgradeRules)) return base_GetAvailableUpgrade(rules, def, player);
 		tUnit = nullptr;   // the game's own calls below us (none today) see the plain walk
 		Block b = {};
 		const int r = Choose(rules, *def, player, unit, &b);

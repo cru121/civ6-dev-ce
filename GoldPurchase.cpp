@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include "GoldPurchase.h"
+#include "Features.h"
 #include "Runtime.h"
 #include "DevBridge.h"
 #include <cstdio>
@@ -129,6 +130,7 @@ namespace GoldPurchase {
 		static CanStartFn orig;
 		static bool __fastcall Hook(void* handler, void* city, void* district, void* command, bool testOnly, void* results) {
 			if (!orig(handler, city, district, command, testOnly, results)) return false;
+			if (!Features::On(Features::GoldPurchase)) return true;   // the game's own rule
 			return Allowed(handler, city, command);
 		}
 	};
@@ -137,6 +139,7 @@ namespace GoldPurchase {
 	// ---- the AI ----------------------------------------------------------------------------------------------------------
 	static bool __fastcall Hook_Validate(void* contract, void* economic) {
 		if (base_Validate(contract, economic)) return true;
+		if (!Features::On(Features::GoldPurchase)) return false;
 		const char* c = (const char*)contract;
 		if (*(const int*)(c + CONTRACT_DISTRICT) != -1 || economic == nullptr) return false;
 		int kind = 0, index = *(const int*)(c + CONTRACT_UNIT);
