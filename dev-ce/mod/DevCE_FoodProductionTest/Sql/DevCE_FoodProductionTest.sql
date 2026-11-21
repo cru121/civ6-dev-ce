@@ -17,3 +17,6 @@ INSERT INTO ModifierArguments (ModifierId, Name, Value) VALUES
 
 INSERT INTO PolicyModifiers (PolicyType, ModifierId) VALUES
 	('POLICY_DISCIPLINE', 'DEVCE_TEST_FOOD_TO_PRODUCTION');
+
+-- Test convenience: also on from the start for every major civ (the policy row above needs Discipline slotted).
+INSERT INTO TraitModifiers (TraitType, ModifierId) VALUES ('TRAIT_LEADER_MAJOR_CIV', 'DEVCE_TEST_FOOD_TO_PRODUCTION');
