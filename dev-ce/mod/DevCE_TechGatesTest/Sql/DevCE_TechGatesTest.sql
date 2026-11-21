@@ -43,3 +43,8 @@ INSERT INTO TechnologyModifiers (TechnologyType, ModifierId) VALUES
 
 INSERT INTO CivicModifiers (CivicType, ModifierId) VALUES
 ('CIVIC_CRAFTSMANSHIP', 'DEVCE_TEST_GATE_IRRIGATION_CRAFTSMANSHIP');
+
+
+-- Test convenience: Ancient era techs and civics cost 1 (and Military Tradition), so the gates can be tried within a few turns.
+UPDATE Technologies SET Cost = 1 WHERE EraType = 'ERA_ANCIENT';
+UPDATE Civics SET Cost = 1 WHERE EraType = 'ERA_ANCIENT' OR CivicType = 'CIVIC_MILITARY_TRADITION';
