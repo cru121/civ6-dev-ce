@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Mod id="63a47f26-bb00-4523-800a-5f487044dfa5" version="1">
+	<Properties>
+		<Name>Dev CE Food To Production Test (experimental)</Name>
+		<Teaser>Test: every city turns its excess food into production while it builds a unit.</Teaser>
+		<Description>TEST MOD for the Dev CE food to production property. Every major civ's cities get DEVCE_FOOD_TO_PRODUCTION = 1: while a city produces a unit, its excess food is added to its production (production bonuses apply) and it does not grow. Needs the Dev CE GameCore mod.</Description>
+		<Authors>Dev CE</Authors>
+		<CompatibleVersions>2.0</CompatibleVersions>
+		<AffectsSavedGames>1</AffectsSavedGames>
+	</Properties>
+	<Dependencies>
+		<Mod id="4873eb62-8ccc-4574-b784-dda455e74e68" title="Expansion: Gathering Storm" />
+	</Dependencies>
+	<InGameActions>
+		<UpdateDatabase id="DCFPT_SQL">
+			<File>Sql/DevCE_FoodProductionTest.sql</File>
+		</UpdateDatabase>
+         <UpdateText id="FoodPurchaseText">
+             <File>Text.sql</File>
+        </UpdateText>
+	</InGameActions>
+	<Files>
+		<File>Sql/DevCE_FoodProductionTest.sql</File>
+        <File>Text.sql</File>
+	</Files>
+</Mod>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Mod id="612d94ca-15f8-46dd-8b0a-fc2c06626c60" version="1">
+	<Properties>
+		<Name>Dev CE Gold Purchase Test (experimental)</Name>
+		<Teaser>Test: every city may buy Walls / Castle / other city-centre buildings with gold, the capital also Spies.</Teaser>
+		<Description>TEST MOD for the Dev CE gold purchase unlocks. Every major civ's cities get DEVCE_GOLD_PURCHASE_DISTRICT_CITY_CENTER (build-only city-centre buildings: Walls, Castle, Star Fort, Flood Barrier, ...); the city with the Palace also gets DEVCE_GOLD_PURCHASE_UNIT_SPY. Needs the Dev CE GameCore mod and DevCE_GoldPurchase (production panel).</Description>
+		<Authors>Dev CE</Authors>
+		<CompatibleVersions>2.0</CompatibleVersions>
+		<AffectsSavedGames>1</AffectsSavedGames>
+	</Properties>
+	<Dependencies>
+		<Mod id="4873eb62-8ccc-4574-b784-dda455e74e68" title="Expansion: Gathering Storm" />
+	</Dependencies>
+	<InGameActions>
+		<UpdateDatabase id="DCGPT_SQL">
+			<File>Sql/DevCE_GoldPurchaseTest.sql</File>
+		</UpdateDatabase>
+	</InGameActions>
+	<Files>
+		<File>Sql/DevCE_GoldPurchaseTest.sql</File>
+	</Files>
+</Mod>

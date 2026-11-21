@@ -286,6 +286,8 @@
     <ClCompile Include="BuildingGates.cpp" />
     <ClCompile Include="FounderUniques.cpp" />
     <ClCompile Include="CityRadius.cpp" />
+    <ClCompile Include="GoldPurchase.cpp" />
+    <ClCompile Include="FoodProduction.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerCities.cpp" />
     <ClCompile Include="PlayerGovernors.cpp" />
@@ -402,6 +404,8 @@
     <ClInclude Include="BuildingGates.h" />
     <ClInclude Include="FounderUniques.h" />
     <ClInclude Include="CityRadius.h" />
+    <ClInclude Include="GoldPurchase.h" />
+    <ClInclude Include="FoodProduction.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerCities.h" />
     <ClInclude Include="PlayerGovernors.h" />

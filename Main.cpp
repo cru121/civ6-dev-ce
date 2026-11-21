@@ -37,6 +37,8 @@
 #include "BuildingGates.h"
 #include "FounderUniques.h"
 #include "CityRadius.h"
+#include "GoldPurchase.h"
+#include "FoodProduction.h"
 
 HANDLE mainThread;
 
@@ -159,6 +161,8 @@ static void InitHooks() {
     BuildingGates::Create();
     FounderUniques::Create();
     CityRadius::Create();
+    GoldPurchase::Create();
+    FoodProduction::Create();
 
     std::cout << "Hooks initialized!\n";
 }

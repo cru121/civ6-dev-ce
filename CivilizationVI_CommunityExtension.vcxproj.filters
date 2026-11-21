@@ -242,6 +242,10 @@
     <ClCompile Include="BuildingGates.cpp">
     <ClCompile Include="FounderUniques.cpp">
     <ClCompile Include="CityRadius.cpp">
+    <ClCompile Include="GoldPurchase.cpp">
+      <Filter>Source Files\GameCore</Filter>
+    </ClCompile>
+    <ClCompile Include="FoodProduction.cpp">
       <Filter>Source Files\GameCore</Filter>
     </ClCompile>
   </ItemGroup>
@@ -545,6 +549,10 @@
     <ClInclude Include="BuildingGates.h">
     <ClInclude Include="FounderUniques.h">
     <ClInclude Include="CityRadius.h">
+    <ClInclude Include="GoldPurchase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FoodProduction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="EAVector.h">
