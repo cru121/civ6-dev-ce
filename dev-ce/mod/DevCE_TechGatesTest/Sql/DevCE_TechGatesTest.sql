@@ -45,6 +45,7 @@ INSERT INTO CivicModifiers (CivicType, ModifierId) VALUES
 ('CIVIC_CRAFTSMANSHIP', 'DEVCE_TEST_GATE_IRRIGATION_CRAFTSMANSHIP');
 
 
--- Test convenience: Ancient era techs and civics cost 1 (and Military Tradition), so the gates can be tried within a few turns.
-UPDATE Technologies SET Cost = 1 WHERE EraType = 'ERA_ANCIENT';
-UPDATE Civics SET Cost = 1 WHERE EraType = 'ERA_ANCIENT' OR CivicType = 'CIVIC_MILITARY_TRADITION';
+-- Test convenience: Ancient era techs and civics (and Military Tradition) cost a fifth, so the gates can be tried within a few turns.
+-- Scaled, not set to 1: the tech tree puts techs in one column per distinct cost, so equal costs would stack techs on top of each other.
+UPDATE Technologies SET Cost = MAX(1, Cost / 5) WHERE EraType = 'ERA_ANCIENT';
+UPDATE Civics SET Cost = MAX(1, Cost / 5) WHERE EraType = 'ERA_ANCIENT' OR CivicType = 'CIVIC_MILITARY_TRADITION';
