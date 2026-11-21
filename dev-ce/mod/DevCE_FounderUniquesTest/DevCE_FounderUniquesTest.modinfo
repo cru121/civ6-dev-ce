@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Mod id="f94fc0dc-d3d5-44ab-9154-36d00da9d7d0" version="1">
+	<Properties>
+		<Name>Dev CE Founder Uniques Test (experimental)</Name>
+		<Teaser>Test: cities you did not found can build their founder's unique units and buildings.</Teaser>
+		<Description>TEST MOD for the Dev CE founder uniques. Every city of a major civ gets DEVCE_BUILD_FOUNDER_UNIQUES = 1; in a city founded by another player you can then also build that player's unique units and buildings (your own units stay: e.g. both Legion and Swordsman in a captured Roman city). Needs the Dev CE GameCore mod.</Description>
+		<Authors>Dev CE</Authors>
+		<CompatibleVersions>2.0</CompatibleVersions>
+		<AffectsSavedGames>1</AffectsSavedGames>
+	</Properties>
+	<Dependencies>
+		<Mod id="4873eb62-8ccc-4574-b784-dda455e74e68" title="Expansion: Gathering Storm" />
+	</Dependencies>
+	<InGameActions>
+		<UpdateDatabase id="DCFUT_SQL">
+			<File>Sql/DevCE_FounderUniquesTest.sql</File>
+		</UpdateDatabase>
+	</InGameActions>
+	<Files>
+		<File>Sql/DevCE_FounderUniquesTest.sql</File>
+	</Files>
+</Mod>
