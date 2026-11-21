@@ -26,6 +26,7 @@
 #include "EventSystems.h"
 #include "GameProcessor.h"
 #include "VetoEvents.h"
+#include "TechGates.h"
 #include "NationalParks.h"
 #include "DevBridge.h"
 #include "LuaHooks.h"
@@ -149,6 +150,7 @@ static void InitHooks() {
     NationalParks::Create();
     GameProcessor::Create();
     VetoEvents::Create();
+    TechGates::Create();
     DevBridge::Create();
     TerrainView::Create();
 

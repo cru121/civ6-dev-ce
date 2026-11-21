@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Mod id="0b54529d-f5c6-49c0-a00d-55716b44b167" version="1">
+	<Properties>
+		<Name>Dev CE Tech and Civic Gates (experimental)</Name>
+		<Teaser>Tables for extra conditions on techs and civics, opened by player properties (needs Dev CE).</Teaser>
+		<Description>EXPERIMENTAL. Adds the tables DevCE_TechnologyGates and DevCE_CivicGates. A row makes a tech or civic need the player property Property to be at least 1, on top of its prereqs; modifiers set the property with MODIFIER_PLAYER_ADJUST_PROPERTY (from a policy, a civic, a tech, a trait...). Techs or civics that add to a gate's property through TechnologyModifiers / CivicModifiers count as its openers: the tree's "research up to here" path goes through the cheapest one, and so does the AI. The optional Description (a LOC key) is shown in the tooltip while the gate is shut. Other mods add the rows in their own SQL; list this mod as a dependency so the tables exist first. Needs the Dev CE GameCore mod; without it the tables do nothing.</Description>
+		<Authors>slothoth</Authors>
+		<CompatibleVersions>2.0</CompatibleVersions>
+		<AffectsSavedGames>1</AffectsSavedGames>
+	</Properties>
+	<Dependencies>
+		<Mod id="4873eb62-8ccc-4574-b784-dda455e74e68" title="Expansion: Gathering Storm" />
+	</Dependencies>
+	<InGameActions>
+		<UpdateDatabase id="DCTG_SQL">
+			<File>Sql/DevCE_TechGates.sql</File>
+		</UpdateDatabase>
+		<UpdateText id="DCTG_TEXT">
+			<File>Text/DevCE_TechGates_Text.sql</File>
+		</UpdateText>
+		<ImportFiles id="DCTG_UI">
+			<File>UI/ToolTipLoader_DevCE_TechGates.lua</File>
+		</ImportFiles>
+	</InGameActions>
+	<Files>
+		<File>Sql/DevCE_TechGates.sql</File>
+		<File>Text/DevCE_TechGates_Text.sql</File>
+		<File>UI/ToolTipLoader_DevCE_TechGates.lua</File>
+	</Files>
+</Mod>

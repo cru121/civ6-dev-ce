@@ -237,6 +237,9 @@
     <ClCompile Include="NationalParks.cpp">
       <Filter>Source Files\GameCore</Filter>
     </ClCompile>
+    <ClCompile Include="TechGates.cpp">
+      <Filter>Source Files\GameCore</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HavokScript.h">
@@ -531,6 +534,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="NationalParks.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TechGates.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="EAVector.h">

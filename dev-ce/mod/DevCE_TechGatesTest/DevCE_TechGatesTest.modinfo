@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Mod id="0e9ed9c4-bb1a-417e-b0aa-45541dbab8e8" version="1">
+	<Properties>
+		<Name>Dev CE Tech Gates Test</Name>
+		<Teaser>Test gates on early techs and civics (needs Dev CE Tech and Civic Gates).</Teaser>
+		<Description>Archery needs the Discipline policy slotted; The Wheel needs Bronze Working or Astrology (no Mining prereq); Irrigation needs the Craftsmanship civic; Military Tradition needs Bronze Working.</Description>
+		<Authors>slothoth</Authors>
+		<CompatibleVersions>2.0</CompatibleVersions>
+		<AffectsSavedGames>1</AffectsSavedGames>
+	</Properties>
+	<Dependencies>
+		<Mod id="4873eb62-8ccc-4574-b784-dda455e74e68" title="Expansion: Gathering Storm" />
+		<Mod id="0b54529d-f5c6-49c0-a00d-55716b44b167" title="Dev CE Tech and Civic Gates (experimental)" />
+	</Dependencies>
+	<InGameActions>
+		<UpdateDatabase id="DCTGT_SQL">
+			<Properties><LoadOrder>10</LoadOrder></Properties>
+			<File>Sql/DevCE_TechGatesTest.sql</File>
+		</UpdateDatabase>
+		<UpdateText id="DCTGT_TEXT">
+			<File>Text/DevCE_TechGatesTest_Text.sql</File>
+		</UpdateText>
+	</InGameActions>
+	<Files>
+		<File>Sql/DevCE_TechGatesTest.sql</File>
+		<File>Text/DevCE_TechGatesTest_Text.sql</File>
+	</Files>
+</Mod>
