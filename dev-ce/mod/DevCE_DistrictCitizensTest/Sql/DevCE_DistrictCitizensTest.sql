@@ -38,3 +38,12 @@ INSERT INTO PolicyModifiers(PolicyType, ModifierId) VALUES
 ('POLICY_GOD_KING', 'DEVCE_TEST_CAMPUS_CITIZEN_SLOT'),
 ('POLICY_GOD_KING', 'DEVCE_TEST_CAMPUS_CITIZEN_SCIENCE'),
 ('POLICY_GOD_KING', 'DEVCE_TEST_CAMPUS_CITIZEN_GOLD');
+
+
+-- Test convenience: the same modifiers also for every major civ from the start (no God King needed), and a cheap Campus
+-- that needs no tech, so it can be built on turn 1.
+INSERT INTO TraitModifiers(TraitType, ModifierId) VALUES
+('TRAIT_LEADER_MAJOR_CIV', 'DEVCE_TEST_CAMPUS_CITIZEN_SLOT'),
+('TRAIT_LEADER_MAJOR_CIV', 'DEVCE_TEST_CAMPUS_CITIZEN_SCIENCE'),
+('TRAIT_LEADER_MAJOR_CIV', 'DEVCE_TEST_CAMPUS_CITIZEN_GOLD');
+UPDATE Districts SET Cost = 1, PrereqTech = NULL WHERE DistrictType = 'DISTRICT_CAMPUS';
