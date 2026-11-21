@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Mod id="fbe3a304-42e2-4963-8afd-92e1b5f694c2" version="1">
+	<Properties>
+		<Name>Dev CE Unit Property (experimental)</Name>
+		<Teaser>Custom unit commands whose effect is a great person action (needs Dev CE).</Teaser>
+		<Description>Requirement unit properyt test.</Description>
+		<Authors>Dev CE</Authors>
+		<CompatibleVersions>2.0</CompatibleVersions>
+		<AffectsSavedGames>1</AffectsSavedGames>
+	</Properties>
+	<Dependencies>
+		<Mod id="4873eb62-8ccc-4574-b784-dda455e74e68" title="Expansion: Gathering Storm" />
+	</Dependencies>
+	<InGameActions>
+		<UpdateDatabase id="DCUCA_SQL">
+			<Properties>
+				<LoadOrder>500</LoadOrder>
+			 </Properties>
+			<File>Sql/DevCE_Requirement.sql</File>
+		</UpdateDatabase>
+	</InGameActions>
+	<Files>
+		<File>Sql/DevCE_Requirement.sql</File>
+	</Files>
+</Mod>

@@ -250,6 +250,19 @@
       <Filter>Source Files\GameCore</Filter>
     </ClCompile>
     <ClCompile Include="CitySpecialists.cpp">
+    <ClCompile Include="GreatPersonAssign.cpp">
+      <Filter>Source Files\GameCore</Filter>
+    </ClCompile>
+    <ClCompile Include="UnitCommandActions.cpp">
+      <Filter>Source Files\GameCore</Filter>
+    </ClCompile>
+    <ClCompile Include="UnitPropertyRequirement.cpp">
+      <Filter>Source Files\GameCore</Filter>
+    </ClCompile>
+    <ClCompile Include="UnitUpgradeFallback.cpp">
+      <Filter>Source Files\GameCore</Filter>
+    </ClCompile>
+    <ClCompile Include="UnitUpgradeRules.cpp">
       <Filter>Source Files\GameCore</Filter>
     </ClCompile>
   </ItemGroup>
@@ -561,6 +574,19 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CitySpecialists.h">
+    <ClInclude Include="GreatPersonAssign.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UnitCommandActions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UnitPropertyRequirement.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UnitUpgradeFallback.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UnitUpgradeRules.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="EAVector.h">

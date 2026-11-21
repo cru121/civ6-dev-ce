@@ -30,6 +30,11 @@
 #include "DistrictCitizens.h"
 #include "CitySpecialists.h"
 #include "NationalParks.h"
+#include "GreatPersonAssign.h"
+#include "UnitCommandActions.h"
+#include "UnitPropertyRequirement.h"
+#include "UnitUpgradeFallback.h"
+#include "UnitUpgradeRules.h"
 #include "DevBridge.h"
 #include "LuaHooks.h"
 #include "LuaDebugger.h"
@@ -94,6 +99,10 @@ void __cdecl Hook_RegisterScriptData(hks::lua_State* L) {
     CCallWithErrorHandling(L, AI::Espionage::RegisterAIEspionageManager, NULL);
     CCallWithErrorHandling(L, NationalParks::Register, NULL);
     CCallWithErrorHandling(L, CitySpecialists::Register, NULL);
+    UnitCommandActions::ResetForNewGame();    // a new game context: the command definitions are pushed again by the gameplay script
+    CCallWithErrorHandling(L, UnitCommandActions::Register, NULL);
+    UnitUpgradeRules::ResetForNewGame();    // a new game context: the upgrade rules are pushed again by the gameplay script
+    CCallWithErrorHandling(L, UnitUpgradeRules::Register, NULL);
 
     base_RegisterScriptData(L);
 }
@@ -105,6 +114,8 @@ void __cdecl Hook_RegisterScriptDataForUI(hks::lua_State* _, hks::lua_State* L) 
 
     PushSharedGlobals(L);
     CCallWithErrorHandling(L, NationalParks::RegisterUI, NULL);
+    CCallWithErrorHandling(L, UnitCommandActions::RegisterUI, NULL);
+    CCallWithErrorHandling(L, UnitUpgradeRules::RegisterUI, NULL);
 
     base_RegisterScriptDataForUI(_, L);
 }
@@ -162,6 +173,11 @@ static void InitHooks() {
     DistrictCitizens::Create();
     CitySpecialists::Create();
     DevBridge::Create();
+    GreatPersonAssign::Create();
+    UnitCommandActions::Create();
+    UnitPropertyRequirement::Create();
+    UnitUpgradeFallback::Create();
+    UnitUpgradeRules::Create();
     TerrainView::Create();
     BuildingGates::Create();
     FounderUniques::Create();

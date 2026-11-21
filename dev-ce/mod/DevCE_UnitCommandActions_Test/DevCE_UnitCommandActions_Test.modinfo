@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Mod id="290034e7-248e-4260-b5f0-8b7d97ceddf3" version="1">
+	<Properties>
+		<Name>Dev CE Unit Command Actions test</Name>
+		<Teaser>Test: Warriors get Crassus' great person action as a unit command (needs Dev CE and Dev CE Unit Command Actions).</Teaser>
+		<Description>TEST ONLY. Adds UNITCOMMAND_DEVCE_TEST_CRASSUS, bound to the action of Marcus Licinius Crassus (+60 gold, claims the tile; needs an unowned tile next to your territory), granted to UNIT_WARRIOR, and UNITCOMMAND_DEVCE_TEST_COLAEUS (Colaeus: +100 faith, a copy of the resource under the unit) granted to units with PROMOTION_BATTLECRY. Usable every turn, also by AI Warriors. Disposable single-player games only.</Description>
+		<Authors>Dev CE</Authors>
+		<CompatibleVersions>2.0</CompatibleVersions>
+		<AffectsSavedGames>1</AffectsSavedGames>
+	</Properties>
+	<Dependencies>
+		<Mod id="fbe3a304-42e2-4963-8afd-92e1b5f8f4c2" title="Dev CE Unit Command Actions (experimental)" />
+	</Dependencies>
+	<InGameActions>
+		<UpdateDatabase id="DCUCAT_SQL">
+			<Properties><LoadOrder>100</LoadOrder></Properties>
+			<File>Sql/DevCE_UnitCommandActions_Test.sql</File>
+		</UpdateDatabase>
+	</InGameActions>
+	<Files>
+		<File>Sql/DevCE_UnitCommandActions_Test.sql</File>
+	</Files>
+</Mod>

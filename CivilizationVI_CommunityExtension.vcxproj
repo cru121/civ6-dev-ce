@@ -290,6 +290,11 @@
     <ClCompile Include="CityRadius.cpp" />
     <ClCompile Include="GoldPurchase.cpp" />
     <ClCompile Include="FoodProduction.cpp" />
+    <ClCompile Include="GreatPersonAssign.cpp" />
+    <ClCompile Include="UnitCommandActions.cpp" />
+    <ClCompile Include="UnitPropertyRequirement.cpp" />
+    <ClCompile Include="UnitUpgradeFallback.cpp" />
+    <ClCompile Include="UnitUpgradeRules.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerCities.cpp" />
     <ClCompile Include="PlayerGovernors.cpp" />
@@ -410,6 +415,11 @@
     <ClInclude Include="CityRadius.h" />
     <ClInclude Include="GoldPurchase.h" />
     <ClInclude Include="FoodProduction.h" />
+    <ClInclude Include="GreatPersonAssign.h" />
+    <ClInclude Include="UnitCommandActions.h" />
+    <ClInclude Include="UnitPropertyRequirement.h" />
+    <ClInclude Include="UnitUpgradeFallback.h" />
+    <ClInclude Include="UnitUpgradeRules.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerCities.h" />
     <ClInclude Include="PlayerGovernors.h" />

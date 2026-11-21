@@ -118,6 +118,10 @@ _er = by_name[EDIT_NAME]
 assert len(_er) == 1
 EDIT_RVA = rva_of(_er[0])
 
+# Interfaces whose generated registration hook also calls a hand-written DevBridge::HandExtra_<iface>(L, t) (declared in DevBridge.h),
+# for methods that are more than one engine call (e.g. GreatPersonAssign.cpp: UnitGreatPerson:SetGreatPersonType).
+HAND_EXTRA = {'IUnitGreatPerson'}
+
 SKIP = collections.defaultdict(list)
 
 
@@ -381,6 +385,8 @@ for k, itf in enumerate(ifaces):
         e = exposed[i]
         L.append('\tif (gStates[%d].ok) { PushLuaMethod(L, l_%d, "lDev%s", t, "%s"); }' % (i, i, e['fn'], e['fn']))
     L.append('\tLog("[DevBridge] %s: %d methods added to the Lua object", "%s", %d);' % (itf, len(by_iface[itf]), itf, len(by_iface[itf])))
+    if itf in HAND_EXTRA:
+        L.append('\tHandExtra_%s(L, t);   // hand-written methods (DevBridge.h)' % itf)
     L.append('\tbase_reg_%d(a, b, c);' % k)
     L.append('}')
 L.append('')

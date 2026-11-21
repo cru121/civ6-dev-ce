@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Mod id="6c744c35-3117-436b-a771-324b4698eeff" version="1">
+	<Properties>
+		<Name>Dev CE Alt Unit Upgrade Test (experimental)</Name>
+		<Teaser>.</Teaser>
+		<Description>Dev test for alt unit upgrades: Warrior can upgrade to an Archer besides its normal upgrade. Also the example of the alternative upgrade buttons in the unit panel (UI/DevCE_UnitAltUpgrades_UI). Needs Dev CE Unit Upgrade Rules.</Description>
+		<Authors>Dev CE</Authors>
+		<CompatibleVersions>2.0</CompatibleVersions>
+		<AffectsSavedGames>1</AffectsSavedGames>
+	</Properties>
+	<Dependencies>
+		<Mod id="4873eb62-8ccc-4574-b784-dda455e74e68" title="Expansion: Gathering Storm" />
+		<Mod id="6c744c35-3117-436b-a771-324b4888eeff" title="Dev CE Unit Upgrade Rules (experimental)" />
+	</Dependencies>
+	<InGameActions>
+		<UpdateDatabase id="DCUU_SQL">
+		<Properties>
+			<LoadOrder>500</LoadOrder>
+		  </Properties>
+			<File>Sql/DevCE_UnitUpgrades.sql</File>
+		</UpdateDatabase>
+		<AddUserInterfaces id="DCUAT_UI">
+			<Properties>
+				<Context>InGame</Context>
+			</Properties>
+			<File>UI/DevCE_UnitAltUpgrades_UI.xml</File>
+		</AddUserInterfaces>
+		<ImportFiles id="DCUAT_UI_IMPORT">
+			<File>UI/DevCE_UnitAltUpgrades_UI.lua</File>
+			<File>UI/DevCE_UnitAltUpgrades_UI.xml</File>
+		</ImportFiles>
+	</InGameActions>
+	<Files>
+		<File>Sql/DevCE_UnitUpgrades.sql</File>
+		<File>UI/DevCE_UnitAltUpgrades_UI.lua</File>
+		<File>UI/DevCE_UnitAltUpgrades_UI.xml</File>
+	</Files>
+</Mod>

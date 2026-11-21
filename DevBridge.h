@@ -60,6 +60,9 @@ namespace DevBridge {
 	void PushExtra_IPlayerGovernors(hks::lua_State* L, int t);
 	void PushExtra_IMapPlot(hks::lua_State* L, int t);
 	void PushExtra_IUnitManager(hks::lua_State* L, int t);
+	// The reverse case: hand-written methods on an interface whose registration function the generated table hooks. The generated hook calls
+	// HandExtra_<iface>(L, t) right after its own methods (gen_bridge.py HAND_EXTRA).
+	void HandExtra_IUnitGreatPerson(hks::lua_State* L, int t);   // GreatPersonAssign.cpp: SetGreatPersonType
 
 	int Dispatch(hks::lua_State* L, int index);   // called by the generated thin wrappers
 	void InstallGeneratedHooks();                 // generated: hooks the PushMethods/RegisterMembers of each interface

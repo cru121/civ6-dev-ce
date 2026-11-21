@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Mod id="fbe3a304-42e2-4963-8afd-92e1b5f8f4c2" version="1">
+	<Properties>
+		<Name>Dev CE Unit Command Actions (experimental)</Name>
+		<Teaser>Custom unit commands whose effect is a great person action (needs Dev CE).</Teaser>
+		<Description>EXPERIMENTAL. Adds the tables DevCE_UnitCommandActions (a UnitCommands row and the GreatPersonIndividuals row whose action it uses) and DevCE_UnitCommandGrants (which unit types may use it) and pushes them to the Dev CE GameCore at game start. A command can start when the individual's ActionRequires rules pass at the unit's plot; it attaches the individual's GreatPersonIndividualActionModifiers around the unit and ends its moves (no charges). The unit panel shows the action's effect text and why it cannot be used (as for a great person); hovering the button highlights the plots where it can be used. AI players use their commands at the start of their turn, moving to a nearby plot where they can. Other mods insert rows in their own SQL; list this mod as a dependency so the tables exist first. Needs the Dev CE GameCore mod; without it this mod does nothing. Single player only.</Description>
+		<Authors>Dev CE</Authors>
+		<CompatibleVersions>2.0</CompatibleVersions>
+		<AffectsSavedGames>1</AffectsSavedGames>
+	</Properties>
+	<Dependencies>
+		<Mod id="4873eb62-8ccc-4574-b784-dda455e74e68" title="Expansion: Gathering Storm" />
+	</Dependencies>
+	<LocalizedText>
+		<Text id="LOC_DEVCE_UNITCOMMAND_NO_MOVES">
+			<en_US>Needs movement left (usable once per turn).</en_US>
+		</Text>
+		<Text id="LOC_DEVCE_UNITCOMMAND_REQUIREMENTS_NOT_MET">
+			<en_US>Cannot be used on this tile.</en_US>
+		</Text>
+	</LocalizedText>
+	<InGameActions>
+		<UpdateDatabase id="DCUCA_SQL">
+			<File>Sql/DevCE_UnitCommandActions.sql</File>
+		</UpdateDatabase>
+		<AddUserInterfaces id="DCUCA_UI">
+			<Properties><Context>InGame</Context></Properties>
+			<File>UI/DevCE_UnitCommandActions_UI.xml</File>
+		</AddUserInterfaces>
+		<AddGameplayScripts id="DCUCA_GP">
+			<File>Scripts/DevCE_UnitCommandActions_GP.lua</File>
+		</AddGameplayScripts>
+	</InGameActions>
+	<Files>
+		<File>Sql/DevCE_UnitCommandActions.sql</File>
+		<File>Scripts/DevCE_UnitCommandActions_GP.lua</File>
+		<File>UI/DevCE_UnitCommandActions_UI.xml</File>
+		<File>UI/DevCE_UnitCommandActions_UI.lua</File>
+	</Files>
+</Mod>

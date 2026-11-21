@@ -3433,6 +3433,7 @@ static void __cdecl hook_reg_37(void* a, void* b, void* c) {
 	if (gStates[16].ok) { PushLuaMethod(L, l_16, "lDevChangeActionCharges", t, "ChangeActionCharges"); }
 	if (gStates[969].ok) { PushLuaMethod(L, l_969, "lDevHasUsedActionCharges", t, "HasUsedActionCharges"); }
 	Log("[DevBridge] IUnitGreatPerson: 2 methods added to the Lua object", "IUnitGreatPerson", 2);
+	HandExtra_IUnitGreatPerson(L, t);   // hand-written methods (DevBridge.h)
 	base_reg_37(a, b, c);
 }
 // IUnitReligion::PushMethods  void(lua_State* L, int t)
