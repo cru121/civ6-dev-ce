@@ -241,6 +241,7 @@
       <Filter>Source Files\GameCore</Filter>
     <ClCompile Include="BuildingGates.cpp">
     <ClCompile Include="FounderUniques.cpp">
+    <ClCompile Include="CityRadius.cpp">
       <Filter>Source Files\GameCore</Filter>
     </ClCompile>
   </ItemGroup>
@@ -543,6 +544,7 @@
       <Filter>Header Files</Filter>
     <ClInclude Include="BuildingGates.h">
     <ClInclude Include="FounderUniques.h">
+    <ClInclude Include="CityRadius.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="EAVector.h">

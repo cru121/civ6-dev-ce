@@ -36,6 +36,7 @@
 #include "BankTrace.h"
 #include "BuildingGates.h"
 #include "FounderUniques.h"
+#include "CityRadius.h"
 
 HANDLE mainThread;
 
@@ -157,6 +158,7 @@ static void InitHooks() {
     TerrainView::Create();
     BuildingGates::Create();
     FounderUniques::Create();
+    CityRadius::Create();
 
     std::cout << "Hooks initialized!\n";
 }

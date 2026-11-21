@@ -285,6 +285,7 @@
     <ClCompile Include="NationalParks.cpp" />
     <ClCompile Include="BuildingGates.cpp" />
     <ClCompile Include="FounderUniques.cpp" />
+    <ClCompile Include="CityRadius.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerCities.cpp" />
     <ClCompile Include="PlayerGovernors.cpp" />
@@ -400,6 +401,7 @@
     <ClInclude Include="NationalParks.h" />
     <ClInclude Include="BuildingGates.h" />
     <ClInclude Include="FounderUniques.h" />
+    <ClInclude Include="CityRadius.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerCities.h" />
     <ClInclude Include="PlayerGovernors.h" />

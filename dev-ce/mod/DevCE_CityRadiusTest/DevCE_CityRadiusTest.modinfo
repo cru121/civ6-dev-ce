@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Mod id="cc6f573e-2a03-48ab-a23c-7367c17aea08" version="1">
+	<Properties>
+		<Name>Dev CE City Radius Test (experimental)</Name>
+		<Teaser>Test: every major civ's cities work and buy tiles out to 4; the Pyramids raise their owner's cities to 5.</Teaser>
+		<Description>TEST MOD for the Dev CE city radius. Turns the feature on (game capability CAPABILITY_DEVCE_CITY_RADIUS) and gives every major civ's cities 1 extra ring (city property DEVCE_CITY_EXTRA_RINGS, radius 4); the Pyramids give all their owner's cities 1 more (radius 5). Start a new game: the capability only takes effect for games started with it. Needs the Dev CE GameCore mod.</Description>
+		<Authors>Dev CE</Authors>
+		<CompatibleVersions>2.0</CompatibleVersions>
+		<AffectsSavedGames>1</AffectsSavedGames>
+	</Properties>
+	<Dependencies>
+		<Mod id="4873eb62-8ccc-4574-b784-dda455e74e68" title="Expansion: Gathering Storm" />
+	</Dependencies>
+	<InGameActions>
+		<UpdateDatabase id="DCCRT_SQL">
+			<File>Sql/DevCE_CityRadiusTest.sql</File>
+		</UpdateDatabase>
+	</InGameActions>
+	<Files>
+		<File>Sql/DevCE_CityRadiusTest.sql</File>
+	</Files>
+</Mod>
