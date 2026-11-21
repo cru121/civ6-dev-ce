@@ -77,6 +77,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.props" />
   </ImportGroup>
   <ImportGroup Label="Shared">
   </ImportGroup>
@@ -218,6 +219,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AI.cpp" />
+    <ClCompile Include="AIDistrictScores.cpp" />
+    <MASM Include="native\hook_entry.asm" />
     <ClCompile Include="asmjit\core\archtraits.cpp" />
     <ClCompile Include="asmjit\core\assembler.cpp" />
     <ClCompile Include="asmjit\core\builder.cpp" />
@@ -319,6 +322,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AI.h" />
+    <ClInclude Include="AIDistrictScores.h" />
+    <ClInclude Include="native\target_identity.h" />
     <ClInclude Include="asmjit\a64.h" />
     <ClInclude Include="asmjit\arm.h" />
     <ClInclude Include="asmjit\asmjit-scope-begin.h" />
@@ -443,5 +448,6 @@
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.targets" />
   </ImportGroup>
 </Project>

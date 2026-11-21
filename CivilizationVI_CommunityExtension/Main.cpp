@@ -24,6 +24,7 @@
 #include "UnitManager.h"
 #include "Unit.h"
 #include "AI.h"
+#include "AIDistrictScores.h"
 #include "EventSystems.h"
 #include "GameProcessor.h"
 #include "VetoEvents.h"
@@ -94,6 +95,7 @@ void __cdecl Hook_RegisterScriptData(hks::lua_State* L) {
     DevBridge::Log("[DevBridge] gameplay lua_State = %p", (void*)L);
 
     PushSharedGlobals(L);
+    AI::DistrictScores::RegisterLua(L);    // CE_AI* district-score API (henno / Civ Supply Chains); inert until a mod publishes a policy
     NationalParks::ResetRules();    // a new game context: the park rules are pushed again by the gameplay script
     CCallWithErrorHandling(L, CityTradeManager::Register, NULL);
     CCallWithErrorHandling(L, CultureManager::Register, NULL);
@@ -150,6 +152,11 @@ static void InitHooks() {
     GlobalParameters_Get = GetGameCoreGlobalAt<ProxyTypes::GlobalParameters_Get>(GLOBAL_PARAMETERS_GET_OFFSET);
     ApplyTourism = GetGameCoreGlobalAt<ProxyTypes::ApplyTourism>(APPLY_TOURISM_OFFSET);
     GetPlayersToProcess = GetGameCoreGlobalAt<ProxyTypes::GetPlayersToProcess>(GET_PLAYERS_TO_PROCESS_OFFSET);
+
+    // Qualifies the original GameCore image before our registration detours modify it; failure only disables this optional API.
+    if (!AI::DistrictScores::Create()) {
+        MainLogger->Warn("District-score capability unavailable; its policy remains disabled.");
+    }
 
     orig_RegisterScriptData = GetGameCoreGlobalAt<ProxyTypes::RegisterScriptData>(REGISTER_SCRIPT_DATA_OFFSET);
     CreateHook(orig_RegisterScriptData, &Hook_RegisterScriptData, &base_RegisterScriptData);
@@ -256,6 +263,7 @@ extern "C" {
         if (!g_initOk) {
             return nullptr;
         }
+        AI::DistrictScores::Reset();    // policy is per game context; hooks stay installed
         return base_DllCreateGameContext();
     }
 
@@ -263,6 +271,7 @@ extern "C" {
     // name up, which can happen before the original GameCore is loaded (error 127). Our old workaround, loading GameCore on a thread
     // started in DllMain, raced with that lookup. This function always exists; GameCore is loaded on the first DllCreateGameContext.
     __declspec(dllexport) void __cdecl DllDestroyGameContext(void* context) {
+        AI::DistrictScores::Reset();
         if (base_DllDestroyGameContext) {
             base_DllDestroyGameContext(context);
         }

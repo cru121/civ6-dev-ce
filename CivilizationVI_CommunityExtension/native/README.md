@@ -1,0 +1,875 @@
+# Experimental district-site score API
+
+## Review the current csc-dev integration
+
+[Main.cpp](../Main.cpp) keeps CE's process initialization, gameplay Lua
+registration and game-context reset. [Runtime](../Runtime.h) owns hook
+installation. The existing CE features use CreateHook. The related AI detours
+use InstallHookGroup so all original trampolines exist before a group can run.
+Runtime also owns the verified instruction adapter used by ordinary building
+nomination. Its assembly replays the interrupted native instruction.
+
+[AIDistrictScores.cpp](../AIDistrictScores.cpp) owns the versioned policy and
+bindings. Lua stages numeric offers, Commit publishes one generation, and
+Reset retires game-context state. Native workers read bounded copies or hold a
+policy lock only for local, guarded reads and writes. The lock is released
+before the original decision or a Lua API call. Native objects are borrowed for
+the current call. A receipt identifies the observed consumer and the action it
+took, such as a score write or an earlier tree update.
+
+| Consumer | Where to start | Scope |
+| --- | --- | --- |
+| District scores and managed types | [District scores](../AIDistrictScores.cpp), [managed values](district_managed_values.inl) | Civ owns legal locations, reservations and production competition. |
+| Static and timed quotes | [Economy pricing](economy_pricing.inl), [site pricing](native_site_pricing.inl) | Quotes return signed Q8 utility for the caller to use in a bid. |
+| Supplier protection and repair | [Builder protection](builder_protection.inl), [harvest](clear_plot_harvest.inl), [repair admission](district_repair_admission.inl) | Guards apply at the ordinary work or repair decision. |
+| Research, recruitment and finishing | [Material development](material_development.inl), [worker finishing](material_worker_dispatch.inl) | Civ owns prerequisites, queue competition, custody and legal work. |
+
+Current support is Windows DX11 and Gathering Storm on Steam build 26595377.
+[target_identity.h](target_identity.h) and Runtime's executable profile identify
+the two images. The [relocation ledger](../../native-relocation.json) maps the
+previous and current RVAs. Feature-local layout constants and prefixes sit
+next to their callers. Unqualified features keep the original native path or
+leave their optional Lua capability unavailable. The dated sections below
+retain their own binary scope and addresses.
+
+`CE_AIMonotonicSeconds()` returns read-only fractional seconds from a local
+`std::chrono::steady_clock` origin. Subtract readings around a synchronous Lua
+policy pass to measure elapsed wall time, including native pricing/UI calls.
+It takes no game object or address and changes no decision state. Its origin
+has no relationship to turns, economic discounts or process CPU time; callers
+must treat an absent binding as unavailable measurement rather than zero cost.
+CSC records whole-publication and per-player envelopes, then separately reads
+CE's existing per-packet managed-cell refresh counter before replacement and
+at the final observation boundary. Per-player spans partition the publication
+and must not be added a second time. Repeated native counter samples for the
+same version are cumulative; retain their maximum.
+
+
+## Material restoration and held Builders
+
+Lua can stage one reachable worker per AI empire with
+CE_AIMaterialWorkerLoanOffer(player, city, plot, improvement, unit, unitType,
+x, y, artifact). The existing packet must also have a positive supplier
+entry for the exact restoration job. The last argument identifies an
+Antiquity Site with no Builder harvest action, or -1. The other coordinates
+are the worker position when Lua checked its route. The offer expires when
+the policy packet is replaced.
+
+The [loan consumer](material_worker_loan.inl) follows the same priority
+pass as worker finishing. It observes the completed native district
+action-dispatch call. A district must hold exactly one ordinary routed
+worker and have no clearing action on the plot. Native permission and equal
+priority still apply. CE permits one specific native release comparison
+to expose that unit to the regular evaluator. The district, improvement
+and production bids remain in their own native decisions.
+
+CE_AIMaterialDevelopmentStatus() advertises workerLoanReady, the published
+workerLoanOffers count, and workerLoan and workerLoanFirst for the offer
+delivered to the native evaluator. The first receipt identifies player,
+city, plot, improvement, worker, holder controller, receiver controller,
+and turn. Use operation and supply readback for actual follow-through.
+workerLoanMicros records time spent in the qualifying release path for
+that publication. Use the full game A/B to measure additional turn time.
+See the [matched Axum experiment](https://github.com/hennogous/Henno-Mods/blob/main/project/docs/research/mods/csc-ai-axum-builder-availability-20261120.md#letting-the-supplier-recruit-from-an-idle-clearance-pass).
+
+## Explicit recurring intervals — 17 November
+
+`CE_AIYieldIntervalValue(player,city,yield,amountQ8,ready,horizon,discountQ8)`
+and `CE_AIAmenityIntervalValue(player,city,count,ready,horizon,discountQ8)`
+share the Stream APIs' arguments, readiness and bounds (current maximum horizon
+300). They return signed Q8 utility, or no Lua value when unavailable. Existing
+Stream and fixed-amount bindings retain their behavior.
+
+Native cumulative helper528310 returns the input at t=0;528660 subtracts that
+origin for unequal times. A recurring interval requires cumulative0=0. When
+ready=0, add normalized yield, or the same city/count's native amenity quote
+at(0,0), before range/sign checks. Use int64 for the addition. Amenity utility
+is nonlinear: never use count times price(1), or infer its sign from count.
+Positive-start intervals keep the native result. Every zero-start interval
+increases by one normalized current period relative to the old Stream API.
+
+Ghidra reference SHA324c51e9, runtime SHA092abfbb; relevant text identical.
+Astra reviewed the trace and implementation. Supported VS2022 Release build,
+249 native checks,4 Runtime failure/cleanup cases and instruction restoration
+pass. A shared-controller replay qualifies15 real pricing cases,8/8 joint
+customer quotes and unchanged10,954 gameplay rows; exit0/restored. Routine
+customer residual delivery is separate. No upstream PR.
+
+
+## Managed investment delivery candidate - 13 November
+
+Branch `codex/quarter-value-delivery`, built against Windows Steam XP2 SHA256
+`092abfbb2176f8df04b5212f819dc269dd83aea866ff05aaf489904a1ff7c41f`.
+No upstream PR. The following extends, and corrects the reservation scope of,
+the historical final-entry experiment described below.
+
+- `CE_AIDistrictScoresManagedType(player,district,defaultQ8)` declares whole
+  new-investment valuation for one type. Begin/Allow precede it; sparse positive
+  FinalEntry values override a nonpositive default. Defaults are bounded
+  -4096..0 utility;256 scopes total,16 per player. Duplicate/malformed scopes
+  reject staging. No early/guarded additive entry may share a managed type.
+- `CE_AIDistrictScoresManagedReceipt(version,player,district)` returns staged,
+  considered/applied/writes, reservedWrites/fallbackWrites/masked/requestWrites,
+  protected guard counts, last identity/reason/reservation and processing time.
+  Counters reset at the next atomic commit. A write is not a selection/action.
+- Existing status adds managedTypes, managedPasses, managedMicroseconds,
+  managedWrites and managedTraceDropped. Legacy changed remains the bounded
+  additive/final-legacy write count; managed writes have a separate counter.
+
+`district_managed_values.inl` refreshes current valid cells after aggregation and
+before joint selection, type-specific location and PresentValue reads. It owns
+no reservations: nonempty IDs remain readable claims, with native thresholds.
+A nonpositive managed new investment is masked only during placement selection
+because the native selector can otherwise choose a negative candidate. Every
+byte is restored. Location selection applies the shared supplier exclusion too.
+Generic existing district footprints are excluded, preserving construction/repair.
+A managed player with no per-city entries still gets defaults in a new city.
+
+The Update hook at3fa5e0 returns bool in AL. Native building+190 and unit+178
+branches precede district+1a8; only a genuine managed district request can be
+repriced, after successful native validation/ETA update. Native Update retains
+max(old,current), so a cache-only reduction cannot retire a high old request.
+The adapter assigns wrapper+148/value+158 through2ca0f0's tracked setter, whose
+actual body consumes RCX/RDX only (incoming R8 is overwritten before use).
+No request, reservation, coordinates, ETA, queue or completion state is changed.
+Locationless requests match native max(0,column);11ec40 on city+b58 excludes
+existing Quarters using onlyComplete=false/includeReplacements=true. Existing
+pillaged districts count too: that function has no pillage exclusion.
+
+The new Location3e5550, RequestUpdate3fa5e0, setter2ca0f0 and count11ec40 entries
+have exact32-byte guards in addition to the full image identity. All detours use
+Runtime.InstallHookGroup. No raw MinHook calls or Lua callbacks enter this code.
+Borrowed native pointers never persist across calls; generation checks reject a
+retired packet. Invalid layouts/sentinels do not become legal opportunities.
+
+Physical-footprint correction: row+50 is HasImprovement, not HasDistrict.
+Row+51 means completed/unpillaged district and cannot preserve a foundation or
+repair. All managed operations and the shared supplier/typed-decline masks
+instead query the actual city district collection using the already qualified
+repair getter11e520(city+b58,&xy). No completion/pillage filter is imposed.
+Its entry prefix is checked, and the full160-byte body matches the qualified
+reference/current binary. A missing/unreadable object preserves native state.
+Independent fixtures distinguish improved empty land, foundations before/after
+improvement removal, pillaged districts and stale protection scopes.
+
+Loops are capped to37 native rows and16 managed types per player. Optional
+managed writes/reader traces are capped at2048 records and reserve half the
+16384 journal for core evidence; dropped samples are counted and never retire
+policy. They do not consume the old4096 legacy write budget. Core/legacy trace
+exhaustion still fails closed. Processing counters cover managed matrix passes,
+not all masks/Lua/quotes/engine work, so measure end-to-end timing separately.
+
+243 native checks pass, including a20000-consumer rewrite stress, request AL
+failure/branch precedence, reserved cells, new city defaults, locationless
+rebasing, existing-footprint exemption, supplier masks and epoch retirement.
+The four Runtime failure/cleanup cases and instruction delivery/restoration
+also pass. These synthetic checks do not establish real ABI/game performance.
+Shared-controller replay and fresh-game evidence remain separate requirements.
+Static REA bundle: `Desktop/Codex/csc-ai-placement-coverage-20261113/rea-current-consumers.json`.
+
+
+## Complete district values and read-only economic quotes — 13 November
+
+The generic final-entry mode shares the existing atomic batch/lifecycle:
+`Begin → Allow → FinalEntry → Commit`. It is exclusive with early/guarded-late
+entries for the same player/city/district/plot. No CSC identifiers or transaction
+rules enter CE. The consuming mod owns valuation; CE owns qualified transport.
+
+| Lua method | Meaning |
+|---|---|
+| `CE_AIDistrictScoresFinalEntry(player,city,district,plot,valueQ8)` | Replace the whole eligible matrix cell after native building aggregation. Signed Q8 utility, bounded -4096..4096 utility. Zero/negative values are allowed; invalid native sentinels are never revived; reservations are neither created nor changed. |
+| `CE_AIEconomyStatus()` | JSON ABI1, separate final/pricing readiness, final bounds and maximum horizon100. Presence alone is not readiness. |
+| `CE_AIYieldStreamValue(player,city,yield,amountQ8,ready,horizon,discountQ8)` | Normalize recurring yield using native defaults/player strategy, then native timed discounting. Income amount bounded +/-128 per turn, 0<=ready<horizon<=100. |
+| `CE_AIYieldFixedValue(player,city,yield,amountQ8,at,discountQ8)` | Price a one-off amount, such as a land invoice, using the equal-time branch. Amount bounded +/-4096, 0<=at<=100. |
+| `CE_AIAmenityStreamValue(player,city,count,ready,horizon,discountQ8)` | Native city/player amenity valuation; count bounded +/-8 and same recurring timing limits. |
+
+Pricing returns an integer Q8 utility, or no Lua result (`nil`) when unavailable.
+Never interpret nil as a free investment or zero income. Discount must be positive
+and at most64 in Q8 units. The calling thread is the game's ordinary Lua thread;
+no native hook calls back into Lua and no pointer survives a quote. Game context,
+owner/city identity, definition index, timing and numeric/sign bounds are checked.
+
+`target_identity.h` names every new RVA and field. `economy_pricing.inl` documents
+ABI aliases and verifies helper entry bytes after Create's full binary SHA check.
+The registry accessor306b80 and city lookup2c4360 resolve current player/city
+objects; normalization52b110, timed income528660 and amenity5272a0 are read-only
+calls, not hooks. Yield definition lookup7d1ce0 is covered by the full SHA guard.
+Ghidra reference XP2 SHA324c51e9 and supported November hotfix SHA092abfbb have
+identical relevant text. Do not port offsets by assuming another build matches.
+
+Final mode uses the existing Runtime aggregation-call hook. It snapshots before
+the original aggregation and revalidates epoch, matrix/row identity, intended
+owner/city, eligible owned/frontier status, reservation and invalid sentinels
+afterward. A qualified final write is a `Final` trace/receipt, distinct from early
+`Net` and guarded `Late`. A published bid, successful write, selector winner,
+purchase and completed construction remain separate evidence.
+
+Native regression:184 district checks,4 shared-hook failure/cleanup cases and
+instruction-call delivery/restoration pass. The supported Release build uses the
+existing pinned MinHook library at CE's expected ignored local library path;
+this feature changes no upstream build system. Initial fresh3-turn pricing smoke
+qualified all five AI cities, pricing/final readiness1, normal exit0 and restored
+preferences. It did NOT demonstrate full economic bids: CSC readiness facts were
+unavailable and its established fallback remained active. The revised main-mod fact adapter subsequently passed a fresh30-turn window:
+actual whole-value entries reached native writes/cache reads/eligible comparisons.
+After final mod-side review safeguards, a fresh3-turn smoke repeated16 exact
+write/cache/comparison receipts on source-matching policy. Example whole bid
+-70,076Q8 at player1/city65536/district36/plot985 was staged, written and read
+in an eligible city comparison; siteWins remained0. All sessions exited0 and
+restored preferences/packages. These qualify transport, not improved placement,
+construction or Service outcomes. See the
+[exact CSC revisions and audit](https://github.com/hennogous/Henno-Mods/blob/main/project/docs/research/mods/csc-ai-central-economy-20261113.md).
+
+
+This module adds generic district/site incentives to CE. A consuming mod publishes
+numeric player/city/district/plot adjustments through gameplay Lua. CE applies
+qualified adjustments to fresh native outputs and records diagnostic observations.
+It contains no mod-specific adjacency rules, construction orders or subsidies.
+
+This development branch follows CE's C++ module, Runtime hook and HavokScript
+binding conventions. It adds an optional late write to the earlier score API.
+The prior build's qualification is retained separately below. Upstream review,
+broader compatibility and release remain separate.
+
+## Reviewer walkthrough
+
+Read the integration in this order:
+
+1. `Main.cpp` calls `AI::DistrictScores::Create` once, registers the gameplay
+   Lua bindings and retires the policy at context boundaries.
+2. `AIDistrictScores.cpp` qualifies the original image and delegates grouped
+   hook installation to `Runtime::InstallHookGroup`. Runtime creates all
+   trampolines before enabling any hook and rolls back this group's targets
+   on failure. `hook_entry.asm` preserves the NetValue caller's R12 row and
+   original seven arguments, with Win64 stack and unwind metadata.
+3. Lua stages a table using Begin, Allow and Entry or LateEntry. Commit
+   publishes it under the policy lock. The early hook preserves the original
+   NetValue result pointer. The late hook checks the cache around aggregation.
+   Both recheck the publication generation after the original routine.
+4. The bounded journal records write attempts and the cache, winner and
+   plot-specific present value. Hooks never call HKS. Lua functions release
+   lock guards before invoking HKS, which can exit via longjmp.
+
+The RVAs and layouts were recovered from the pinned Windows XP2 disassembly and
+corroborated by the earlier four-hook prototype. They are not cross-platform CE
+struct definitions. Relevant native contracts are:
+
+| RVA | Contract / qualification |
+|---|---|
+| `52a440` | NetValue returns the caller's int32 output pointer; other arguments pass through unchanged. |
+| `3e30be` | Ordinary caller return address; R12 identifies its plot-analysis row. Other NetValue callers are not adjusted. |
+| `3dfee0` | CalculateDistrictValues(this) returns void. Only the qualified caller may apply late entries. |
+| `3e293c` / `3e2941` | DoTurnActivate's call to aggregation and its return. Verify the call target and observe completion before district selection. |
+| `3e4a50` | GetBestDistrict(this, int32 xy[2]) returns district index, or -1 with no valid coordinates. |
+| `3e7f40` | PresentValueOf(this, int32 *out, district, optional plot) returns out; only explicit-plot calls are traced. |
+| `5bdac0` | RegisterScriptData prefix is verified before CE modifies it; this module does not detour it. |
+
+Named function addresses and field offsets live in `target_identity.h`. The
+late matrix and row alias were verified in the
+[late placement replay](https://hennogous.github.io/Henno-Mods/ai/sources/project/docs/research/mods/csc-ai-late-placement-20261105).
+A changed GameCore requires requalifying ABI, call-site register use and layout.
+The game owns every pointer. Bounds checks alone cannot guarantee lifetime.
+
+## Optional building nomination and production fallback
+
+On Windows Steam XP2 build 26595377 (GameCore SHA 4de40abf), the flag restore
+at RVA 3e4295 precedes the effective Q8 building-score comparison at 3e429a.
+CE installs one instruction call through Runtime. The Win64 shim preserves
+volatile registers, passes the original caller return address, replays the
+flag restore and returns to the original comparison. The shim admits modes
+0/0 for ordinary nomination and 1/0 or 1/1 for the two queue paths. The
+adapter checks the corresponding native return address. The game's prerequisites
+and positive-score checks still govern eligibility. Unrecognized callers and
+unsupported instruction bytes retain stock behavior.
+
+The ordinary caller at 3e0ec5 can nominate a building for prerequisite
+preparation or a construction contract. Its preference changes that
+comparison. It leaves the cached value used by the contract and purchase
+routes intact. QueueNextBuild also calls the same selector at 3e7d57 and
+3e7e59 (returns 3e7d5c and 3e7e5e). Both require an immediately buildable
+item. The latter enables an additional building-class filter. These paths
+converge before the regular admitted-contract check. If the queue falls
+through, the winning building's effective score can then compete against
+unit and project scores. CE leaves those competing values and the contract
+gate untouched.
+
+CE_AIBuildingNominationBid(player, city, building, deltaQ8) stages the
+ordinary preference using Begin/Allow/Commit as before.
+CE_AIBuildingNominationQueueBid(player, city, building, deltaQ8, queueDeltaQ8)
+can stage separate preferences for the two consumers in the same entry.
+A zero disables the corresponding consumer. Each positive preference is
+capped at 131,072 Q8. Duplicate entries keep the strongest independent
+value, so opting a city/building into the queue cannot promote a larger
+ordinary preference there. Both consumers preserve nonpositive and
+overflowing scores.
+
+The queue capability verifies both direct CALL targets as part of hook
+installation. Failure of this optional fingerprint leaves the qualified
+ordinary channel available. CE_AIBuildingNominationStatus reports this
+as queueReady, with queueChanged and firstQueue for the current
+publication. CE_AIBuildingNominationReceipt reports the staged queueBidQ8,
+queueComparisons and queueWrites for the same key and packet version as
+the existing ordinary counters. A queue write is a comparison observation. The mod must
+inspect the actual queue or completed building for follow-through.
+
+## Existing project integration
+
+Use CE's existing Visual Studio solution and dependency setup. The feature
+builds with CE's C++20 settings. The Win64 shim uses the MASM customization, and
+both x64 configurations link the Windows SDK `Bcrypt.lib`.
+
+Initialize after CE's HavokScript/MinHook setup and before its registration hooks
+alter the qualified image. Register bindings in each gameplay Lua state. Reset
+policy before creating and destroying a game context; hooks remain process-owned.
+The existing develop `std::call_once`, logger, export layout and destroy forwarder
+are retained. Failure disables this capability, rather than silently providing
+an unqualified score consumer.
+
+The feature uses CE's typed HavokScript imports and `PushLuaMethod`. The JSON
+helper uses bounded 240-byte literal fragments, `luaL_checkstack` and incremental
+`hksi_lua_concat` to stay within the shipped formatter's 511-byte limit.
+
+## Qualified native target
+
+Windows x64 Gathering Storm `GameCore_XP2_FinalRelease.dll`, Steam build
+26407122. The November hotfix retains the earlier XP2 instruction bytes,
+section layout and AI caller sites. This topic branch is an offline port
+candidate pending qualification on a compatible upstream CE base.
+
+```
+SHA-256 092abfbb2176f8df04b5212f819dc269dd83aea866ff05aaf489904a1ff7c41f
+PE timestamp 1793649108
+Image size 12976128
+```
+
+Initialization checks the original file hash, loaded metadata, all four hook
+prefixes, the registration prefix and the aggregation caller's relative CALL. `target_identity.h` contains qualification
+metadata and prefixes. No GameCore DLL is bundled. Other builds/platforms are
+outside this contract.
+
+## Gameplay Lua interface
+
+All globals start with `CE_AIDistrictScores`. Mutating methods return 1 on
+success, 0 on rejection; consumers must catch argument errors and Disable after
+any partial/rejected publication.
+
+| Suffix | Arguments | Meaning |
+|---|---|---|
+| `Begin` | version, width, height, districtCount | Disable old policy and open empty staging. |
+| `Allow` | playerId | Admit one original AI identity. |
+| `Entry` | playerId, cityId, districtIndex, plotIndex, deltaQ8 | Add an early NetValue adjustment. |
+| `LateEntry` | playerId, cityId, districtIndex, plotIndex, expectedBeforeQ8, expectedFinalQ8, deltaQ8 | Add an adjustment after building aggregation. |
+| `Commit` | none | Publish the complete staged table atomically. |
+| `Disable` | none | Retire policy/staging and advance generation. |
+| `Status` | none | JSON readiness, counters, samples and trace metadata. |
+| `TraceCount` | none | Retained native journal length. |
+| `TraceRead` | offset, limit, expectedGeneration | Non-consuming JSON journal page. |
+
+Argument conversion occurs before any lock: HKS may longjmp on a bad argument.
+Consumers must catch that error and call Disable. Once conversion succeeds,
+Begin retires the current policy before range/version validation. A rejected
+Allow, Entry or LateEntry poisons staging; Commit rejects a partial batch or any native
+fault. Only context reset clears faults. Disable retains the published version
+and journal; Commit/reset clear the journal. This distinction matters when
+harvesting evidence or replacing a rejected publication.
+
+Versions increase within a context. Width/height are 1-256; districtCount is
+1-4096 and covers the highest native index plus one. Player IDs are 0-63, city IDs
+nonnegative, districts 1 through districtCount-1, plots zero-based y*width+x.
+At most 4096 unique pairs are admitted across both entry methods. Capture original human/AI roles before
+autoplay changes them; the native allowlist does not discover original humans.
+
+Deltas are signed Q8 utility units (256 Q8 = 1 utility), not yields or build orders.
+Bounds are -262144 through +1048576, excluding zero; at most 4096 native changes
+are admitted per publication. Zero and scores at/below -2559744 are protected.
+Deductions clamp at -1048576 without raising a base already at/below that floor.
+Unsafe arithmetic, including results above INT_MAX/2, is rejected unchanged.
+These inherited diagnostic bounds are not recommended tuning weights.
+
+### Late score contract
+
+LateEntry uses the same Begin, Allow and Commit transaction and write budget.
+The expected scores are the pair's positive values at aggregation entry and
+return, before the CE delta. The final native value must be at least the entry
+value, and the adjusted result must remain positive and within the existing
+numeric ceiling. A pair can appear once, through either Entry or LateEntry.
+
+The late hook admits only a non-center, owned, district-eligible, unreserved row
+whose row scores alias the writable matrix. It checks the expected entry value
+before native aggregation, then rechecks row identity, reservation, matrix,
+finished value and publication generation before the write. A mismatched
+calculation keeps its native value. A new native calculation may independently
+qualify again. CE leaves the building forecast and native candidate eligibility
+alone. The consumer supplies the expected values and a delta justified by its
+own evidence. This API adds no building-component query or Lua worker callback.
+
+## Diagnostics and lifetime
+
+The NetValue hook preserves native arguments and returned output identity.
+The aggregation hook records the cache after any late write. The winner and
+plot-specific PresentValue readers are read-only. Cache and PresentValue records
+cover published pairs. A best record can show another district in the city.
+
+Status ABI1 retains the first 64 changed samples and exposes trace_count,
+trace_capacity (16384) and active. Trace kinds are net/cache/best/pv/late. Each record
+contains generation/version, player/city/district/plot, base/result, reason and
+eligibility. Net reasons: 0 adjusted, 2 protected, 3 arithmetic rejected,
+4 write budget exhausted. Late records use reason 0 for a write and 5/6 for
+an entry/final score mismatch. Their base/result fields report the finished
+native and resulting scores. Invalid layout or reservation skips the write.
+A best district/plot of -1 reports no winner.
+
+TraceRead offsets are zero-based; limits are 1-64. JSON includes generation,
+version, total, offset, next, stale and records. A generation mismatch returns an
+empty stale page. Disable before reading for a stable journal, then use the new
+Status generation; records may retain an older capture generation. Save pages
+before Commit/reset, which clear the journal. Capacity exhaustion disables
+incentives and reports a fault rather than silently losing evidence.
+
+Storage and lookup deliberately favor an inspectable bounded implementation:
+fixed arrays, linear pair lookup and no worker-side heap allocation. The API has
+one global publisher per context, with no per-mod ownership token; multiple
+consuming mods must coordinate. Large-world performance and a composable
+multi-consumer API remain review topics rather than implicit guarantees.
+
+The policy lock and generation fence prevent older admitted calls from writing or
+appending after replacement/reset. This does not make an entire analysis pass
+atomic, cancel old requests or remove cached influence. Policy is not serialized;
+a consuming mod must reconstruct it after loading a save. The carrier is pinned before hooks become active and remains resident until
+process exit. Live FreeLibrary unload is intentionally unsupported; there is no
+hook-removal/drain protocol. Multiplayer and general unload safety are unqualified.
+
+### Reproduce the isolated checks
+
+The optional self-test uses synthetic CityBuild buffers and original routines.
+It checks both score phases, refusals, generation retirement, JSON paging and
+the shared Runtime helper's create/queue/apply failure paths with MinHook stubs.
+The test cannot validate actual native memory layout, the MASM entry or Lua
+lifetime in a running game.
+
+Open an x64 Developer PowerShell for VS2022 in the DLL project directory.
+
+```powershell
+if ($env:VSCMD_ARG_TGT_ARCH -ne 'x64') { throw 'Use an x64 Developer PowerShell' }
+$ceSource = (Resolve-Path .).Path
+$ceTestOutput = Join-Path $env:TEMP 'CE-score-selftest'
+New-Item -ItemType Directory -Force -Path $ceTestOutput | Out-Null
+Push-Location $ceTestOutput
+try {
+    cl.exe /nologo /O2 /Gy /EHsc /std:c++20 /DCE_AI_DISTRICT_SCORES_TEST /D_CRT_SECURE_NO_WARNINGS `
+        "/I$ceSource" "/I$ceSource\include" "$ceSource\AIDistrictScores.cpp" `
+        "$ceSource\native\tests\selftest.cpp" "$ceSource\Runtime.cpp" "$ceSource\HavokScript.cpp" `
+        /Fe:ce-score-selftest.exe /link /OPT:REF /NODEFAULTLIB:libMinHook.x64.lib bcrypt.lib user32.lib
+    if ($LASTEXITCODE -ne 0) { throw 'Self-test compilation failed' }
+    .\ce-score-selftest.exe
+    if ($LASTEXITCODE -ne 0) { throw 'Self-test checks failed' }
+} finally { Pop-Location }
+```
+
+Expected results are 278 district-score checks and four hook-group checks.
+The instruction-call check exercises byte refusal, near-relay delivery and
+restoration with an executable synthetic caller.
+The three failure-path diagnostics are expected in the isolated host.
+
+## Earlier C port qualification checkpoint â€” 5 November 2026
+
+Tested implementation: commit `87f48fc7878d00851279bccbc9dd30cfe147470b`, based on
+upstream develop `2986a746b396eb93aad14f9afffb043a09c2c489`. The results in
+this section apply to that C implementation.
+
+- Existing Release/x64 VCXPROJ builds with VS2022/MSVC14.44.35207, SDK26100 and
+  pinned vcpkg dependencies. Unmodified upstream builds in the same environment;
+  each reports the same 144 warnings and zero errors. No alternate CE builder or
+  source workaround is part of the contribution.
+- Feature DLL SHA-256:
+  `b1090682fc6c964d077c36efe4dcbac6693d6bf83f9da08b5ad4c0f6e77d139b`.
+  All 157 export contracts match upstream; independent static checks cover actual
+  imports, compiled guards/bindings/lifecycle, the MASM shim and its unwind data.
+- A fresh isolated CSC/Lua test reached turn 100 on Online speed, checked an
+  observation-only context at turns 1â€“2, and reloaded the exact save at turn 6,
+  using the shared controller. All 101 Lua/Python plan comparisons match across
+  100 publications. All 27,775 journal records pass the audit: 62 increases,
+  13,746 deductions, all four trace families, zero reported native API faults,
+  no original-human trace and read-only diagnostic outputs.
+- Normal supported exit (code 0), all 153 subscription preferences, source/package inventories
+  and the previous development-package restoration are verified. No Frida,
+  Python policy publisher, district orders or grants were used.
+
+The [develop qualification report](https://hennogous.github.io/Henno-Mods/ai/sources/project/docs/research/mods/csc-ce-develop-port-20261105)
+identifies the build/native receipts, exact target, test setup and limitations.
+The zero-fault count refers to the API and policy. The game logs also contain
+duplicate CurrentClickouts localization errors; the report separates new lines
+from the pre-run prefix. No general clean-log or attribution claim is made.
+
+This establishes the bounded method on the pinned Windows target, not better AI
+quality, a controlled comparison across CSC revisions, Debug, multiplayer,
+other CE consumers, live DLL unloading or actual Workshop subscription.
+
+The [earlier prototype report](https://hennogous.github.io/Henno-Mods/ai/sources/project/docs/research/mods/csc-ce-policy-parity-20261104)
+preserves the recovered signatures and its distinct runtime observations; its
+counts should not be substituted for this develop build. The old PR is closed.
+Final capability scope will be reviewed before a replacement PR to develop.
+
+## Builder supplier protection
+
+The optional improvement-score consumer uses the existing Begin, Allow,
+Commit and Disable transaction. Stage one or more compatible improvement IDs
+per protected site with CE_AIBuilderProtectionAllow(player, city, plot,
+improvement). Here Allow means this improvement remains eligible at a listed
+site. A site without entries has ordinary scoring. Every publication replaces
+both policies. A caller that lacks the optional capability can continue to
+publish district entries alone.
+
+CE_AIBuilderProtectionBid(player, city, plot, improvement, deltaQ8) stages
+the same allowance with a bounded preference. The accepted range is 0 to
+64 score units (16,384 in Q8). The strongest preference for an identical key
+wins at publication. The hook adds a bid only to a positive result from the
+already eligible native caller, and skips arithmetic overflow. A zero,
+negative or ineligible result stays native. Callers can continue to use
+CE_AIBuilderProtectionAllow with no preference.
+
+CE_AIBuilderProtectionStatus also reports maxBidQ8, bids and firstBid.
+The positive-bid count and first tuple are separate from protection
+so a rejected improvement cannot hide evidence of a successful bid.
+
+CE_AIBuilderProtectionStatus returns readiness, allowance count, changed
+score count, faults and the first applied tuple with the old and new score
+for the current publication. The evidence window rolls at Commit. There is
+no per-call journal or journal-dependent write cutoff for this consumer.
+
+The ordinary Win64 function hook at 52a8c0 preserves the original call and
+returned pointer. The qualified caller at 3e3423 copies its score unchanged
+to the improvement array. For a published site, the hook checks the exact
+player, city, coordinates and improvement before substituting the engine's
+ineligible score read from b66cb0. Native ranking, pathing, reservations and
+job execution remain native. New publications take effect on a fresh score
+calculation. Disable retires future writes and does not clear existing
+native cache or cancel an assigned job.
+
+This consumer shares the GameCore identity and lifecycle with district
+scores. Its own prefix or hook failure leaves the district capability
+available. A returned-pointer or output-shape mismatch stops Builder writes
+for the context and leaves the original score in place. There is no Lua call
+from the AI worker.
+
+## Committed Builder harvest protection
+
+CE_AIBuilderHarvestProtectionStage() opts the current staging transaction
+into Clear Plot harvest protection for its Builder allowance sites.
+CE_AIBuilderHarvestProtectionStatus returns readiness, opt-in state, fault
+count, rejection count and the first [player, plot, worker] receipt.
+The opt-in belongs to a publication. Commit resets the receipts. A failed
+native write check retires the guard for that context.
+
+The Win64 ClearPlotNode::Update entry at 55eaf0 runs first. Its worker
+selection and cleanup remain native. The guard checks the published
+generation, admitted AI player, exact protected plot and true harvest
+binding. For a ready result it clears the selected worker and returns
+the routine's native failure value 3. This prevents the later Clear Plot
+execution for that attempt. The tree owns job release and retry. Ordinary
+construction and repair with no harvest binding retain the native result.
+Other harvest callers, feature removal and non-harvest replacement are
+outside this capability.
+
+Target and harvest bindings use the offsets and record widths documented
+beside the hook. The selected worker store and player ID read have separate
+prefix checks. An unsupported hook leaves score-stage protection available.
+
+## Wonder site offers and supplier protection
+
+`CE_AIWonderPlacementOffer(player, city, building, plot, deltaQ8)` stages an
+optional site preference for an exact Wonder and plot in the current score
+packet. It accepts at most 512 unique keys and positive values up to 6144 Q8.
+It returns 1 for staging, 0 for bad keys, limits or missing capability. Publish
+with the district commit and refresh for the next policy generation.
+
+The existing XP2 plot evaluator at RVA 3e2aa0 checks CanHaveWonder (25bad0),
+calls Building NetValue (52a050) from 3e419a, then copies the returned signed
+Q8 value to its per-building plot row. The existing shared CE hook filters
+on return RVA 3e419f and validates the current packet generation, coordinates,
+city/owner and writable return slot. It caps a positive offer at one
+twelfth of the original positive row value. Supplier protection takes
+precedence. Other callers, including ordinary building forecasts, retain their
+existing behavior. No second hook or new target layout is involved.
+
+The existing Wonder status now also reports `offerCapacity` and `maxOfferQ8`, the published
+`version` and `offers`, `matchedOffers`, `boostedOffers`, and a first write
+`[player,city,plot,building,beforeQ8,afterQ8]`. Staging and score writes precede
+the actual comparison, reservation and construction.
+
+CE_AISupplierWonderProtectionStage() opts the staged Builder supplier sites
+into Wonder protection. Invoke it after supplying the allowed improvements
+and before Commit. It does not stage any additional sites. An empty or
+unavailable batch rejects the opt-in. Commit resets the evidence counters.
+CE_AISupplierWonderProtectionStatus reports ready, protected, changed, faults
+and the first changed tuple (player, city, plot, building, original, result).
+
+The hook uses the standard Win64 building NetValue entry (52a050) and calls
+the original with the same eight arguments. It changes a qualified result
+only from the coordinate-bearing caller (3e419a, return 3e419f). That caller
+checks CanHaveWonder and copies the result directly into the plot row.
+The other caller (3e3edd) passes sentinel coordinates for ordinary buildings
+and repairs, which retain their original scores. A protected Wonder row
+receives the same native ineligible score as a rejected plot. Score changes
+leave other sites and the native winner, reservation and production logic
+in control. Existing reservations and already cached values are unchanged
+until the relevant engine path runs again.
+
+This optional hook uses the same image qualification and shared Runtime
+as Builder protection. An unexpected entry, caller or output leaves
+ordinary evaluation intact. The publisher and worker share only the staged
+immutable site keys. No Lua or world mutation runs from the worker.
+
+
+## Optional supplemental district repair
+
+`CE_AIDistrictRepairStage(player, city, district, plot)` stages one exact
+existing footprint per original AI city inside the district policy
+transaction. A publication accepts up to 256 candidates. CSC decides
+which repairs are worth making available. The packet carries no score,
+priority, or completion command.
+
+The typed `CheckForDistrict` hook at `3e0ee0` runs the stock nomination
+first. This version admits a repair beside a newly created stock tree.
+It uses the city's `GetDistrictAt` (`11e520`), the existing complete and
+pillaged flags, and the `CanZone` call (`0f9d50`) used by `BuildDistrict`.
+The exact candidate must have a positive native plot value. Existing
+work is checked in the player's active tree list, which the native
+manager rebuilds after reading a save. A matching trigger or an active
+supplemental tree for the same city blocks another admission.
+
+The stock tree factory (`563840`), controller registration (`53feb0`)
+and analysis copy (`0d6160`) own the engine-side objects. The temporary
+analysis and display string follow the native stack lifetimes. The
+copied trigger must match the original candidate with zero base and
+bonus before the manager can run it. The ordinary slot stays with the
+stock plan. GameCore decodes the plot value, refreshes and arbitrates
+the request, and handles completion and retirement.
+
+`CE_AIDistrictRepairStatus()` exposes readiness, staged capacity,
+admitted, duplicate, rejected and fault counts, and the first admitted
+tuple `[player,city,plot,tree,controller,plotQ8]` per publication.
+Unrecognised native entry bytes disable this optional capability.
+Invalid or stale candidates leave stock planning alone. Structural
+faults stop new supplemental admissions until context reset. A reset
+retires the CE packet and keeps engine-owned requests in the save under
+the native manager. Live save/reload behaviour requires a separate test.
+
+### Supplier exclusion in the ordinary district selector
+
+The optional CSC integration stages one owned plot with
+`CE_AISupplierExclusionStage(player, city, plot)` in the existing atomic
+district batch. `CE_AISupplierExclusionStatus()` reports availability,
+capacity and the process lifetime count of rows masked during selection.
+The list is limited to 256 distinct plot identities. CSC derives these
+identities from live supplier facts once per turn.
+
+The existing `GetBestDistrict` hook checks the published generation and
+the current CityBuild identity, bounds, row ownership and row writability.
+It borrows eligible bytes for one original call and restores their exact
+values immediately afterward. This path uses the existing Win64
+`GetBestDistrict` ABI, row stride and eligibility field. It adds no
+address, new entry detour, or modified score or reservation cell. The
+pinned selector's body traverses these rows without reallocating them and
+uses ordinary native reservation checks and tie-breaking.
+
+The mask covers the ordinary joint placement decision. It does not
+cancel retained contracts, change the type-specific location helper or
+substitute for repair eligibility. The temporary row mask relies on the
+stock city activation phase owning its selector view. Broader thread
+ownership, callers and Workshop delivery need review before release.
+The isolated self-test checks exact byte restoration, nested scope and
+unchanged score and reservation values.
+
+### Readback for published guidance
+
+Read receipts before the next commit replaces the publication. Each read is
+scoped to the exact policy version, owner and city. A stale version returns
+`staged: 0`.
+
+- `CE_AIDistrictScoresReceipt(version, player, city, district, plot)` reads one
+  site from the existing bounded journal. It separates score attempts and
+  writes, cache observations, calls to the stock city selector and exact
+  wins. Cache eligibility is the row's native flag. A recorded win is the
+  return from the selector, before reservation, queue and construction.
+  Sparse callers can use this API without serializing whole journal pages.
+- `CE_AIBuildingNominationReceipt(version, player, city, building)` reports
+  forecast calls, ordinary comparison hits and score writes. The read-only
+  forecast observer shares the existing building NetValue detour and
+  qualifies its ordinary caller at 3e3edd (return 3e3ee2) on the pinned
+  XP2 hotfix image. If the caller fingerprint or shared detour is
+  unavailable, `forecastReady` is zero. A zero or negative comparison is
+  acknowledged and keeps its native value.
+- `CE_AIDistrictRepairStatus()` additionally reports how many native
+  CheckForDistrict calls reached a city with a staged repair. A call can
+  be observed with the normal slot occupied and no supplemental admission.
+
+The stock selector can consider a supplier exclusion even if the same city
+has no score edits in that publication. The exclusion still uses the same
+owned-row qualification and restores the eligibility byte after the call.
+
+## Optional district purchase ownership acknowledgement
+
+`CE_AIDistrictPurchaseCompletionStage(player, city, district)` adds a generic
+numeric scope to Begin/Allow/Commit. A rejected row poisons staging; duplicate
+scopes coalesce at commit. Missing/unsupported bytes disable this optional
+capability while ordinary score guidance remains available. The caller owns
+original-human exclusion and its desired district family.
+
+At ContractManagerDecorator::UpdateContract (55a030), the typed Win64 wrapper
+preserves all six arguments and invokes the original once. Only the expected
+PurchasePlotContract vtable9fa930 in accepted state3 is considered. Current
+executing-tree analysis supplies city/district/plot; a bounded parent walk
+checks the root owner-control. Pure map52d00/attributes5f090 (pool4c210) verify
+canonical target coordinates, signed owner and purchase-city ID. These must
+match that city. No engine pointer is stored between callbacks or across loads.
+A lazily unresolved native handle is left to the original getter; a subsequent
+update can acknowledge it after native resolution.
+
+The acknowledgement uses archive-aware assignment64a6d0(contract+a0,&seven),
+following native BuildingCreated3f81d0 / DistrictCreated3f8210. This is a generic
+tracked setter, not a CompleteContract API; direct contract+b0 writes would
+bypass archive dirtiness. The normal decorator still handles progression and
+cleanup. The short setter is called under the publication lock only because
+its audited body has no AI/HKS callbacks; original functions and pure lookups
+run outside that lock. A generation mismatch or inconsistent identity prevents
+the write. A failed state transition disables further acknowledgements until
+context reset.
+
+`CE_AIDistrictPurchaseCompletionStatus()` reports readiness, scope count,
+considerations, acknowledgements and faults. The versioned
+`CE_AIDistrictPurchaseCompletionReceipt(version, player, city, district)` reads
+that exact scope's considered/owned/acknowledged/rejected counts plus last
+contract/plot/before/after, independent of clipped samples. Ownership fulfilment
+is not payment evidence: cultural growth can also satisfy the prerequisite.
+No funds, scores, purchases, reservations or build commands are supplied here.
+
+Binary/ABI evidence and controlled diagnostic outcome: AI-N118 and
+[CSC acquisition evidence](https://github.com/hennogous/Henno-Mods/blob/main/project/docs/research/mods/csc-ai-nuremberg-acquisition-20261112.md).
+The 13 added native checks exercise disabled/out-of-scope, unowned/other-city,
+invalid identities, tracked completion/deduplication, exact/stale receipts,
+staging rejection and context retirement. They do not establish live ABI,
+reload reconstruction or integrated construction; those remain live gates.
+
+### Typed district-site declines
+
+This optional ABI1 uses the existing joint district selector hook and its
+already qualified CityBuild matrix. It adds no native address or detour.
+
+- Begin/Allow establish version, dimensions and original-AI identity.
+- CE_AIDistrictDeclineStage(player, city, district, plot) stages one exact cell.
+- Commit sorts/deduplicates the bounded list (capacity4096) and atomically
+  replaces it with the rest of the complete policy. Failed staging poisons
+  that transaction; callers must disable or handle failure as for score bids.
+- CE_AIDistrictDeclineStatus reports capability/version/scope capacity and
+  considered, masked, restored, rejected and fault counts.
+- CE_AIDistrictDeclineReceipt(version, player, city, district, plot) reads one
+  exact key. Stale version is staged0. Ready alone does not mean enabled;
+  pair it with the normal policy status.
+
+Decline is choice admission, not an economic score or a production order.
+Only during original_best, eligible owned/frontier cells in the valid score
+range are temporarily set to DeclinedScore = InvalidScore - 1. The native
+predicate is reservationPriority < cell && currentBest <= cell; currentBest
+starts at InvalidScore, so equality with that floor is insufficient for a
+low-priority reserved row. Original cells at the floor also need the temporary
+mask; below-floor and explicitly protected extreme values remain untouched.
+Reservation handles and other district columns are unchanged. The RAII scope
+restores every original i32 before ordinary cache/Best readback, even when
+publication retires during the call. Nested masks cannot restore their parent.
+The selector does not relocate/free its matrix during this qualified call.
+
+Mask storage is bounded to this city's published keys. Allocation failure
+before any write retires the capability and selects normally; journal capacity
+is checked for the entire mask batch before any cell changes. No Lua is called
+from native jobs. Tests cover nested/retired scopes, owned/frontier/reserved
+rows, zero/negative/floor scores, native predicate boundaries, protected values,
+detached row pointers and two-cell exact/insufficient journal capacity.
+
+Receipt meanings are deliberately distinct: considered is consultation, not
+admission. Missing, ineligible or protected cells can be considered with no
+mask and no rejection. Rejected reports the pointer/write-layout guard.
+originalQ8 is meaningful only after masked>0. Restoration after retirement
+does not credit a replacement generation's counters. All counters reset at
+the next complete commit; archive observations before replacement.
+
+The mod owns the semantic reason for declining a site and must withdraw it
+when live facts improve. The API cannot verify supply potential or benefit.
+It does not cancel a retained tree, invalidate a permanent cache, choose a
+different district or alter later competition with ordinary production.
+
+
+## Read-only native site accounting and evaluation context (15 November)
+
+CE_AIEvaluationContext() returns ordinaryHorizon, wonderHorizon, discountQ8
+and maxHorizon as JSON, or no result when initialized context is unavailable.
+It reads the same GlobalAI horizon entry and discount as ordinary valuation.
+Online is50/1024Q8; quote bounds now support ordinary horizons through300.
+
+CE_AIDistrictSiteAdjustment(player,city,district,x,y,ready,horizon,discountQ8)
+returns netQ8, intrinsicQ8, adjustmentQ8 and includesPurchase. The adjustment
+is native NetValue minus intrinsic district Value, before future-building
+aggregation or district-preference scaling. A caller pricing its own district
+income retains native purchase/harvest/improvement/resource-copy accounting.
+A frontier residual includes its native purchase quote: do not add a second
+Gold invoice. These are valuation quotes, not payment receipts.
+
+The original NetValue trampoline is called directly, followed by intrinsic
+Value into a private24-byte zero-initialized Types::Vector<AiMapChange>.
+The output is hypothetical analysis, never placement. Its allocation is freed
+through GameCore's own _aligned_free import with RAII. No cache, reservation,
+queue or world object is written, no entry staged and no pointer retained.
+There are no new hooks or raw MinHook calls.
+
+Only matching player/city, valid district, bounded coordinates/times and empty
+owned/frontier footprints qualify. Existing foundations/repairs remain on
+their separate routes. NetValue zero/invalid short-circuits, bad objects,
+unsupported binary/prefix/import or unready globals return no result. This
+is not a complete CanZone/CanProduce query. Use the existing gameplay
+publication/inactive boundary and cache only within that boundary.
+
+native/native_site_pricing.inl names RVAs, GlobalAI fields, allocator and ABI.
+Supported XP2 SHA092abfbb2176f8df04b5212f819dc269dd83aea866ff05aaf489904a1ff7c41f
+matches reference324c51e9 .text. Existing image validation plus new helper
+fingerprints qualify these calls. The supported MSVC build and normal
+HavokScript registration/lifecycle are retained; CE contains no CSC economics.
+
+Shared-controller Online25 qualification,15 November: real context50/1024,
+six captured real-map ledgers reconcile economic/bid totals and native cost
+residuals; invalid inputs return nil. Exit0 and preference restoration pass.
+Artifacts: Desktop/Codex/csc-ai-native-valuation-20261115/fresh25-01.
+
+
+## Optional effect prices,18 November2026
+
+`CE_AIEconomyStatus` adds `servicePricingReady`; ordinary pricing remains usable
+when this optional qualification fails. No additional hook is installed.
+
+- `CE_AIPseudoYieldIntervalValue(player,city,pseudoYieldId,amountQ8,start,end,discountQ8)`
+  returns native Q8 utility. IDs come from loaded PseudoYields; GPP classes expose
+  their PseudoYieldType. Native strategic/diplomatic weights apply once. Amounts
+  are bounded to plus/minus128 units; IDs must fit the actual definition vector
+  and be below1024. Existing interval/time bounds apply.
+- `CE_AIGrowthIntervalValue(player,city,percentPointsQ8,start,end,discountQ8)`
+  takes2560 for+10%. It reads actual positive Food surplus and uses default Food
+  normalization, following the growth child. Percentages0..100 are admitted.
+  It does not simulate future population, Housing or modifier eligibility.
+
+Invalid objects, bounds or image qualification return no Lua result. Recurring
+intervals use the corrected zero cumulative origin. Pseudo-yield utility may
+be zero or signed according to native preference. Borrowed pointers never escape
+these synchronous gameplay calls. CE supplies no mod-specific chain policy.
+
+ServicePricingLayout names NormalizePseudoYield52af40, definitions7d1480,
+FoodSurplus124060, Food index globalb8f648 and CityGrowth+970. GPP child47b3f0
+and growth child46fac0 establish the normalization/timing ABI. Supported XP2
+SHA092abfbb and reference324c51e9 share exact .text SHA256
+`d5bc8feddb8c030dbf2afc3fa9d9110eadbdb349cdb8aa56d5928625290c3d79`.
+Full-image identity plus the new function prefixes qualify these calls.
+
+Supported MSVC build and253 native checks pass. Unchanged saved-world100/250
+checks repeat native prices/calculated bids, then close/restore. At100,
+Engineer204+191=395Q8 and Tourism256+209=465Q8 reconcile two one-period quotes.
+Growth+10% with11 positive surplus quotes488Q8 over two periods. The mature
+Engineer's native price is0. Evidence: Henno-Mods/project/docs/research/mods/
+`csc-ai-service-valuation-implementation-20261118.md` and JSON. No upstream PR.
