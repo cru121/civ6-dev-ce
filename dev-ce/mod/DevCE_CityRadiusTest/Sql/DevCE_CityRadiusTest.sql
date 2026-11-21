@@ -24,3 +24,11 @@ INSERT INTO ModifierArguments (ModifierId, Name, Value) VALUES
 INSERT INTO TraitModifiers (TraitType, ModifierId) VALUES ('TRAIT_LEADER_MAJOR_CIV', 'DEVCE_TEST_RADIUS_TRAIT');
 -- the Pyramids: +1 for all the owner's cities (5)
 INSERT INTO BuildingModifiers (BuildingType, ModifierId) VALUES ('BUILDING_PYRAMIDS', 'DEVCE_TEST_RADIUS_WONDER');
+
+-- Test convenience: the Pyramids cost 1 production, need no tech, and can be placed on any flat or hill land tile
+-- (so the capital can build them on turn 1 and the radius 5 case can be tried at once).
+UPDATE Buildings SET Cost = 1, PrereqTech = NULL WHERE BuildingType = 'BUILDING_PYRAMIDS';
+INSERT OR IGNORE INTO Building_ValidTerrains (BuildingType, TerrainType) VALUES
+	('BUILDING_PYRAMIDS', 'TERRAIN_GRASS'), ('BUILDING_PYRAMIDS', 'TERRAIN_GRASS_HILLS'),
+	('BUILDING_PYRAMIDS', 'TERRAIN_PLAINS'), ('BUILDING_PYRAMIDS', 'TERRAIN_PLAINS_HILLS'),
+	('BUILDING_PYRAMIDS', 'TERRAIN_DESERT_HILLS'), ('BUILDING_PYRAMIDS', 'TERRAIN_TUNDRA'), ('BUILDING_PYRAMIDS', 'TERRAIN_TUNDRA_HILLS');

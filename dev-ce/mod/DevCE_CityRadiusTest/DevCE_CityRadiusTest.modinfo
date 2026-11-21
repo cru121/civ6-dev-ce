@@ -3,7 +3,7 @@
 	<Properties>
 		<Name>Dev CE City Radius Test (experimental)</Name>
 		<Teaser>Test: every major civ's cities work and buy tiles out to 4; the Pyramids raise their owner's cities to 5.</Teaser>
-		<Description>TEST MOD for the Dev CE city radius. Turns the feature on (game capability CAPABILITY_DEVCE_CITY_RADIUS) and gives every major civ's cities 1 extra ring (city property DEVCE_CITY_EXTRA_RINGS, radius 4); the Pyramids give all their owner's cities 1 more (radius 5). Start a new game: the capability only takes effect for games started with it. Needs the Dev CE GameCore mod.</Description>
+		<Description>TEST MOD for the Dev CE city radius. Turns the feature on (game capability CAPABILITY_DEVCE_CITY_RADIUS) and gives every major civ's cities 1 extra ring (city property DEVCE_CITY_EXTRA_RINGS, radius 4); the Pyramids give all their owner's cities 1 more (radius 5). Start a new game: the capability only takes effect for games started with it. For testing, the Pyramids cost 1 production, need no tech and can be placed on grass, plains, desert and tundra tiles (flat or hills), and the human player gets 5000 gold on turn 1 to buy tiles. Needs the Dev CE GameCore mod.</Description>
 		<Authors>Dev CE</Authors>
 		<CompatibleVersions>2.0</CompatibleVersions>
 		<AffectsSavedGames>1</AffectsSavedGames>
@@ -15,8 +15,12 @@
 		<UpdateDatabase id="DCCRT_SQL">
 			<File>Sql/DevCE_CityRadiusTest.sql</File>
 		</UpdateDatabase>
+		<AddGameplayScripts id="DCCRT_GP">
+			<File>Scripts/DevCE_CityRadiusTest_GP.lua</File>
+		</AddGameplayScripts>
 	</InGameActions>
 	<Files>
 		<File>Sql/DevCE_CityRadiusTest.sql</File>
+		<File>Scripts/DevCE_CityRadiusTest_GP.lua</File>
 	</Files>
 </Mod>
