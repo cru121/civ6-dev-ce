@@ -86,6 +86,13 @@ namespace NationalParks {
 		int districts[64] = {};                 // district type indices that may be part of a park (-1 / no district is always fine)
 	};
 	static Rules gRules;
+	// (wonder list lives next to the rules: Buildings indices of world wonders that may be part of a park; see RuleValid)
+	static int gWonderCount = 0;
+	static int gWonders[64] = {};
+	static bool WonderAllowed(int wonderType) {
+		for (int i = 0; i < gWonderCount; i++) if (gWonders[i] == wonderType) return true;
+		return false;
+	}
 	static constexpr int RULE_IMPROVEMENTS = 1, RULE_MOUNTAINS = 2, RULE_NATURAL_WONDERS = 4;
 
 	void ResetRules() { gRules.active = false; }
@@ -103,19 +110,25 @@ namespace NationalParks {
 		char* owner = getOwnerData(plot);
 		if (owner == NULL || (int)*(signed char*)(owner + 0x1c) != playerId) return false;
 		if (!(gRules.flags & RULE_IMPROVEMENTS) && *(short*)(plot + 0x44) != -1) return false;
+		// Kind of tile: a world wonder (Plot::CityAttributes::m_eWonderType, a Buildings index at owner + 0x1e, -1 = none) must be in the wonder list,
+		// a district must be in the district list. The appeal range applies to ALL tiles; only plain mountain / natural wonder tiles (no wonder, no
+		// district) may be exempt from it by the rule flags.
+		const int wonder = (int)*(short*)(owner + 0x1e);
 		const int district = GetGameCoreGlobalAt<Types::GetDistrictTypeFn>(GET_DISTRICT_TYPE_OFFSET)(owner);
-		if (district != -1) {
-			if (!DistrictAllowed(district)) return false;       // an allowed district is an explicit permission: no terrain/appeal check
+		bool exempt = false;
+		if (wonder != -1) {
+			if (!WonderAllowed(wonder)) return false;
+		} else if (district != -1) {
+			if (!DistrictAllowed(district)) return false;
 		} else {
 			const unsigned short terrain = *(unsigned short*)(plot + 0x2c);
-			bool ok = (gRules.flags & RULE_MOUNTAINS) && terrain <= 0xe && ((0x4924u >> (terrain & 0x1f)) & 1u);
-			if (!ok && (gRules.flags & RULE_NATURAL_WONDERS)) ok = GetGameCoreGlobalAt<Types::IsNaturalWonderFn>(IS_NATURAL_WONDER_OFFSET)(plot);
-			if (!ok) {
-				auto appeal = (int (*)(void*))(*(void***)plot)[0x28 / 8];
-				const int a = appeal(plot);
-				ok = a >= gRules.minAppeal && a <= gRules.maxAppeal;
-			}
-			if (!ok) return false;
+			exempt = (gRules.flags & RULE_MOUNTAINS) && terrain <= 0xe && ((0x4924u >> (terrain & 0x1f)) & 1u);
+			if (!exempt && (gRules.flags & RULE_NATURAL_WONDERS)) exempt = GetGameCoreGlobalAt<Types::IsNaturalWonderFn>(IS_NATURAL_WONDER_OFFSET)(plot);
+		}
+		if (!exempt) {
+			auto appeal = (int (*)(void*))(*(void***)plot)[0x28 / 8];
+			const int a = appeal(plot);
+			if (a < gRules.minAppeal || a > gRules.maxAppeal) return false;
 		}
 		int coord[2] = { (int)*(short*)(plot + 0x28), (int)*(short*)(plot + 0x2a) };
 		return FindPark(np, coord) == NULL;
@@ -158,7 +171,8 @@ namespace NationalParks {
 		return valid;
 	}
 
-	// NationalParks.SetRules(minTiles, maxTiles, minAppeal, maxAppeal, flags, {districtIndex, ...})
+	// NationalParks.SetRules(minTiles, maxTiles, minAppeal, maxAppeal, flags, {districtIndex, ...} [, {wonderBuildingIndex, ...}])
+	// A tile holding a world wonder is valid only if the wonder is in the 7th argument (none given = no wonder tile is valid).
 	static int lSetRules(hks::lua_State* L) {
 		Rules next;
 		next.minTiles = hks::checkinteger(L, 1);
@@ -173,6 +187,16 @@ namespace NationalParks {
 			next.districts[next.districtCount++] = hks::checkinteger(L, -1);
 			hks::pop(L, 1);
 		}
+		int nextWonders[64]; int nextWonderCount = 0;      // optional 7th argument: Buildings indices of world wonders that may be part of a park
+		if (hks::gettop(L) >= 7) {
+			int w = (int)hks::objlen(L, 7);
+			if (w > 64) w = 64;
+			for (int i = 1; i <= w; i++) {
+				hks::rawgeti(L, 7, i);
+				nextWonders[nextWonderCount++] = hks::checkinteger(L, -1);
+				hks::pop(L, 1);
+			}
+		}
 		if (next.minTiles < 1) next.minTiles = 1;
 		if (next.maxTiles > MAX_CUSTOM_PLOTS) next.maxTiles = MAX_CUSTOM_PLOTS;
 		if (next.maxTiles < next.minTiles) next.maxTiles = next.minTiles;
@@ -181,8 +205,10 @@ namespace NationalParks {
 		gRules.minAppeal = next.minAppeal; gRules.maxAppeal = next.maxAppeal; gRules.flags = next.flags;
 		gRules.districtCount = next.districtCount;
 		for (int i = 0; i < next.districtCount; i++) gRules.districts[i] = next.districts[i];
+		gWonderCount = nextWonderCount;
+		for (int i = 0; i < nextWonderCount; i++) gWonders[i] = nextWonders[i];
 		gRules.active = true;
-		DevBridge::Log("[DevCEPark] rules set: tiles %d..%d appeal %d..%d flags %d districts %d", gRules.minTiles, gRules.maxTiles, gRules.minAppeal, gRules.maxAppeal, gRules.flags, gRules.districtCount);
+		DevBridge::Log("[DevCEPark] rules set: tiles %d..%d appeal %d..%d flags %d districts %d wonders %d", gRules.minTiles, gRules.maxTiles, gRules.minAppeal, gRules.maxAppeal, gRules.flags, gRules.districtCount, gWonderCount);
 		return 0;
 	}
 
