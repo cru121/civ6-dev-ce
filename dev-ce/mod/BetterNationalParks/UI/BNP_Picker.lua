@@ -153,6 +153,8 @@ end
 local function CanOffer(unit)
 	if unit == nil or unit:GetOwner() ~= PlayerID() then return false; end
 	if NationalParks == nil or NationalParks.IsValidParkTile == nil then return false; end   -- needs Dev CE
+	local custom = GameConfiguration.GetValue("BNP_CUSTOM_SHAPE");       -- setup option; nil = option unknown, then the button stays
+	if custom ~= nil and not (custom == true or custom == 1 or custom == "1" or custom == "true") then return false; end
 	local info = GameInfo.Units[unit:GetType()];
 	if info == nil or (info.ParkCharges or 0) <= 0 then return false; end
 	if unit:GetParkCharges() <= 0 then return false; end

@@ -11,6 +11,16 @@
 	<Dependencies>
 		<Mod id="4873eb62-8ccc-4574-b784-dda455e74e68" title="Expansion: Gathering Storm" />
 	</Dependencies>
+	<FrontEndActions>
+		<UpdateDatabase id="BNP_CONFIG">
+			<Properties><LoadOrder>9000001</LoadOrder></Properties>
+			<File>Config/BNP_Config.xml</File>
+		</UpdateDatabase>
+		<UpdateText id="BNP_CONFIG_TEXT">
+			<Properties><LoadOrder>9000001</LoadOrder></Properties>
+			<File>Text/BNP_ConfigText.xml</File>
+		</UpdateText>
+	</FrontEndActions>
 	<InGameActions>
 		<UpdateText id="BNP_TEXT">
 			<File>Text/BNP_Text.xml</File>
@@ -31,6 +41,8 @@
 	</InGameActions>
 	<Files>
 		<File>Text/BNP_Text.xml</File>
+		<File>Text/BNP_ConfigText.xml</File>
+		<File>Config/BNP_Config.xml</File>
 		<File>Sql/BNP_Rules.sql</File>
 		<File>Scripts/BNP_Rules_GP.lua</File>
 		<File>Scripts/BNP_Picker_GP.lua</File>

@@ -64,6 +64,9 @@ GameEvents.DEVCEPARK_DESIGNATE.Add(function(owner, unitID, parameters)
 	if parameters == nil then Reply(owner, "National Park request without tiles."); return; end
 	if NationalParks == nil or NationalParks.DesignateCustom == nil then Reply(owner, "Dev CE is not loaded: custom parks are not available."); return; end
 
+	local custom = GameConfiguration.GetValue("BNP_CUSTOM_SHAPE");
+	if custom ~= nil and not (custom == true or custom == 1 or custom == "1" or custom == "true") then Reply(owner, "Custom National Parks are switched off in the game setup."); return; end
+
 	local plots = {};
 	local n = tonumber(parameters["DCP_N"]);
 	if n ~= nil then

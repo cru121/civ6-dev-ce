@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GameData>
+	<LocalizedText>
+		<Row Tag="LOC_BNP_CUSTOM_SHAPE_NAME" Language="en_US"><Text>National Parks: Custom Shapes</Text></Row>
+		<Row Tag="LOC_BNP_CUSTOM_SHAPE_DESC" Language="en_US"><Text>Adds a second Naturalist/Mountie button to pick the tiles of a National Park yourself (needs the Dev CE GameCore). Human player only: the AI keeps building the standard four-tile parks. Single player only.</Text></Row>
+		<Row Tag="LOC_BNP_MIN_SIZE_NAME" Language="en_US"><Text>National Park: Minimum Tiles</Text></Row>
+		<Row Tag="LOC_BNP_MIN_SIZE_DESC" Language="en_US"><Text>Fewest tiles a custom National Park may have (1 to 32).</Text></Row>
+		<Row Tag="LOC_BNP_MAX_SIZE_NAME" Language="en_US"><Text>National Park: Maximum Tiles</Text></Row>
+		<Row Tag="LOC_BNP_MAX_SIZE_DESC" Language="en_US"><Text>Most tiles a custom National Park may have (1 to 32). Values below the minimum are raised to the minimum.</Text></Row>
+
+		<Row Tag="LOC_BNP_WONDER_MODE_NAME" Language="en_US"><Text>National Park: World Wonders</Text></Row>
+		<Row Tag="LOC_BNP_WONDER_MODE_DESC" Language="en_US"><Text>Which world wonders may be part of a National Park. Applies to the standard Naturalist action and to the AI too. Wonder tiles must also pass the appeal rule.</Text></Row>
+		<Row Tag="LOC_BNP_MODE_DEFAULT_WONDERS" Language="en_US"><Text>Landmark Wonders</Text></Row>
+		<Row Tag="LOC_BNP_MODE_DEFAULT_WONDERS_DESC" Language="en_US"><Text>Stonehenge, Hanging Gardens, Temple of Artemis, Machu Picchu, Mahabodhi Temple and Chichen Itza.</Text></Row>
+		<Row Tag="LOC_BNP_MODE_ALL_WONDERS" Language="en_US"><Text>All Wonders</Text></Row>
+		<Row Tag="LOC_BNP_MODE_ALL_WONDERS_DESC" Language="en_US"><Text>Every world wonder.</Text></Row>
+		<Row Tag="LOC_BNP_MODE_NO_WONDERS" Language="en_US"><Text>None</Text></Row>
+		<Row Tag="LOC_BNP_MODE_NO_WONDERS_DESC" Language="en_US"><Text>No wonder tile may be part of a park (the standard rule).</Text></Row>
+		<Row Tag="LOC_BNP_MODE_CUSTOM" Language="en_US"><Text>Custom</Text></Row>
+		<Row Tag="LOC_BNP_MODE_CUSTOM_WONDERS_DESC" Language="en_US"><Text>Choose the wonders yourself in the list below.</Text></Row>
+		<Row Tag="LOC_BNP_WONDERS_NAME" Language="en_US"><Text>National Park: Custom Wonder List</Text></Row>
+		<Row Tag="LOC_BNP_WONDERS_DESC" Language="en_US"><Text>Checked wonders may be part of a National Park. Used when World Wonders is set to Custom.</Text></Row>
+
+		<Row Tag="LOC_BNP_DISTRICT_MODE_NAME" Language="en_US"><Text>National Park: Districts</Text></Row>
+		<Row Tag="LOC_BNP_DISTRICT_MODE_DESC" Language="en_US"><Text>Which districts may be part of a National Park. Applies to the standard Naturalist action and to the AI too. District tiles must also pass the appeal rule.</Text></Row>
+		<Row Tag="LOC_BNP_MODE_DEFAULT_DISTRICTS" Language="en_US"><Text>Preserve</Text></Row>
+		<Row Tag="LOC_BNP_MODE_DEFAULT_DISTRICTS_DESC" Language="en_US"><Text>Only the Preserve district.</Text></Row>
+		<Row Tag="LOC_BNP_MODE_NO_DISTRICTS" Language="en_US"><Text>None</Text></Row>
+		<Row Tag="LOC_BNP_MODE_NO_DISTRICTS_DESC" Language="en_US"><Text>No district tile may be part of a park (the standard rule).</Text></Row>
+		<Row Tag="LOC_BNP_MODE_CUSTOM_DISTRICTS_DESC" Language="en_US"><Text>Choose the districts yourself in the list below.</Text></Row>
+		<Row Tag="LOC_BNP_DISTRICTS_NAME" Language="en_US"><Text>National Park: Custom District List</Text></Row>
+		<Row Tag="LOC_BNP_DISTRICTS_DESC" Language="en_US"><Text>Checked districts may be part of a National Park. Used when Districts is set to Custom.</Text></Row>
+	</LocalizedText>
+</GameData>
