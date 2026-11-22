@@ -59,6 +59,7 @@ constexpr int InvalidScore = -9999 * Q8Units;
 constexpr int MinimumScore = -4096 * Q8Units;
 constexpr int MinDelta = -1024 * Q8Units;
 constexpr int MaxDelta = 4096 * Q8Units;
+constexpr int MaxPositiveSiteCost = 64 * Q8Units;
 constexpr int MaxScore = (std::numeric_limits<int>::max)() / 2;
 
 struct Entry {
@@ -69,6 +70,9 @@ struct Entry {
     // A final replacement is a caller-valued complete bid, not an additive
     // correction. It is exclusive with early/guarded-late entries for this key.
     bool finalReplacement{};
+    // Optional Q8 opportunity cost after the ordinary early delta.
+    // Retain the positive score that admits native building aggregation.
+    int positiveCostQ8{};
 };
 struct Sample {
     Entry key;
@@ -274,16 +278,25 @@ int readable(const void* p, size_t bytes, bool write) {
  * preserve native zero/invalid results, and never raise a low score while trying
  * to penalize it. INT_MAX/2 is conservative headroom for the known later 1.5
  * district preference factor, not a proof about every downstream computation. */
-int adjusted(int base, int delta, int* result) {
+bool protected_score(int base, int delta, int positiveCostQ8) {
+    return !base || base <= InvalidScore || (delta < 0 && base <= MinimumScore) ||
+        (positiveCostQ8 > 0 && delta == 0 && base <= 1);
+}
+
+int adjusted(int base, int delta, int* result, int positiveCostQ8 = 0) {
     int64_t sum = static_cast<int64_t>(base) + delta;
     *result = base;
-    if (!base || base <= InvalidScore || (delta < 0 && base <= MinimumScore))
+    if (protected_score(base, delta, positiveCostQ8))
         return 0;
     if (delta < 0 && sum < MinimumScore)
         sum = MinimumScore;
     /* Retain room for the native positive district preference factor. */
     if (sum > MaxScore || sum < INT_MIN || sum == InvalidScore)
         return 0;
+    // Use the actual value at the consumer. The cost never revives a
+    // weak cell or moves a positive one below the building-forecast gate.
+    if (positiveCostQ8 > 0 && sum > 1)
+        sum = (std::max)(int64_t{1}, sum - positiveCostQ8);
     *result = static_cast<int>(sum);
     return 1;
 }
@@ -335,9 +348,9 @@ void apply_score(TraceKind kind, const Entry& entry, int* score) {
     const int base = *score;
     int result = base;
     TraceReason reason = Applied;
-    if (!adjusted(base, entry.delta, &result)) {
-        reason = (!base || base <= InvalidScore || (entry.delta < 0 && base <= MinimumScore))
-            ? ProtectedScore : InvalidArithmetic;
+    const int positiveCostQ8 = kind == Net ? entry.positiveCostQ8 : 0;
+    if (!adjusted(base, entry.delta, &result, positiveCostQ8)) {
+        reason = protected_score(base, entry.delta, positiveCostQ8) ? ProtectedScore : InvalidArithmetic;
     }
     else if (kind == Late && result <= 0) {
         reason = InvalidArithmetic;
@@ -938,9 +951,12 @@ bool stage_entry(const Entry& entry, bool late) {
     bool ok = staging_valid && staging.count < MaxEntries && entry.player >= 0 && entry.player < MaxPlayers &&
         staging.allowed[entry.player] && entry.city >= 0 && entry.district > 0 && entry.district < staging.districts &&
         entry.plot >= 0 && entry.plot < staging.width * staging.height &&
+        entry.positiveCostQ8 >= 0 && entry.positiveCostQ8 <= MaxPositiveSiteCost &&
+        (entry.positiveCostQ8 == 0 || (!late && !entry.finalReplacement)) &&
         (entry.finalReplacement
             ? entry.delta == 0 && entry.expectedBefore == 0 && entry.expectedFinal >= MinimumScore && entry.expectedFinal <= MaxDelta
-            : entry.delta >= MinDelta && entry.delta <= MaxDelta && entry.delta != 0);
+            : entry.delta >= MinDelta && entry.delta <= MaxDelta &&
+                (entry.delta != 0 || entry.positiveCostQ8 != 0));
     if (late && !entry.finalReplacement) {
         const auto adjustedFinal = static_cast<int64_t>(entry.expectedFinal) + entry.delta;
         ok = ok && entry.expectedBefore > 0 && entry.expectedFinal >= entry.expectedBefore && entry.expectedFinal <= MaxScore &&
@@ -965,6 +981,13 @@ bool stage_entry(const Entry& entry, bool late) {
 int l_entry(lua_State* L) {
     const Entry entry{hks::checkinteger(L, 1), hks::checkinteger(L, 2), hks::checkinteger(L, 3),
         hks::checkinteger(L, 4), hks::checkinteger(L, 5)};
+    return integer_result(L, stage_entry(entry, false));
+}
+
+int l_early_cost(lua_State* L) {
+    Entry entry{hks::checkinteger(L, 1), hks::checkinteger(L, 2), hks::checkinteger(L, 3),
+        hks::checkinteger(L, 4), hks::checkinteger(L, 5)};
+    entry.positiveCostQ8 = hks::checkinteger(L, 6);
     return integer_result(L, stage_entry(entry, false));
 }
 
@@ -1572,6 +1595,7 @@ void RegisterLua(hks::lua_State* L) {
     PushLuaMethod(L, l_begin, "CE_AIDistrictScoresBegin", hks::LUA_GLOBAL, "CE_AIDistrictScoresBegin");
     PushLuaMethod(L, l_allow, "CE_AIDistrictScoresAllow", hks::LUA_GLOBAL, "CE_AIDistrictScoresAllow");
     PushLuaMethod(L, l_entry, "CE_AIDistrictScoresEntry", hks::LUA_GLOBAL, "CE_AIDistrictScoresEntry");
+    PushLuaMethod(L, l_early_cost, "CE_AIDistrictScoresEarlyCost", hks::LUA_GLOBAL, "CE_AIDistrictScoresEarlyCost");
     PushLuaMethod(L, MaterialDevelopment::stage_research, "CE_AIMaterialResearchBid", hks::LUA_GLOBAL, "CE_AIMaterialResearchBid");
     PushLuaMethod(L, MaterialDevelopment::stage_builder, "CE_AIMaterialBuilderRequestBid", hks::LUA_GLOBAL, "CE_AIMaterialBuilderRequestBid");
     PushLuaMethod(L, MaterialDevelopment::WorkerDispatch::stage_offer, "CE_AIMaterialWorkerFinishOffer", hks::LUA_GLOBAL, "CE_AIMaterialWorkerFinishOffer");
