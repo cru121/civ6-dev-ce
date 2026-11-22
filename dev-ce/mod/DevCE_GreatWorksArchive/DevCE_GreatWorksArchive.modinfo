@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Mod id="e9742fa0-700c-4185-9e3f-6d546618d93f" version="1">
+	<Properties>
+		<Name>Dev CE Great Works Archive (experimental)</Name>
+		<Teaser>Keeps great works that would be lost (relics with no free slot) in an archive you can view, place and trade (needs Dev CE).</Teaser>
+		<Description>EXPERIMENTAL. Adds an "Archive" button to the Great Works screen. It lists great works you own that are displayed in no city, and lets you place one in a city with a free suitable slot. With this mod a relic found while all relic slots are full is kept in the archive instead of being lost, a work whose building is removed stays yours, and archived works can be offered in trades. Needs the Dev CE GameCore mod; without it the mod does nothing. Dev CE alone does not change how a game plays: the native part is switched on only by this mod's game capability. Single-player testing only.</Description>
+		<Authors>cru121</Authors>
+		<AffectsSavedGames>1</AffectsSavedGames>
+		<CompatibleVersions>2.0</CompatibleVersions>
+	</Properties>
+	<Dependencies>
+		<Mod id="4873eb62-8ccc-4574-b784-dda455e74e68" title="Expansion: Gathering Storm" />
+	</Dependencies>
+	<InGameActions>
+		<!-- Switches the native feature on (game capability). -->
+		<UpdateDatabase id="DCGWA_SQL">
+			<File>Sql/DevCE_GreatWorksArchive.sql</File>
+		</UpdateDatabase>
+		<!-- Gameplay VM: drains the native events, keeps the ownership table, receives the UI's place request and calls GWArchive.TryPlace. -->
+		<AddGameplayScripts id="DCGWA_GP">
+			<Properties><LoadOrder>150</LoadOrder></Properties>
+			<File>Scripts/GWA_Gameplay.lua</File>
+		</AddGameplayScripts>
+		<!-- UI VM: the Archive button and panel. A NEW context; no base UI file is replaced. -->
+		<AddUserInterfaces id="DCGWA_UI">
+			<Properties><Context>InGame</Context><LoadOrder>150</LoadOrder></Properties>
+			<File>UI/GWA_Panel.xml</File>
+		</AddUserInterfaces>
+		<ImportFiles id="DCGWA_UI_Files">
+			<File>UI/GWA_Panel.xml</File>
+			<File>UI/GWA_Panel.lua</File>
+		</ImportFiles>
+	</InGameActions>
+	<Files>
+		<File>Sql/DevCE_GreatWorksArchive.sql</File>
+		<File>Scripts/GWA_Gameplay.lua</File>
+		<File>UI/GWA_Panel.xml</File>
+		<File>UI/GWA_Panel.lua</File>
+	</Files>
+</Mod>

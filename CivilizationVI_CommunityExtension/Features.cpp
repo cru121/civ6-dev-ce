@@ -21,6 +21,7 @@ namespace Features {
 		{ "CAPABILITY_DEVCE_FOOD_PRODUCTION", "food to production", 0 },
 		{ "CAPABILITY_DEVCE_DISTRICT_CITIZENS", "district citizens", 0 },
 		{ "CAPABILITY_DEVCE_CITY_RADIUS", "city radius", 0 },
+		{ "CAPABILITY_DEVCE_GW_ARCHIVE", "great works archive", 0 },
 	};
 
 	// -1 = not asked in this game yet, 0 = off, 1 = on
