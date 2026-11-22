@@ -118,5 +118,7 @@
 		<Row Tag="LOC_BNP_D_DISTRICT_WALLED_QUARTER" Language="en_US"><Text>Walled Quarter</Text></Row>
 		<Row Tag="LOC_BNP_D_DISTRICT_WATER_ENTERTAINMENT_COMPLEX" Language="en_US"><Text>Water Park</Text></Row>
 		<Row Tag="LOC_BNP_D_DISTRICT_WATER_STREET_CARNIVAL" Language="en_US"><Text>Copacabana</Text></Row>
+		<Row Tag="LOC_BNP_ITEM_W_DESC" Language="en_US"><Text>Checked: this wonder may be part of a National Park.</Text></Row>
+		<Row Tag="LOC_BNP_ITEM_D_DESC" Language="en_US"><Text>Checked: this district may be part of a National Park.</Text></Row>
 	</LocalizedText>
 </GameData>

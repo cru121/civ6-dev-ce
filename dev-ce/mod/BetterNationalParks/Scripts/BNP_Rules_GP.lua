@@ -35,7 +35,7 @@ local function PushRules()
 		local list = Cfg("BNP_DISTRICTS");
 		if type(list) == "table" then
 			for _, name in ipairs(list) do
-				local d = GameInfo.Districts[name];
+				local d = GameInfo.Districts[(tostring(name):gsub("^BNP_D_", ""))];
 				if d ~= nil then table.insert(districts, d.Index); else print("[BNP] unknown district " .. tostring(name)); end
 			end
 		end
@@ -53,7 +53,7 @@ local function PushRules()
 		local list = Cfg("BNP_WONDERS");
 		if type(list) == "table" then
 			for _, name in ipairs(list) do
-				local b = GameInfo.Buildings[name];
+				local b = GameInfo.Buildings[(tostring(name):gsub("^BNP_W_", ""))];
 				if b ~= nil then table.insert(wonders, b.Index); end      -- wonders of an unowned expansion are simply unknown here
 			end
 		end
