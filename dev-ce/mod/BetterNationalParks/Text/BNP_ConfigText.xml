@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <GameData>
 	<LocalizedText>
-		<Row Tag="LOC_BNP_CUSTOM_SHAPE_NAME" Language="en_US"><Text>National Parks: Custom Shapes</Text></Row>
+		<Row Tag="LOC_BNP_CUSTOM_SHAPE_NAME" Language="en_US"><Text>Nat. Parks: Custom Shapes</Text></Row>
 		<Row Tag="LOC_BNP_CUSTOM_SHAPE_DESC" Language="en_US"><Text>Adds a second Naturalist/Mountie button to pick the tiles of a National Park yourself (needs the Dev CE GameCore). Human player only: the AI keeps building the standard four-tile parks. Single player only.</Text></Row>
-		<Row Tag="LOC_BNP_MIN_SIZE_NAME" Language="en_US"><Text>National Park: Minimum Tiles</Text></Row>
+		<Row Tag="LOC_BNP_MIN_SIZE_NAME" Language="en_US"><Text>Nat. Park: Min Tiles</Text></Row>
 		<Row Tag="LOC_BNP_MIN_SIZE_DESC" Language="en_US"><Text>Fewest tiles a custom National Park may have (1 to 32).</Text></Row>
-		<Row Tag="LOC_BNP_MAX_SIZE_NAME" Language="en_US"><Text>National Park: Maximum Tiles</Text></Row>
+		<Row Tag="LOC_BNP_MAX_SIZE_NAME" Language="en_US"><Text>Nat. Park: Max Tiles</Text></Row>
 		<Row Tag="LOC_BNP_MAX_SIZE_DESC" Language="en_US"><Text>Most tiles a custom National Park may have (1 to 32). Values below the minimum are raised to the minimum.</Text></Row>
 
-		<Row Tag="LOC_BNP_WONDER_MODE_NAME" Language="en_US"><Text>National Park: World Wonders</Text></Row>
+		<Row Tag="LOC_BNP_WONDER_MODE_NAME" Language="en_US"><Text>Nat. Park: World Wonders</Text></Row>
 		<Row Tag="LOC_BNP_WONDER_MODE_DESC" Language="en_US"><Text>Which world wonders may be part of a National Park. Applies to the standard Naturalist action and to the AI too. Wonder tiles must also pass the appeal rule.</Text></Row>
 		<Row Tag="LOC_BNP_MODE_DEFAULT_WONDERS" Language="en_US"><Text>Landmark Wonders</Text></Row>
 		<Row Tag="LOC_BNP_MODE_DEFAULT_WONDERS_DESC" Language="en_US"><Text>Stonehenge, Hanging Gardens, Temple of Artemis, Machu Picchu, Mahabodhi Temple and Chichen Itza.</Text></Row>
@@ -18,17 +18,105 @@
 		<Row Tag="LOC_BNP_MODE_NO_WONDERS_DESC" Language="en_US"><Text>No wonder tile may be part of a park (the standard rule).</Text></Row>
 		<Row Tag="LOC_BNP_MODE_CUSTOM" Language="en_US"><Text>Custom</Text></Row>
 		<Row Tag="LOC_BNP_MODE_CUSTOM_WONDERS_DESC" Language="en_US"><Text>Choose the wonders yourself in the list below.</Text></Row>
-		<Row Tag="LOC_BNP_WONDERS_NAME" Language="en_US"><Text>National Park: Custom Wonder List</Text></Row>
+		<Row Tag="LOC_BNP_WONDERS_NAME" Language="en_US"><Text>Custom Wonder List</Text></Row>
 		<Row Tag="LOC_BNP_WONDERS_DESC" Language="en_US"><Text>Checked wonders may be part of a National Park. Used when World Wonders is set to Custom.</Text></Row>
 
-		<Row Tag="LOC_BNP_DISTRICT_MODE_NAME" Language="en_US"><Text>National Park: Districts</Text></Row>
+		<Row Tag="LOC_BNP_DISTRICT_MODE_NAME" Language="en_US"><Text>Nat. Park: Districts</Text></Row>
 		<Row Tag="LOC_BNP_DISTRICT_MODE_DESC" Language="en_US"><Text>Which districts may be part of a National Park. Applies to the standard Naturalist action and to the AI too. District tiles must also pass the appeal rule.</Text></Row>
 		<Row Tag="LOC_BNP_MODE_DEFAULT_DISTRICTS" Language="en_US"><Text>Preserve</Text></Row>
 		<Row Tag="LOC_BNP_MODE_DEFAULT_DISTRICTS_DESC" Language="en_US"><Text>Only the Preserve district.</Text></Row>
 		<Row Tag="LOC_BNP_MODE_NO_DISTRICTS" Language="en_US"><Text>None</Text></Row>
 		<Row Tag="LOC_BNP_MODE_NO_DISTRICTS_DESC" Language="en_US"><Text>No district tile may be part of a park (the standard rule).</Text></Row>
 		<Row Tag="LOC_BNP_MODE_CUSTOM_DISTRICTS_DESC" Language="en_US"><Text>Choose the districts yourself in the list below.</Text></Row>
-		<Row Tag="LOC_BNP_DISTRICTS_NAME" Language="en_US"><Text>National Park: Custom District List</Text></Row>
+		<Row Tag="LOC_BNP_DISTRICTS_NAME" Language="en_US"><Text>Custom District List</Text></Row>
 		<Row Tag="LOC_BNP_DISTRICTS_DESC" Language="en_US"><Text>Checked districts may be part of a National Park. Used when Districts is set to Custom.</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_ALHAMBRA" Language="en_US"><Text>Alhambra</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_AMUNDSEN_SCOTT_RESEARCH_STATION" Language="en_US"><Text>Amundsen-Scott Research Station</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_ANGKOR_WAT" Language="en_US"><Text>Angkor Wat</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_APADANA" Language="en_US"><Text>Apadana</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_BIG_BEN" Language="en_US"><Text>Big Ben</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_BIOSPHERE" Language="en_US"><Text>Biosphère</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_BOLSHOI_THEATRE" Language="en_US"><Text>Bolshoi Theatre</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_BROADWAY" Language="en_US"><Text>Broadway</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_CASA_DE_CONTRATACION" Language="en_US"><Text>Casa de Contratación</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_CHICHEN_ITZA" Language="en_US"><Text>Chichen Itza</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_COLOSSEUM" Language="en_US"><Text>Colosseum</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_COLOSSUS" Language="en_US"><Text>Colossus</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_CRISTO_REDENTOR" Language="en_US"><Text>Cristo Redentor</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_EIFFEL_TOWER" Language="en_US"><Text>Eiffel Tower</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_ESTADIO_DO_MARACANA" Language="en_US"><Text>Estádio do Maracanã</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_ETEMENANKI" Language="en_US"><Text>Etemenanki</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_FORBIDDEN_CITY" Language="en_US"><Text>Forbidden City</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_GOLDEN_GATE_BRIDGE" Language="en_US"><Text>Golden Gate Bridge</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_GREAT_BATH" Language="en_US"><Text>Great Bath</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_GREAT_LIBRARY" Language="en_US"><Text>Great Library</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_GREAT_LIGHTHOUSE" Language="en_US"><Text>Great Lighthouse</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_GREAT_ZIMBABWE" Language="en_US"><Text>Great Zimbabwe</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_HAGIA_SOPHIA" Language="en_US"><Text>Hagia Sophia</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_HALICARNASSUS_MAUSOLEUM" Language="en_US"><Text>Mausoleum at Halicarnassus</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_HANGING_GARDENS" Language="en_US"><Text>Hanging Gardens</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_HERMITAGE" Language="en_US"><Text>Hermitage</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_HUEY_TEOCALLI" Language="en_US"><Text>Huey Teocalli</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_JEBEL_BARKAL" Language="en_US"><Text>Jebel Barkal</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_KILWA_KISIWANI" Language="en_US"><Text>Kilwa Kisiwani</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_KOTOKU_IN" Language="en_US"><Text>Kotoku-in</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_MACHU_PICCHU" Language="en_US"><Text>Machu Picchu</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_MAHABODHI_TEMPLE" Language="en_US"><Text>Mahabodhi Temple</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_MEENAKSHI_TEMPLE" Language="en_US"><Text>Meenakshi Temple</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_MONT_ST_MICHEL" Language="en_US"><Text>Mont St. Michel</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_ORACLE" Language="en_US"><Text>Oracle</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_ORSZAGHAZ" Language="en_US"><Text>Országház</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_OXFORD_UNIVERSITY" Language="en_US"><Text>Oxford University</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_PANAMA_CANAL" Language="en_US"><Text>Panama Canal</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_PETRA" Language="en_US"><Text>Petra</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_POTALA_PALACE" Language="en_US"><Text>Potala Palace</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_PYRAMIDS" Language="en_US"><Text>Pyramids</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_RUHR_VALLEY" Language="en_US"><Text>Ruhr Valley</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_STATUE_LIBERTY" Language="en_US"><Text>Statue of Liberty</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_STATUE_OF_ZEUS" Language="en_US"><Text>Statue of Zeus</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_STONEHENGE" Language="en_US"><Text>Stonehenge</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_ST_BASILS_CATHEDRAL" Language="en_US"><Text>St. Basil's Cathedral</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_SYDNEY_OPERA_HOUSE" Language="en_US"><Text>Sydney Opera House</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_TAJ_MAHAL" Language="en_US"><Text>Taj Mahal</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_TEMPLE_ARTEMIS" Language="en_US"><Text>Temple of Artemis</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_TERRACOTTA_ARMY" Language="en_US"><Text>Terracotta Army</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_TORRE_DE_BELEM" Language="en_US"><Text>Torre de Belém</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_UNIVERSITY_SANKORE" Language="en_US"><Text>University of Sankore</Text></Row>
+		<Row Tag="LOC_BNP_W_BUILDING_VENETIAN_ARSENAL" Language="en_US"><Text>Venetian Arsenal</Text></Row>
+		<Row Tag="LOC_BNP_D_DISTRICT_ACROPOLIS" Language="en_US"><Text>Acropolis</Text></Row>
+		<Row Tag="LOC_BNP_D_DISTRICT_AERODROME" Language="en_US"><Text>Aerodrome</Text></Row>
+		<Row Tag="LOC_BNP_D_DISTRICT_AQUEDUCT" Language="en_US"><Text>Aqueduct</Text></Row>
+		<Row Tag="LOC_BNP_D_DISTRICT_BATH" Language="en_US"><Text>Bath</Text></Row>
+		<Row Tag="LOC_BNP_D_DISTRICT_CAMPUS" Language="en_US"><Text>Campus</Text></Row>
+		<Row Tag="LOC_BNP_D_DISTRICT_CANAL" Language="en_US"><Text>Canal</Text></Row>
+		<Row Tag="LOC_BNP_D_DISTRICT_COMMERCIAL_HUB" Language="en_US"><Text>Commercial Hub</Text></Row>
+		<Row Tag="LOC_BNP_D_DISTRICT_COTHON" Language="en_US"><Text>Cothon</Text></Row>
+		<Row Tag="LOC_BNP_D_DISTRICT_DAM" Language="en_US"><Text>Dam</Text></Row>
+		<Row Tag="LOC_BNP_D_DISTRICT_DIPLOMATIC_QUARTER" Language="en_US"><Text>Diplomatic Quarter</Text></Row>
+		<Row Tag="LOC_BNP_D_DISTRICT_ENCAMPMENT" Language="en_US"><Text>Encampment</Text></Row>
+		<Row Tag="LOC_BNP_D_DISTRICT_ENTERTAINMENT_COMPLEX" Language="en_US"><Text>Entertainment Complex</Text></Row>
+		<Row Tag="LOC_BNP_D_DISTRICT_GOVERNMENT" Language="en_US"><Text>Government Plaza</Text></Row>
+		<Row Tag="LOC_BNP_D_DISTRICT_HANSA" Language="en_US"><Text>Hansa</Text></Row>
+		<Row Tag="LOC_BNP_D_DISTRICT_HARBOR" Language="en_US"><Text>Harbor</Text></Row>
+		<Row Tag="LOC_BNP_D_DISTRICT_HIPPODROME" Language="en_US"><Text>Hippodrome</Text></Row>
+		<Row Tag="LOC_BNP_D_DISTRICT_HOLY_SITE" Language="en_US"><Text>Holy Site</Text></Row>
+		<Row Tag="LOC_BNP_D_DISTRICT_IKANDA" Language="en_US"><Text>Ikanda</Text></Row>
+		<Row Tag="LOC_BNP_D_DISTRICT_INDUSTRIAL_ZONE" Language="en_US"><Text>Industrial Zone</Text></Row>
+		<Row Tag="LOC_BNP_D_DISTRICT_LAVRA" Language="en_US"><Text>Lavra</Text></Row>
+		<Row Tag="LOC_BNP_D_DISTRICT_MBANZA" Language="en_US"><Text>Mbanza</Text></Row>
+		<Row Tag="LOC_BNP_D_DISTRICT_NEIGHBORHOOD" Language="en_US"><Text>Neighborhood</Text></Row>
+		<Row Tag="LOC_BNP_D_DISTRICT_OBSERVATORY" Language="en_US"><Text>Observatory</Text></Row>
+		<Row Tag="LOC_BNP_D_DISTRICT_OPPIDUM" Language="en_US"><Text>Oppidum</Text></Row>
+		<Row Tag="LOC_BNP_D_DISTRICT_PRESERVE" Language="en_US"><Text>Preserve</Text></Row>
+		<Row Tag="LOC_BNP_D_DISTRICT_ROYAL_NAVY_DOCKYARD" Language="en_US"><Text>Royal Navy Dockyard</Text></Row>
+		<Row Tag="LOC_BNP_D_DISTRICT_SEOWON" Language="en_US"><Text>Seowon</Text></Row>
+		<Row Tag="LOC_BNP_D_DISTRICT_SPACEPORT" Language="en_US"><Text>Spaceport</Text></Row>
+		<Row Tag="LOC_BNP_D_DISTRICT_STREET_CARNIVAL" Language="en_US"><Text>Street Carnival</Text></Row>
+		<Row Tag="LOC_BNP_D_DISTRICT_SUGUBA" Language="en_US"><Text>Suguba</Text></Row>
+		<Row Tag="LOC_BNP_D_DISTRICT_THANH" Language="en_US"><Text>Thành</Text></Row>
+		<Row Tag="LOC_BNP_D_DISTRICT_THEATER" Language="en_US"><Text>Theater Square</Text></Row>
+		<Row Tag="LOC_BNP_D_DISTRICT_WALLED_QUARTER" Language="en_US"><Text>Walled Quarter</Text></Row>
+		<Row Tag="LOC_BNP_D_DISTRICT_WATER_ENTERTAINMENT_COMPLEX" Language="en_US"><Text>Water Park</Text></Row>
+		<Row Tag="LOC_BNP_D_DISTRICT_WATER_STREET_CARNIVAL" Language="en_US"><Text>Copacabana</Text></Row>
 	</LocalizedText>
 </GameData>

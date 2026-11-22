@@ -2,13 +2,13 @@
 <GameInfo>
 	<!-- Better National Parks: setup-screen options (front end, Config database). Read in game by Scripts/BNP_Rules_GP.lua with GameConfiguration.GetValue. -->
 	<Parameters>
-		<Row ParameterId="BNP_CustomShape" Name="LOC_BNP_CUSTOM_SHAPE_NAME" Description="LOC_BNP_CUSTOM_SHAPE_DESC" Domain="bool" DefaultValue="0" ConfigurationGroup="Game" ConfigurationId="BNP_CUSTOM_SHAPE" GroupId="AdvancedOptions" SupportsLANMultiplayer="0" SupportsInternetMultiplayer="0" SupportsHotSeat="0" SupportsPlayByCloud="0" SortIndex="3000"/>
-		<Row ParameterId="BNP_MinSize" Name="LOC_BNP_MIN_SIZE_NAME" Description="LOC_BNP_MIN_SIZE_DESC" Domain="BNP_SizeRange" DefaultValue="3" ConfigurationGroup="Game" ConfigurationId="BNP_MIN_SIZE" GroupId="AdvancedOptions" Hash="0" SupportsLANMultiplayer="0" SupportsInternetMultiplayer="0" SupportsHotSeat="0" SupportsPlayByCloud="0" SortIndex="3001"/>
-		<Row ParameterId="BNP_MaxSize" Name="LOC_BNP_MAX_SIZE_NAME" Description="LOC_BNP_MAX_SIZE_DESC" Domain="BNP_SizeRange" DefaultValue="5" ConfigurationGroup="Game" ConfigurationId="BNP_MAX_SIZE" GroupId="AdvancedOptions" Hash="0" SupportsLANMultiplayer="0" SupportsInternetMultiplayer="0" SupportsHotSeat="0" SupportsPlayByCloud="0" SortIndex="3002"/>
-		<Row ParameterId="BNP_WonderMode" Name="LOC_BNP_WONDER_MODE_NAME" Description="LOC_BNP_WONDER_MODE_DESC" Domain="BNP_WonderMode" DefaultValue="DEFAULT" ConfigurationGroup="Game" ConfigurationId="BNP_WONDER_MODE" GroupId="AdvancedOptions" Hash="0" SortIndex="3003"/>
-		<Row ParameterId="BNP_Wonders" Name="LOC_BNP_WONDERS_NAME" Description="LOC_BNP_WONDERS_DESC" Domain="BNP_ParkWonders" Array="1" ConfigurationGroup="Game" ConfigurationId="BNP_WONDERS" GroupId="AdvancedOptions" Hash="0" SortIndex="3004"/>
-		<Row ParameterId="BNP_DistrictMode" Name="LOC_BNP_DISTRICT_MODE_NAME" Description="LOC_BNP_DISTRICT_MODE_DESC" Domain="BNP_DistrictMode" DefaultValue="DEFAULT" ConfigurationGroup="Game" ConfigurationId="BNP_DISTRICT_MODE" GroupId="AdvancedOptions" Hash="0" SortIndex="3005"/>
-		<Row ParameterId="BNP_Districts" Name="LOC_BNP_DISTRICTS_NAME" Description="LOC_BNP_DISTRICTS_DESC" Domain="BNP_ParkDistricts" Array="1" ConfigurationGroup="Game" ConfigurationId="BNP_DISTRICTS" GroupId="AdvancedOptions" Hash="0" SortIndex="3006"/>
+		<Row ParameterId="BNP_CustomShape" Name="LOC_BNP_CUSTOM_SHAPE_NAME" Description="LOC_BNP_CUSTOM_SHAPE_DESC" Domain="bool" DefaultValue="0" ConfigurationGroup="Game" ConfigurationId="BNP_CUSTOM_SHAPE" GroupId="AdvancedOptions" SupportsLANMultiplayer="0" SupportsInternetMultiplayer="0" SupportsHotSeat="0" SupportsPlayByCloud="0" SortIndex="3011"/>
+		<Row ParameterId="BNP_MinSize" Name="LOC_BNP_MIN_SIZE_NAME" Description="LOC_BNP_MIN_SIZE_DESC" Domain="BNP_SizeRange" DefaultValue="3" ConfigurationGroup="Game" ConfigurationId="BNP_MIN_SIZE" GroupId="AdvancedOptions" Hash="0" SupportsLANMultiplayer="0" SupportsInternetMultiplayer="0" SupportsHotSeat="0" SupportsPlayByCloud="0" SortIndex="3012"/>
+		<Row ParameterId="BNP_MaxSize" Name="LOC_BNP_MAX_SIZE_NAME" Description="LOC_BNP_MAX_SIZE_DESC" Domain="BNP_SizeRange" DefaultValue="5" ConfigurationGroup="Game" ConfigurationId="BNP_MAX_SIZE" GroupId="AdvancedOptions" Hash="0" SupportsLANMultiplayer="0" SupportsInternetMultiplayer="0" SupportsHotSeat="0" SupportsPlayByCloud="0" SortIndex="3013"/>
+		<Row ParameterId="BNP_WonderMode" Name="LOC_BNP_WONDER_MODE_NAME" Description="LOC_BNP_WONDER_MODE_DESC" Domain="BNP_WonderMode" DefaultValue="DEFAULT" ConfigurationGroup="Game" ConfigurationId="BNP_WONDER_MODE" GroupId="AdvancedOptions" Hash="0" SortIndex="3014"/>
+		<Row ParameterId="BNP_Wonders" Name="LOC_BNP_WONDERS_NAME" Description="LOC_BNP_WONDERS_DESC" Domain="BNP_ParkWonders" Array="1" ConfigurationGroup="Game" ConfigurationId="BNP_WONDERS" GroupId="AdvancedOptions" Hash="0" SortIndex="3015"/>
+		<Row ParameterId="BNP_DistrictMode" Name="LOC_BNP_DISTRICT_MODE_NAME" Description="LOC_BNP_DISTRICT_MODE_DESC" Domain="BNP_DistrictMode" DefaultValue="DEFAULT" ConfigurationGroup="Game" ConfigurationId="BNP_DISTRICT_MODE" GroupId="AdvancedOptions" Hash="0" SortIndex="3016"/>
+		<Row ParameterId="BNP_Districts" Name="LOC_BNP_DISTRICTS_NAME" Description="LOC_BNP_DISTRICTS_DESC" Domain="BNP_ParkDistricts" Array="1" ConfigurationGroup="Game" ConfigurationId="BNP_DISTRICTS" GroupId="AdvancedOptions" Hash="0" SortIndex="3017"/>
 	</Parameters>
 	<ParameterDependencies>
 		<Row ParameterId="BNP_MinSize" ConfigurationGroup="Game" ConfigurationId="BNP_CUSTOM_SHAPE" Operator="Equals" ConfigurationValue="1"/>
@@ -27,93 +27,93 @@
 		<Row Domain="BNP_DistrictMode" Value="DEFAULT" Name="LOC_BNP_MODE_DEFAULT_DISTRICTS" Description="LOC_BNP_MODE_DEFAULT_DISTRICTS_DESC" SortIndex="10"/>
 		<Row Domain="BNP_DistrictMode" Value="NONE" Name="LOC_BNP_MODE_NO_DISTRICTS" Description="LOC_BNP_MODE_NO_DISTRICTS_DESC" SortIndex="20"/>
 		<Row Domain="BNP_DistrictMode" Value="CUSTOM" Name="LOC_BNP_MODE_CUSTOM" Description="LOC_BNP_MODE_CUSTOM_DISTRICTS_DESC" SortIndex="30"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_ALHAMBRA" Name="LOC_BUILDING_ALHAMBRA_NAME" SortIndex="10"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_AMUNDSEN_SCOTT_RESEARCH_STATION" Name="LOC_BUILDING_AMUNDSEN_SCOTT_RESEARCH_STATION_NAME" SortIndex="20"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_ANGKOR_WAT" Name="LOC_BUILDING_ANGKOR_WAT_NAME" SortIndex="30"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_APADANA" Name="LOC_BUILDING_APADANA_NAME" SortIndex="40"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_BIG_BEN" Name="LOC_BUILDING_BIG_BEN_NAME" SortIndex="50"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_BIOSPHERE" Name="LOC_BUILDING_BIOSPHERE_NAME" SortIndex="60"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_BOLSHOI_THEATRE" Name="LOC_BUILDING_BOLSHOI_THEATRE_NAME" SortIndex="70"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_BROADWAY" Name="LOC_BUILDING_BROADWAY_NAME" SortIndex="80"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_CASA_DE_CONTRATACION" Name="LOC_BUILDING_CASA_DE_CONTRATACION_NAME" SortIndex="90"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_CHICHEN_ITZA" Name="LOC_BUILDING_CHICHEN_ITZA_NAME" SortIndex="100"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_COLOSSEUM" Name="LOC_BUILDING_COLOSSEUM_NAME" SortIndex="110"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_COLOSSUS" Name="LOC_BUILDING_COLOSSUS_NAME" SortIndex="120"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_CRISTO_REDENTOR" Name="LOC_BUILDING_CRISTO_REDENTOR_NAME" SortIndex="130"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_EIFFEL_TOWER" Name="LOC_BUILDING_EIFFEL_TOWER_NAME" SortIndex="140"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_ESTADIO_DO_MARACANA" Name="LOC_BUILDING_ESTADIO_DO_MARACANA_NAME" SortIndex="150"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_ETEMENANKI" Name="LOC_BUILDING_ETEMENANKI_NAME" SortIndex="160"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_FORBIDDEN_CITY" Name="LOC_BUILDING_FORBIDDEN_CITY_NAME" SortIndex="170"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_GOLDEN_GATE_BRIDGE" Name="LOC_BUILDING_GOLDEN_GATE_BRIDGE_NAME" SortIndex="180"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_GREAT_BATH" Name="LOC_BUILDING_GREAT_BATH_NAME" SortIndex="190"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_GREAT_LIBRARY" Name="LOC_BUILDING_GREAT_LIBRARY_NAME" SortIndex="200"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_GREAT_LIGHTHOUSE" Name="LOC_BUILDING_GREAT_LIGHTHOUSE_NAME" SortIndex="210"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_GREAT_ZIMBABWE" Name="LOC_BUILDING_GREAT_ZIMBABWE_NAME" SortIndex="220"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_HAGIA_SOPHIA" Name="LOC_BUILDING_HAGIA_SOPHIA_NAME" SortIndex="230"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_HALICARNASSUS_MAUSOLEUM" Name="LOC_BUILDING_HALICARNASSUS_MAUSOLEUM_NAME" SortIndex="240"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_HANGING_GARDENS" Name="LOC_BUILDING_HANGING_GARDENS_NAME" SortIndex="250"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_HERMITAGE" Name="LOC_BUILDING_HERMITAGE_NAME" SortIndex="260"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_HUEY_TEOCALLI" Name="LOC_BUILDING_HUEY_TEOCALLI_NAME" SortIndex="270"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_JEBEL_BARKAL" Name="LOC_BUILDING_JEBEL_BARKAL_NAME" SortIndex="280"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_KILWA_KISIWANI" Name="LOC_BUILDING_KILWA_KISIWANI_NAME" SortIndex="290"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_KOTOKU_IN" Name="LOC_BUILDING_KOTOKU_IN_NAME" SortIndex="300"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_MACHU_PICCHU" Name="LOC_BUILDING_MACHU_PICCHU_NAME" SortIndex="310"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_MAHABODHI_TEMPLE" Name="LOC_BUILDING_MAHABODHI_TEMPLE_NAME" SortIndex="320"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_MEENAKSHI_TEMPLE" Name="LOC_BUILDING_MEENAKSHI_TEMPLE_NAME" SortIndex="330"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_MONT_ST_MICHEL" Name="LOC_BUILDING_MONT_ST_MICHEL_NAME" SortIndex="340"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_ORACLE" Name="LOC_BUILDING_ORACLE_NAME" SortIndex="350"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_ORSZAGHAZ" Name="LOC_BUILDING_ORSZAGHAZ_NAME" SortIndex="360"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_OXFORD_UNIVERSITY" Name="LOC_BUILDING_OXFORD_UNIVERSITY_NAME" SortIndex="370"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_PANAMA_CANAL" Name="LOC_BUILDING_PANAMA_CANAL_NAME" SortIndex="380"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_PETRA" Name="LOC_BUILDING_PETRA_NAME" SortIndex="390"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_POTALA_PALACE" Name="LOC_BUILDING_POTALA_PALACE_NAME" SortIndex="400"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_PYRAMIDS" Name="LOC_BUILDING_PYRAMIDS_NAME" SortIndex="410"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_RUHR_VALLEY" Name="LOC_BUILDING_RUHR_VALLEY_NAME" SortIndex="420"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_STATUE_LIBERTY" Name="LOC_BUILDING_STATUE_LIBERTY_NAME" SortIndex="430"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_STATUE_OF_ZEUS" Name="LOC_BUILDING_STATUE_OF_ZEUS_NAME" SortIndex="440"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_STONEHENGE" Name="LOC_BUILDING_STONEHENGE_NAME" SortIndex="450"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_ST_BASILS_CATHEDRAL" Name="LOC_BUILDING_ST_BASILS_CATHEDRAL_NAME" SortIndex="460"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_SYDNEY_OPERA_HOUSE" Name="LOC_BUILDING_SYDNEY_OPERA_HOUSE_NAME" SortIndex="470"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_TAJ_MAHAL" Name="LOC_BUILDING_TAJ_MAHAL_NAME" SortIndex="480"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_TEMPLE_ARTEMIS" Name="LOC_BUILDING_TEMPLE_ARTEMIS_NAME" SortIndex="490"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_TERRACOTTA_ARMY" Name="LOC_BUILDING_TERRACOTTA_ARMY_NAME" SortIndex="500"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_TORRE_DE_BELEM" Name="LOC_BUILDING_TORRE_DE_BELEM_NAME" SortIndex="510"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_UNIVERSITY_SANKORE" Name="LOC_BUILDING_UNIVERSITY_SANKORE_NAME" SortIndex="520"/>
-		<Row Domain="BNP_ParkWonders" Value="BUILDING_VENETIAN_ARSENAL" Name="LOC_BUILDING_VENETIAN_ARSENAL_NAME" SortIndex="530"/>
-		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_ACROPOLIS" Name="LOC_DISTRICT_ACROPOLIS_NAME" SortIndex="10"/>
-		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_AERODROME" Name="LOC_DISTRICT_AERODROME_NAME" SortIndex="20"/>
-		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_AQUEDUCT" Name="LOC_DISTRICT_AQUEDUCT_NAME" SortIndex="30"/>
-		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_BATH" Name="LOC_DISTRICT_BATH_NAME" SortIndex="40"/>
-		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_CAMPUS" Name="LOC_DISTRICT_CAMPUS_NAME" SortIndex="50"/>
-		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_CANAL" Name="LOC_DISTRICT_CANAL_NAME" SortIndex="60"/>
-		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_COMMERCIAL_HUB" Name="LOC_DISTRICT_COMMERCIAL_HUB_NAME" SortIndex="70"/>
-		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_COTHON" Name="LOC_DISTRICT_COTHON_NAME" SortIndex="80"/>
-		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_DAM" Name="LOC_DISTRICT_DAM_NAME" SortIndex="90"/>
-		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_DIPLOMATIC_QUARTER" Name="LOC_DISTRICT_DIPLOMATIC_QUARTER_NAME" SortIndex="100"/>
-		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_ENCAMPMENT" Name="LOC_DISTRICT_ENCAMPMENT_NAME" SortIndex="110"/>
-		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_ENTERTAINMENT_COMPLEX" Name="LOC_DISTRICT_ENTERTAINMENT_COMPLEX_NAME" SortIndex="120"/>
-		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_GOVERNMENT" Name="LOC_DISTRICT_GOVERNMENT_NAME" SortIndex="130"/>
-		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_HANSA" Name="LOC_DISTRICT_HANSA_NAME" SortIndex="140"/>
-		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_HARBOR" Name="LOC_DISTRICT_HARBOR_NAME" SortIndex="150"/>
-		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_HIPPODROME" Name="LOC_DISTRICT_HIPPODROME_NAME" SortIndex="160"/>
-		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_HOLY_SITE" Name="LOC_DISTRICT_HOLY_SITE_NAME" SortIndex="170"/>
-		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_IKANDA" Name="LOC_DISTRICT_IKANDA_NAME" SortIndex="180"/>
-		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_INDUSTRIAL_ZONE" Name="LOC_DISTRICT_INDUSTRIAL_ZONE_NAME" SortIndex="190"/>
-		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_LAVRA" Name="LOC_DISTRICT_LAVRA_NAME" SortIndex="200"/>
-		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_MBANZA" Name="LOC_DISTRICT_MBANZA_NAME" SortIndex="210"/>
-		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_NEIGHBORHOOD" Name="LOC_DISTRICT_NEIGHBORHOOD_NAME" SortIndex="220"/>
-		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_OBSERVATORY" Name="LOC_DISTRICT_OBSERVATORY_NAME" SortIndex="230"/>
-		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_OPPIDUM" Name="LOC_DISTRICT_OPPIDUM_NAME" SortIndex="240"/>
-		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_PRESERVE" Name="LOC_DISTRICT_PRESERVE_NAME" SortIndex="250"/>
-		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_ROYAL_NAVY_DOCKYARD" Name="LOC_DISTRICT_ROYAL_NAVY_DOCKYARD_NAME" SortIndex="260"/>
-		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_SEOWON" Name="LOC_DISTRICT_SEOWON_NAME" SortIndex="270"/>
-		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_SPACEPORT" Name="LOC_DISTRICT_SPACEPORT_NAME" SortIndex="280"/>
-		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_STREET_CARNIVAL" Name="LOC_DISTRICT_STREET_CARNIVAL_NAME" SortIndex="290"/>
-		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_SUGUBA" Name="LOC_DISTRICT_SUGUBA_NAME" SortIndex="300"/>
-		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_THANH" Name="LOC_DISTRICT_THANH_NAME" SortIndex="310"/>
-		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_THEATER" Name="LOC_DISTRICT_THEATER_NAME" SortIndex="320"/>
-		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_WALLED_QUARTER" Name="LOC_DISTRICT_WALLED_QUARTER_NAME" SortIndex="330"/>
-		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_WATER_ENTERTAINMENT_COMPLEX" Name="LOC_DISTRICT_WATER_ENTERTAINMENT_COMPLEX_NAME" SortIndex="340"/>
-		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_WATER_STREET_CARNIVAL" Name="LOC_DISTRICT_WATER_STREET_CARNIVAL_NAME" SortIndex="350"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_ALHAMBRA" Name="LOC_BNP_W_BUILDING_ALHAMBRA" SortIndex="10"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_AMUNDSEN_SCOTT_RESEARCH_STATION" Name="LOC_BNP_W_BUILDING_AMUNDSEN_SCOTT_RESEARCH_STATION" SortIndex="20"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_ANGKOR_WAT" Name="LOC_BNP_W_BUILDING_ANGKOR_WAT" SortIndex="30"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_APADANA" Name="LOC_BNP_W_BUILDING_APADANA" SortIndex="40"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_BIG_BEN" Name="LOC_BNP_W_BUILDING_BIG_BEN" SortIndex="50"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_BIOSPHERE" Name="LOC_BNP_W_BUILDING_BIOSPHERE" SortIndex="60"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_BOLSHOI_THEATRE" Name="LOC_BNP_W_BUILDING_BOLSHOI_THEATRE" SortIndex="70"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_BROADWAY" Name="LOC_BNP_W_BUILDING_BROADWAY" SortIndex="80"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_CASA_DE_CONTRATACION" Name="LOC_BNP_W_BUILDING_CASA_DE_CONTRATACION" SortIndex="90"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_CHICHEN_ITZA" Name="LOC_BNP_W_BUILDING_CHICHEN_ITZA" SortIndex="100"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_COLOSSEUM" Name="LOC_BNP_W_BUILDING_COLOSSEUM" SortIndex="110"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_COLOSSUS" Name="LOC_BNP_W_BUILDING_COLOSSUS" SortIndex="120"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_CRISTO_REDENTOR" Name="LOC_BNP_W_BUILDING_CRISTO_REDENTOR" SortIndex="130"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_EIFFEL_TOWER" Name="LOC_BNP_W_BUILDING_EIFFEL_TOWER" SortIndex="140"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_ESTADIO_DO_MARACANA" Name="LOC_BNP_W_BUILDING_ESTADIO_DO_MARACANA" SortIndex="150"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_ETEMENANKI" Name="LOC_BNP_W_BUILDING_ETEMENANKI" SortIndex="160"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_FORBIDDEN_CITY" Name="LOC_BNP_W_BUILDING_FORBIDDEN_CITY" SortIndex="170"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_GOLDEN_GATE_BRIDGE" Name="LOC_BNP_W_BUILDING_GOLDEN_GATE_BRIDGE" SortIndex="180"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_GREAT_BATH" Name="LOC_BNP_W_BUILDING_GREAT_BATH" SortIndex="190"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_GREAT_LIBRARY" Name="LOC_BNP_W_BUILDING_GREAT_LIBRARY" SortIndex="200"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_GREAT_LIGHTHOUSE" Name="LOC_BNP_W_BUILDING_GREAT_LIGHTHOUSE" SortIndex="210"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_GREAT_ZIMBABWE" Name="LOC_BNP_W_BUILDING_GREAT_ZIMBABWE" SortIndex="220"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_HAGIA_SOPHIA" Name="LOC_BNP_W_BUILDING_HAGIA_SOPHIA" SortIndex="230"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_HALICARNASSUS_MAUSOLEUM" Name="LOC_BNP_W_BUILDING_HALICARNASSUS_MAUSOLEUM" SortIndex="240"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_HANGING_GARDENS" Name="LOC_BNP_W_BUILDING_HANGING_GARDENS" SortIndex="250"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_HERMITAGE" Name="LOC_BNP_W_BUILDING_HERMITAGE" SortIndex="260"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_HUEY_TEOCALLI" Name="LOC_BNP_W_BUILDING_HUEY_TEOCALLI" SortIndex="270"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_JEBEL_BARKAL" Name="LOC_BNP_W_BUILDING_JEBEL_BARKAL" SortIndex="280"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_KILWA_KISIWANI" Name="LOC_BNP_W_BUILDING_KILWA_KISIWANI" SortIndex="290"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_KOTOKU_IN" Name="LOC_BNP_W_BUILDING_KOTOKU_IN" SortIndex="300"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_MACHU_PICCHU" Name="LOC_BNP_W_BUILDING_MACHU_PICCHU" SortIndex="310"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_MAHABODHI_TEMPLE" Name="LOC_BNP_W_BUILDING_MAHABODHI_TEMPLE" SortIndex="320"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_MEENAKSHI_TEMPLE" Name="LOC_BNP_W_BUILDING_MEENAKSHI_TEMPLE" SortIndex="330"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_MONT_ST_MICHEL" Name="LOC_BNP_W_BUILDING_MONT_ST_MICHEL" SortIndex="340"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_ORACLE" Name="LOC_BNP_W_BUILDING_ORACLE" SortIndex="350"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_ORSZAGHAZ" Name="LOC_BNP_W_BUILDING_ORSZAGHAZ" SortIndex="360"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_OXFORD_UNIVERSITY" Name="LOC_BNP_W_BUILDING_OXFORD_UNIVERSITY" SortIndex="370"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_PANAMA_CANAL" Name="LOC_BNP_W_BUILDING_PANAMA_CANAL" SortIndex="380"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_PETRA" Name="LOC_BNP_W_BUILDING_PETRA" SortIndex="390"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_POTALA_PALACE" Name="LOC_BNP_W_BUILDING_POTALA_PALACE" SortIndex="400"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_PYRAMIDS" Name="LOC_BNP_W_BUILDING_PYRAMIDS" SortIndex="410"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_RUHR_VALLEY" Name="LOC_BNP_W_BUILDING_RUHR_VALLEY" SortIndex="420"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_STATUE_LIBERTY" Name="LOC_BNP_W_BUILDING_STATUE_LIBERTY" SortIndex="430"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_STATUE_OF_ZEUS" Name="LOC_BNP_W_BUILDING_STATUE_OF_ZEUS" SortIndex="440"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_STONEHENGE" Name="LOC_BNP_W_BUILDING_STONEHENGE" SortIndex="450"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_ST_BASILS_CATHEDRAL" Name="LOC_BNP_W_BUILDING_ST_BASILS_CATHEDRAL" SortIndex="460"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_SYDNEY_OPERA_HOUSE" Name="LOC_BNP_W_BUILDING_SYDNEY_OPERA_HOUSE" SortIndex="470"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_TAJ_MAHAL" Name="LOC_BNP_W_BUILDING_TAJ_MAHAL" SortIndex="480"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_TEMPLE_ARTEMIS" Name="LOC_BNP_W_BUILDING_TEMPLE_ARTEMIS" SortIndex="490"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_TERRACOTTA_ARMY" Name="LOC_BNP_W_BUILDING_TERRACOTTA_ARMY" SortIndex="500"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_TORRE_DE_BELEM" Name="LOC_BNP_W_BUILDING_TORRE_DE_BELEM" SortIndex="510"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_UNIVERSITY_SANKORE" Name="LOC_BNP_W_BUILDING_UNIVERSITY_SANKORE" SortIndex="520"/>
+		<Row Domain="BNP_ParkWonders" Value="BUILDING_VENETIAN_ARSENAL" Name="LOC_BNP_W_BUILDING_VENETIAN_ARSENAL" SortIndex="530"/>
+		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_ACROPOLIS" Name="LOC_BNP_D_DISTRICT_ACROPOLIS" SortIndex="10"/>
+		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_AERODROME" Name="LOC_BNP_D_DISTRICT_AERODROME" SortIndex="20"/>
+		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_AQUEDUCT" Name="LOC_BNP_D_DISTRICT_AQUEDUCT" SortIndex="30"/>
+		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_BATH" Name="LOC_BNP_D_DISTRICT_BATH" SortIndex="40"/>
+		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_CAMPUS" Name="LOC_BNP_D_DISTRICT_CAMPUS" SortIndex="50"/>
+		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_CANAL" Name="LOC_BNP_D_DISTRICT_CANAL" SortIndex="60"/>
+		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_COMMERCIAL_HUB" Name="LOC_BNP_D_DISTRICT_COMMERCIAL_HUB" SortIndex="70"/>
+		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_COTHON" Name="LOC_BNP_D_DISTRICT_COTHON" SortIndex="80"/>
+		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_DAM" Name="LOC_BNP_D_DISTRICT_DAM" SortIndex="90"/>
+		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_DIPLOMATIC_QUARTER" Name="LOC_BNP_D_DISTRICT_DIPLOMATIC_QUARTER" SortIndex="100"/>
+		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_ENCAMPMENT" Name="LOC_BNP_D_DISTRICT_ENCAMPMENT" SortIndex="110"/>
+		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_ENTERTAINMENT_COMPLEX" Name="LOC_BNP_D_DISTRICT_ENTERTAINMENT_COMPLEX" SortIndex="120"/>
+		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_GOVERNMENT" Name="LOC_BNP_D_DISTRICT_GOVERNMENT" SortIndex="130"/>
+		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_HANSA" Name="LOC_BNP_D_DISTRICT_HANSA" SortIndex="140"/>
+		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_HARBOR" Name="LOC_BNP_D_DISTRICT_HARBOR" SortIndex="150"/>
+		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_HIPPODROME" Name="LOC_BNP_D_DISTRICT_HIPPODROME" SortIndex="160"/>
+		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_HOLY_SITE" Name="LOC_BNP_D_DISTRICT_HOLY_SITE" SortIndex="170"/>
+		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_IKANDA" Name="LOC_BNP_D_DISTRICT_IKANDA" SortIndex="180"/>
+		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_INDUSTRIAL_ZONE" Name="LOC_BNP_D_DISTRICT_INDUSTRIAL_ZONE" SortIndex="190"/>
+		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_LAVRA" Name="LOC_BNP_D_DISTRICT_LAVRA" SortIndex="200"/>
+		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_MBANZA" Name="LOC_BNP_D_DISTRICT_MBANZA" SortIndex="210"/>
+		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_NEIGHBORHOOD" Name="LOC_BNP_D_DISTRICT_NEIGHBORHOOD" SortIndex="220"/>
+		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_OBSERVATORY" Name="LOC_BNP_D_DISTRICT_OBSERVATORY" SortIndex="230"/>
+		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_OPPIDUM" Name="LOC_BNP_D_DISTRICT_OPPIDUM" SortIndex="240"/>
+		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_PRESERVE" Name="LOC_BNP_D_DISTRICT_PRESERVE" SortIndex="250"/>
+		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_ROYAL_NAVY_DOCKYARD" Name="LOC_BNP_D_DISTRICT_ROYAL_NAVY_DOCKYARD" SortIndex="260"/>
+		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_SEOWON" Name="LOC_BNP_D_DISTRICT_SEOWON" SortIndex="270"/>
+		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_SPACEPORT" Name="LOC_BNP_D_DISTRICT_SPACEPORT" SortIndex="280"/>
+		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_STREET_CARNIVAL" Name="LOC_BNP_D_DISTRICT_STREET_CARNIVAL" SortIndex="290"/>
+		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_SUGUBA" Name="LOC_BNP_D_DISTRICT_SUGUBA" SortIndex="300"/>
+		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_THANH" Name="LOC_BNP_D_DISTRICT_THANH" SortIndex="310"/>
+		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_THEATER" Name="LOC_BNP_D_DISTRICT_THEATER" SortIndex="320"/>
+		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_WALLED_QUARTER" Name="LOC_BNP_D_DISTRICT_WALLED_QUARTER" SortIndex="330"/>
+		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_WATER_ENTERTAINMENT_COMPLEX" Name="LOC_BNP_D_DISTRICT_WATER_ENTERTAINMENT_COMPLEX" SortIndex="340"/>
+		<Row Domain="BNP_ParkDistricts" Value="DISTRICT_WATER_STREET_CARNIVAL" Name="LOC_BNP_D_DISTRICT_WATER_STREET_CARNIVAL" SortIndex="350"/>
 	</DomainValues>
 </GameInfo>
