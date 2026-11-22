@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GameData>
+	<LocalizedText>
+		<Row Tag="LOC_BNP_BUTTON_TOOLTIP" Language="en_US">
+			<Text>Designate Custom National Park[NEWLINE]Pick {1_Min} to {2_Max} touching tiles of one city. Click the last tile again to finish early, right-click to undo or cancel. Human player only.</Text>
+		</Row>
+		<Row Tag="LOC_DCP_BUTTON_TOOLTIP" Language="en_US">
+			<Text>Designate Custom National Park (Better National Parks)</Text>
+		</Row>
+	</LocalizedText>
+</GameData>

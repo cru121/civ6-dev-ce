@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Mod id="443e6e0c-6113-45fb-9985-86b431f78df9" version="1">
+	<Properties>
+		<Name>Better National Parks (experimental)</Name>
+		<Teaser>Custom-shaped National Parks and configurable park rules (needs Dev CE).</Teaser>
+		<Description>EXPERIMENTAL, needs the Dev CE GameCore mod (0.5.0 or newer; only one GameCore mod enabled). Rules: which tiles may be part of a National Park (min/max appeal, improvements, mountains, natural wonders, districts such as Preserve, individual world wonders), read from the tables NationalParkTypes, NationalPark_ValidDistricts and NationalPark_ValidWonders. These rules also change the vanilla Naturalist action and the AI. Custom shapes (human player, single player only): a second Naturalist or Mountie button lets you pick the tiles of a park yourself, between the minimum and maximum tile count; the normal action is not replaced. Without Dev CE nothing happens and the button stays hidden.</Description>
+		<Authors>cru121</Authors>
+		<CompatibleVersions>2.0</CompatibleVersions>
+		<AffectsSavedGames>0</AffectsSavedGames>
+	</Properties>
+	<Dependencies>
+		<Mod id="4873eb62-8ccc-4574-b784-dda455e74e68" title="Expansion: Gathering Storm" />
+	</Dependencies>
+	<InGameActions>
+		<UpdateText id="BNP_TEXT">
+			<File>Text/BNP_Text.xml</File>
+		</UpdateText>
+		<UpdateDatabase id="BNP_SQL">
+			<File>Sql/BNP_Rules.sql</File>
+		</UpdateDatabase>
+		<AddGameplayScripts id="BNP_RULES_GP">
+			<File>Scripts/BNP_Rules_GP.lua</File>
+		</AddGameplayScripts>
+		<AddGameplayScripts id="BNP_PICKER_GP">
+			<File>Scripts/BNP_Picker_GP.lua</File>
+		</AddGameplayScripts>
+		<AddUserInterfaces id="BNP_UI">
+			<Properties><Context>InGame</Context></Properties>
+			<File>UI/BNP_Picker.xml</File>
+		</AddUserInterfaces>
+	</InGameActions>
+	<Files>
+		<File>Text/BNP_Text.xml</File>
+		<File>Sql/BNP_Rules.sql</File>
+		<File>Scripts/BNP_Rules_GP.lua</File>
+		<File>Scripts/BNP_Picker_GP.lua</File>
+		<File>UI/BNP_Picker.xml</File>
+		<File>UI/BNP_Picker.lua</File>
+	</Files>
+</Mod>
