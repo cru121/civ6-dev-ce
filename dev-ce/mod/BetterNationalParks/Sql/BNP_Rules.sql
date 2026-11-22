@@ -17,8 +17,7 @@ CREATE TABLE IF NOT EXISTS NationalPark_ValidDistricts (
 	ParkType     TEXT NOT NULL,
 	DistrictType TEXT NOT NULL,
 	PRIMARY KEY (ParkType, DistrictType),
-	FOREIGN KEY (ParkType) REFERENCES NationalParkTypes (ParkType) ON DELETE CASCADE ON UPDATE CASCADE,
-	FOREIGN KEY (DistrictType) REFERENCES Districts (DistrictType) ON DELETE CASCADE ON UPDATE CASCADE
+	FOREIGN KEY (ParkType) REFERENCES NationalParkTypes (ParkType) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- A tile holding one of these world wonders may be part of a park (decided by the wonder alone; DISTRICT_WONDER is not needed in the table above).
@@ -26,8 +25,7 @@ CREATE TABLE IF NOT EXISTS NationalPark_ValidWonders (
 	ParkType     TEXT NOT NULL,
 	BuildingType TEXT NOT NULL,
 	PRIMARY KEY (ParkType, BuildingType),
-	FOREIGN KEY (ParkType) REFERENCES NationalParkTypes (ParkType) ON DELETE CASCADE ON UPDATE CASCADE,
-	FOREIGN KEY (BuildingType) REFERENCES Buildings (BuildingType) ON DELETE CASCADE ON UPDATE CASCADE
+	FOREIGN KEY (ParkType) REFERENCES NationalParkTypes (ParkType) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- Defaults of this mod (to be replaced by setup-screen options): 3..5 tiles for the custom picker, Preserve and a few landmark wonders allowed.
@@ -35,7 +33,7 @@ INSERT OR IGNORE INTO NationalParkTypes (ParkType, MinTiles, MaxTiles) VALUES ('
 
 INSERT OR IGNORE INTO NationalPark_ValidDistricts (ParkType, DistrictType) VALUES ('NATIONAL_PARK_DEFAULT', 'DISTRICT_PRESERVE');
 
--- selected from Buildings so that a wonder missing in the current ruleset is simply skipped
-INSERT OR IGNORE INTO NationalPark_ValidWonders (ParkType, BuildingType)
-	SELECT 'NATIONAL_PARK_DEFAULT', BuildingType FROM Buildings WHERE BuildingType IN
-		('BUILDING_STONEHENGE', 'BUILDING_HANGING_GARDENS', 'BUILDING_TEMPLE_ARTEMIS', 'BUILDING_MACHU_PICCHU', 'BUILDING_MAHABODHI_TEMPLE', 'BUILDING_CHICHEN_ITZA');
+-- plain names (no SELECT from Buildings): wonders of content that loads after this file still count; unknown names are skipped by the Lua script
+INSERT OR IGNORE INTO NationalPark_ValidWonders (ParkType, BuildingType) VALUES
+	('NATIONAL_PARK_DEFAULT', 'BUILDING_STONEHENGE'), ('NATIONAL_PARK_DEFAULT', 'BUILDING_HANGING_GARDENS'), ('NATIONAL_PARK_DEFAULT', 'BUILDING_TEMPLE_ARTEMIS'),
+	('NATIONAL_PARK_DEFAULT', 'BUILDING_MACHU_PICCHU'), ('NATIONAL_PARK_DEFAULT', 'BUILDING_MAHABODHI_TEMPLE'), ('NATIONAL_PARK_DEFAULT', 'BUILDING_CHICHEN_ITZA');
