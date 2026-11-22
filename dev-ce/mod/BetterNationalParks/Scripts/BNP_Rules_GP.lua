@@ -73,8 +73,9 @@ local function PushRules()
 	-- Custom shapes: with the option off the picker is hidden (UI and gameplay script check BNP_CUSTOM_SHAPE) and the size limits do not matter.
 	local minTiles, maxTiles = row.MinTiles, row.MaxTiles;
 	if Truthy(Cfg("BNP_CUSTOM_SHAPE")) then
-		minTiles = tonumber(Cfg("BNP_MIN_SIZE")) or minTiles;
-		maxTiles = tonumber(Cfg("BNP_MAX_SIZE")) or maxTiles;
+		local vmin, vmax = Cfg("BNP_MIN_SIZE"), Cfg("BNP_MAX_SIZE");      -- tonumber(nil) raises an error in HavokScript
+		if vmin ~= nil then minTiles = tonumber(vmin) or minTiles; end
+		if vmax ~= nil then maxTiles = tonumber(vmax) or maxTiles; end
 		if maxTiles < minTiles then maxTiles = minTiles; end
 	end
 
@@ -84,7 +85,7 @@ local function PushRules()
 	if Truthy(row.AllowNaturalWonders) then flags = flags + FLAG_NATURAL_WONDERS; end
 
 	NationalParks.SetRules(minTiles, maxTiles, row.MinAppeal, row.MaxAppeal, flags, districts, wonders);
-	print("[BNP] rules pushed (districts " .. districtMode .. ", wonders " .. wonderMode .. ", custom shape " .. tostring(Cfg("BNP_CUSTOM_SHAPE")) .. "): tiles " .. minTiles .. ".." .. maxTiles .. ", appeal " .. row.MinAppeal .. ".." .. row.MaxAppeal
+	print("[BNP] rules pushed (districts " .. districtMode .. ", wonders " .. wonderMode .. ", custom shape " .. tostring(Cfg("BNP_CUSTOM_SHAPE") or "unset") .. "): tiles " .. minTiles .. ".." .. maxTiles .. ", appeal " .. row.MinAppeal .. ".." .. row.MaxAppeal
 		.. ", flags " .. flags .. ", districts " .. #districts .. ", wonders " .. #wonders);
 end
 

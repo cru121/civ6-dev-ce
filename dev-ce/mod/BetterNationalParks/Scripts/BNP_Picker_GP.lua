@@ -20,7 +20,8 @@ local function Reply(owner, text)
 	print("[DevCEPark][GP] " .. text);
 	local player = Players[owner];
 	if player == nil then return; end
-	local seq = tonumber(player:GetProperty("DEVCEPARK_SEQ")) or 0;
+	local raw = player:GetProperty("DEVCEPARK_SEQ");      -- nil before the first answer; HavokScript's tonumber(nil) raises an error
+	local seq = (raw ~= nil and tonumber(raw)) or 0;
 	player:SetProperty("DEVCEPARK_MSG", text);
 	player:SetProperty("DEVCEPARK_SEQ", seq + 1);
 end
@@ -68,10 +69,12 @@ GameEvents.DEVCEPARK_DESIGNATE.Add(function(owner, unitID, parameters)
 	if custom ~= nil and not (custom == true or custom == 1 or custom == "1" or custom == "true") then Reply(owner, "Custom National Parks are switched off in the game setup."); return; end
 
 	local plots = {};
-	local n = tonumber(parameters["DCP_N"]);
+	local n = nil;
+	if parameters["DCP_N"] ~= nil then n = tonumber(parameters["DCP_N"]); end
 	if n ~= nil then
 		for i = 1, n do
-			local p = tonumber(parameters["DCP_T" .. i]);
+			local p = nil;
+			if parameters["DCP_T" .. i] ~= nil then p = tonumber(parameters["DCP_T" .. i]); end
 			if p == nil then Reply(owner, "National Park request with a missing tile."); return; end
 			plots[i] = p;
 		end
