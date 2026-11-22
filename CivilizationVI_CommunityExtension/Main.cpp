@@ -32,6 +32,7 @@
 #include "DistrictCitizens.h"
 #include "CitySpecialists.h"
 #include "NationalParks.h"
+#include "GWArchive.h"
 #include "GreatPersonAssign.h"
 #include "UnitCommandActions.h"
 #include "UnitPropertyRequirement.h"
@@ -105,6 +106,7 @@ void __cdecl Hook_RegisterScriptData(hks::lua_State* L) {
     CCallWithErrorHandling(L, AI::CongressSupport::RegisterOutcomeTypes, NULL);
     CCallWithErrorHandling(L, AI::Espionage::RegisterAIEspionageManager, NULL);
     CCallWithErrorHandling(L, NationalParks::Register, NULL);
+    CCallWithErrorHandling(L, GWArchive::Register, NULL);
     CCallWithErrorHandling(L, CitySpecialists::Register, NULL);
     Features::NewGame();    // a new game context: read the feature capabilities again
     UnitCommandActions::ResetForNewGame();    // a new game context: the command definitions are pushed again by the gameplay script
@@ -181,6 +183,7 @@ static void InitHooks() {
     AI::CongressSupport::Create();
     AI::Espionage::Create();
     NationalParks::Create();
+    GWArchive::Create();
     GameProcessor::Create();
     VetoEvents::Create();
     TechGates::Create();

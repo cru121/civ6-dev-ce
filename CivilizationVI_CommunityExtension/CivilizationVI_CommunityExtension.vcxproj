@@ -288,6 +288,7 @@
     <ClCompile Include="MemoryManipulation.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="NationalParks.cpp" />
+    <ClCompile Include="GWArchive.cpp" />
     <ClCompile Include="BuildingGates.cpp" />
     <ClCompile Include="Features.cpp" />
     <ClCompile Include="CitizenWorkersHook.cpp" />
@@ -418,6 +419,7 @@
     <ClInclude Include="Log.h" />
     <ClInclude Include="MemoryManipulation.h" />
     <ClInclude Include="NationalParks.h" />
+    <ClInclude Include="GWArchive.h" />
     <ClInclude Include="BuildingGates.h" />
     <ClInclude Include="Features.h" />
     <ClInclude Include="CitizenWorkersHook.h" />

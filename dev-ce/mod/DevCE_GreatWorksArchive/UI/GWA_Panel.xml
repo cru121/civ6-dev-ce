@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- New in-game UI context (AddUserInterfaces; no base-file replacement, so it coexists with other UI mods).
+     At runtime GWA_Root (button + list panel) is ChangeParent'd INTO the Great Works screen so it draws on top
+     of it. GWA_Root copies that screen's 1024x768 centred frame, so the offsets below are in the screen's own
+     coordinates: the top row, just right of the "View Gallery" button (which is at 17,51 and 250 wide).
+     GWA_Toast stays in this context; it is what the player sees after the screen has closed.
+     Styles are known-good ones from the base game and the Great People mod. -->
+<Context>
+	<Container ID="GWA_Root" Anchor="C,C" Size="1024,768">
+		<GridButton ID="GWA_TabButton" Anchor="L,T" Offset="277,51" Size="210,26" Style="ButtonControlTan" Hidden="1"/>
+
+		<Grid ID="GWA_Frame" Anchor="L,T" Offset="277,80" Size="440,420" Style="SubContainerSmall2" Hidden="1">
+			<Stack ID="GWA_OuterStack" Anchor="C,T" Offset="0,12" StackGrowth="Bottom" StackPadding="6">
+				<Label ID="GWA_Title" Anchor="C,T" Style="FontNormal14" Color="255,236,150,255" FontStyle="Stroke" String="GREAT WORKS ARCHIVE"/>
+				<Label ID="GWA_Status" Anchor="C,T" Style="FontNormal12" Color="200,200,200,255" WrapWidth="400" String="Loading..."/>
+				<Stack ID="GWA_ListStack" Anchor="C,T" StackGrowth="Bottom" StackPadding="4"/>
+				<Label ID="GWA_Message" Anchor="C,T" Style="FontNormal12" Color="255,140,120,255" WrapWidth="400" String=""/>
+				<GridButton ID="GWA_FixButton" Anchor="C,T" Size="190,26" Style="ButtonControlTan"/>
+			</Stack>
+		</Grid>
+	</Container>
+
+	<Grid ID="GWA_Toast" Anchor="C,T" Offset="0,110" Size="560,72" Style="SubContainerSmall2" Hidden="1">
+		<Label ID="GWA_ToastLabel" Anchor="C,C" Style="FontNormal14" Color="255,236,150,255" WrapWidth="520" String=""/>
+		<Button ID="GWA_ToastClick" Anchor="C,C" Size="560,72"/>
+	</Grid>
+
+	<!-- One row per archived work. IM top control = GWA_RowBtn. -->
+	<Instance Name="GWA_RowInst">
+		<GridButton ID="GWA_RowBtn" Size="404,48" Style="MainButtonSmall">
+			<Label ID="GWA_RowLabel" Anchor="L,C" Offset="12,0" Style="FontNormal12" Color="255,255,255,255" WrapWidth="380"/>
+		</GridButton>
+	</Instance>
+</Context>

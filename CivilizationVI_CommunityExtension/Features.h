@@ -14,11 +14,14 @@
 //   CAPABILITY_DEVCE_FOOD_PRODUCTION     excess food into unit production (FoodProduction)
 //   CAPABILITY_DEVCE_DISTRICT_CITIZENS   district citizen slots and yields from district properties (DistrictCitizens)
 //   CAPABILITY_DEVCE_CITY_RADIUS         city radius up to 5 (CityRadius)
+//   CAPABILITY_DEVCE_GW_ARCHIVE          Great Works Archive: relics with no free slot are kept unslotted instead of being lost, archived works
+//                                        are tradable, and the work/slot events are reported to the gameplay script (GWArchive). The
+//                                        GWArchive Lua table itself is always there but only reads state or acts when a script calls it
 //
 // The answer is read once per game and kept; Features::NewGame() (a new gameplay context) forgets it. A capability must already be in
 // the database when the game starts, as with every game capability.
 namespace Features {
-	enum Id { UpgradeRules, UpgradeFallback, GoldPurchase, FoodProduction, DistrictCitizens, CityRadius, COUNT };
+	enum Id { UpgradeRules, UpgradeFallback, GoldPurchase, FoodProduction, DistrictCitizens, CityRadius, GreatWorksArchive, COUNT };
 
 	// Resolves the capability hashes and the engine functions that read them. False (every feature then stays off) when the
 	// engine's code is not the expected one.
