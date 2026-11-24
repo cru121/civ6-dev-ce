@@ -358,6 +358,7 @@ any partial/rejected publication.
 | `Begin` | version, width, height, districtCount | Disable old policy and open empty staging. |
 | `Allow` | playerId | Admit one original AI identity. |
 | `Entry` | playerId, cityId, districtIndex, plotIndex, deltaQ8 | Add an early NetValue adjustment. |
+| `EarlyCost` | playerId, cityId, districtIndex, plotIndex, deltaQ8, positiveCostQ8 | Include a cost up to 64 utility points after the ordinary early delta. Keep the resulting positive score at least 1 Q8 so the native building forecast can run. |
 | `LateEntry` | playerId, cityId, districtIndex, plotIndex, expectedBeforeQ8, expectedFinalQ8, deltaQ8 | Add an adjustment after building aggregation. |
 | `Commit` | none | Publish the complete staged table atomically. |
 | `Disable` | none | Retire policy/staging and advance generation. |
@@ -466,7 +467,7 @@ try {
 } finally { Pop-Location }
 ```
 
-Expected results are 278 district-score checks and four hook-group checks.
+Expected results are 284 district-score checks and four hook-group checks. On Dev CE, compile the test host with `ASMJIT_STATIC`, `ASMJIT_NO_AARCH64` and `/MD`, and link the bundled asmjit object files from the matching Release x64 build.
 The instruction-call check exercises byte refusal, near-relay delivery and
 restoration with an executable synthetic caller.
 The three failure-path diagnostics are expected in the isolated host.

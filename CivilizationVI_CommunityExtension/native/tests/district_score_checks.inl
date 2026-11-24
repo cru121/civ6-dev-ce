@@ -158,6 +158,12 @@ int run_self_test() {
     CHECK(!adjusted(INT_MAX, 256, &v) && v == INT_MAX);
     CHECK(adjusted(-1048500, -256, &v) && v == MinimumScore);
     CHECK(!adjusted(-1048577, -256, &v) && v == -1048577);
+    CHECK(adjusted(900, 500, &v, 256) && v == 1144);
+    CHECK(adjusted(200, 0, &v, 256) && v == 1);
+    CHECK(adjusted(200, -250, &v, 256) && v == -50);
+    CHECK(!adjusted(1, 0, &v, 256) && v == 1);
+    CHECK(!adjusted(-1, 0, &v, 256) && v == -1);
+    CHECK(!adjusted(InvalidScore, 0, &v, 256) && v == InvalidScore);
     alignas(8) unsigned char object[DistrictMatrixLengthOffset + sizeof(unsigned)]{};
     alignas(8) unsigned char city[ManagedCityDistrictsOffset + sizeof(void*)]{};
     alignas(8) unsigned char rows[2 * PlotAnalysisRowSize]{};
